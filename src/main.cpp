@@ -1,5 +1,4 @@
 #include <SFML/Window.hpp>
-#include <iostream>
 
 int main(int argc, char** argv)
 {

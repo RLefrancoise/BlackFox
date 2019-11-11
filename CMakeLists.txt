@@ -13,22 +13,14 @@ find_package(SFML 2.5 COMPONENTS graphics window network audio system main REQUI
 link_directories(${SFML_LIBRARY_DIRS})
 include_directories(${SFML_INCLUDE_DIRS})
 
-# Files
-file(
-    GLOB_RECURSE
-    source_files
-    src/*
-)
+# Falcon
+find_package(Falcon REQUIRED)
 
-# Executable
-add_executable(
-    BlackFox
-    ${source_files}
-)
+link_directories(${Falcon_LIBRARY_DIRS})
+include_directories(${Falcon_INCLUDE_DIRS})
 
-target_link_libraries(
-    BlackFox
-    sfml-graphics sfml-window sfml-network sfml-audio sfml-system sfml-main
-)
+# RTTR
+find_package(RTTR CONFIG REQUIRED Core)
 
-target_compile_features(BlackFox PRIVATE cxx_std_17)
+# SRC folder
+add_subdirectory(src)
