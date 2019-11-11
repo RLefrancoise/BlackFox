@@ -122,6 +122,48 @@ namespace BlackFox
 		 */
 		BFVector2& operator-(void);
 
+		/*!
+		 * \fn	BFVector2& operator*(float scale);
+		 *
+		 * \brief	Scale this vector
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	11/11/2019
+		 *
+		 * \param	scale	The scale factor.
+		 *
+		 * \returns	The updated vector.
+		 */
+		BFVector2& operator*(float scale);
+
+		/*!
+		 * \fn	bool operator==(const BFVector2& rhs) const;
+		 *
+		 * \brief	Tests if this vector is equals to another vector
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	11/11/2019
+		 *
+		 * \param	rhs	The other vector
+		 *
+		 * \returns	True if the vector is equal to the other vector
+		 */
+		bool operator==(const BFVector2& rhs) const;
+
+		/*!
+		 * \fn	bool operator!=(const BFVector2& rhs) const;
+		 *
+		 * \brief	Tests if this vector is not equal to another vector
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	11/11/2019
+		 *
+		 * \param	rhs	The other vector
+		 *
+		 * \returns	True if the vector is not equal to the other vector
+		 */
+		bool operator!=(const BFVector2& rhs) const;
+
 		/*! \brief	X value */
 		float x;
 		/*! \brief	Y value */

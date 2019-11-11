@@ -48,4 +48,21 @@ namespace BlackFox
 		y = -y;
 		return *this;
 	}
+
+	BFVector2 & BFVector2::operator*(float scale)
+	{
+		x *= scale;
+		y *= scale;
+		return *this;
+	}
+
+	bool BFVector2::operator==(const BFVector2 & rhs) const
+	{
+		return x == rhs.x && y == rhs.y;
+	}
+
+	bool BFVector2::operator!=(const BFVector2 & rhs) const
+	{
+		return !(*this == rhs);
+	}
 }
