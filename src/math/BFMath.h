@@ -15,7 +15,7 @@ namespace BlackFox
 		const float TWO_PI = PI * 2.0f;
 
 		/*!
-		 * \fn	float clamp(float x, float low, float high);
+		 * \fn	T clamp(T x, T low, T high);
 		 *
 		 * \brief	If x is smaller than low, x equals low. If x is larger than high, x equals high. Otherwise x is unchanged.
 		 *
@@ -28,10 +28,17 @@ namespace BlackFox
 		 *
 		 * \returns	The clamped value.
 		 */
-		float clamp(float x, float low, float high);
+		template <typename T>
+		float clamp(T x, T low, T high)
+		{
+			if (x < low) x = low;
+			else if (x > high) x = high;
+
+			return x;
+		}
 
 		/*!
-		 * \fn	float wrap(float x, float low, float high);
+		 * \fn	T wrap(T x, T low, T high);
 		 *
 		 * \brief	If x is below the low value it will return the high value, if x is higher than the high value, it will return the low value
 		 *
@@ -44,10 +51,19 @@ namespace BlackFox
 		 *
 		 * \returns	The wrapped value.
 		 */
-		float wrap(float x, float low, float high);
+		template <typename T>
+		T wrap(T x, T low, T high)
+		{
+			if (x < low)
+				x = high;
+			else if (x > high)
+				x = low;
+
+			return x;
+		}
 
 		/*!
-		 * \fn	float min(float first, float second);
+		 * \fn	T min(T first, T second);
 		 *
 		 * \brief	Determines the minimum of the given parameters.
 		 *
@@ -59,10 +75,14 @@ namespace BlackFox
 		 *
 		 * \returns	The minimum value.
 		 */
-		float min(float first, float second);
+		template <typename T>
+		T min(T first, T second)
+		{
+			return (first < second) ? first : second;
+		}
 
 		/*!
-		 * \fn	float max(float first, float second);
+		 * \fn	T max(T first, T second);
 		 *
 		 * \brief	Determines the maximum of the given parameters.
 		 *
@@ -74,7 +94,11 @@ namespace BlackFox
 		 *
 		 * \returns	The maximum value.
 		 */
-		float max(float first, float second);
+		template <typename T>
+		T max(T first, T second)
+		{
+			return (first > second) ? first : second;
+		}
 
 		/*!
 		 * \fn	template<typename T> T lerp(T start, T end, float time)

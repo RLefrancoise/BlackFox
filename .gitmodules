@@ -1,0 +1,3 @@
+[submodule "thirdParties/cpp-sdl2"]
+	path = thirdParties/cpp-sdl2
+	url = https://github.com/Edhebi/cpp-sdl2.git

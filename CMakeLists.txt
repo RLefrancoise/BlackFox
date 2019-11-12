@@ -6,12 +6,12 @@ project(BlackFox)
 # Build
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
-# SFML
-set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML 2.5 COMPONENTS graphics window network audio system main REQUIRED)
+# SDL2
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
-link_directories(${SFML_LIBRARY_DIRS})
-include_directories(${SFML_INCLUDE_DIRS})
+# CPP-SDL2
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdParties/cpp-sdl2/sources)
 
 # Falcon
 find_package(Falcon REQUIRED)

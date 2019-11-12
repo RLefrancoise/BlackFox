@@ -18,7 +18,7 @@ add_executable(
 
 target_link_libraries(
     BlackFox
-    sfml-graphics sfml-window sfml-network sfml-audio sfml-system sfml-main ${Falcon_LIBRARIES} RTTR::Core_Lib
+    ${Falcon_LIBRARIES} RTTR::Core_Lib ${SDL2_LIBRARIES}
 )
 
 target_compile_features(BlackFox PRIVATE cxx_std_17)
