@@ -44,6 +44,16 @@ namespace BlackFox
 		 */
 		int execute();
 
+		/*!
+		 * \fn	void BFApplication::quit();
+		 *
+		 * \brief	Quits the application
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	13/11/2019
+		 */
+		void quit();
+
 	private:
 
 		/*!

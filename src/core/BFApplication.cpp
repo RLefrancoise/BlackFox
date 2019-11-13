@@ -48,6 +48,11 @@ namespace BlackFox
 		return EXIT_SUCCESS;
 	}
 
+	void BFApplication::quit()
+	{
+		m_running = false;
+	}
+
 	bool BFApplication::init()
 	{
 		try 
