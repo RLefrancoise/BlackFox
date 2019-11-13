@@ -15,6 +15,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/sources)
 # ENTT
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/entt/src)
 
+# ImGui
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui)
+
 # ENTT ImGui Entity Editor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)
 
@@ -50,6 +53,6 @@ target_link_libraries(
     ${Falcon_LIBRARIES} ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} # RTTR::Core_Lib
 )
 
-target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../thirdParties/imgui)
+# target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../thirdParties/imgui)
 
 target_compile_features(BlackFox PRIVATE cxx_std_17)

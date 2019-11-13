@@ -1,7 +1,8 @@
 #ifndef BLACKFOX_APPLICATION_H
 #define BLACKFOX_APPLICATION_H
 
-#include "cpp-sdl2/sdl.hpp"
+#include <cpp-sdl2/sdl.hpp>
+#include "BFSingleton.h"
 
 namespace BlackFox
 {
@@ -13,29 +14,23 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	12/11/2019
 	 */
-	class BFApplication
+	class BFApplication : BFSingleton<BFApplication>
 	{
+		friend class BFSingleton<BFApplication>;
+
 	public:
 
 		/*!
-		 * \fn	BFApplication::BFApplication(sdl::Root& root, sdl::Window& window);
+		 * \fn	BFApplication::BFApplication(BFApplication&& app);
 		 *
-		 * \brief	Default constructor
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 */
-		explicit BFApplication(sdl::Root& root, sdl::Window& window);
-
-		/*!
-		 * \fn	virtual BFApplication::~BFApplication();
-		 *
-		 * \brief	Destructor
+		 * \brief	Move constructor
 		 *
 		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
+		 * \date	13/11/2019
+		 *
+		 * \param [in,out]	app	The application.
 		 */
-		virtual ~BFApplication();
+		BFApplication(BFApplication&& app) noexcept;
 
 		/*!
 		 * \fn	int BFApplication::execute();
@@ -49,10 +44,30 @@ namespace BlackFox
 		 */
 		int execute();
 
-	protected:
+	private:
 
 		/*!
-		 * \fn	virtual bool BFApplication::init();
+		 * \fn	BFApplication::BFApplication();
+		 *
+		 * \brief	Default constructor
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	13/11/2019
+		 */
+		BFApplication();
+
+		/*!
+		 * \fn	BFApplication::~BFApplication();
+		 *
+		 * \brief	Destructor
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	12/11/2019
+		 */
+		~BFApplication() noexcept;
+
+		/*!
+		 * \fn	bool BFApplication::init();
 		 *
 		 * \brief	Initializes the application
 		 *
@@ -61,10 +76,10 @@ namespace BlackFox
 		 *
 		 * \returns	True if it succeeds, false if it fails.
 		 */
-		virtual bool init();
+		bool init();
 
 		/*!
-		 * \fn	virtual void BFApplication::onEvent(const sdl::Event& ev);
+		 * \fn	void BFApplication::onEvent(const sdl::Event& ev);
 		 *
 		 * \brief	Called when an event occured 
 		 *
@@ -73,49 +88,42 @@ namespace BlackFox
 		 *
 		 * \param	ev	The event.
 		 */
-		virtual void onEvent(const sdl::Event& ev);
+		void onEvent(const sdl::Event& ev);
 
 		/*!
-		 * \fn	virtual void BFApplication::loop();
+		 * \fn	void BFApplication::loop();
 		 *
 		 * \brief	Application loop
 		 *
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		virtual void loop();
+		void loop();
 
 		/*!
-		 * \fn	virtual void BFApplication::render();
+		 * \fn	void BFApplication::render();
 		 *
 		 * \brief	Renders the application
 		 *
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		virtual void render();
+		void render();
 
 		/*!
-		 * \fn	virtual void BFApplication::cleanup();
+		 * \fn	void BFApplication::cleanup();
 		 *
 		 * \brief	Cleans up the application
 		 *
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		virtual void cleanup();
-
-	private:
-
-		BFApplication(const BFApplication& app) = delete;
-		BFApplication(BFApplication&& app) = delete;
-		BFApplication& operator=(const BFApplication& app) = delete;
-		BFApplication& operator=(BFApplication&& app) = delete;
+		void cleanup();
 
 		/*! \brief	SDL root */
-		sdl::Root& m_root;
+		sdl::Root m_root;
 		/*! \brief	SDL window */
-		sdl::Window& m_window;
+		sdl::Window m_window;
 		/*! \brief	SDL renderer */
 		sdl::Renderer m_renderer;
 		/*! \brief	Is application running ? */
