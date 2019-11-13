@@ -3,6 +3,7 @@
 
 #include <cpp-sdl2/sdl.hpp>
 #include "BFSingleton.h"
+#include "BFCommandManager.h"
 
 namespace BlackFox
 {
@@ -53,6 +54,18 @@ namespace BlackFox
 		 * \date	13/11/2019
 		 */
 		void quit();
+
+		/*!
+		 * \fn	BFCommandManager* BFApplication::commandManager() const;
+		 *
+		 * \brief	Get the command manager
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	13/11/2019
+		 *
+		 * \returns	The BFCommandManager used by the application.
+		 */
+		BFCommandManager* commandManager() const;
 
 	private:
 
@@ -138,6 +151,8 @@ namespace BlackFox
 		sdl::Renderer m_renderer;
 		/*! \brief	Is application running ? */
 		bool m_running;
+
+		std::unique_ptr<BFCommandManager> m_commandManager;
 	};
 }
 

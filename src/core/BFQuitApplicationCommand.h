@@ -7,6 +7,8 @@ namespace BlackFox
 {
 	class BFQuitApplicationCommand : public BFCommand
 	{
+		RTTR_ENABLE(BFCommand)
+
 	public:
 		virtual void execute(void);
 		virtual BFQuitApplicationCommand* clone(void) const;
