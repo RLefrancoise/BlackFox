@@ -18,14 +18,14 @@ namespace BlackFox
 	public:
 
 		/*!
-		 * \fn	BFApplication::BFApplication();
+		 * \fn	BFApplication::BFApplication(sdl::Root& root, sdl::Window& window);
 		 *
 		 * \brief	Default constructor
 		 *
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		BFApplication();
+		explicit BFApplication(sdl::Root& root, sdl::Window& window);
 
 		/*!
 		 * \fn	virtual BFApplication::~BFApplication();
@@ -107,10 +107,15 @@ namespace BlackFox
 
 	private:
 
+		BFApplication(const BFApplication& app) = delete;
+		BFApplication(BFApplication&& app) = delete;
+		BFApplication& operator=(const BFApplication& app) = delete;
+		BFApplication& operator=(BFApplication&& app) = delete;
+
 		/*! \brief	SDL root */
-		std::unique_ptr<sdl::Root> m_root;
+		sdl::Root& m_root;
 		/*! \brief	SDL window */
-		std::unique_ptr<sdl::Window> m_window;
+		sdl::Window& m_window;
 		/*! \brief	SDL renderer */
 		sdl::Renderer m_renderer;
 		/*! \brief	Is application running ? */

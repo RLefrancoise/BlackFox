@@ -1,3 +1,12 @@
 [submodule "thirdParties/cpp-sdl2"]
 	path = thirdParties/cpp-sdl2
 	url = https://github.com/Edhebi/cpp-sdl2.git
+[submodule "thirdParties/entt"]
+	path = thirdParties/entt
+	url = https://github.com/skypjack/entt.git
+[submodule "thirdParties/imgui_entt_entity_editor"]
+	path = thirdParties/imgui_entt_entity_editor
+	url = https://github.com/Green-Sky/imgui_entt_entity_editor.git
+[submodule "thirdParties/imgui"]
+	path = thirdParties/imgui
+	url = https://github.com/ocornut/imgui.git

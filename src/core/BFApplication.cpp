@@ -2,11 +2,12 @@
 
 namespace BlackFox
 {
-	BFApplication::BFApplication(): m_running(false)
+	BFApplication::BFApplication(sdl::Root& root,sdl::Window& window): 
+		m_root(root), 
+		m_window(window), 
+		m_running(false)
 	{
-		m_root = std::make_unique<sdl::Root>(SDL_INIT_EVENTS);
-		m_window = std::make_unique<sdl::Window>("Black Fox", sdl::Vec2i(800, 600));
-		m_renderer = m_window->make_renderer();
+		m_renderer = m_window.make_renderer();
 	}
 
 	BFApplication::~BFApplication()
@@ -45,6 +46,7 @@ namespace BlackFox
 	{
 		return true;
 	}
+
 	void BFApplication::onEvent(const sdl::Event & ev)
 	{
 		switch(ev.type)
