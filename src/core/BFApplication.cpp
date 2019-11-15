@@ -1,4 +1,5 @@
 #include "BFApplication.h"
+#include "BFQuitApplicationCommand.h"
 
 #include <iostream>
 
@@ -87,7 +88,7 @@ namespace BlackFox
 		switch(ev.type)
 		{
 			case SDL_QUIT:
-				m_running = false;
+				commandManager()->createCommand<BFQuitApplicationCommand>()->execute();
 				break;
 		}
 	}

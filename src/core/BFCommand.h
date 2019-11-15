@@ -1,8 +1,6 @@
 #ifndef BLACKFOX_COMMAND_H
 #define BLACKFOX_COMMAND_H
 
-#include <rttr/rttr_enable.h>
-
 namespace BlackFox
 {
 	/*!
@@ -15,8 +13,6 @@ namespace BlackFox
 	 */
 	class BFCommand
 	{
-		RTTR_ENABLE()
-
 	public:
 		virtual ~BFCommand(void) {}
 
