@@ -15,7 +15,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	12/11/2019
 	 */
-	class BFApplication : BFSingleton<BFApplication>
+	class BFApplication : private BFSingleton<BFApplication>
 	{
 		friend class BFSingleton<BFApplication>;
 

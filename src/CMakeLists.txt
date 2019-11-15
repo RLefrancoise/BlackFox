@@ -21,6 +21,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui)
 # ENTT ImGui Entity Editor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)
 
+# TermColor
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
+
 # Falcon
 find_package(Falcon REQUIRED)
 link_directories(${Falcon_LIBRARY_DIRS})

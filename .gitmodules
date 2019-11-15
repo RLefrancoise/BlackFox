@@ -10,3 +10,6 @@
 [submodule "thirdParties/imgui"]
 	path = thirdParties/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "thirdParties/termcolor"]
+	path = thirdParties/termcolor
+	url = https://github.com/ikalnytskyi/termcolor.git

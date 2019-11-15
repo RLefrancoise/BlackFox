@@ -18,8 +18,8 @@ namespace BlackFox
 
 	private:
 		BFNonCopyable(const BFNonCopyable& app) = delete;
-		BFNonCopyable& operator=(const BFNonCopyable& app) = delete;
-		BFNonCopyable& operator=(BFNonCopyable&& app) = delete;
+		BFNonCopyable operator=(const BFNonCopyable& app) = delete;
+		BFNonCopyable operator=(BFNonCopyable&& app) = delete;
 	};
 }
 
