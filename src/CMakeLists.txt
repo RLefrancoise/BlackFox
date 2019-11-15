@@ -26,9 +26,6 @@ find_package(Falcon REQUIRED)
 link_directories(${Falcon_LIBRARY_DIRS})
 include_directories(${Falcon_INCLUDE_DIRS})
 
-# RTTR
-find_package(RTTR CONFIG REQUIRED Core)
-
 # Files
 file(
     GLOB_RECURSE
@@ -50,7 +47,7 @@ add_executable(
 target_link_libraries(
     BlackFox
 	LINK_PUBLIC
-    ${Falcon_LIBRARIES} ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} RTTR::Core_Lib
+	${Falcon_LIBRARIES} ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} fmt::fmt-header-only
 )
 
 # target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../thirdParties/imgui)

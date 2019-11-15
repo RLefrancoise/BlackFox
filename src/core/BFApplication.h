@@ -151,7 +151,7 @@ namespace BlackFox
 		sdl::Renderer m_renderer;
 		/*! \brief	Is application running ? */
 		bool m_running;
-
+		/*! \brief	Command Manager */
 		std::unique_ptr<BFCommandManager> m_commandManager;
 	};
 }

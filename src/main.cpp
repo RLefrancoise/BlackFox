@@ -1,4 +1,3 @@
-#include <iostream>
 #include "core/BFApplication.h"
 
 using namespace BlackFox;
