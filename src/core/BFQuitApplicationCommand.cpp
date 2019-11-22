@@ -3,13 +3,18 @@
 
 namespace BlackFox
 {
+	BFQuitApplicationCommand::BFQuitApplicationCommand(std::shared_ptr<BFApplication> application) : m_application(application)
+	{
+	}
+
 	void BFQuitApplicationCommand::execute(void)
 	{
-		BFSingleton<BFApplication>::get().quit();
+		BF_PRINT("Quit application")
+		m_application->quit();
 	}
 
 	BFQuitApplicationCommand* BFQuitApplicationCommand::clone(void) const
 	{
-		return new BFQuitApplicationCommand();
+		return new BFQuitApplicationCommand(m_application);
 	}
 }

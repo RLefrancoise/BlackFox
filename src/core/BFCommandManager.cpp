@@ -1,18 +1,16 @@
 #include "BFCommandManager.h"
-#include "BFCommand.h"
 
-#include <iostream>
+using namespace cinject;
 
 namespace BlackFox
 {
-	BFCommandManager::BFCommandManager()
+	BFCommandManager::BFCommandManager(std::shared_ptr<Container> container) : m_container(container)
 	{
 	}
 
 	BFCommandManager::BFCommandManager(BFCommandManager&& manager) noexcept
 	{
 		clearAllCommands();
-		m_commands.clear();
 
 		for each (auto command in manager.m_commands)
 		{
@@ -27,11 +25,6 @@ namespace BlackFox
 
 	void BFCommandManager::clearAllCommands()
 	{
-		CommandsMapIterator it;
-		for (it = m_commands.begin(); it != m_commands.end(); ++it)
-		{
-			delete it->second;
-			it->second = nullptr;
-		}
+		m_commands.clear();
 	}
 }

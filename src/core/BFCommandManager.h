@@ -1,10 +1,10 @@
 #ifndef BLACKFOX_COMMANDMANAGER_H
 #define BLACKFOX_COMMANDMANAGER_H
 
+#include <cinject/cinject.h>
 #include <typeinfo>
 #include <typeindex>
 #include <unordered_map>
-#include <memory>
 #include <fmt/format.h>
 
 #include "BFNonCopyable.h"
@@ -33,7 +33,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 */
-		BFCommandManager();
+		CINJECT(BFCommandManager(std::shared_ptr<cinject::Container> container));
 
 		/*!
 		 * \fn	BFCommandManager::BFCommandManager(BFCommandManager&& manager) noexcept;
@@ -79,11 +79,10 @@ namespace BlackFox
 				registerCommand<C>();
 			}
 
-			BFCommand* command = getRegisteredCommand<C>();
+			auto command = getRegisteredCommand<C>();
 			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).raw_name())
 
-			std::shared_ptr<C> commandPtr(static_cast<C*>(command->clone()));
-			return commandPtr;
+			return std::shared_ptr<C>(static_cast<C*>(command->clone()));
 		}
 
 	private:
@@ -93,14 +92,16 @@ namespace BlackFox
 		 *
 		 * \brief	Defines an alias representing the commands map
 		 */
-		typedef std::unordered_map<std::type_index, BFCommand*> CommandsMap;
+		typedef std::unordered_map<std::type_index, std::shared_ptr<BFCommand> > CommandsMap;
 
 		/*!
 		 * \typedef	std::unordered_map<std::type_index, BFCommand*>::iterator CommandsMapIterator
 		 *
 		 * \brief	Defines an alias representing the commands map iterator
 		 */
-		typedef std::unordered_map<std::type_index, BFCommand*>::iterator CommandsMapIterator;
+		typedef std::unordered_map<std::type_index, std::shared_ptr<BFCommand> >::iterator CommandsMapIterator;
+
+		std::shared_ptr<cinject::Container> m_container;
 
 		/*!
 		 * \fn	void BFCommandManager::clearAllCommands();
@@ -127,8 +128,7 @@ namespace BlackFox
 		template <typename C>
 		bool isCommandRegistered()
 		{
-			auto it = m_commands.cbegin();
-			for (; it != m_commands.cend(); ++it)
+			for (auto it = m_commands.cbegin(); it != m_commands.cend(); ++it)
 			{
 				if (it->first.hash_code() == typeid(C).hash_code()) return true;
 			}
@@ -153,8 +153,7 @@ namespace BlackFox
 		template <typename C>
 		bool isCommandRegistered(CommandsMapIterator* pos)
 		{
-			auto it = m_commands.cbegin();
-			for (; it != m_commands.cend(); ++it)
+			for (auto it = m_commands.begin(); it != m_commands.end(); ++it)
 			{
 				if (it->first.hash_code() == typeid(C).hash_code())
 				{
@@ -183,7 +182,7 @@ namespace BlackFox
 		BFCommand* getRegisteredCommand()
 		{
 			if (!isCommandRegistered<C>()) return nullptr;
-			return m_commands[typeid(C)];
+			return m_commands[typeid(C)].get();
 		}
 
 		/*!
@@ -206,7 +205,7 @@ namespace BlackFox
 				return;
 			}
 
-			m_commands[typeid(C)] = static_cast<BFCommand*>(new C());
+			m_commands[typeid(C)] = m_container->get<C>();
 			BF_PRINT("{} registered", typeid(C).raw_name())
 		}
 
@@ -232,7 +231,6 @@ namespace BlackFox
 			}
 
 			//Delete command
-			if (pos->second != nullptr) delete pos->second;
 			m_commands.erase(pos);
 
 			BF_PRINT("{} unregistered", typeid(C).raw_name())

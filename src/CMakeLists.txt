@@ -9,6 +9,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/example
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
+# CInject
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cinject/include)
+
 # CPP-SDL2
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/sources)
 

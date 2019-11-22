@@ -9,7 +9,7 @@
 
 #ifdef _DEBUG
 //Print
-#	define BF_PRINT(x, ...)		fmt::print(BF_DEBUG_HEADER + (x), __VA_ARGS__);
+#	define BF_PRINT(x, ...)		std::cout << fmt::format(BF_DEBUG_HEADER + (x), __VA_ARGS__) << std::endl;
 //Warning
 #	define BF_WARNING(x, ...)	std::cout << termcolor::yellow << fmt::format(BF_DEBUG_HEADER + (x), __VA_ARGS__) << termcolor::reset << std::endl;
 //Error
@@ -22,7 +22,6 @@
 #endif
 
 //Exception
-#define BF_EXCEPTION(x, ...)	BF_ERROR(x, __VA_ARGS__) \
-								throw std::runtime_error(BF_DEBUG_HEADER + fmt::format((x), __VA_ARGS__));
+#define BF_EXCEPTION(x, ...)	throw std::runtime_error(BF_DEBUG_HEADER + fmt::format((x), __VA_ARGS__));
 
 #endif

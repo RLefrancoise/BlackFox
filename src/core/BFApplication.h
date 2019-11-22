@@ -1,8 +1,9 @@
 #ifndef BLACKFOX_APPLICATION_H
 #define BLACKFOX_APPLICATION_H
 
+#include <cinject/cinject.h>
+#include <memory>
 #include <cpp-sdl2/sdl.hpp>
-#include "BFSingleton.h"
 #include "BFCommandManager.h"
 
 namespace BlackFox
@@ -15,11 +16,20 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	12/11/2019
 	 */
-	class BFApplication : private BFSingleton<BFApplication>
+	class BFApplication : private BFNonCopyable
 	{
-		friend class BFSingleton<BFApplication>;
-
 	public:
+		CINJECT(BFApplication(std::shared_ptr<cinject::Container> container, std::shared_ptr<BFCommandManager> commandManager));
+
+		/*!
+		 * \fn	BFApplication::~BFApplication();
+		 *
+		 * \brief	Destructor
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	12/11/2019
+		 */
+		~BFApplication() noexcept;
 
 		/*!
 		 * \fn	BFApplication::BFApplication(BFApplication&& app);
@@ -55,39 +65,7 @@ namespace BlackFox
 		 */
 		void quit();
 
-		/*!
-		 * \fn	BFCommandManager* BFApplication::commandManager() const;
-		 *
-		 * \brief	Get the command manager
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	13/11/2019
-		 *
-		 * \returns	The BFCommandManager used by the application.
-		 */
-		BFCommandManager* commandManager() const;
-
 	private:
-
-		/*!
-		 * \fn	BFApplication::BFApplication();
-		 *
-		 * \brief	Default constructor
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	13/11/2019
-		 */
-		BFApplication();
-
-		/*!
-		 * \fn	BFApplication::~BFApplication();
-		 *
-		 * \brief	Destructor
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 */
-		~BFApplication() noexcept;
 
 		/*!
 		 * \fn	bool BFApplication::init();
@@ -151,8 +129,11 @@ namespace BlackFox
 		sdl::Renderer m_renderer;
 		/*! \brief	Is application running ? */
 		bool m_running;
+
+		std::shared_ptr<cinject::Container> m_container;
+
 		/*! \brief	Command Manager */
-		std::unique_ptr<BFCommandManager> m_commandManager;
+		std::shared_ptr<BFCommandManager> m_commandManager;
 	};
 }
 

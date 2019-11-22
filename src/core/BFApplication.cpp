@@ -1,13 +1,16 @@
 #include "BFApplication.h"
 #include "BFQuitApplicationCommand.h"
-
 #include <iostream>
+
+using namespace cinject;
 
 namespace BlackFox
 {
-	BFApplication::BFApplication(): m_running(false)
+	BFApplication::BFApplication(std::shared_ptr<Container> container, std::shared_ptr<BFCommandManager> commandManager) 
+	: m_running(false),
+	m_container(container),
+	m_commandManager(commandManager)
 	{
-		m_commandManager = std::make_unique<BFCommandManager>();
 	}
 
 	BFApplication::~BFApplication()
@@ -19,7 +22,8 @@ namespace BlackFox
 		m_window(std::move(app.m_window)),
 		m_renderer(std::move(app.m_renderer)),
 		m_running(app.m_running),
-		m_commandManager(std::move(app.m_commandManager))
+		m_container(app.m_container),
+		m_commandManager(app.m_commandManager)
 	{
 	}
 
@@ -56,11 +60,6 @@ namespace BlackFox
 		m_running = false;
 	}
 
-	BFCommandManager* BFApplication::commandManager() const
-	{
-		return m_commandManager.get();
-	}
-
 	bool BFApplication::init()
 	{
 		try 
@@ -88,7 +87,7 @@ namespace BlackFox
 		switch(ev.type)
 		{
 			case SDL_QUIT:
-				commandManager()->createCommand<BFQuitApplicationCommand>()->execute();
+				m_commandManager->createCommand<BFQuitApplicationCommand>()->execute();
 				break;
 		}
 	}
