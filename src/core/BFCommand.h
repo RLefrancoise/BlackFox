@@ -14,6 +14,14 @@ namespace BlackFox
 	class BFCommand
 	{
 	public:
+
+		/*!
+		 * \typedef	std::shared_ptr<BFCommand> Ptr
+		 *
+		 * \brief	Alias for BlackFox Command pointer
+		 */
+		typedef std::shared_ptr<BFCommand> Ptr;
+
 		virtual ~BFCommand(void) noexcept = default;
 
 		/*!

@@ -27,6 +27,13 @@ namespace BlackFox
 	public:
 
 		/*!
+		 * \typedef	std::shared_ptr<BFCommandManager> Ptr
+		 *
+		 * \brief	Alias for BlackFox command manager Ptr
+		 */
+		typedef std::shared_ptr<BFCommandManager> Ptr;
+
+		/*!
 		 * \fn	BFCommandManager::BFCommandManager();
 		 *
 		 * \brief	Default constructor
@@ -93,14 +100,14 @@ namespace BlackFox
 		 *
 		 * \brief	Defines an alias representing the commands map
 		 */
-		typedef std::unordered_map<std::type_index, std::shared_ptr<BFCommand> > CommandsMap;
+		typedef std::unordered_map<std::type_index, BFCommand::Ptr> CommandsMap;
 
 		/*!
 		 * \typedef	std::unordered_map<std::type_index, BFCommand*>::iterator CommandsMapIterator
 		 *
 		 * \brief	Defines an alias representing the commands map iterator
 		 */
-		typedef std::unordered_map<std::type_index, std::shared_ptr<BFCommand> >::iterator CommandsMapIterator;
+		typedef std::unordered_map<std::type_index, BFCommand::Ptr>::iterator CommandsMapIterator;
 
 		/*!
 		 * \fn	void BFCommandManager::clearAllCommands();

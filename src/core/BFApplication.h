@@ -20,7 +20,26 @@ namespace BlackFox
 	class BFApplication : private BFNonCopyable
 	{
 	public:
-		CINJECT(BFApplication(DiContainer container, std::shared_ptr<BFCommandManager> commandManager));
+
+		/*!
+		 * \typedef	std::shared_ptr<BFApplication> Ptr
+		 *
+		 * \brief	Alias for BlackFox application pointer
+		 */
+		typedef std::shared_ptr<BFApplication> Ptr;
+
+		/*!
+		 * \fn	BFApplication(DiContainer container, BFCommandManager::Ptr commandManager);
+		 *
+		 * \brief	Constructor
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	22/11/2019
+		 *
+		 * \param	container		The DI container.
+		 * \param	commandManager	The command manager.
+		 */
+		CINJECT(BFApplication(DiContainer container, BFCommandManager::Ptr commandManager));
 
 		/*!
 		 * \fn	BFApplication::~BFApplication();
@@ -135,7 +154,7 @@ namespace BlackFox
 		DiContainer m_container;
 
 		/*! \brief	Command Manager */
-		std::shared_ptr<BFCommandManager> m_commandManager;
+		BFCommandManager::Ptr m_commandManager;
 	};
 }
 

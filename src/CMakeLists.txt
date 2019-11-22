@@ -27,10 +27,13 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)
 # TermColor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
 
+# ChaiScript
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ChaiScript/include)
+
 # Falcon
-find_package(Falcon REQUIRED)
-link_directories(${Falcon_LIBRARY_DIRS})
-include_directories(${Falcon_INCLUDE_DIRS})
+# find_package(Falcon REQUIRED)
+# link_directories(${Falcon_LIBRARY_DIRS})
+# include_directories(${Falcon_INCLUDE_DIRS})
 
 # Files
 file(
@@ -53,7 +56,7 @@ add_executable(
 target_link_libraries(
     BlackFox
 	LINK_PUBLIC
-	${Falcon_LIBRARIES} ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} fmt::fmt-header-only
+	${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} fmt::fmt-header-only # ${Falcon_LIBRARIES}
 )
 
 # target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../thirdParties/imgui)

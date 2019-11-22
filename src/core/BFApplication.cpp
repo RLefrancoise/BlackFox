@@ -6,7 +6,7 @@ using namespace cinject;
 
 namespace BlackFox
 {
-	BFApplication::BFApplication(DiContainer container, std::shared_ptr<BFCommandManager> commandManager) :
+	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager) :
 		m_running(false),
 		m_container(container),
 		m_commandManager(commandManager)

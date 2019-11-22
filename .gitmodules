@@ -16,3 +16,6 @@
 [submodule "thirdParties/cinject"]
 	path = thirdParties/cinject
 	url = https://github.com/mjirous/cinject
+[submodule "thirdParties/ChaiScript"]
+	path = thirdParties/ChaiScript
+	url = https://github.com/ChaiScript/ChaiScript.git
