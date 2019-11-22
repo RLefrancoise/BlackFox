@@ -5,6 +5,7 @@
 #include <memory>
 #include <cpp-sdl2/sdl.hpp>
 #include "BFCommandManager.h"
+#include "../BFTypeDefs.h"
 
 namespace BlackFox
 {
@@ -19,7 +20,7 @@ namespace BlackFox
 	class BFApplication : private BFNonCopyable
 	{
 	public:
-		CINJECT(BFApplication(std::shared_ptr<cinject::Container> container, std::shared_ptr<BFCommandManager> commandManager));
+		CINJECT(BFApplication(DiContainer container, std::shared_ptr<BFCommandManager> commandManager));
 
 		/*!
 		 * \fn	BFApplication::~BFApplication();
@@ -29,7 +30,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		~BFApplication() noexcept;
+		~BFApplication() noexcept = default;
 
 		/*!
 		 * \fn	BFApplication::BFApplication(BFApplication&& app);
@@ -130,7 +131,8 @@ namespace BlackFox
 		/*! \brief	Is application running ? */
 		bool m_running;
 
-		std::shared_ptr<cinject::Container> m_container;
+		/*! \brief	DI container */
+		DiContainer m_container;
 
 		/*! \brief	Command Manager */
 		std::shared_ptr<BFCommandManager> m_commandManager;

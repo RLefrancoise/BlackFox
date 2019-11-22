@@ -10,6 +10,7 @@
 #include "BFNonCopyable.h"
 #include "BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "BFDebug.h"
+#include "../BFTypeDefs.h"
 
 namespace BlackFox
 {
@@ -33,7 +34,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 */
-		CINJECT(BFCommandManager(std::shared_ptr<cinject::Container> container));
+		CINJECT(BFCommandManager(DiContainer container));
 
 		/*!
 		 * \fn	BFCommandManager::BFCommandManager(BFCommandManager&& manager) noexcept;
@@ -101,8 +102,6 @@ namespace BlackFox
 		 */
 		typedef std::unordered_map<std::type_index, std::shared_ptr<BFCommand> >::iterator CommandsMapIterator;
 
-		std::shared_ptr<cinject::Container> m_container;
-
 		/*!
 		 * \fn	void BFCommandManager::clearAllCommands();
 		 *
@@ -126,7 +125,7 @@ namespace BlackFox
 		 * \returns	True if the command is registered, false if not.
 		 */
 		template <typename C>
-		bool isCommandRegistered()
+		bool isCommandRegistered() const
 		{
 			for (auto it = m_commands.cbegin(); it != m_commands.cend(); ++it)
 			{
@@ -238,6 +237,9 @@ namespace BlackFox
 
 		/*! \brief	The registered commands */
 		CommandsMap m_commands;
+
+		/*! \brief	DI container */
+		DiContainer m_container;
 	};
 }
 

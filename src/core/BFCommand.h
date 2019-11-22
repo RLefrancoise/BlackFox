@@ -14,7 +14,7 @@ namespace BlackFox
 	class BFCommand
 	{
 	public:
-		virtual ~BFCommand(void) {}
+		virtual ~BFCommand(void) noexcept = default;
 
 		/*!
 		 * \fn	virtual void BFCommand::execute(void) = 0;

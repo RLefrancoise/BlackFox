@@ -1,21 +1,30 @@
 #include "core/BFApplication.h"
 #include <cinject/cinject.h>
-#include "core/BFQuitApplicationCommand.h"
+#include "installers/BFMainContext.h"
+#include "installers/BFCoreInstaller.h"
 
 using namespace BlackFox;
 using namespace cinject;
+
+DiContext createMainContext(DiContainer container)
+{
+	DiContext mainContext = std::make_shared<BFMainContext>(container);
+	mainContext->addInstaller(std::make_shared<BFCoreInstaller>(container));
+
+	return mainContext;
+}
 
 int main(int argc, char** argv)
 {
 	try
 	{
+		//Create DI Container
 		auto container = std::make_shared<Container>();
-
 		container->bind<Container>().toConstant(container);
-		container->bind<BFCommandManager>().toSelf().inSingletonScope();
-		container->bind<BFApplication>().toSelf().inSingletonScope();
-
-		container->bind<BFQuitApplicationCommand>().toSelf();
+		
+		//Create main context
+		auto mainContext = createMainContext(container);
+		mainContext->run();
 
 		//Execute the app
 		auto app = container->get<BFApplication>();
