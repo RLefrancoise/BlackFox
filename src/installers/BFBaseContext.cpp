@@ -2,12 +2,20 @@
 
 namespace BlackFox
 {
-	BFBaseContext::BFBaseContext(DiContainer container) : m_container(container)
+	BFBaseContext::BFBaseContext(DiContainer container) :
+		m_init(false),
+		m_container(container)
 	{
 	}
 
 	void BFBaseContext::run()
 	{
+		if(!m_init)
+		{
+			init();
+			m_init = true;
+		}
+
 		for (auto& installer : m_installers)
 		{
 			installer->installBindings();
