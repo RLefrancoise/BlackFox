@@ -6,6 +6,7 @@
 #include <cpp-sdl2/sdl.hpp>
 #include "BFCommandManager.h"
 #include "../BFTypeDefs.h"
+#include "BFLevel.h"
 
 namespace BlackFox
 {
@@ -155,6 +156,9 @@ namespace BlackFox
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;
+
+		/*! \brief	The current level */
+		BFLevel::Ptr m_level;
 	};
 }
 

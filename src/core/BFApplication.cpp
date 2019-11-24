@@ -11,6 +11,7 @@ namespace BlackFox
 		m_container(container),
 		m_commandManager(commandManager)
 	{
+		m_level = BFLevel::create(m_container);
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept : 
@@ -19,7 +20,8 @@ namespace BlackFox
 		m_renderer(std::move(app.m_renderer)),
 		m_running(app.m_running),
 		m_container(app.m_container),
-		m_commandManager(app.m_commandManager)
+		m_commandManager(app.m_commandManager),
+		m_level(app.m_level)
 	{
 	}
 

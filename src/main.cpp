@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 		container->bind<Container>().toConstant(container);
 		
 		//Create main context
-		auto mainContext = makeContext<BFMainContext>(container);
+		auto mainContext = makeContext<BFMainContext>(container, true);
 
 		//Execute the app
 		auto app = container->get<BFApplication>();
