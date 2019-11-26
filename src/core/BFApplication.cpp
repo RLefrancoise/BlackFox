@@ -9,6 +9,7 @@ namespace BlackFox
 	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager) :
 		m_running(false),
 		m_lastFrameTime(0),
+		m_deltaTime(0.0f),
 		m_container(container),
 		m_commandManager(commandManager)
 	{
@@ -23,6 +24,7 @@ namespace BlackFox
 		m_renderer(std::move(app.m_renderer)),
 		m_running(app.m_running),
 		m_lastFrameTime(app.m_lastFrameTime),
+		m_deltaTime(app.m_deltaTime),
 		m_container(std::move(app.m_container)),
 		m_commandManager(std::move(app.m_commandManager)),
 		m_worlds(std::move(app.m_worlds))
@@ -31,7 +33,9 @@ namespace BlackFox
 
 	int BFApplication::execute()
 	{
+		m_polledEvents.clear();
 		auto ev = sdl::Event{};
+		Uint32 currentTime = 0;
 
 		//init
 		if (!init()) return EXIT_FAILURE;
@@ -40,10 +44,22 @@ namespace BlackFox
 		m_running = true;
 		while(m_running)
 		{
+			//Get frame delta
+			currentTime = SDL_GetTicks();
+			m_deltaTime = (currentTime - m_lastFrameTime) / 1000.0f;
+			m_lastFrameTime = currentTime;
+
 			//events
 			while(ev.poll())
 			{
-				onEvent(ev);
+				m_polledEvents.emplace_back(ev);
+				
+				switch (ev.type)
+				{
+				case SDL_QUIT:
+					m_commandManager->createCommand<BFQuitApplicationCommand>()->execute();
+					break;
+				}
 			}
 
 			//loop
@@ -115,32 +131,33 @@ namespace BlackFox
 		return true;
 	}
 
-	void BFApplication::onEvent(const sdl::Event & ev)
+	void BFApplication::loop() const
 	{
-		//Dispatch the event to the current world
-		m_currentWorld->onEvent(ev);
-
-		switch(ev.type)
+		//Dispatch events to current world
+		for each(auto ev in m_polledEvents)
 		{
-			case SDL_QUIT:
-				m_commandManager->createCommand<BFQuitApplicationCommand>()->execute();
-				break;
+			m_currentWorld->onEvent(ev, ComponentSystemGroups::GameLoop);
 		}
-	}
-
-	void BFApplication::loop()
-	{
-		const auto currentTime(SDL_GetTicks());
-		const auto delta((currentTime - m_lastFrameTime) / 1000.0f);
-		m_lastFrameTime = currentTime;
 
 		//Update current world
-		m_currentWorld->update(delta);
+		m_currentWorld->update(m_deltaTime, ComponentSystemGroups::GameLoop);
 	}
 
-	void BFApplication::render()
+	void BFApplication::render() const
 	{
+		//Clear window
 		m_renderer.clear(sdl::Color::Black());
+
+		//Dispatch events to current world
+		for each(auto ev in m_polledEvents)
+		{
+			m_currentWorld->onEvent(ev, ComponentSystemGroups::Render);
+		}
+
+		//Update current world
+		m_currentWorld->update(m_deltaTime, ComponentSystemGroups::Render);
+
+		//Draw window content
 		m_renderer.present();
 	}
 

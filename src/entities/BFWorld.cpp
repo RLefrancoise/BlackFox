@@ -1,5 +1,6 @@
 #include "BFWorld.h"
 #include "BFApplication.h"
+#include <algorithm>
 
 namespace BlackFox
 {
@@ -12,19 +13,50 @@ namespace BlackFox
 		return m_entityManager;
 	}
 
-	void BFWorld::onEvent(const sdl::Event & ev) const
+	void BFWorld::onEvent(const sdl::Event & ev, ComponentSystemGroups group) const
 	{
-		for each(auto system in m_systems)
+		const auto systemsInGroup = getSystemsByGroup(group);
+
+		for each(auto system in systemsInGroup)
 		{
-			system.second->onEvent(ev);
+			system->onEvent(ev);
 		}
 	}
 
-	void BFWorld::update(float dt) const
+	void BFWorld::update(float dt, ComponentSystemGroups group) const
 	{
-		for each(auto system in m_systems)
+		const auto systemsInGroup = getSystemsByGroup(group);
+
+		for each(auto system in systemsInGroup)
 		{
-			system.second->update(dt);
+			system->update(dt);
 		}
+	}
+	std::vector<BFComponentSystem::Ptr> BFWorld::getSystemsByGroup(ComponentSystemGroups group) const
+	{
+		std::vector<BFComponentSystem::Ptr> systems;
+
+		//If group doesn't exist in groups, return empty list
+		if (systemGroups.find(group) == systemGroups.end()) return systems;
+
+		const auto groupSystemTypes = systemGroups[group];
+
+		for each(auto s in m_systems)
+		{
+			auto systemType = s.first;
+			//If system is not in the group, ignore it
+			if (std::find_if(
+				groupSystemTypes.cbegin(),
+				groupSystemTypes.cend(),
+				[&](std::type_index t) -> bool { return t.hash_code() == systemType.hash_code(); }
+			) == groupSystemTypes.cend())
+			{
+				continue;
+			}
+
+			systems.push_back(s.second);
+		}
+
+		return systems;
 	}
 }

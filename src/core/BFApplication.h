@@ -160,18 +160,6 @@ namespace BlackFox
 		bool init();
 
 		/*!
-		 * \fn	void BFApplication::onEvent(const sdl::Event& ev);
-		 *
-		 * \brief	Called when an event occured 
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 *
-		 * \param	ev	The event.
-		 */
-		void onEvent(const sdl::Event& ev);
-
-		/*!
 		 * \fn	void BFApplication::loop();
 		 *
 		 * \brief	Application loop
@@ -179,7 +167,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		void loop();
+		void loop() const;
 
 		/*!
 		 * \fn	void BFApplication::render();
@@ -189,7 +177,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		void render();
+		void render() const;
 
 		/*!
 		 * \fn	void BFApplication::cleanup();
@@ -212,6 +200,11 @@ namespace BlackFox
 
 		/*! \brief	The last frame time */
 		Uint32 m_lastFrameTime;
+		/*! \brief	The delta time */
+		float m_deltaTime;
+
+		/*! \brief	The polled events */
+		std::vector<sdl::Event> m_polledEvents;
 
 		/*! \brief	DI container */
 		DiContainer m_container;

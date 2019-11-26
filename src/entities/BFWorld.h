@@ -8,6 +8,7 @@
 #include "BFTypeDefs.h"
 #include "BFNonCopyable.h"
 #include "BFComponentSystem.h"
+#include "BFComponentSystemFlags.h"
 
 namespace BlackFox
 {
@@ -62,9 +63,10 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	26/11/2019
 		 *
-		 * \param	ev	The event.
+		 * \param	ev		The event.
+		 * \param	group	The system group.
 		 */
-		void onEvent(const sdl::Event& ev) const;
+		void onEvent(const sdl::Event& ev, ComponentSystemGroups group) const;
 
 		/*!
 		 * \fn	void BFWorld::update(float dt) const;
@@ -75,8 +77,9 @@ namespace BlackFox
 		 * \date	26/11/2019
 		 *
 		 * \param	dt	The delta time
+		 * \param	group	The system group.
 		 */
-		void update(float dt) const;
+		void update(float dt, ComponentSystemGroups group) const;
 
 		/*!
 		 * \fn	template <typename S> std::shared_ptr<S> BFWorld::getSystem()
@@ -103,6 +106,8 @@ namespace BlackFox
 			
 			return m_systems[systemType];
 		}
+
+		std::vector<BFComponentSystem::Ptr> getSystemsByGroup(ComponentSystemGroups group) const;
 
 	private:
 		/*! \brief	The level DI container */
