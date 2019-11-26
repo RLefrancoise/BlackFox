@@ -1,5 +1,5 @@
 #include "BFCoreInstaller.h"
-#include "../core/BFQuitApplicationCommand.h"
+#include "BFQuitApplicationCommand.h"
 
 namespace BlackFox
 {

@@ -8,10 +8,13 @@ namespace BlackFox
 {
 	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager) :
 		m_running(false),
+		m_lastFrameTime(0),
 		m_container(container),
 		m_commandManager(commandManager)
 	{
-		m_level = BFLevel::create(m_container);
+		//Create default world
+		const auto world = m_container->get<BFWorld>();
+		m_worlds["default"] = world;
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept : 
@@ -19,9 +22,10 @@ namespace BlackFox
 		m_window(std::move(app.m_window)),
 		m_renderer(std::move(app.m_renderer)),
 		m_running(app.m_running),
-		m_container(app.m_container),
-		m_commandManager(app.m_commandManager),
-		m_level(app.m_level)
+		m_lastFrameTime(app.m_lastFrameTime),
+		m_container(std::move(app.m_container)),
+		m_commandManager(std::move(app.m_commandManager)),
+		m_worlds(std::move(app.m_worlds))
 	{
 	}
 
@@ -58,6 +62,37 @@ namespace BlackFox
 		m_running = false;
 	}
 
+	bool BFApplication::hasWorld(const std::string & worldId)
+	{
+		if (m_worlds.find(worldId) == m_worlds.end())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	BFWorld::Ptr BFApplication::world(const std::string & worldId)
+	{
+		return m_worlds[worldId];
+	}
+
+	BFWorld::Ptr BFApplication::currentWorld() const
+	{
+		return m_currentWorld;
+	}
+
+	void BFApplication::currentWorld(const std::string& worldId)
+	{
+		if(!hasWorld(worldId))
+		{
+			BF_WARNING("Cannot set current world to {}. Identifier is not found", worldId)
+			return;
+		}
+
+		m_currentWorld = m_worlds[worldId];
+	}
+
 	bool BFApplication::init()
 	{
 		try 
@@ -82,6 +117,9 @@ namespace BlackFox
 
 	void BFApplication::onEvent(const sdl::Event & ev)
 	{
+		//Dispatch the event to the current world
+		m_currentWorld->onEvent(ev);
+
 		switch(ev.type)
 		{
 			case SDL_QUIT:
@@ -92,6 +130,12 @@ namespace BlackFox
 
 	void BFApplication::loop()
 	{
+		const auto currentTime(SDL_GetTicks());
+		const auto delta((currentTime - m_lastFrameTime) / 1000.0f);
+		m_lastFrameTime = currentTime;
+
+		//Update current world
+		m_currentWorld->update(delta);
 	}
 
 	void BFApplication::render()

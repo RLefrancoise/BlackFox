@@ -1,18 +1,18 @@
-#include "BFLevel.h"
-#include "../installers/BFLevelContext.h"
+#include "BFScene.h"
+#include "BFSceneContext.h"
 
 namespace BlackFox
 {
-	BFLevel::BFLevel(DiContainer container) : m_container(container)
+	BFScene::BFScene(DiContainer container) : m_container(container)
 	{
 	}
 
-	EntityManager BFLevel::entityManager() const
+	EntityManager BFScene::entityManager() const
 	{
 		return m_entityManager;
 	}
 
-	BFLevel::Ptr BFLevel::create(DiContainer parentContainer)
+	BFScene::Ptr BFScene::create(DiContainer parentContainer)
 	{
 		//Make a copy of the parent container to have the same bindings + bindings only for the level
 		const auto& c = *parentContainer.get();
@@ -20,10 +20,10 @@ namespace BlackFox
 		levelContainer->bind<cinject::Container>().toConstant(levelContainer);
 
 		//Level
-		auto level = std::make_shared<BFLevel>(levelContainer);
+		auto level = std::make_shared<BFScene>(levelContainer);
 
 		//Level context
-		auto levelContext = makeContext<BFLevelContext, BFLevel::Ptr>(levelContainer, level);
+		auto levelContext = makeContext<BFSceneContext, BFScene::Ptr>(levelContainer, level);
 
 		return level;
 	}

@@ -10,7 +10,7 @@
 #include "BFNonCopyable.h"
 #include "BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "BFDebug.h"
-#include "../BFTypeDefs.h"
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {

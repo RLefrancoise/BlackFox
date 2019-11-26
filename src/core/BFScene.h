@@ -1,32 +1,32 @@
-#ifndef BLACKFOX_LEVEL_H
-#define BLACKFOX_LEVEL_H
+#ifndef BLACKFOX_SCENE_H
+#define BLACKFOX_SCENE_H
 
 #include <memory>
-#include "../BFTypeDefs.h"
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {
 	/*!
-	 * \class	BFLevel
+	 * \class	BFScene
 	 *
-	 * \brief	BlackFox level.
+	 * \brief	BlackFox scene.
 	 *
 	 * \author	Renaud Lefrançoise
 	 * \date	24/11/2019
 	 */
-	class BFLevel
+	class BFScene
 	{
 	public:
 
 		/*!
-		 * \typedef	std::shared_ptr<BFLevel> Ptr
+		 * \typedef	std::shared_ptr<BFWorld> Ptr
 		 *
-		 * \brief	Alias for BlackFox level pointer
+		 * \brief	Alias for BlackFox world pointer
 		 */
-		typedef std::shared_ptr<BFLevel> Ptr;
+		typedef std::shared_ptr<BFScene> Ptr;
 
 		/*!
-		 * \fn	explicit BFLevel::BFLevel(DiContainer container);
+		 * \fn	explicit BFScene::BFScene(DiContainer container);
 		 *
 		 * \brief	Constructor
 		 *
@@ -35,10 +35,10 @@ namespace BlackFox
 		 *
 		 * \param	container	The DI container.
 		 */
-		explicit BFLevel(DiContainer container);
+		explicit BFScene(DiContainer container);
 
 		/*!
-		 * \fn	EntityManager BFLevel::entityManager() const;
+		 * \fn	EntityManager BFWorld::entityManager() const;
 		 *
 		 * \brief	Get the Entity manager
 		 *
@@ -50,7 +50,7 @@ namespace BlackFox
 		EntityManager entityManager() const;
 
 		/*!
-		 * \fn	static BFLevel::Ptr BFLevel::create(DiContainer parentContainer);
+		 * \fn	static BFWorld::Ptr BFWorld::create(DiContainer parentContainer);
 		 *
 		 * \brief	Creates a new level
 		 *
@@ -61,7 +61,7 @@ namespace BlackFox
 		 *
 		 * \returns	The created level.
 		 */
-		static BFLevel::Ptr create(DiContainer parentContainer);
+		static BFScene::Ptr create(DiContainer parentContainer);
 
 	private:
 		/*! \brief	The level DI container */

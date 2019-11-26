@@ -2,24 +2,24 @@
 #define BLACKFOX_LEVELINSTALLER_H
 
 #include "BFBaseInstaller.h"
-#include "../core/BFLevel.h"
+#include "BFScene.h"
 
 namespace BlackFox
 {
 	/*!
-	 * \class	BFLevelInstaller
+	 * \class	BFSceneInstaller
 	 *
 	 * \brief	BlackFox level installer.
 	 *
 	 * \author	Renaud Lefrançoise
 	 * \date	24/11/2019
 	 */
-	class BFLevelInstaller: public BFBaseInstaller
+	class BFSceneInstaller: public BFBaseInstaller
 	{
 	public:
 
 		/*!
-		 * \fn	explicit BFLevelInstaller::BFLevelInstaller(DiContainer container);
+		 * \fn	explicit BFSceneInstaller::BFSceneInstaller(DiContainer container);
 		 *
 		 * \brief	Constructor
 		 *
@@ -28,13 +28,13 @@ namespace BlackFox
 		 *
 		 * \param	container	The container.
 		 */
-		explicit BFLevelInstaller(DiContainer container, BFLevel::Ptr level);
+		explicit BFSceneInstaller(DiContainer container, BFScene::Ptr level);
 
 		void installBindings() override;
 
 	private:
-		/*! \brief	The level */
-		BFLevel::Ptr m_level;
+		/*! \brief	The scene */
+		BFScene::Ptr m_scene;
 	};
 }
 

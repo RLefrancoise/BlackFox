@@ -47,11 +47,28 @@ file(
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
+# Scan folders macro
+MACRO(HEADER_DIRECTORIES return_list)
+    FILE(GLOB_RECURSE new_list *.h)
+    SET(dir_list "")
+    FOREACH(file_path ${new_list})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dir_list ${dir_list} ${dir_path})
+    ENDFOREACH()
+    LIST(REMOVE_DUPLICATES dir_list)
+    SET(${return_list} ${dir_list})
+ENDMACRO()
+
+HEADER_DIRECTORIES(SOURCES_FOLDERS)
+
 # Executable
 add_executable(
     BlackFox
     ${SOURCES}
 )
+
+# Add sources folders to target
+target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 target_link_libraries(
     BlackFox

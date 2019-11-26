@@ -2,23 +2,23 @@
 #define BLACKFOX_LEVELCONTEXT_H
 
 #include "BFBaseContext.h"
-#include "../core/BFLevel.h"
+#include "BFScene.h"
 
 namespace BlackFox
 {
 	/*!
-	 * \class	BFLevelContext
+	 * \class	BFSceneContext
 	 *
 	 * \brief	BlackFox level context.
 	 *
 	 * \author	Renaud Lefrançoise
 	 * \date	24/11/2019
 	 */
-	class BFLevelContext : public BFBaseContext
+	class BFSceneContext : public BFBaseContext
 	{
 	public:
 		/*!
-		 * \fn	explicit BFLevelContext::BFLevelContext(DiContainer container);
+		 * \fn	explicit BFSceneContext::BFSceneContext(DiContainer container);
 		 *
 		 * \brief	Constructor
 		 *
@@ -27,12 +27,12 @@ namespace BlackFox
 		 *
 		 * \param	container	The container.
 		 */
-		explicit BFLevelContext(DiContainer container, BFLevel::Ptr level);
+		explicit BFSceneContext(DiContainer container, BFScene::Ptr level);
 
 		void init() override;
 
 	private:
-		BFLevel::Ptr m_level;
+		BFScene::Ptr m_level;
 	};
 }
 

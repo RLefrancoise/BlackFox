@@ -5,8 +5,8 @@
 #include <memory>
 #include <cpp-sdl2/sdl.hpp>
 #include "BFCommandManager.h"
-#include "../BFTypeDefs.h"
-#include "BFLevel.h"
+#include "BFTypeDefs.h"
+#include "BFWorld.h"
 
 namespace BlackFox
 {
@@ -28,6 +28,13 @@ namespace BlackFox
 		 * \brief	Alias for BlackFox application pointer
 		 */
 		typedef std::shared_ptr<BFApplication> Ptr;
+
+		/*!
+		 * \typedef	std::unordered_map<std::string, BFWorld::Ptr> WorldList
+		 *
+		 * \brief	Alias for world list.
+		 */
+		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
 
 		/*!
 		 * \fn	BFApplication(DiContainer container, BFCommandManager::Ptr commandManager);
@@ -85,6 +92,58 @@ namespace BlackFox
 		 * \date	13/11/2019
 		 */
 		void quit();
+
+		/*!
+		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
+		 *
+		 * \brief	Check if world exists
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \param	worldId	Identifier for the world.
+		 *
+		 * \returns	True if world exists, false if not.
+		 */
+		bool hasWorld(const std::string& worldId);
+
+		/*!
+		 * \fn	BFWorld::Ptr BFApplication::world(const std::string& worldId);
+		 *
+		 * \brief	Get a world by its identifier.
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \param	worldId	Identifier for the world.
+		 *
+		 * \returns	A BFWorld::Ptr.
+		 */
+		BFWorld::Ptr world(const std::string& worldId);
+
+		/*!
+		 * \fn	BFWorld::Ptr BFApplication::currentWorld() const;
+		 *
+		 * \brief	Current world
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \returns	A BFWorld::Ptr.
+		 */
+		BFWorld::Ptr currentWorld() const;
+
+		/*!
+		 * \fn	void BFApplication::currentWorld(const std::string& worldId);
+		 *
+		 * \brief	Set the current world
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \param	worldId	Identifier for the world.
+		 */
+		void currentWorld(const std::string& worldId);
 
 	private:
 
@@ -151,14 +210,18 @@ namespace BlackFox
 		/*! \brief	Is application running ? */
 		bool m_running;
 
+		/*! \brief	The last frame time */
+		Uint32 m_lastFrameTime;
+
 		/*! \brief	DI container */
 		DiContainer m_container;
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;
-
-		/*! \brief	The current level */
-		BFLevel::Ptr m_level;
+		/*! \brief	The worlds */
+		WorldList m_worlds;
+		/*! \brief	The current world */
+		BFWorld::Ptr m_currentWorld;
 	};
 }
 

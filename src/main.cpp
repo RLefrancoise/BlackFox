@@ -1,7 +1,7 @@
 #include <cinject/cinject.h>
 
-#include "core/BFApplication.h"
-#include "installers/BFMainContext.h"
+#include "BFApplication.h"
+#include "BFMainContext.h"
 
 using namespace BlackFox;
 using namespace cinject;

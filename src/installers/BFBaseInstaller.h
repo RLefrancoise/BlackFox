@@ -2,7 +2,7 @@
 #define BLACKFOX_BASEINSTALLER_H
 
 #include "IBFInstaller.h"
-#include "../BFTypeDefs.h"
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {

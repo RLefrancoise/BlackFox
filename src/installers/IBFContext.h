@@ -2,8 +2,8 @@
 #define BLACKFOX_ICONTEXT_H
 
 #include "IBFInstaller.h"
-#include "../BFTypeDefs.h"
-#include "../core/BFDebug.h"
+#include "BFTypeDefs.h"
+#include "BFDebug.h"
 
 namespace BlackFox
 {

@@ -2,7 +2,7 @@
 #define BLACKFOX_BASECONTEXT_H
 
 #include "IBFContext.h"
-#include "../BFTypeDefs.h"
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {
