@@ -1,6 +1,7 @@
 #include "BFApplication.h"
 #include "BFQuitApplicationCommand.h"
 #include <iostream>
+#include "BFApplicationEventsSystem.h"
 
 using namespace cinject;
 
@@ -16,6 +17,7 @@ namespace BlackFox
 		//Create default world
 		const auto world = m_container->get<BFWorld>();
 		m_worlds["default"] = world;
+		currentWorld("default");
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept : 
@@ -53,19 +55,14 @@ namespace BlackFox
 			while(ev.poll())
 			{
 				m_polledEvents.emplace_back(ev);
-				
-				switch (ev.type)
-				{
-				case SDL_QUIT:
-					m_commandManager->createCommand<BFQuitApplicationCommand>()->execute();
-					break;
-				}
 			}
 
 			//loop
 			loop();
 			//render
 			render();
+			//end of frame
+			endOfFrame();
 		}
 
 		cleanup();
@@ -76,6 +73,11 @@ namespace BlackFox
 	void BFApplication::quit()
 	{
 		m_running = false;
+	}
+
+	BFCommandManager::Ptr BFApplication::commandManager() const
+	{
+		return m_commandManager;
 	}
 
 	bool BFApplication::hasWorld(const std::string & worldId)
@@ -121,6 +123,9 @@ namespace BlackFox
 
 			//Renderer
 			m_renderer = m_window.make_renderer();
+
+			//Application events system
+			m_currentWorld->createSystem<Systems::BFApplicationEventsSystem>(EndOfFrame);
 		}
 		catch (sdl::Exception& err)
 		{
@@ -159,6 +164,18 @@ namespace BlackFox
 
 		//Draw window content
 		m_renderer.present();
+	}
+
+	void BFApplication::endOfFrame() const
+	{
+		//Dispatch events to current world
+		for each(auto ev in m_polledEvents)
+		{
+			m_currentWorld->onEvent(ev, ComponentSystemGroups::EndOfFrame);
+		}
+
+		//Update current world
+		m_currentWorld->update(m_deltaTime, ComponentSystemGroups::EndOfFrame);
 	}
 
 	void BFApplication::cleanup()

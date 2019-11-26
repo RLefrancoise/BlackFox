@@ -81,8 +81,42 @@ namespace BlackFox
 		 */
 		void update(float dt, ComponentSystemGroups group) const;
 
+		template <typename S>
+		bool hasSystem()
+		{
+			const std::type_index systemType = typeid(S);
+			return m_systems.find(systemType) != m_systems.end();
+		}
+
+		template <typename S>
+		S* createSystem(ComponentSystemGroups group)
+		{
+			const std::type_index systemType = typeid(S);
+
+			if(hasSystem<S>())
+			{
+				BF_WARNING("World has already the system {}, create system will return the registered system", systemType.name())
+				return getSystem<S>();
+			}
+
+			//Bind the system in the container to be able to use get after
+			m_container->bind<S>().toSelf();
+			//Create the system and resolve its dependencies
+			auto system = m_container->get<S>();
+			//Set the world of the system to this world
+			system->setWorld(this);
+			//Add the system to the system list
+			m_systems.insert(std::make_pair(systemType, system));
+			//Add the system to its group
+			m_systemGroups[group].push_back(system.get());
+
+			BF_PRINT("System {} created", systemType.name())
+
+			return static_cast<S*>(system.get());
+		}
+
 		/*!
-		 * \fn	template <typename S> std::shared_ptr<S> BFWorld::getSystem()
+		 * \fn	template <typename S> S* BFWorld::getSystem()
 		 *
 		 * \brief	Gets the system. If system is not created, creates it and returns it.
 		 *
@@ -91,23 +125,18 @@ namespace BlackFox
 		 * \returns	The system.
 		 */
 		template <typename S>
-		std::shared_ptr<S> getSystem()
+		S* getSystem()
 		{
 			const std::type_index systemType = typeid(S);
 
-			//If system not created, create it and store it in the system list
-			if(m_systems.find(systemType) == m_systems.end())
+			if (!hasSystem<S>())
 			{
-				auto system = m_container->get<S>();
-				system->setWorld(this);
-				m_systems[systemType] = system;
-				return system;
+				BF_WARNING("World has no system {}. getSystem will return a null pointer", systemType.name())
+				return nullptr;
 			}
 			
-			return m_systems[systemType];
+			return static_cast<S*>(m_systems[systemType].get());
 		}
-
-		std::vector<BFComponentSystem::Ptr> getSystemsByGroup(ComponentSystemGroups group) const;
 
 	private:
 		/*! \brief	The level DI container */
@@ -116,6 +145,8 @@ namespace BlackFox
 		EntityManager m_entityManager;
 		/*! \brief	The systems */
 		std::unordered_map<std::type_index, BFComponentSystem::Ptr> m_systems;
+		/*! \brief	System groups */
+		std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem*>> m_systemGroups;
 	};
 }
 

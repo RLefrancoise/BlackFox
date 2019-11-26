@@ -8,8 +8,8 @@ using namespace cinject;
 
 int main(int argc, char** argv)
 {
-	try
-	{
+	//try
+	//{
 		//Create DI Container
 		auto container = std::make_shared<Container>();
 		container->bind<Container>().toConstant(container);
@@ -20,9 +20,9 @@ int main(int argc, char** argv)
 		//Execute the app
 		auto app = container->get<BFApplication>();
 		return app->execute();
-	} catch(const std::exception& err)
+	/*} catch(const std::exception& err)
 	{
 		BF_ERROR("{}", err.what())
 		return EXIT_FAILURE;
-	}	
+	}*/	
 }

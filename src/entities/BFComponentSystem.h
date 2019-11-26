@@ -79,6 +79,8 @@ namespace BlackFox
 		 */
 		virtual void update(float dt) = 0;
 
+		std::string name() const;
+
 	private:
 
 		/*!
@@ -95,7 +97,7 @@ namespace BlackFox
 
 	protected:
 		/*! \brief	The application */
-		std::shared_ptr<BFApplication> m_application;
+		BFApplication* m_application;
 		/*! \brief	The world owning the system */
 		BFWorld* m_world;
 	};

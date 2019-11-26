@@ -4,7 +4,8 @@
 #include <typeindex>
 #include <vector>
 #include <unordered_map>
-#include "BFComponentSystem.h"
+
+#include "BFDebug.h"
 
 namespace BlackFox
 {
@@ -15,11 +16,21 @@ namespace BlackFox
 		EndOfFrame		= 1 << 2
 	};
 
-	typedef std::unordered_map<ComponentSystemGroups, std::vector<std::type_index> > SystemGroups;
+	/*typedef std::unordered_map<ComponentSystemGroups, std::vector<std::type_index> > SystemGroups;
 	static SystemGroups systemGroups;
 
-#define BF_SYSTEM(system, group)	systemGroups[group].emplace_back(typeid(system)); \
-									class system : public BFComponentSystem
+	template <typename System>
+	class BFComponentSystemGroupAdder
+	{
+	public:
+		explicit BFComponentSystemGroupAdder(ComponentSystemGroups group)
+		{
+			BF_PRINT("Component system {} placed in group {}", typeid(System).name(), group)
+			systemGroups[group].emplace_back(typeid(System));
+		}
+	};
+
+#define BF_SYSTEM(system, group)	BFComponentSystemGroupAdder<system> _group_system_ = BFComponentSystemGroupAdder<system>(group);*/
 }
 
 #endif

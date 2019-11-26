@@ -94,6 +94,18 @@ namespace BlackFox
 		void quit();
 
 		/*!
+		 * \fn	BFCommandManager::Ptr BFApplication::commandManager() const;
+		 *
+		 * \brief	Get the command manager
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \returns	The command manager.
+		 */
+		BFCommandManager::Ptr commandManager() const;
+
+		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
 		 *
 		 * \brief	Check if world exists
@@ -178,6 +190,16 @@ namespace BlackFox
 		 * \date	12/11/2019
 		 */
 		void render() const;
+
+		/*!
+		 * \fn	void BFApplication::endOfFrame() const;
+		 *
+		 * \brief	Called at the end of the current frame
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 */
+		void endOfFrame() const;
 
 		/*!
 		 * \fn	void BFApplication::cleanup();
