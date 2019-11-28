@@ -10,7 +10,7 @@ namespace BlackFox
 	 *
 	 * \brief	Interface for BlackFox DI Installer
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	22/11/2019
 	 */
 	class IBFInstaller
@@ -22,7 +22,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 */
 		virtual ~IBFInstaller() noexcept = default;
@@ -32,7 +32,7 @@ namespace BlackFox
 		 *
 		 * \brief	Installs the bindings
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 */
 		virtual void installBindings(void) = 0;

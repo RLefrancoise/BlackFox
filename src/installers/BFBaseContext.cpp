@@ -3,8 +3,8 @@
 namespace BlackFox
 {
 	BFBaseContext::BFBaseContext(DiContainer container) :
-		m_init(false),
-		m_container(container)
+	m_init(false),
+	m_container(std::move(container))
 	{
 	}
 

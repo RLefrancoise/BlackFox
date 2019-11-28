@@ -1,4 +1,4 @@
-#ifndef BLACKBOX_MATH_H
+#ifndef BLACKFOX_MATH_H
 #define BLACKFOX_MATH_H
 
 namespace BlackFox
@@ -19,7 +19,7 @@ namespace BlackFox
 		 *
 		 * \brief	If x is smaller than low, x equals low. If x is larger than high, x equals high. Otherwise x is unchanged.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	x   	The value to clamp.
@@ -42,7 +42,7 @@ namespace BlackFox
 		 *
 		 * \brief	If x is below the low value it will return the high value, if x is higher than the high value, it will return the low value
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	x   	The value to wrap.
@@ -67,7 +67,7 @@ namespace BlackFox
 		 *
 		 * \brief	Determines the minimum of the given parameters.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	first	The first value.
@@ -86,7 +86,7 @@ namespace BlackFox
 		 *
 		 * \brief	Determines the maximum of the given parameters.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	first 	The first value.

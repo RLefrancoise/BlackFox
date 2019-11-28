@@ -11,7 +11,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox scene.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	24/11/2019
 	 */
 	class BFScene
@@ -30,7 +30,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	24/11/2019
 		 *
 		 * \param	container	The DI container.
@@ -38,36 +38,22 @@ namespace BlackFox
 		explicit BFScene(DiContainer container);
 
 		/*!
-		 * \fn	EntityManager BFWorld::entityManager() const;
+		 * \fn	static BFScene::Ptr BFScene::create(DiContainer parentContainer);
 		 *
-		 * \brief	Get the Entity manager
+		 * \brief	Creates a new scene
 		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	24/11/2019
-		 *
-		 * \returns	An EntityManager.
-		 */
-		EntityManager entityManager() const;
-
-		/*!
-		 * \fn	static BFWorld::Ptr BFWorld::create(DiContainer parentContainer);
-		 *
-		 * \brief	Creates a new level
-		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	24/11/2019
 		 *
 		 * \param	parentContainer	The parent DI container.
 		 *
-		 * \returns	The created level.
+		 * \returns	The created scene.
 		 */
 		static BFScene::Ptr create(DiContainer parentContainer);
 
 	private:
-		/*! \brief	The level DI container */
+		/*! \brief	The scene DI container */
 		DiContainer m_container;
-		/*! \brief	The entity manager */
-		EntityManager m_entityManager;
 	};
 }
 

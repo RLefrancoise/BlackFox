@@ -4,7 +4,8 @@
 
 namespace BlackFox::Systems
 {
-	BFApplicationEventsSystem::BFApplicationEventsSystem(std::shared_ptr<BFApplication> application) : BFComponentSystem(application)
+	BFApplicationEventsSystem::BFApplicationEventsSystem(std::shared_ptr<BFApplication> application) 
+	: BFComponentSystem(std::move(application))
 	{
 	}
 
@@ -16,9 +17,5 @@ namespace BlackFox::Systems
 			m_application->commandManager()->createCommand<BFQuitApplicationCommand>()->execute();
 			break;
 		}
-	}
-
-	void BFApplicationEventsSystem::update(float dt)
-	{
 	}
 }

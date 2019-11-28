@@ -4,18 +4,28 @@ project(BlackFox)
 # Build
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 # SDL2
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/examples/cmake-modules/")
+# list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/examples/cmake-modules/")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
+
+# SDL Image
+find_package(SDL2_image REQUIRED)
+include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
 # CInject
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cinject/include)
 
 # CPP-SDL2
+add_compile_definitions(CPP_SDL2_USE_SDL_IMAGE)
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/sources)
 
 # ENTT
+IF (WIN32)
+	add_compile_definitions(NOMINMAX)
+ENDIF()
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/entt/src)
 
 # ImGui
@@ -29,11 +39,6 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
 
 # ChaiScript
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ChaiScript/include)
-
-# Falcon
-# find_package(Falcon REQUIRED)
-# link_directories(${Falcon_LIBRARY_DIRS})
-# include_directories(${Falcon_INCLUDE_DIRS})
 
 # Files
 file(
@@ -70,12 +75,16 @@ add_executable(
 # Add sources folders to target
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
+IF(WIN32)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only)
+ELSE()
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only dl pthread)
+ENDIF()
+
 target_link_libraries(
     BlackFox
 	LINK_PUBLIC
-	${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} fmt::fmt-header-only # ${Falcon_LIBRARIES}
+	${LIBRARIES}
 )
-
-# target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../thirdParties/imgui)
 
 target_compile_features(BlackFox PRIVATE cxx_std_17)

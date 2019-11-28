@@ -2,6 +2,7 @@
 #include "BFQuitApplicationCommand.h"
 #include <iostream>
 #include "BFApplicationEventsSystem.h"
+#include "BFRenderSpriteSystem.h"
 
 using namespace cinject;
 
@@ -11,8 +12,8 @@ namespace BlackFox
 		m_running(false),
 		m_lastFrameTime(0),
 		m_deltaTime(0.0f),
-		m_container(container),
-		m_commandManager(commandManager)
+		m_container(std::move(container)),
+		m_commandManager(std::move(commandManager))
 	{
 		//Create default world
 		const auto world = m_container->get<BFWorld>();
@@ -21,7 +22,7 @@ namespace BlackFox
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept : 
-		m_root(std::move(app.m_root)),
+		m_root(app.m_root),
 		m_window(std::move(app.m_window)),
 		m_renderer(std::move(app.m_renderer)),
 		m_running(app.m_running),
@@ -80,14 +81,19 @@ namespace BlackFox
 		return m_commandManager;
 	}
 
+	const sdl::Window & BFApplication::window() const
+	{
+		return m_window;
+	}
+
+	const sdl::Renderer & BFApplication::renderer() const
+	{
+		return m_renderer;
+	}
+
 	bool BFApplication::hasWorld(const std::string & worldId)
 	{
-		if (m_worlds.find(worldId) == m_worlds.end())
-		{
-			return false;
-		}
-
-		return true;
+		return !(m_worlds.find(worldId) == m_worlds.end());
 	}
 
 	BFWorld::Ptr BFApplication::world(const std::string & worldId)
@@ -126,6 +132,8 @@ namespace BlackFox
 
 			//Application events system
 			m_currentWorld->createSystem<Systems::BFApplicationEventsSystem>(EndOfFrame);
+			//Render sprite system
+			m_currentWorld->createSystem<Systems::BFRenderSpriteSystem>(Render);
 		}
 		catch (sdl::Exception& err)
 		{
@@ -139,7 +147,7 @@ namespace BlackFox
 	void BFApplication::loop() const
 	{
 		//Dispatch events to current world
-		for each(auto ev in m_polledEvents)
+		for (auto ev : m_polledEvents)
 		{
 			m_currentWorld->onEvent(ev, ComponentSystemGroups::GameLoop);
 		}
@@ -154,7 +162,7 @@ namespace BlackFox
 		m_renderer.clear(sdl::Color::Black());
 
 		//Dispatch events to current world
-		for each(auto ev in m_polledEvents)
+		for (auto ev : m_polledEvents)
 		{
 			m_currentWorld->onEvent(ev, ComponentSystemGroups::Render);
 		}
@@ -169,7 +177,7 @@ namespace BlackFox
 	void BFApplication::endOfFrame() const
 	{
 		//Dispatch events to current world
-		for each(auto ev in m_polledEvents)
+		for (auto ev : m_polledEvents)
 		{
 			m_currentWorld->onEvent(ev, ComponentSystemGroups::EndOfFrame);
 		}

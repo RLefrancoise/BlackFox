@@ -1,7 +1,7 @@
 #ifndef BLACKFOX_SCRIPTING_MANAGER_H
 #define BLACKFOX_SCRIPTING_MANAGER_H
 
-#include <chaiscript/chaiscript.hpp>
+//#include <chaiscript/chaiscript.hpp>
 
 namespace BlackFox
 {
@@ -11,7 +11,7 @@ namespace BlackFox
 		BFScriptingManager();
 		~BFScriptingManager();
 
-		template <typename T>
+		/*template <typename T>
 		void registerType(const std::string& typeName)
 		{
 			m_chai.add(chaiscript::user_type<T>(), typeName);
@@ -24,7 +24,7 @@ namespace BlackFox
 		}
 
 	private:
-		chaiscript::ChaiScript m_chai;
+		chaiscript::ChaiScript m_chai;*/
 	};
 }
 

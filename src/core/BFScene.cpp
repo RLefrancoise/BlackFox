@@ -3,28 +3,24 @@
 
 namespace BlackFox
 {
-	BFScene::BFScene(DiContainer container) : m_container(container)
+	BFScene::BFScene(DiContainer container)
+	: m_container(std::move(container))
 	{
-	}
-
-	EntityManager BFScene::entityManager() const
-	{
-		return m_entityManager;
 	}
 
 	BFScene::Ptr BFScene::create(DiContainer parentContainer)
 	{
-		//Make a copy of the parent container to have the same bindings + bindings only for the level
-		const auto& c = *parentContainer.get();
-		auto levelContainer = std::make_shared<cinject::Container>(c);
-		levelContainer->bind<cinject::Container>().toConstant(levelContainer);
+		//Create a scene container with main container as its parent to inherit the bindings
+		cinject::Container* c = parentContainer.get();
+		auto sceneContainer = std::make_shared<cinject::Container>(c);
+		sceneContainer->bind<cinject::Container>().toConstant(sceneContainer);
 
-		//Level
-		auto level = std::make_shared<BFScene>(levelContainer);
+		//Scene
+		auto scene = std::make_shared<BFScene>(sceneContainer);
 
-		//Level context
-		auto levelContext = makeContext<BFSceneContext, BFScene::Ptr>(levelContainer, level);
+		//Scene context
+		auto sceneContext = makeContext<BFSceneContext, BFScene::Ptr>(sceneContainer, scene);
 
-		return level;
+		return scene;
 	}
 }

@@ -10,7 +10,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox Singleton template
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	13/11/2019
 	 *
 	 * \tparam	T	Class type to be templated
@@ -25,7 +25,7 @@ namespace BlackFox
 		 *
 		 * \brief	Gets the singleton instance
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	13/11/2019
 		 *
 		 * \returns	The singleton instance

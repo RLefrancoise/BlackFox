@@ -19,7 +19,7 @@ namespace BlackFox
 	 *
 	 * \brief	Manager for BlackFox commands.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud Lefranï¿½oise
 	 * \date	15/11/2019
 	 */
 	class BFCommandManager : private BFNonCopyable
@@ -38,7 +38,7 @@ namespace BlackFox
 		 *
 		 * \brief	Default constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 */
 		CINJECT(BFCommandManager(DiContainer container));
@@ -48,7 +48,7 @@ namespace BlackFox
 		 *
 		 * \brief	Move constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \param [in,out]	manager	The manager.
@@ -60,7 +60,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 */
 		~BFCommandManager();
@@ -70,7 +70,7 @@ namespace BlackFox
 		 *
 		 * \brief	Creates a command
 		 * 			
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \exception	std::runtime_error	Raised when the command could not be created.
@@ -88,7 +88,7 @@ namespace BlackFox
 			}
 
 			auto command = getRegisteredCommand<C>();
-			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).raw_name())
+			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).name())
 
 			return std::shared_ptr<C>(static_cast<C*>(command->clone()));
 		}
@@ -114,7 +114,7 @@ namespace BlackFox
 		 *
 		 * \brief	Clears all commands
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 */
 		void clearAllCommands();
@@ -124,7 +124,7 @@ namespace BlackFox
 		 *
 		 * \brief	Queries if the command is registered
 		 * 			
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command.
@@ -148,7 +148,7 @@ namespace BlackFox
 		 * \brief	Queries if a command is registered
 		 *
 		 * 
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 * 			
 		 * \tparam	C	Type of the command.
@@ -177,7 +177,7 @@ namespace BlackFox
 		 *
 		 * \brief	Gets registered command
 		 * 			
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command.
@@ -196,7 +196,7 @@ namespace BlackFox
 		 *
 		 * \brief	Registers a command
 		 * 			
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command
@@ -207,12 +207,12 @@ namespace BlackFox
 			//if command is already registered, don't register again
 			if (isCommandRegistered<C>())
 			{
-				BF_PRINT("Command {} already registered", typeid(C).raw_name())
+				BF_PRINT("Command {} already registered", typeid(C).name())
 				return;
 			}
 
 			m_commands[typeid(C)] = m_container->get<C>();
-			BF_PRINT("{} registered", typeid(C).raw_name())
+			BF_PRINT("{} registered", typeid(C).name())
 		}
 
 		/*!
@@ -220,7 +220,7 @@ namespace BlackFox
 		 *
 		 * \brief	Unregisters a command
 		 * 			
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud Lefranï¿½oise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command
@@ -232,14 +232,14 @@ namespace BlackFox
 
 			if (!isCommandRegistered<C>(&pos))
 			{
-				BF_PRINT("Command {} is not registered", typeid(C).raw_name())
+				BF_PRINT("Command {} is not registered", typeid(C).name())
 				return;
 			}
 
 			//Delete command
 			m_commands.erase(pos);
 
-			BF_PRINT("{} unregistered", typeid(C).raw_name())
+			BF_PRINT("{} unregistered", typeid(C).name())
 		}
 
 		/*! \brief	The registered commands */

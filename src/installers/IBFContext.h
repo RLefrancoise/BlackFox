@@ -12,7 +12,7 @@ namespace BlackFox
 	 *
 	 * \brief	Interface for BlackFox DI Context
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	22/11/2019
 	 */
 	class IBFContext
@@ -24,7 +24,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 */
 		virtual ~IBFContext() noexcept = default;
@@ -34,7 +34,7 @@ namespace BlackFox
 		 *
 		 * \brief	Initializes the context
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 */
 		virtual void init() = 0;
@@ -44,7 +44,7 @@ namespace BlackFox
 		 *
 		 * \brief	Runs the context
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 */
 		virtual void run() = 0;
@@ -54,7 +54,7 @@ namespace BlackFox
 		 *
 		 * \brief	Adds an installer to the context
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 *
 		 * \param	installer	The installer.

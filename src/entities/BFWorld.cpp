@@ -3,8 +3,10 @@
 
 namespace BlackFox
 {
-	BFWorld::BFWorld(DiContainer container) : m_container(container)
+	BFWorld::BFWorld(DiContainer container)
+	: m_container(std::move(container))
 	{
+		m_entityManager = std::make_shared<entt::registry>();
 	}
 
 	EntityManager BFWorld::entityManager() const
@@ -18,7 +20,7 @@ namespace BlackFox
 
 		const auto systemsInGroup = m_systemGroups.at(group);
 
-		for each(auto system in systemsInGroup)
+		for (auto system : systemsInGroup)
 		{
 			system->onEvent(ev);
 		}
@@ -30,7 +32,7 @@ namespace BlackFox
 
 		const auto systemsInGroup = m_systemGroups.at(group);
 
-		for each(auto system in systemsInGroup)
+		for (auto system : systemsInGroup)
 		{
 			system->update(dt);
 		}

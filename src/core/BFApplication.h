@@ -15,7 +15,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox Application class.
 	 *
-	 * \author	Renaud LefranÁoise
+	 * \author	Renaud Lefran√ßoise
 	 * \date	12/11/2019
 	 */
 	class BFApplication : private BFNonCopyable
@@ -41,7 +41,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	22/11/2019
 		 *
 		 * \param	container		The DI container.
@@ -54,7 +54,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 */
 		~BFApplication() noexcept = default;
@@ -64,7 +64,7 @@ namespace BlackFox
 		 *
 		 * \brief	Move constructor
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	13/11/2019
 		 *
 		 * \param [in,out]	app	The application.
@@ -76,7 +76,7 @@ namespace BlackFox
 		 *
 		 * \brief	Executes the application
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 *
 		 * \returns	Execution return code
@@ -88,7 +88,7 @@ namespace BlackFox
 		 *
 		 * \brief	Quits the application
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	13/11/2019
 		 */
 		void quit();
@@ -98,7 +98,7 @@ namespace BlackFox
 		 *
 		 * \brief	Get the command manager
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 *
 		 * \returns	The command manager.
@@ -106,11 +106,35 @@ namespace BlackFox
 		BFCommandManager::Ptr commandManager() const;
 
 		/*!
+		 * \fn	const sdl::Window& BFApplication::window() const;
+		 *
+		 * \brief	Gets the application window
+		 *
+		 * \author	Renaud Lefran√ßoise
+		 * \date	27/11/2019
+		 *
+		 * \returns	The application window.
+		 */
+		const sdl::Window& window() const;
+
+		/*!
+		 * \fn	const sdl::Renderer& BFApplication::renderer() const;
+		 *
+		 * \brief	Gets the application renderer
+		 *
+		 * \author	Renaud Lefran√ßoise
+		 * \date	27/11/2019
+		 *
+		 * \returns	The application renderer.
+		 */
+		const sdl::Renderer& renderer() const;
+
+		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
 		 *
 		 * \brief	Check if world exists
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 *
 		 * \param	worldId	Identifier for the world.
@@ -124,7 +148,7 @@ namespace BlackFox
 		 *
 		 * \brief	Get a world by its identifier.
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 *
 		 * \param	worldId	Identifier for the world.
@@ -138,7 +162,7 @@ namespace BlackFox
 		 *
 		 * \brief	Current world
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 *
 		 * \returns	A BFWorld::Ptr.
@@ -150,7 +174,7 @@ namespace BlackFox
 		 *
 		 * \brief	Set the current world
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 *
 		 * \param	worldId	Identifier for the world.
@@ -164,7 +188,7 @@ namespace BlackFox
 		 *
 		 * \brief	Initializes the application
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 *
 		 * \returns	True if it succeeds, false if it fails.
@@ -176,7 +200,7 @@ namespace BlackFox
 		 *
 		 * \brief	Application loop
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 */
 		void loop() const;
@@ -186,7 +210,7 @@ namespace BlackFox
 		 *
 		 * \brief	Renders the application
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 */
 		void render() const;
@@ -196,7 +220,7 @@ namespace BlackFox
 		 *
 		 * \brief	Called at the end of the current frame
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	26/11/2019
 		 */
 		void endOfFrame() const;
@@ -206,7 +230,7 @@ namespace BlackFox
 		 *
 		 * \brief	Cleans up the application
 		 *
-		 * \author	Renaud LefranÁoise
+		 * \author	Renaud Lefran√ßoise
 		 * \date	12/11/2019
 		 */
 		void cleanup();

@@ -8,7 +8,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox Vector2 class
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	11/11/2019
 	 */
 
@@ -19,7 +19,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	x	(Optional) The x value.
@@ -32,7 +32,7 @@ namespace BlackFox
 		 *
 		 * \brief	Adds a vector to this vector and returns a new vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The vector to add
@@ -46,7 +46,7 @@ namespace BlackFox
 		 *
 		 * \brief	Substract a vector from this vector and returns a new vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The vector to substract
@@ -60,7 +60,7 @@ namespace BlackFox
 		 *
 		 * \brief	Negates this vector and returns a new vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \returns	The new vector
@@ -72,7 +72,7 @@ namespace BlackFox
 		 *
 		 * \brief	Scales this vector and returns a new vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	scale	The scale factor.
@@ -87,7 +87,7 @@ namespace BlackFox
 		 *
 		 * \brief	Adds a vector to this vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The vector to add
@@ -101,7 +101,7 @@ namespace BlackFox
 		 *
 		 * \brief	Substract a vector from this vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The vector to substract
@@ -115,7 +115,7 @@ namespace BlackFox
 		 *
 		 * \brief	Negates this vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \returns	The updated vector
@@ -127,7 +127,7 @@ namespace BlackFox
 		 *
 		 * \brief	Scale this vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	scale	The scale factor.
@@ -141,7 +141,7 @@ namespace BlackFox
 		 *
 		 * \brief	Tests if this vector is equals to another vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The other vector
@@ -155,7 +155,7 @@ namespace BlackFox
 		 *
 		 * \brief	Tests if this vector is not equal to another vector
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	11/11/2019
 		 *
 		 * \param	rhs	The other vector

@@ -1,10 +1,11 @@
-#ifndef BLACKFOX_LEVEL_H
-#define BLACKFOX_LEVEL_H
+#ifndef BLACKFOX_WORLD_H
+#define BLACKFOX_WORLD_H
 
 #include <memory>
 #include <typeinfo>
 #include <typeindex>
 
+#include "BFDebug.h"
 #include "BFTypeDefs.h"
 #include "BFNonCopyable.h"
 #include "BFComponentSystem.h"
@@ -17,7 +18,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox world.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	24/11/2019
 	 */
 	class BFWorld : private BFNonCopyable
@@ -36,7 +37,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	24/11/2019
 		 *
 		 * \param	container	The DI container.
@@ -48,7 +49,7 @@ namespace BlackFox
 		 *
 		 * \brief	Get the Entity manager
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	24/11/2019
 		 *
 		 * \returns	An EntityManager.
@@ -60,7 +61,7 @@ namespace BlackFox
 		 *
 		 * \brief	Dispatch the event to the world systems.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	ev		The event.
@@ -73,7 +74,7 @@ namespace BlackFox
 		 *
 		 * \brief	Updates the world and its systems.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	dt	The delta time
@@ -81,16 +82,39 @@ namespace BlackFox
 		 */
 		void update(float dt, ComponentSystemGroups group) const;
 
+		/*!
+		 * \fn	template <typename S> bool BFWorld::hasSystem()
+		 *
+		 * \brief	Check if the world has the given system or not
+		 *
+		 * \tparam	S	Type of the system.
+		 *
+		 * \returns	True if the world has the system, false if not.
+		 */
 		template <typename S>
 		bool hasSystem()
 		{
+			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of hasSystem must derive from BFComponentSystem");
+
 			const std::type_index systemType = typeid(S);
 			return m_systems.find(systemType) != m_systems.end();
 		}
 
+		/*!
+		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
+		 *
+		 * \brief	Creates a system in the world.
+		 *
+		 * \tparam	S	Type of the system.
+		 * \param	group	The group the system will belong to.
+		 *
+		 * \returns	The created system.
+		 */
 		template <typename S>
 		S* createSystem(ComponentSystemGroups group)
 		{
+			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
+
 			const std::type_index systemType = typeid(S);
 
 			if(hasSystem<S>())
@@ -118,7 +142,7 @@ namespace BlackFox
 		/*!
 		 * \fn	template <typename S> S* BFWorld::getSystem()
 		 *
-		 * \brief	Gets the system. If system is not created, creates it and returns it.
+		 * \brief	Gets the given system. Returns null pointer if the system does not exist.
 		 *
 		 * \tparam	S	Type of the system.
 		 *
@@ -127,6 +151,8 @@ namespace BlackFox
 		template <typename S>
 		S* getSystem()
 		{
+			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of getSystem must derive from BFComponentSystem");
+
 			const std::type_index systemType = typeid(S);
 
 			if (!hasSystem<S>())

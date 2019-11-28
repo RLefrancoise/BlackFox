@@ -3,7 +3,8 @@
 
 namespace BlackFox
 {
-	BFQuitApplicationCommand::BFQuitApplicationCommand(std::shared_ptr<BFApplication> application) : m_application(application)
+	BFQuitApplicationCommand::BFQuitApplicationCommand(std::shared_ptr<BFApplication> application)
+	: m_application(std::move(application))
 	{
 	}
 

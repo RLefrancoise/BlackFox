@@ -1,5 +1,5 @@
-#ifndef BLACKFOX_LEVELINSTALLER_H
-#define BLACKFOX_LEVELINSTALLER_H
+#ifndef BLACKFOX_SCENEINSTALLER_H
+#define BLACKFOX_SCENEINSTALLER_H
 
 #include "BFBaseInstaller.h"
 #include "BFScene.h"
@@ -11,19 +11,19 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox level installer.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	24/11/2019
 	 */
-	class BFSceneInstaller: public BFBaseInstaller
+	class BFSceneInstaller : public BFBaseInstaller
 	{
 	public:
 
 		/*!
-		 * \fn	explicit BFSceneInstaller::BFSceneInstaller(DiContainer container);
+		 * \fn	explicit BFSceneInstaller::BFSceneInstaller(DiContainer container, BFScene::Ptr level);
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	24/11/2019
 		 *
 		 * \param	container	The container.

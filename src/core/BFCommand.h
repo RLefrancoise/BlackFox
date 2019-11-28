@@ -8,7 +8,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox command class.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	13/11/2019
 	 */
 	class BFCommand
@@ -29,7 +29,7 @@ namespace BlackFox
 		 *
 		 * \brief	Executes the command
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	13/11/2019
 		 */
 		virtual void execute(void) = 0;
@@ -39,7 +39,7 @@ namespace BlackFox
 		 *
 		 * \brief	Makes a deep copy of this object
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	13/11/2019
 		 *
 		 * \returns	A copy of this object.

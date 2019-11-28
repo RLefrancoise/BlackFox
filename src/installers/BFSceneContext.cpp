@@ -3,7 +3,9 @@
 
 namespace BlackFox
 {
-	BFSceneContext::BFSceneContext(DiContainer container, BFScene::Ptr level) : BFBaseContext(container), m_level(level)
+	BFSceneContext::BFSceneContext(DiContainer container, BFScene::Ptr level)
+	: BFBaseContext(std::move(container))
+	, m_level(std::move(level))
 	{
 	}
 

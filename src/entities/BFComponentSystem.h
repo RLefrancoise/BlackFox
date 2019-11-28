@@ -65,7 +65,7 @@ namespace BlackFox
 		 *
 		 * \param	ev	The event.
 		 */
-		virtual void onEvent(const sdl::Event& ev) = 0;
+		virtual void onEvent(const sdl::Event& ev) {}
 
 		/*!
 		 * \fn	virtual void BFComponentSystem::update(float dt) = 0;
@@ -77,11 +77,23 @@ namespace BlackFox
 		 *
 		 * \param	dt	The delta time
 		 */
-		virtual void update(float dt) = 0;
+		virtual void update(float dt) {}
 
+		/*!
+		 * \fn	std::string BFComponentSystem::name() const;
+		 *
+		 * \brief	Gets the name of the system.
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	27/11/2019
+		 *
+		 * \returns	The name of the system.
+		 */
 		std::string name() const;
 
 	private:
+
+		BFComponentSystem() = delete;
 
 		/*!
 		 * \fn	void BFComponentSystem::setWorld(BFWorld* world);

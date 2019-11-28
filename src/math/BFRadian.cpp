@@ -4,11 +4,13 @@
 
 namespace BlackFox
 {
-	BFRadian::BFRadian(float radians) : m_value(radians)
+	BFRadian::BFRadian(float radians)
+	: m_value(radians)
 	{
 	}
 
-	BFRadian::BFRadian(const BFDegree & degrees) : m_value((BFMath::PI / 180.f) * degrees.value())
+	BFRadian::BFRadian(const BFDegree & degrees)
+	: m_value((BFMath::PI / 180.f) * degrees.value())
 	{
 	}
 
@@ -17,8 +19,9 @@ namespace BlackFox
 		return m_value;
 	}
 
-	BFRadian BFRadian::operator=(const BFDegree & degrees) const
+	BFRadian& BFRadian::operator=(const BFDegree & degrees)
 	{
-		return BFRadian(degrees);
+		m_value = (BFMath::PI / 180.f) * degrees.value();
+		return *this;
 	}
 }

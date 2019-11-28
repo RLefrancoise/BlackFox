@@ -4,7 +4,8 @@
 
 namespace BlackFox
 {
-	BFMainContext::BFMainContext(DiContainer container) : BFBaseContext(container)
+	BFMainContext::BFMainContext(DiContainer container)
+	: BFBaseContext(std::move(container))
 	{
 	}
 

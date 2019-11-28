@@ -3,7 +3,8 @@
 
 namespace BlackFox
 {
-	BFCoreInstaller::BFCoreInstaller(DiContainer container) : BFBaseInstaller(container)
+	BFCoreInstaller::BFCoreInstaller(DiContainer container)
+	: BFBaseInstaller(std::move(container))
 	{
 	}
 

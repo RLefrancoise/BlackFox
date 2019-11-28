@@ -11,7 +11,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox Base DI Context.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	22/11/2019
 	 */
 	class BFBaseContext : public IBFContext
@@ -23,7 +23,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 *
 		 * \param	container	The container.

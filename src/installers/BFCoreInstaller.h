@@ -10,7 +10,7 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox installer for Core module
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	22/11/2019
 	 */
 	class BFCoreInstaller : public BFBaseInstaller
@@ -22,7 +22,7 @@ namespace BlackFox
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	22/11/2019
 		 *
 		 * \param	container	The container.
