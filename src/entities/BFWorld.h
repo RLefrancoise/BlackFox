@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <rttr/variant.h>
 #include <vector>
+#include <unordered_map>
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
@@ -15,6 +16,8 @@
 
 namespace BlackFox
 {
+	class BFApplication;
+
 	/*!
 	 * \class	BFWorld
 	 *
@@ -33,6 +36,13 @@ namespace BlackFox
 		 * \brief	Alias for BlackFox world pointer
 		 */
 		typedef std::shared_ptr<BFWorld> Ptr;
+
+		/*!
+		 * \typedef	std::unordered_map<std::string, BFWorld::Ptr> WorldList
+		 *
+		 * \brief	Alias for world list.
+		 */
+		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
 
 		/*!
 		 * \fn	explicit BFWorld::BFWorld(DiContainer container);
@@ -59,33 +69,78 @@ namespace BlackFox
 		EntityManager entityManager() const;
 
 		/*!
-		 * \fn	void BFWorld::onEvent(const sdl::Event& ev) const;
+		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
 		 *
-		 * \brief	Dispatch the event to the world systems.
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	ev		The event.
-		 * \param	group	The system group.
-		 */
-		void onEvent(const sdl::Event& ev, ComponentSystemGroups group) const;
-
-		/*!
-		 * \fn	void BFWorld::update(float dt) const;
-		 *
-		 * \brief	Updates the world and its systems.
+		 * \brief	Check if world exists
 		 *
 		 * \author	Renaud Lefrançoise
 		 * \date	26/11/2019
 		 *
-		 * \param	dt	The delta time
-		 * \param	group	The system group.
+		 * \param	worldId	Identifier for the world.
+		 *
+		 * \returns	True if world exists, false if not.
 		 */
-		void update(float dt, ComponentSystemGroups group) const;
+		static bool hasWorld(const std::string& worldId);
 
 		/*!
-		 * \fn	template <typename S> bool BFWorld::hasSystem()
+		 * \fn	BFWorld::Ptr BFApplication::world(const std::string& worldId);
+		 *
+		 * \brief	Get a world by its identifier.
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	26/11/2019
+		 *
+		 * \param	worldId	Identifier for the world.
+		 *
+		 * \returns	A BFWorld::Ptr.
+		 */
+		static BFWorld::Ptr world(const std::string& worldId);
+
+		static BFWorld::Ptr create(const std::string& worldId, BFApplication* application);
+
+		/*!
+		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
+		 *
+		 * \brief	Creates a system in the world.
+		 *
+		 * \tparam	S			Type of the system.
+		 * \param	group		The group the system will belong to.
+		 * \param	application	The application.
+		 *
+		 * \returns	The created system.
+		 */
+		template <typename S>
+		static S* createSystem(ComponentSystemGroups group, BFApplication* application)
+		{
+			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
+
+			auto type = rttr::type::get<S>();
+
+			if(hasSystem<S>())
+			{
+				BF_WARNING("World has already the system {}, create system will return the registered system", type.get_name().to_string())
+				return getSystem<S>();
+			}
+
+			//Create system
+			auto system = std::make_shared<S>(application);
+			//Add the system to the system list
+			registeredSystems.insert(std::make_pair(type, system));
+			//Add the system to its group
+			systemTypes[group].emplace_back(system);
+
+			BF_PRINT("System {} created", type.get_name().to_string())
+
+			return static_cast<S*>(system.get());
+		}
+
+		static void createSystemFromType(const rttr::type& system, DiContainer container);
+		static void getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems);
+
+		static void refreshSystems(ComponentSystemGroups group, const BFApplication* application);
+
+		/*!
+		 * \fn	template <typename S> static bool BFWorld::hasSystem()
 		 *
 		 * \brief	Check if the world has the given system or not
 		 *
@@ -94,55 +149,14 @@ namespace BlackFox
 		 * \returns	True if the world has the system, false if not.
 		 */
 		template <typename S>
-		bool hasSystem()
+		static bool hasSystem()
 		{
-			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of hasSystem must derive from BFComponentSystem");
-
-			const std::type_index systemType = typeid(S);
-			return m_systems.find(systemType) != m_systems.end();
+			auto type = rttr::type::get<S>();
+			return registeredSystems.find(type) != registeredSystems.end();
 		}
 
 		/*!
-		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
-		 *
-		 * \brief	Creates a system in the world.
-		 *
-		 * \tparam	S	Type of the system.
-		 * \param	group	The group the system will belong to.
-		 *
-		 * \returns	The created system.
-		 */
-		template <typename S>
-		S* createSystem(ComponentSystemGroups group)
-		{
-			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
-
-			const std::type_index systemType = typeid(S);
-
-			if(hasSystem<S>())
-			{
-				BF_WARNING("World has already the system {}, create system will return the registered system", systemType.name())
-				return getSystem<S>();
-			}
-
-			//Bind the system in the container to be able to use get after
-			m_container->bind<S>().toSelf();
-			//Create the system and resolve its dependencies
-			auto system = m_container->get<S>();
-			//Set the world of the system to this world
-			system->setWorld(this);
-			//Add the system to the system list
-			m_systems.insert(std::make_pair(systemType, system));
-			//Add the system to its group
-			m_systemGroups[group].push_back(system.get());
-
-			BF_PRINT("System {} created", systemType.name())
-
-			return static_cast<S*>(system.get());
-		}
-
-		/*!
-		 * \fn	template <typename S> S* BFWorld::getSystem()
+		 * \fn	template <typename S> static S* BFWorld::getSystem()
 		 *
 		 * \brief	Gets the given system. Returns null pointer if the system does not exist.
 		 *
@@ -151,37 +165,32 @@ namespace BlackFox
 		 * \returns	The system.
 		 */
 		template <typename S>
-		S* getSystem()
+		static S* getSystem()
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of getSystem must derive from BFComponentSystem");
 
-			const std::type_index systemType = typeid(S);
+			auto type = rttr::type::get<S>();
 
 			if (!hasSystem<S>())
 			{
-				BF_WARNING("World has no system {}. getSystem will return a null pointer", systemType.name())
+				BF_WARNING("World has no system {}. getSystem will return a null pointer", type.get_name().to_string())
 				return nullptr;
 			}
-			
-			return static_cast<S*>(m_systems[systemType].get());
-		}
 
-		static void createSystemFromType(const rttr::type& system, DiContainer container);
-		static void updateSystems(float dt, ComponentSystemGroups group, const BFWorld::Ptr& world);
-		static void clearSystems();
+			return static_cast<S*>(registeredSystems[type].get());
+		}
 
 	private:
 		/*! \brief	The level DI container */
 		DiContainer m_container;
 		/*! \brief	The entity manager */
 		EntityManager m_entityManager;
-		/*! \brief	The systems */
-		std::unordered_map<std::type_index, BFComponentSystem::Ptr> m_systems;
-		/*! \brief	System groups */
-		std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem*>> m_systemGroups;
 
-		static std::unordered_map<rttr::type, rttr::variant> registeredSystems;
-		static std::unordered_map<ComponentSystemGroups, std::vector<rttr::variant>> systemTypes;
+		/*! \brief	The worlds */
+		static WorldList worlds;
+
+		static std::unordered_map<rttr::type, BFComponentSystem::Ptr> registeredSystems;
+		static std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> systemTypes;
 	};
 }
 

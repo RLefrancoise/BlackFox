@@ -4,9 +4,11 @@
 #include <cinject/cinject.h>
 #include <memory>
 #include <cpp-sdl2/sdl.hpp>
+
+#include "BFWorld.h"
+#include "BFComponentSystemFlags.h"
 #include "BFCommandManager.h"
 #include "BFTypeDefs.h"
-#include "BFWorld.h"
 #include "BFScene.h"
 
 namespace BlackFox
@@ -21,6 +23,8 @@ namespace BlackFox
 	 */
 	class BFApplication : private BFNonCopyable
 	{
+		friend class BFWorld;
+
 	public:
 
 		/*!
@@ -29,13 +33,6 @@ namespace BlackFox
 		 * \brief	Alias for BlackFox application pointer
 		 */
 		typedef std::shared_ptr<BFApplication> Ptr;
-
-		/*!
-		 * \typedef	std::unordered_map<std::string, BFWorld::Ptr> WorldList
-		 *
-		 * \brief	Alias for world list.
-		 */
-		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
 
 		/*!
 		 * \fn	BFApplication(DiContainer container, BFCommandManager::Ptr commandManager);
@@ -130,58 +127,6 @@ namespace BlackFox
 		 */
 		const sdl::Renderer& renderer() const;
 
-		/*!
-		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
-		 *
-		 * \brief	Check if world exists
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	worldId	Identifier for the world.
-		 *
-		 * \returns	True if world exists, false if not.
-		 */
-		bool hasWorld(const std::string& worldId);
-
-		/*!
-		 * \fn	BFWorld::Ptr BFApplication::world(const std::string& worldId);
-		 *
-		 * \brief	Get a world by its identifier.
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	worldId	Identifier for the world.
-		 *
-		 * \returns	A BFWorld::Ptr.
-		 */
-		BFWorld::Ptr world(const std::string& worldId);
-
-		/*!
-		 * \fn	BFWorld::Ptr BFApplication::currentWorld() const;
-		 *
-		 * \brief	Current world
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \returns	A BFWorld::Ptr.
-		 */
-		BFWorld::Ptr currentWorld() const;
-
-		/*!
-		 * \fn	void BFApplication::currentWorld(const std::string& worldId);
-		 *
-		 * \brief	Set the current world
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	worldId	Identifier for the world.
-		 */
-		void currentWorld(const std::string& worldId);
-
 	private:
 
 		/*!
@@ -260,11 +205,6 @@ namespace BlackFox
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;
-
-		/*! \brief	The worlds */
-		WorldList m_worlds;
-		/*! \brief	The current world */
-		BFWorld::Ptr m_currentWorld;
 	};
 }
 

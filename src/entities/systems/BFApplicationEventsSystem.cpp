@@ -2,6 +2,8 @@
 #include "BFApplication.h"
 #include "BFQuitApplicationCommand.h"
 
+BF_SYSTEM_REGISTER(BlackFox::Systems::BFApplicationEventsSystem, "BFApplicationEventsSystem")
+
 namespace BlackFox::Systems
 {
 	BFApplicationEventsSystem::BFApplicationEventsSystem(std::shared_ptr<BFApplication> application) 

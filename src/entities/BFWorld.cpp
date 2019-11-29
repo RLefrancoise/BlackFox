@@ -5,8 +5,9 @@
 
 namespace BlackFox
 {
-    std::unordered_map<rttr::type, rttr::variant> BFWorld::registeredSystems;
-    std::unordered_map<ComponentSystemGroups, std::vector<rttr::variant>> BFWorld::systemTypes;
+	BFWorld::WorldList BFWorld::worlds;
+    std::unordered_map<rttr::type, BFComponentSystem::Ptr> BFWorld::registeredSystems;
+    std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> BFWorld::systemTypes;
 
 	BFWorld::BFWorld(DiContainer container)
 	: m_container(std::move(container))
@@ -19,28 +20,36 @@ namespace BlackFox
 		return m_entityManager;
 	}
 
-	void BFWorld::onEvent(const sdl::Event & ev, ComponentSystemGroups group) const
+	bool BFWorld::hasWorld(const std::string & worldId)
 	{
-		if (m_systemGroups.find(group) == m_systemGroups.end()) return;
-
-		const auto systemsInGroup = m_systemGroups.at(group);
-
-		for (auto system : systemsInGroup)
-		{
-			system->onEvent(ev);
-		}
+		return !(worlds.find(worldId) == worlds.end());
 	}
 
-	void BFWorld::update(float dt, ComponentSystemGroups group) const
+	BFWorld::Ptr BFWorld::world(const std::string & worldId)
 	{
-		if (m_systemGroups.find(group) == m_systemGroups.end()) return;
-
-		const auto systemsInGroup = m_systemGroups.at(group);
-
-		for (auto system : systemsInGroup)
+		if(!hasWorld(worldId))
 		{
-			system->update(dt);
+			BF_EXCEPTION("World {} does not exist", worldId)
 		}
+		return worlds[worldId];
+	}
+
+	BFWorld::Ptr BFWorld::create(const std::string& worldId, BFApplication* application)
+	{
+		if(hasWorld(worldId))
+		{
+			BF_WARNING("World {} already exists", worldId)
+			return world(worldId);
+		}
+
+		//Get application container
+		const auto& container = application->m_container;
+
+		//Create world
+		auto world = container->get<BFWorld>();
+		worlds[worldId] = world;
+
+		return world;
 	}
 
 	void BFWorld::createSystemFromType(const rttr::type &system, DiContainer container)
@@ -67,42 +76,53 @@ namespace BlackFox
 
 		//Get the system group
 		ComponentSystemGroups group = system.get_method("get_group").invoke(s).get_value<ComponentSystemGroups>();
+
+		bool ok = false;
+		auto sPtr = s.convert<BFComponentSystem*>(&ok);
+		if(!ok)
+		{
+			BF_ERROR("Failed to convert variant for system {} to BFComponentSystem*", system.get_name().to_string())
+			return;
+		}
+
+		BFComponentSystem::Ptr sharedPtr(sPtr);
+
 		//Add the system to the systems map
-		systemTypes[group].emplace_back(s);
+		systemTypes[group].emplace_back(sharedPtr);
 		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group)
 
 		//Remember the registration of the system
-		registeredSystems.insert(std::make_pair(system, s));
+		registeredSystems.insert(std::make_pair(system, sharedPtr));
 
 		BF_PRINT("System {} created", system.get_name().to_string())
 	}
 
-	void BFWorld::updateSystems(float dt, ComponentSystemGroups group, const BFWorld::Ptr& world)
+	void BFWorld::getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems)
+	{
+		if(systemTypes.find(group) == systemTypes.end()) return;
+		*systems = systemTypes.at(group);
+	}
+
+	void BFWorld::refreshSystems(ComponentSystemGroups group, const BFApplication* application)
 	{
 		if(systemTypes.find(group) == systemTypes.end()) return;
 
-		const auto systems = systemTypes.at(group);
+		std::vector<BFComponentSystem::Ptr> systems = systemTypes[group];
 
-		for(const rttr::variant& system : systems)
+		//for each system
+		for(const auto& system : systems)
 		{
-			bool ok = false;
-			auto s = system.convert<BFComponentSystem*>(&ok);
-			if(!ok)
+			for(const auto& world : worlds)
 			{
-				BF_ERROR("Failed to convert variant for system {} to BFComponentSystem*", system.get_type().get_name().to_string())
-				return;
+				system->setWorld(world.second.get());
+
+				for (const auto& ev : application->m_polledEvents)
+				{
+					system->onEvent(ev);
+				}
+
+				system->update(application->m_deltaTime);
 			}
-
-			s->setWorld(world.get());
-			s->update(dt);
-		}
-	}
-
-	void BFWorld::clearSystems()
-	{
-		for(auto& rs : registeredSystems)
-		{
-			rs.second.get_type().destroy(rs.second);
 		}
 	}
 }

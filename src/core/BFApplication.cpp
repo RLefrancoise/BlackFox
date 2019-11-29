@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "BFWorld.h"
+#include "BFComponentSystem.h"
 #include "BFApplicationEventsSystem.h"
 #include "BFPositionComponent.h"
 #include "BFSpriteComponent.h"
@@ -28,8 +30,7 @@ namespace BlackFox
 		m_lastFrameTime(app.m_lastFrameTime),
 		m_deltaTime(app.m_deltaTime),
 		m_container(std::move(app.m_container)),
-		m_commandManager(std::move(app.m_commandManager)),
-		m_worlds(std::move(app.m_worlds))
+		m_commandManager(std::move(app.m_commandManager))
 	{
 	}
 
@@ -90,32 +91,6 @@ namespace BlackFox
 		return m_renderer;
 	}
 
-	bool BFApplication::hasWorld(const std::string & worldId)
-	{
-		return !(m_worlds.find(worldId) == m_worlds.end());
-	}
-
-	BFWorld::Ptr BFApplication::world(const std::string & worldId)
-	{
-		return m_worlds[worldId];
-	}
-
-	BFWorld::Ptr BFApplication::currentWorld() const
-	{
-		return m_currentWorld;
-	}
-
-	void BFApplication::currentWorld(const std::string& worldId)
-	{
-		if(!hasWorld(worldId))
-		{
-			BF_WARNING("Cannot set current world to {}. Identifier is not found", worldId)
-			return;
-		}
-
-		m_currentWorld = m_worlds[worldId];
-	}
-
 	bool BFApplication::init()
 	{
 		try 
@@ -130,9 +105,7 @@ namespace BlackFox
 			m_renderer = m_window.make_renderer();
 
             //Create default world
-            const auto world = m_container->get<BFWorld>();
-            m_worlds["default"] = world;
-            currentWorld("default");
+            BFWorld::create("default", this);
 
             //Auto create systems
             auto systems = rttr::type::get_by_name("BFComponentSystem").get_derived_classes();
@@ -141,23 +114,22 @@ namespace BlackFox
             	BFWorld::createSystemFromType(s, m_container);
             }
 
-			//Application events system
-			m_currentWorld->createSystem<Systems::BFApplicationEventsSystem>(EndOfFrame);
+            auto defaultWorld = BFWorld::world("default");
 
 			//Just for testing, create some entities
             static sdl::Texture squareImg(m_renderer.ptr(), "test.png");
 
 			//a blue entity
-			auto blueEntity = m_currentWorld->entityManager()->create();
+			auto blueEntity = defaultWorld->entityManager()->create();
 
 			//position
-			m_currentWorld->entityManager()->assign<BFPositionComponent>(
+			defaultWorld->entityManager()->assign<BFPositionComponent>(
 					blueEntity,
 					256,
 					256);
 
 			//sprite
-			m_currentWorld->entityManager()->assign<BFSpriteComponent>(
+			defaultWorld->entityManager()->assign<BFSpriteComponent>(
                     blueEntity,
                     &squareImg,
 					sdl::Rect(sdl::Vec2i(), squareImg.size()),
@@ -166,12 +138,12 @@ namespace BlackFox
 					SDL_BLENDMODE_BLEND);
 
 			//a red entity
-			auto redEntity = m_currentWorld->entityManager()->create();
-			m_currentWorld->entityManager()->assign<BFPositionComponent>(
+			auto redEntity = defaultWorld->entityManager()->create();
+			defaultWorld->entityManager()->assign<BFPositionComponent>(
 					redEntity,
 					256 + squareImg.size().x / 2,
 					256 + squareImg.size().y / 2);
-			m_currentWorld->entityManager()->assign<BFSpriteComponent>(
+			defaultWorld->entityManager()->assign<BFSpriteComponent>(
 			        redEntity,
 			        &squareImg,
 			        sdl::Rect(sdl::Vec2i(), squareImg.size()),
@@ -211,20 +183,10 @@ namespace BlackFox
 
 	void BFApplication::cleanup()
 	{
-		BFWorld::clearSystems();
 	}
 
 	void BFApplication::handleWorldSystems(ComponentSystemGroups group) const
 	{
-		//Dispatch events to current world
-		for (auto ev : m_polledEvents)
-		{
-			m_currentWorld->onEvent(ev, group);
-		}
-
-		//Update current world
-		m_currentWorld->update(m_deltaTime, group);
-
-		BFWorld::updateSystems(m_deltaTime, group, m_currentWorld);
+		BFWorld::refreshSystems(group, this);
 	}
 }
