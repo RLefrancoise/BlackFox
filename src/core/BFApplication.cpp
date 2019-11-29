@@ -36,7 +36,6 @@ namespace BlackFox
 
 	int BFApplication::execute()
 	{
-		m_polledEvents.clear();
 		auto ev = sdl::Event{};
 		Uint32 currentTime = 0;
 
@@ -53,6 +52,7 @@ namespace BlackFox
 			m_lastFrameTime = currentTime;
 
 			//events
+			m_polledEvents.clear();
 			while(ev.poll())
 			{
 				m_polledEvents.emplace_back(ev);
@@ -108,10 +108,10 @@ namespace BlackFox
             BFWorld::create("default", this);
 
             //Auto create systems
-            auto systems = rttr::type::get_by_name("BFComponentSystem").get_derived_classes();
+            auto systems = rttr::type::get<BFComponentSystem>().get_derived_classes();
             for(const auto& s : systems)
             {
-            	BFWorld::createSystemFromType(s, m_container);
+            	BFWorld::createSystemFromType(s, this);
             }
 
             auto defaultWorld = BFWorld::world("default");
@@ -153,7 +153,7 @@ namespace BlackFox
 		}
 		catch (sdl::Exception& err)
 		{
-			std::cerr << err.what() << std::endl;
+		    BF_ERROR("Failed to init application: {}", err.what())
 			return false;
 		}
 
@@ -162,7 +162,7 @@ namespace BlackFox
 
 	void BFApplication::loop() const
 	{
-		handleWorldSystems(GameLoop);
+        BFWorld::refreshSystems(GameLoop, this);
 	}
 
 	void BFApplication::render() const
@@ -170,7 +170,7 @@ namespace BlackFox
 		//Clear window
 		m_renderer.clear(sdl::Color::White());
 
-		handleWorldSystems(Render);
+        BFWorld::refreshSystems(Render, this);
 
 		//Draw window content
 		m_renderer.present();
@@ -178,15 +178,10 @@ namespace BlackFox
 
 	void BFApplication::endOfFrame() const
 	{
-		handleWorldSystems(EndOfFrame);
+        BFWorld::refreshSystems(EndOfFrame, this);
 	}
 
 	void BFApplication::cleanup()
 	{
-	}
-
-	void BFApplication::handleWorldSystems(ComponentSystemGroups group) const
-	{
-		BFWorld::refreshSystems(group, this);
 	}
 }

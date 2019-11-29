@@ -52,7 +52,7 @@ namespace BlackFox
 		return world;
 	}
 
-	void BFWorld::createSystemFromType(const rttr::type &system, DiContainer container)
+	void BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
 	{
 		//Check if the system is already created or not
 		if(registeredSystems.find(system) != registeredSystems.cend())
@@ -61,13 +61,8 @@ namespace BlackFox
 			return;
 		}
 
-	    //Get application
-		auto application = container->get<BFApplication>();
-
 		//Create system from type
-		std::vector<rttr::argument> args;
-		args.emplace_back(application.get());
-		rttr::variant s = system.create(args);
+		rttr::variant s = system.create({application});
 		if(!s.is_valid())
 		{
 			BF_WARNING("Failed to create system {}", system.get_name().to_string())

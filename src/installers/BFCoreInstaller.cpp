@@ -1,4 +1,6 @@
 #include "BFCoreInstaller.h"
+#include "BFCommandManager.h"
+#include "BFApplication.h"
 #include "BFQuitApplicationCommand.h"
 
 namespace BlackFox

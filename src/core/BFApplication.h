@@ -181,8 +181,6 @@ namespace BlackFox
 		 */
 		void cleanup();
 
-		void handleWorldSystems(ComponentSystemGroups group) const;
-
 		/*! \brief	SDL root */
 		sdl::Root m_root;
 		/*! \brief	SDL window */

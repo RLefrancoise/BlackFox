@@ -134,7 +134,7 @@ namespace BlackFox
 			return static_cast<S*>(system.get());
 		}
 
-		static void createSystemFromType(const rttr::type& system, DiContainer container);
+		static void createSystemFromType(const rttr::type& system, BFApplication* application);
 		static void getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems);
 
 		static void refreshSystems(ComponentSystemGroups group, const BFApplication* application);

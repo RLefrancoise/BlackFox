@@ -4,10 +4,11 @@
 #include <cinject/cinject.h>
 #include <memory>
 #include "BFCommand.h"
-#include "BFApplication.h"
 
 namespace BlackFox
 {
+	class BFApplication;
+
 	class BFQuitApplicationCommand : public BFCommand
 	{
 	private:
