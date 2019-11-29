@@ -4,7 +4,7 @@ project(BlackFox)
 # Build
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
-IF(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+IF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     add_compile_definitions(BF_DEBUG)
 ENDIF()
 
