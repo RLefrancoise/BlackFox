@@ -4,8 +4,7 @@
 #include <memory>
 #include <cpp-sdl2/event.hpp>
 #include <cinject/cinject.h>
-
-#include "BFNonCopyable.h"
+#include <rttr/rttr_enable.h>
 
 namespace BlackFox
 {
@@ -17,12 +16,14 @@ namespace BlackFox
 	 *
 	 * \brief	BlackFox Component System.
 	 *
-	 * \author	Renaud Lefrançoise
+	 * \author	Renaud LefranÃ§oise
 	 * \date	26/11/2019
 	 */
-	class BFComponentSystem : private BFNonCopyable
+	class BFComponentSystem
 	{
 		friend class BFWorld;
+
+		RTTR_ENABLE()
 
 	public:
 
@@ -33,12 +34,16 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<BFComponentSystem> Ptr;
 
+        BFComponentSystem() = delete;
+
+        explicit BFComponentSystem(BFApplication* application);
+
 		/*!
 		 * \fn	BFComponentSystem::BFComponentSystem(std::shared_ptr<BFApplication> application);
 		 *
 		 * \brief	Constructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	application	The application.
@@ -50,7 +55,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 */
 		virtual ~BFComponentSystem() noexcept = default;
@@ -60,7 +65,7 @@ namespace BlackFox
 		 *
 		 * \brief	React to the given event.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	ev	The event.
@@ -72,7 +77,7 @@ namespace BlackFox
 		 *
 		 * \brief	Updates the system.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	dt	The delta time
@@ -84,23 +89,19 @@ namespace BlackFox
 		 *
 		 * \brief	Gets the name of the system.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	27/11/2019
 		 *
 		 * \returns	The name of the system.
 		 */
-		std::string name() const;
-
-	private:
-
-		BFComponentSystem() = delete;
+		virtual std::string name() const;
 
 		/*!
 		 * \fn	void BFComponentSystem::setWorld(BFWorld* world);
 		 *
 		 * \brief	Sets the world owning the system.
 		 *
-		 * \author	Renaud Lefrançoise
+		 * \author	Renaud LefranÃ§oise
 		 * \date	26/11/2019
 		 *
 		 * \param	world	The world.

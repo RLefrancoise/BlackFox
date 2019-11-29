@@ -4,6 +4,8 @@
 #include <memory>
 #include <typeinfo>
 #include <typeindex>
+#include <rttr/variant.h>
+#include <vector>
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
@@ -164,6 +166,10 @@ namespace BlackFox
 			return static_cast<S*>(m_systems[systemType].get());
 		}
 
+		static void createSystemFromType(const rttr::type& system, DiContainer container);
+		static void updateSystems(float dt, ComponentSystemGroups group, const BFWorld::Ptr& world);
+		static void clearSystems();
+
 	private:
 		/*! \brief	The level DI container */
 		DiContainer m_container;
@@ -173,6 +179,9 @@ namespace BlackFox
 		std::unordered_map<std::type_index, BFComponentSystem::Ptr> m_systems;
 		/*! \brief	System groups */
 		std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem*>> m_systemGroups;
+
+		static std::unordered_map<rttr::type, rttr::variant> registeredSystems;
+		static std::unordered_map<ComponentSystemGroups, std::vector<rttr::variant>> systemTypes;
 	};
 }
 

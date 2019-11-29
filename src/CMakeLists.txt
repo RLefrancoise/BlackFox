@@ -4,6 +4,10 @@ project(BlackFox)
 # Build
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
+IF(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    add_compile_definitions(BF_DEBUG)
+ENDIF()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # SDL2
@@ -39,6 +43,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
 
 # ChaiScript
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ChaiScript/include)
+
+# RTTR
+find_package(RTTR CONFIG REQUIRED Core)
 
 # Files
 file(
@@ -76,9 +83,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only RTTR::Core_Lib)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only RTTR::Core_Lib dl pthread)
 ENDIF()
 
 target_link_libraries(

@@ -7,6 +7,7 @@
 #include "BFCommandManager.h"
 #include "BFTypeDefs.h"
 #include "BFWorld.h"
+#include "BFScene.h"
 
 namespace BlackFox
 {
@@ -235,6 +236,8 @@ namespace BlackFox
 		 */
 		void cleanup();
 
+		void handleWorldSystems(ComponentSystemGroups group) const;
+
 		/*! \brief	SDL root */
 		sdl::Root m_root;
 		/*! \brief	SDL window */
@@ -257,6 +260,7 @@ namespace BlackFox
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;
+
 		/*! \brief	The worlds */
 		WorldList m_worlds;
 		/*! \brief	The current world */
