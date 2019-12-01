@@ -24,4 +24,15 @@ namespace BlackFox
 		m_value = (180.f / BFMath::PI) * radians.value();
 		return *this;
 	}
+
+    BFDegree &BFDegree::operator=(float angle)
+    {
+        m_value = angle;
+        return *this;
+    }
+
+    float BFDegree::operator()()
+    {
+        return m_value;
+    }
 }

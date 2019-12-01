@@ -7,7 +7,7 @@ namespace BlackFox
 {
 	BFWorld::WorldList BFWorld::worlds;
     std::unordered_map<rttr::type, BFComponentSystem::Ptr> BFWorld::registeredSystems;
-    std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> BFWorld::systemTypes;
+    std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> BFWorld::systemGroups;
 
 	BFWorld::BFWorld(DiContainer container)
 	: m_container(std::move(container))
@@ -83,7 +83,7 @@ namespace BlackFox
 		BFComponentSystem::Ptr sharedPtr(sPtr);
 
 		//Add the system to the systems map
-		systemTypes[group].emplace_back(sharedPtr);
+		systemGroups[group].emplace_back(sharedPtr);
 		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group)
 
 		//Remember the registration of the system
@@ -94,19 +94,20 @@ namespace BlackFox
 
 	void BFWorld::getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems)
 	{
-		if(systemTypes.find(group) == systemTypes.end()) return;
-		*systems = systemTypes.at(group);
+		if(systemGroups.find(group) == systemGroups.end()) return;
+		*systems = systemGroups.at(group);
 	}
 
 	void BFWorld::refreshSystems(ComponentSystemGroups group, const BFApplication* application)
 	{
-		if(systemTypes.find(group) == systemTypes.end()) return;
+		if(systemGroups.find(group) == systemGroups.end()) return;
 
-		std::vector<BFComponentSystem::Ptr> systems = systemTypes[group];
+		std::vector<BFComponentSystem::Ptr> systems = systemGroups[group];
 
 		//for each system
 		for(const auto& system : systems)
 		{
+		    //for each world
 			for(const auto& world : worlds)
 			{
 				system->setWorld(world.second.get());

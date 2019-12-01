@@ -67,6 +67,10 @@ namespace BlackFox
 		 */
 		BFDegree& operator=(const BFRadian& radians);
 
+		BFDegree& operator=(float angle);
+
+		float operator()();
+
 	private:
 		/*! \brief	The number of degrees. */
 		float m_value;

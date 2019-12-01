@@ -5,8 +5,16 @@
 
 namespace BlackFox::Components
 {
-	struct BFPositionComponent //: BFComponent
+	struct BFPositionComponent : BFComponent<BFPositionComponent>
 	{
+	    BF_COMPONENT("Position")
+
+	    BFPositionComponent(int x, int y)
+	    {
+	        this->x = x;
+	        this->y = y;
+	    }
+
 		int x;
 		int y;
 	};

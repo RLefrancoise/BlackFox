@@ -1,6 +1,8 @@
 #include "BFRenderSpriteSystem.h"
 #include "BFApplication.h"
 #include "BFPositionComponent.h"
+#include "BFRotationComponent.h"
+#include "BFScaleComponent.h"
 #include "BFSpriteComponent.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "BFRenderSpriteSystem")
@@ -20,9 +22,13 @@ namespace BlackFox::Systems
 		for(auto entity : view)
 		{
 			auto& position = view.get<BFPositionComponent>(entity);
+			//Rotation is optional, check if entity has rotation
+			auto* rotation = m_world->entityManager()->try_get<BFRotationComponent>(entity);
+			//Scale is optional, check if entity has scale
+			auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
 			auto& sprite = view.get<BFSpriteComponent>(entity);
 
-			auto image = sprite.image;
+			sdl::Texture* image = sprite.image;
 			const auto size = sprite.image->size();
 
 			//Render on screen
@@ -43,15 +49,38 @@ namespace BlackFox::Systems
 				BF_WARNING("Renderer does not support texture alpha mod : {}", SDL_GetError())
 			}
 
-			//Renderer the sprite
-			m_application->renderer().render_copy(
-				*image, //texture to render
-				sprite.rect, //rect of the texture
-				sdl::Rect( //position & size on screen
-					position.x,
-					position.y,
-					size.x,
-					size.y));
+			//Render the sprite
+            if(rotation != nullptr /*|| scale != nullptr*/)
+            {
+                //auto s = scale != nullptr ? sdl::Vec2f(scale->scaleX, scale->scaleY) : sdl::Vec2f(1.0f, 1.0f);
+
+                /*if(rotation != nullptr)
+                {*/
+                    SDL_Rect screenRect {position.x, position.y, size.x, size.y};
+                    if(SDL_RenderCopyEx(
+                            m_application->renderer().ptr(),
+                            image->ptr(),
+                            &sprite.rect,
+                            &screenRect,
+                            rotation->angle(),
+                            &sprite.center,
+                            SDL_FLIP_NONE) < 0)
+                    {
+                        BF_WARNING("Failed to rotate sprite : {}", SDL_GetError())
+                    }
+                //}
+            }
+			else
+            {
+                m_application->renderer().render_copy(
+                    *image, //texture to render
+                    sprite.rect, //rect of the texture
+                    sdl::Rect( //position & size on screen
+                            position.x,
+                            position.y,
+                            size.x,
+                            size.y));
+			}
 		}
 	}
 }

@@ -5,13 +5,18 @@
 
 namespace BlackFox
 {
+    template <typename C>
 	struct BFComponent
 	{
-		std::string name() const
-		{
-			return typeid(this).name();
-		}
+	    BFComponent() = default;
+	    BFComponent(const BFComponent&) = default;
+	    BFComponent(BFComponent&&) noexcept = default;
+	    virtual ~BFComponent() noexcept = default;
+
+	    BFComponent<C>& operator=(const BFComponent<C>&) = default;
 	};
 }
+
+#define BF_COMPONENT(componentName) const char* name = "componentName";
 
 #endif

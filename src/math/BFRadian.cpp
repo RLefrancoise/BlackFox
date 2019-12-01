@@ -24,4 +24,9 @@ namespace BlackFox
 		m_value = (BFMath::PI / 180.f) * degrees.value();
 		return *this;
 	}
+
+    float BFRadian::operator()()
+    {
+        return m_value;
+    }
 }

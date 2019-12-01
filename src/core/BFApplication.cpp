@@ -6,6 +6,7 @@
 #include "BFComponentSystem.h"
 #include "BFApplicationEventsSystem.h"
 #include "BFPositionComponent.h"
+#include "BFRotationComponent.h"
 #include "BFSpriteComponent.h"
 
 using namespace cinject;
@@ -133,6 +134,7 @@ namespace BlackFox
                     blueEntity,
                     &squareImg,
 					sdl::Rect(sdl::Vec2i(), squareImg.size()),
+					SDL_Point {squareImg.size().x / 2, squareImg.size().y / 2},
 					sdl::Color::Blue(),
 					128, //half transparent
 					SDL_BLENDMODE_BLEND);
@@ -143,10 +145,15 @@ namespace BlackFox
 					redEntity,
 					256 + squareImg.size().x / 2,
 					256 + squareImg.size().y / 2);
+			defaultWorld->entityManager()->assign<BFRotationComponent>(
+			        redEntity,
+			        45.0f
+			        );
 			defaultWorld->entityManager()->assign<BFSpriteComponent>(
 			        redEntity,
 			        &squareImg,
 			        sdl::Rect(sdl::Vec2i(), squareImg.size()),
+                    SDL_Point {squareImg.size().x / 2, squareImg.size().y / 2},
 			        sdl::Color::Red(),
 			        128, //Half transparent
 			        SDL_BLENDMODE_BLEND);

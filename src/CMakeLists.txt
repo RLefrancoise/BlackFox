@@ -19,6 +19,9 @@ include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
+# SDL gfx
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/SDL2_gfx_1.0.4)
+
 # CInject
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cinject/include)
 
@@ -83,9 +86,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only RTTR::Core_Lib)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} fmt::fmt-header-only RTTR::Core_Lib dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib dl pthread)
 ENDIF()
 
 target_link_libraries(

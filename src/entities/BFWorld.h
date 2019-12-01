@@ -127,7 +127,7 @@ namespace BlackFox
 			//Add the system to the system list
 			registeredSystems.insert(std::make_pair(type, system));
 			//Add the system to its group
-			systemTypes[group].emplace_back(system);
+			systemGroups[group].emplace_back(system);
 
 			BF_PRINT("System {} created", type.get_name().to_string())
 
@@ -190,7 +190,7 @@ namespace BlackFox
 		static WorldList worlds;
 
 		static std::unordered_map<rttr::type, BFComponentSystem::Ptr> registeredSystems;
-		static std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> systemTypes;
+		static std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> systemGroups;
 	};
 }
 
