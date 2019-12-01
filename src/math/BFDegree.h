@@ -27,7 +27,10 @@ namespace BlackFox
 		 *
 		 * \param	degrees	(Optional) Initial degrees.
 		 */
-		explicit BFDegree(float degrees = 0.f);
+		constexpr explicit BFDegree(float degrees = 0.f)
+		: m_value(degrees)
+		{
+		}
 
 		/*!
 		 * \fn	explicit BFDegree::BFDegree(const BFRadian& radians);
@@ -51,7 +54,7 @@ namespace BlackFox
 		 *
 		 * \returns	Number of degrees.
 		 */
-		float value() const;
+		constexpr float value() const { return m_value; }
 
 		/*!
 		 * \fn	BFDegree BFDegree::operator=(const BFRadian& radians) const;
@@ -67,10 +70,11 @@ namespace BlackFox
 		 */
 		BFDegree& operator=(const BFRadian& radians);
 
-		BFDegree& operator=(float angle);
-
-		float operator()();
-
+		constexpr BFDegree& operator=(float angle)
+		{
+			m_value = angle;
+			return *this;
+		}
 	private:
 		/*! \brief	The number of degrees. */
 		float m_value;

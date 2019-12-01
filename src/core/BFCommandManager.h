@@ -19,7 +19,7 @@ namespace BlackFox
 	 *
 	 * \brief	Manager for BlackFox commands.
 	 *
-	 * \author	Renaud Lefran�oise
+	 * \author	Renaud Lefrançoise
 	 * \date	15/11/2019
 	 */
 	class BFCommandManager : private BFNonCopyable
@@ -38,7 +38,7 @@ namespace BlackFox
 		 *
 		 * \brief	Default constructor
 		 *
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 */
 		CINJECT(BFCommandManager(DiContainer container));
@@ -48,7 +48,7 @@ namespace BlackFox
 		 *
 		 * \brief	Move constructor
 		 *
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \param [in,out]	manager	The manager.
@@ -60,7 +60,7 @@ namespace BlackFox
 		 *
 		 * \brief	Destructor
 		 *
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 */
 		~BFCommandManager();
@@ -70,7 +70,7 @@ namespace BlackFox
 		 *
 		 * \brief	Creates a command
 		 * 			
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \exception	std::runtime_error	Raised when the command could not be created.
@@ -114,7 +114,7 @@ namespace BlackFox
 		 *
 		 * \brief	Clears all commands
 		 *
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 */
 		void clearAllCommands();
@@ -124,7 +124,7 @@ namespace BlackFox
 		 *
 		 * \brief	Queries if the command is registered
 		 * 			
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command.
@@ -134,9 +134,9 @@ namespace BlackFox
 		template <typename C>
 		bool isCommandRegistered() const
 		{
-			for (auto it = m_commands.cbegin(); it != m_commands.cend(); ++it)
+			for (const auto& m_command : m_commands)
 			{
-				if (it->first.hash_code() == typeid(C).hash_code()) return true;
+				if (m_command.first.hash_code() == typeid(C).hash_code()) return true;
 			}
 
 			return false;
@@ -148,7 +148,7 @@ namespace BlackFox
 		 * \brief	Queries if a command is registered
 		 *
 		 * 
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 * 			
 		 * \tparam	C	Type of the command.
@@ -177,7 +177,7 @@ namespace BlackFox
 		 *
 		 * \brief	Gets registered command
 		 * 			
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command.
@@ -196,7 +196,7 @@ namespace BlackFox
 		 *
 		 * \brief	Registers a command
 		 * 			
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command
@@ -220,7 +220,7 @@ namespace BlackFox
 		 *
 		 * \brief	Unregisters a command
 		 * 			
-		 * \author	Renaud Lefran�oise
+		 * \author	Renaud Lefrançoise
 		 * \date	15/11/2019
 		 *
 		 * \tparam	C	Type of the command

@@ -10,12 +10,12 @@ namespace BlackFox::Components
 	{
 	    BF_COMPONENT("Rotation")
 
-	    explicit BFRotationComponent(float degrees)
+	    constexpr explicit BFRotationComponent(float degrees)
+	    : angle(degrees)
         {
-	        angle = degrees;
         }
 
-	    explicit BFRotationComponent(BFDegree a)
+	    constexpr explicit BFRotationComponent(BFDegree a)
         {
 	        angle = a;
         }

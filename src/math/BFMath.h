@@ -6,13 +6,13 @@ namespace BlackFox
 	namespace BFMath
 	{
 		/*! \brief	The smallest value between two floats. */
-		const float EPSILON = 0.00001f;
+		constexpr float EPSILON = 0.00001f;
 		/*! \brief	The value of PI. */
-		const float PI = 3.1415926535897932384626433832795f;
+		constexpr float PI = 3.1415926535897932384626433832795f;
 		/*! \brief	The value of PI/2. */
-		const float HALF_PI = PI * 0.5f;
+		constexpr float HALF_PI = PI * 0.5f;
 		/*! \brief	The value of 2PI. */
-		const float TWO_PI = PI * 2.0f;
+		constexpr float TWO_PI = PI * 2.0f;
 
 		/*!
 		 * \fn	T clamp(T x, T low, T high);

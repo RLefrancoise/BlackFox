@@ -4,7 +4,8 @@ using namespace cinject;
 
 namespace BlackFox
 {
-	BFCommandManager::BFCommandManager(std::shared_ptr<Container> container) : m_container(container)
+	BFCommandManager::BFCommandManager(DiContainer container)
+	: m_container(std::move(container))
 	{
 	}
 

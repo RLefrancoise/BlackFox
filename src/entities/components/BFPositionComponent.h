@@ -9,10 +9,10 @@ namespace BlackFox::Components
 	{
 	    BF_COMPONENT("Position")
 
-	    BFPositionComponent(int x, int y)
+	    constexpr BFPositionComponent(int x, int y)
+	    : x(x)
+	    , y(y)
 	    {
-	        this->x = x;
-	        this->y = y;
 	    }
 
 		int x;

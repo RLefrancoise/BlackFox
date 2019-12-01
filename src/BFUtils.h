@@ -5,7 +5,10 @@
 
 namespace BlackFox
 {
-	static bool hasFlag(Uint32 mask, Uint32 flag);
+	static constexpr bool hasFlag(Uint32 mask, Uint32 flag)
+	{
+		return (mask & flag) == flag;
+	}
 }
 
 #endif

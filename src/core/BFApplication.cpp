@@ -4,10 +4,11 @@
 
 #include "BFWorld.h"
 #include "BFComponentSystem.h"
-#include "BFApplicationEventsSystem.h"
+
 #include "BFPositionComponent.h"
 #include "BFRotationComponent.h"
 #include "BFSpriteComponent.h"
+#include "BFVector2.h"
 
 using namespace cinject;
 using namespace BlackFox::Components;

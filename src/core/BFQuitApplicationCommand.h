@@ -16,7 +16,6 @@ namespace BlackFox
 
 	public:
 		CINJECT(BFQuitApplicationCommand(std::shared_ptr<BFApplication> application));
-		BFQuitApplicationCommand(const BFQuitApplicationCommand& cmd) {}
 
 		void execute(void) override;
 		BFQuitApplicationCommand* clone(void) const override;

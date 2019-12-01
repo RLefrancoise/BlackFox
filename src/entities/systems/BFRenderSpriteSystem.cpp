@@ -5,6 +5,8 @@
 #include "BFScaleComponent.h"
 #include "BFSpriteComponent.h"
 
+#include <cmath>
+
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "BFRenderSpriteSystem")
 
 using namespace BlackFox::Components;
@@ -21,14 +23,14 @@ namespace BlackFox::Systems
 		auto view = m_world->entityManager()->view<BFPositionComponent, BFSpriteComponent>();
 		for(auto entity : view)
 		{
-			auto& position = view.get<BFPositionComponent>(entity);
+			const auto& position = view.get<BFPositionComponent>(entity);
 			//Rotation is optional, check if entity has rotation
-			auto* rotation = m_world->entityManager()->try_get<BFRotationComponent>(entity);
+			const auto* rotation = m_world->entityManager()->try_get<BFRotationComponent>(entity);
 			//Scale is optional, check if entity has scale
-			auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
-			auto& sprite = view.get<BFSpriteComponent>(entity);
+			const auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
+			const auto& sprite = view.get<BFSpriteComponent>(entity);
 
-			sdl::Texture* image = sprite.image;
+			const auto* image = sprite.image;
 			const auto size = sprite.image->size();
 
 			//Render on screen
@@ -50,25 +52,29 @@ namespace BlackFox::Systems
 			}
 
 			//Render the sprite
-            if(rotation != nullptr /*|| scale != nullptr*/)
+            if (rotation != nullptr || scale != nullptr)
             {
-                //auto s = scale != nullptr ? sdl::Vec2f(scale->scaleX, scale->scaleY) : sdl::Vec2f(1.0f, 1.0f);
+                auto s = scale != nullptr
+                		? sdl::Vec2f(scale->scaleX, scale->scaleY)
+                		: sdl::Vec2f(1.0f, 1.0f);
+				int posX(static_cast<int>((position.x + size.x / 2.0f) - (size.x / 2.0f * s.x)));
+				int posY(static_cast<int>((position.y + size.y / 2.0f) - (size.y / 2.0f * s.y)));
 
-                /*if(rotation != nullptr)
-                {*/
-                    SDL_Rect screenRect {position.x, position.y, size.x, size.y};
+                if(rotation != nullptr)
+                {
+                    SDL_Rect screenRect {posX, posY, (int) (size.x * s.x), (int) (size.y * s.y)};
                     if(SDL_RenderCopyEx(
                             m_application->renderer().ptr(),
                             image->ptr(),
                             &sprite.rect,
                             &screenRect,
-                            rotation->angle(),
+                            rotation->angle.value(),
                             &sprite.center,
                             SDL_FLIP_NONE) < 0)
                     {
                         BF_WARNING("Failed to rotate sprite : {}", SDL_GetError())
                     }
-                //}
+                }
             }
 			else
             {

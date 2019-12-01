@@ -9,10 +9,10 @@ namespace BlackFox
     {
         BF_COMPONENT("Scale")
 
-        explicit BFScaleComponent(float x, float y)
+        constexpr explicit BFScaleComponent(float x, float y)
+        : scaleX(x)
+        , scaleY(y)
         {
-            scaleX = x;
-            scaleY = y;
         }
 
         float scaleX;

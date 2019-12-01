@@ -13,14 +13,14 @@ namespace BlackFox::Components
 	{
 	    BF_COMPONENT("Sprite")
 
-	    BFSpriteComponent(sdl::Texture* img, sdl::Rect r, SDL_Point ctr, sdl::Color c, Uint8 a, SDL_BlendMode bm)
+	    constexpr BFSpriteComponent(sdl::Texture* img, sdl::Rect r, SDL_Point ctr, sdl::Color c, Uint8 a, SDL_BlendMode bm)
+	    : image(img)
+	    , rect(r)
+	    , center(ctr)
+	    , color(c)
+	    , alpha(a)
+	    , blendMode(bm)
         {
-	        image = img;
-	        rect = r;
-	        center = ctr;
-	        color = c;
-	        alpha = a;
-	        blendMode = bm;
         }
 
 		sdl::Texture* image;
