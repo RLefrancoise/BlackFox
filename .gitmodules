@@ -19,3 +19,6 @@
 [submodule "thirdParties/ChaiScript"]
 	path = thirdParties/ChaiScript
 	url = https://github.com/ChaiScript/ChaiScript.git
+[submodule "thirdParties/inih"]
+	path = thirdParties/inih
+	url = https://github.com/jtilly/inih.git

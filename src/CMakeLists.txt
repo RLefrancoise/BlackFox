@@ -50,6 +50,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ChaiScript/include)
 # RTTR
 find_package(RTTR CONFIG REQUIRED Core)
 
+# Inih
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/inih)
+
 # Files
 file(
     GLOB_RECURSE
