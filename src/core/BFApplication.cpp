@@ -7,8 +7,8 @@
 
 #include "BFPositionComponent.h"
 #include "BFRotationComponent.h"
+#include "BFScaleComponent.h"
 #include "BFSpriteComponent.h"
-#include "BFVector2.h"
 
 using namespace cinject;
 using namespace BlackFox::Components;
@@ -129,7 +129,11 @@ namespace BlackFox
 					blueEntity,
 					256,
 					256);
-
+            //scale
+            defaultWorld->entityManager()->assign<BFScaleComponent>(
+                    blueEntity,
+                    1.5f,
+                    1.5f);
 			//sprite
 			defaultWorld->entityManager()->assign<BFSpriteComponent>(
                     blueEntity,

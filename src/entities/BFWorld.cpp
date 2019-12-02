@@ -102,7 +102,7 @@ namespace BlackFox
 	{
 		if(systemGroups.find(group) == systemGroups.end()) return;
 
-		std::vector<BFComponentSystem::Ptr> systems = systemGroups[group];
+		const auto& systems = systemGroups[group];
 
 		//for each system
 		for(const auto& system : systems)

@@ -114,7 +114,7 @@ namespace BlackFox
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 
-			auto type = rttr::type::get<S>();
+			const auto type = rttr::type::get<S>();
 
 			if(hasSystem<S>())
 			{
@@ -131,7 +131,7 @@ namespace BlackFox
 
 			BF_PRINT("System {} created", type.get_name().to_string())
 
-			return static_cast<S*>(system.get());
+			return system.get();
 		}
 
 		static void createSystemFromType(const rttr::type& system, BFApplication* application);
@@ -151,7 +151,7 @@ namespace BlackFox
 		template <typename S>
 		static bool hasSystem()
 		{
-			auto type = rttr::type::get<S>();
+			const auto type = rttr::type::get<S>();
 			return registeredSystems.find(type) != registeredSystems.end();
 		}
 
@@ -169,7 +169,7 @@ namespace BlackFox
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of getSystem must derive from BFComponentSystem");
 
-			auto type = rttr::type::get<S>();
+			const auto type = rttr::type::get<S>();
 
 			if (!hasSystem<S>())
 			{

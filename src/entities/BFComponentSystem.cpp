@@ -16,15 +16,15 @@ RTTR_REGISTRATION
 
 namespace BlackFox
 {
-	BFComponentSystem::BFComponentSystem(BFApplication *application) :
-	m_application(application),
-	m_world(nullptr)
+	BFComponentSystem::BFComponentSystem(BFApplication *application)
+	: m_application(application)
+	, m_world(nullptr)
 	{
 	}
 
-	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application) : 
-	m_application(application.get()), 
-	m_world(nullptr)
+	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application)
+	: m_application(application.get())
+	, m_world(nullptr)
 	{
 	}
 

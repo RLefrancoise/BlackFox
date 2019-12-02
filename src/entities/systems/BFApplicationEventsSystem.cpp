@@ -6,7 +6,7 @@ BF_SYSTEM_REGISTER(BlackFox::Systems::BFApplicationEventsSystem, "BFApplicationE
 
 namespace BlackFox::Systems
 {
-	BFApplicationEventsSystem::BFApplicationEventsSystem(std::shared_ptr<BFApplication> application) 
+	BFApplicationEventsSystem::BFApplicationEventsSystem(BFApplication::Ptr application)
 	: BFComponentSystem(std::move(application))
 	{
 	}

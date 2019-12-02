@@ -5,8 +5,6 @@
 #include "BFScaleComponent.h"
 #include "BFSpriteComponent.h"
 
-#include <cmath>
-
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "BFRenderSpriteSystem")
 
 using namespace BlackFox::Components;
@@ -23,15 +21,25 @@ namespace BlackFox::Systems
 		auto view = m_world->entityManager()->view<BFPositionComponent, BFSpriteComponent>();
 		for(auto entity : view)
 		{
+		    //Position
 			const auto& position = view.get<BFPositionComponent>(entity);
 			//Rotation is optional, check if entity has rotation
 			const auto* rotation = m_world->entityManager()->try_get<BFRotationComponent>(entity);
 			//Scale is optional, check if entity has scale
 			const auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
+			//Sprite
 			const auto& sprite = view.get<BFSpriteComponent>(entity);
 
 			const auto* image = sprite.image;
 			const auto size = sprite.image->size();
+
+			//Compute sprite scale
+			const sdl::Vec2f scaleFactor = { scale != nullptr ? scale->scaleX : 1.0f, scale != nullptr ? scale->scaleY : 1.0f };
+			//Compute position according to scale
+            const int posX { static_cast<int>((position.x + size.x / 2.0f) - (size.x / 2.0f * scaleFactor.x)) };
+            const int posY { static_cast<int>((position.y + size.y / 2.0f) - (size.y / 2.0f * scaleFactor.y)) };
+            //Final rect on screen
+            const SDL_Rect screenRect {posX, posY, (int) (size.x * scaleFactor.x), (int) (size.y * scaleFactor.y)};
 
 			//Render on screen
 			SDL_SetRenderTarget(m_application->renderer().ptr(), nullptr);
@@ -52,28 +60,18 @@ namespace BlackFox::Systems
 			}
 
 			//Render the sprite
-            if (rotation != nullptr || scale != nullptr)
+            if (rotation != nullptr)
             {
-                auto s = scale != nullptr
-                		? sdl::Vec2f(scale->scaleX, scale->scaleY)
-                		: sdl::Vec2f(1.0f, 1.0f);
-				int posX(static_cast<int>((position.x + size.x / 2.0f) - (size.x / 2.0f * s.x)));
-				int posY(static_cast<int>((position.y + size.y / 2.0f) - (size.y / 2.0f * s.y)));
-
-                if(rotation != nullptr)
+                if(SDL_RenderCopyEx(
+                        m_application->renderer().ptr(),
+                        image->ptr(),
+                        &sprite.rect,
+                        &screenRect,
+                        rotation->angle.value(),
+                        &sprite.center,
+                        SDL_FLIP_NONE) < 0)
                 {
-                    SDL_Rect screenRect {posX, posY, (int) (size.x * s.x), (int) (size.y * s.y)};
-                    if(SDL_RenderCopyEx(
-                            m_application->renderer().ptr(),
-                            image->ptr(),
-                            &sprite.rect,
-                            &screenRect,
-                            rotation->angle.value(),
-                            &sprite.center,
-                            SDL_FLIP_NONE) < 0)
-                    {
-                        BF_WARNING("Failed to rotate sprite : {}", SDL_GetError())
-                    }
+                    BF_WARNING("Failed to rotate sprite : {}", SDL_GetError())
                 }
             }
 			else
@@ -81,11 +79,7 @@ namespace BlackFox::Systems
                 m_application->renderer().render_copy(
                     *image, //texture to render
                     sprite.rect, //rect of the texture
-                    sdl::Rect( //position & size on screen
-                            position.x,
-                            position.y,
-                            size.x,
-                            size.y));
+                    sdl::Rect(screenRect)); //position & size on screen
 			}
 		}
 	}
