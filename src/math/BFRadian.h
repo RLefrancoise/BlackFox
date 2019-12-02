@@ -29,8 +29,7 @@ namespace BlackFox
 		 */
 		constexpr explicit BFRadian(float radians = 0.f)
 		: m_value(radians)
-		{
-		}
+		{}
 
 		/*!
 		 * \fn	explicit BFRadian::BFRadian(const BFDegree& degrees);
@@ -70,6 +69,11 @@ namespace BlackFox
 		 */
 		BFRadian& operator=(const BFDegree& degrees);
 
+		constexpr BFRadian& operator=(float angle)
+		{
+			m_value = angle;
+			return *this;
+		}
 
 	private:
 		/*! \brief	The number of radians. */

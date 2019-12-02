@@ -13,7 +13,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	11/11/2019
 	 */
-
+    template <typename T>
 	struct BFVector2
 	{
 		/*!
@@ -25,12 +25,12 @@ namespace BlackFox
 		 * \param	x	(Optional) The x value.
 		 * \param	y	(Optional) The y value.
 		 */
-		constexpr explicit BFVector2(float x = 0, float y = 0)
+		constexpr explicit BFVector2(T x = 0, T y = 0)
 		: x(x)
 		, y(y)
 		{}
 
-		constexpr BFVector2(const BFVector2& v) = default;
+		constexpr BFVector2(const BFVector2<T>& v) = default;
 
 		/*!
 		 * \brief	Constructor
@@ -40,7 +40,7 @@ namespace BlackFox
 		 *
 		 * \param	v	The SDL vector.
 		 */
-		constexpr explicit BFVector2(const sdl::Vec2f& v)
+		constexpr explicit BFVector2(const sdl::Vec2<T>& v)
 		: x(v.x)
 		, y(v.y)
 		{
@@ -56,9 +56,9 @@ namespace BlackFox
 		 *
 		 * \returns	The new vector
 		 */
-		constexpr BFVector2 operator+(const BFVector2& rhs) const
+		constexpr BFVector2<T> operator+(const BFVector2<T>& rhs) const
 		{
-			return BFVector2(x + rhs.x, y + rhs.y);
+			return BFVector2<T>(x + rhs.x, y + rhs.y);
 		}
 
 		/*!
@@ -71,9 +71,9 @@ namespace BlackFox
 		 *
 		 * \returns	The new vector
 		 */
-		constexpr BFVector2 operator-(const BFVector2& rhs) const
+		constexpr BFVector2<T> operator-(const BFVector2<T>& rhs) const
 		{
-			return BFVector2(x - rhs.x, y - rhs.y);
+			return BFVector2<T>(x - rhs.x, y - rhs.y);
 		}
 
 		/*!
@@ -84,9 +84,9 @@ namespace BlackFox
 		 *
 		 * \returns	The new vector
 		 */
-		constexpr BFVector2 operator-() const
+		constexpr BFVector2<T> operator-() const
 		{
-			return BFVector2(-x, -y);
+			return BFVector2<T>(-x, -y);
 		}
 
 		/*!
@@ -99,9 +99,9 @@ namespace BlackFox
 		 *
 		 * \returns	The new vector.
 		 */
-		constexpr BFVector2 operator*(float scale) const
+		constexpr BFVector2<T> operator*(float scale) const
 		{
-			return BFVector2(x * scale, y * scale);
+			return BFVector2<T>(x * scale, y * scale);
 		}
 
 		/*!
@@ -114,7 +114,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector
 		 */
-		constexpr BFVector2& operator+(const BFVector2& rhs)
+		constexpr BFVector2<T>& operator+(const BFVector2<T>& rhs)
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -131,7 +131,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector.
 		 */
-		constexpr BFVector2& operator-(const BFVector2& rhs)
+		constexpr BFVector2<T>& operator-(const BFVector2<T>& rhs)
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -146,7 +146,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector
 		 */
-		constexpr BFVector2& operator-()
+		constexpr BFVector2<T>& operator-()
 		{
 			x = -x;
 			y = -y;
@@ -163,7 +163,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector.
 		 */
-		constexpr BFVector2& operator*(float scale)
+		constexpr BFVector2<T>& operator*(float scale)
 		{
 			x *= scale;
 			y *= scale;
@@ -180,7 +180,7 @@ namespace BlackFox
 		 *
 		 * \returns	True if the vector is equal to the other vector
 		 */
-		constexpr bool operator==(const BFVector2& rhs) const
+		constexpr bool operator==(const BFVector2<T>& rhs) const
 		{
 			return x == rhs.x && y == rhs.y;
 		}
@@ -195,35 +195,39 @@ namespace BlackFox
 		 *
 		 * \returns	True if the vector is not equal to the other vector
 		 */
-		constexpr bool operator!=(const BFVector2& rhs) const
+		constexpr bool operator!=(const BFVector2<T>& rhs) const
 		{
 			return !(*this == rhs);
 		}
 
-		constexpr BFVector2& operator=(const BFVector2& v) = default;
-		constexpr BFVector2& operator=(BFVector2&& v) = default;
+		constexpr BFVector2<T>& operator=(const BFVector2<T>& v) = default;
+		constexpr BFVector2<T>& operator=(BFVector2<T>&& v) = default;
 
-		constexpr BFVector2& operator=(const sdl::Vec2f& v)
+		constexpr BFVector2<T>& operator=(const sdl::Vec2<T>& v)
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
 
-		constexpr BFVector2& operator=(sdl::Vec2f&& v)
+		constexpr BFVector2<T>& operator=(sdl::Vec2<T>&& v)
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
 
-		constexpr operator sdl::Vec2f () const { return sdl::Vec2f(x, y); }
+		constexpr operator sdl::Vec2<T> () const { return sdl::Vec2<T>(x, y); }
 
 		/*! \brief	X value */
-		float x;
+		T x;
 		/*! \brief	Y value */
-		float y;
+		T y;
 	};
+
+    typedef BFVector2<float> BFVector2f;
+    typedef BFVector2<int> BFVector2i;
+    typedef BFVector2<double> BFVector2d;
 }
 
 #endif

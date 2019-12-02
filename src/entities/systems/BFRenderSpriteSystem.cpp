@@ -19,7 +19,7 @@ namespace BlackFox::Systems
 	void BFRenderSpriteSystem::update(float dt)
 	{
 		auto view = m_world->entityManager()->view<BFPositionComponent, BFSpriteComponent>();
-		for(auto entity : view)
+		for(const auto& entity : view)
 		{
 		    //Position
 			const auto& position = view.get<BFPositionComponent>(entity);
@@ -35,11 +35,13 @@ namespace BlackFox::Systems
 
 			//Compute sprite scale
 			const sdl::Vec2f scaleFactor = { scale != nullptr ? scale->scaleX : 1.0f, scale != nullptr ? scale->scaleY : 1.0f };
+
 			//Compute position according to scale
-            const int posX { static_cast<int>((position.x + size.x / 2.0f) - (size.x / 2.0f * scaleFactor.x)) };
-            const int posY { static_cast<int>((position.y + size.y / 2.0f) - (size.y / 2.0f * scaleFactor.y)) };
+            const int posX { (int) ((position.x + size.x / 2.0f) - (size.x / 2.0f * scaleFactor.x)) };
+            const int posY { (int) ((position.y + size.y / 2.0f) - (size.y / 2.0f * scaleFactor.y)) };
+
             //Final rect on screen
-            const SDL_Rect screenRect {posX, posY, (int) (size.x * scaleFactor.x), (int) (size.y * scaleFactor.y)};
+            const SDL_Rect screenRect { posX, posY, (int) (size.x * scaleFactor.x), (int) (size.y * scaleFactor.y) };
 
 			//Render on screen
 			SDL_SetRenderTarget(m_application->renderer().ptr(), nullptr);

@@ -1,6 +1,7 @@
 #include "BFApplication.h"
 
 #include <iostream>
+#include <INIReader.h>
 
 #include "BFWorld.h"
 #include "BFComponentSystem.h"
@@ -15,31 +16,31 @@ using namespace BlackFox::Components;
 
 namespace BlackFox
 {
-	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager) :
-		m_running(false),
-		m_lastFrameTime(0),
-		m_deltaTime(0.0f),
-		m_container(std::move(container)),
-		m_commandManager(std::move(commandManager))
+	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager, BFConfigData::Ptr configData) :
+    m_running(false),
+    m_deltaTime(0.0f),
+    m_container(std::move(container)),
+    m_commandManager(std::move(commandManager)),
+    m_configData(std::move(configData))
 	{
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept : 
-		m_root(app.m_root),
-		m_window(std::move(app.m_window)),
-		m_renderer(std::move(app.m_renderer)),
-		m_running(app.m_running),
-		m_lastFrameTime(app.m_lastFrameTime),
-		m_deltaTime(app.m_deltaTime),
-		m_container(std::move(app.m_container)),
-		m_commandManager(std::move(app.m_commandManager))
+    m_root(app.m_root),
+    m_window(std::move(app.m_window)),
+    m_renderer(std::move(app.m_renderer)),
+    m_running(app.m_running),
+    m_fps(app.m_fps),
+    m_deltaTime(app.m_deltaTime),
+    m_container(std::move(app.m_container)),
+    m_commandManager(std::move(app.m_commandManager)),
+    m_configData(std::move(app.m_configData))
 	{
 	}
 
 	int BFApplication::execute()
 	{
 		auto ev = sdl::Event{};
-		Uint32 currentTime = 0;
 
 		//init
 		if (!init()) return EXIT_FAILURE;
@@ -48,10 +49,8 @@ namespace BlackFox
 		m_running = true;
 		while(m_running)
 		{
-			//Get frame delta
-			currentTime = SDL_GetTicks();
-			m_deltaTime = (currentTime - m_lastFrameTime) / 1000.0f;
-			m_lastFrameTime = currentTime;
+		    //Update FPS & delta time
+		    m_deltaTime = SDL_framerateDelay(&m_fps) / 1000.0f;
 
 			//events
 			m_polledEvents.clear();
@@ -101,10 +100,14 @@ namespace BlackFox
 			m_root = sdl::Root();
 
 			//Window
-			m_window = sdl::Window("Black Fox", sdl::Vec2i(800, 600), SDL_INIT_EVENTS);
+			m_window = sdl::Window(m_configData->appData.name, m_configData->appData.windowSize, SDL_INIT_EVENTS);
 
 			//Renderer
 			m_renderer = m_window.make_renderer();
+
+			//FPS manager
+            SDL_initFramerate(&m_fps);
+            if(SDL_setFramerate(&m_fps, m_configData->appData.frameRate) < 0) BF_EXCEPTION("Failed to set framerate")
 
             //Create default world
             BFWorld::create("default", this);

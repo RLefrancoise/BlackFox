@@ -16,3 +16,8 @@ file(
 )
 
 add_library(sdl2gfx STATIC ${SDL2_GFX_SOURCES})
+
+target_link_libraries(
+        sdl2gfx
+        LINK_PRIVATE
+        ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY})

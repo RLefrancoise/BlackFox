@@ -20,8 +20,7 @@ namespace BlackFox::Components
 	    , color(c)
 	    , alpha(a)
 	    , blendMode(bm)
-        {
-        }
+        {}
 
 		sdl::Texture* image;
 		sdl::Rect rect;

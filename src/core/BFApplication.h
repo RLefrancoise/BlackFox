@@ -4,12 +4,14 @@
 #include <cinject/cinject.h>
 #include <memory>
 #include <cpp-sdl2/sdl.hpp>
+#include <SDL2_framerate.h>
 
 #include "BFWorld.h"
 #include "BFComponentSystemFlags.h"
 #include "BFCommandManager.h"
 #include "BFTypeDefs.h"
 #include "BFScene.h"
+#include "BFConfigData.h"
 
 namespace BlackFox
 {
@@ -45,7 +47,7 @@ namespace BlackFox
 		 * \param	container		The DI container.
 		 * \param	commandManager	The command manager.
 		 */
-		CINJECT(BFApplication(DiContainer container, BFCommandManager::Ptr commandManager));
+		CINJECT(BFApplication(DiContainer container, BFCommandManager::Ptr commandManager, BFConfigData::Ptr configData));
 
 		/*!
 		 * \fn	BFApplication::~BFApplication();
@@ -181,6 +183,8 @@ namespace BlackFox
 		 */
 		void cleanup();
 
+		void loadAppData();
+
 		/*! \brief	SDL root */
 		sdl::Root m_root;
 		/*! \brief	SDL window */
@@ -190,8 +194,8 @@ namespace BlackFox
 		/*! \brief	Is application running ? */
 		bool m_running;
 
-		/*! \brief	The last frame time */
-		Uint32 m_lastFrameTime;
+		/*! \brief  The FPS manager */
+		FPSmanager m_fps;
 		/*! \brief	The delta time */
 		float m_deltaTime;
 
@@ -203,6 +207,9 @@ namespace BlackFox
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;
+
+		/*! \brief  Config data */
+		BFConfigData::Ptr m_configData;
 	};
 }
 
