@@ -201,7 +201,7 @@ namespace BlackFox
 		}
 
 		constexpr BFVector2<T>& operator=(const BFVector2<T>& v) = default;
-		constexpr BFVector2<T>& operator=(BFVector2<T>&& v) = default;
+		constexpr BFVector2<T>& operator=(BFVector2<T>&& v) noexcept = default;
 
 		constexpr BFVector2<T>& operator=(const sdl::Vec2<T>& v)
 		{

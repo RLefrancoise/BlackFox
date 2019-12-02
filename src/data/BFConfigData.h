@@ -28,7 +28,7 @@ namespace BlackFox
         {
             appData = {
                 file.get("Application", "name", "BlackFox"), //name
-                file.getInt("Application", "frameRate", 60), //frame rate
+                file.getIntTo<Uint32>("Application", "frameRate", 60), //frame rate
                 file.getBool("Application", "fullScreen", false), //full screen
                 sdl::Vec2i( //window size
                     file.getInt("Application", "width", 800),
@@ -40,11 +40,11 @@ namespace BlackFox
         explicit operator std::string() const
         {
             return fmt::format("BFConfigData[name={}, frameRate={}, fullScreen={}, windowSize={},{}]"
-                , appData.name
-                , appData.frameRate
-                , appData.fullScreen
-                , appData.windowSize.x
-                , appData.windowSize.y);
+                    , appData.name
+                    , appData.frameRate
+                    , appData.fullScreen
+                    , appData.windowSize.x
+                    , appData.windowSize.y);
         }
     };
 }

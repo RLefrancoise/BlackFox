@@ -10,7 +10,7 @@ namespace BlackFox
     {
         //Config data
         m_configData = std::make_shared<BFConfigData>(BFIniFile("data/config.ini"));
-        BF_PRINT("{}", static_cast<std::string>(*m_configData))
+        BF_PRINT("{}", (std::string) *m_configData)
         m_container->bind<BFConfigData>().toConstant(m_configData);
     }
 }

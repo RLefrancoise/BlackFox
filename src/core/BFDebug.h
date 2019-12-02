@@ -5,8 +5,7 @@
 #include <fmt/format.h>
 #include <termcolor/termcolor.hpp>
 
-#define BF_DEBUG_HEADER fmt::format("{}:{} - {} - ", __FILE__, __LINE__, __FUNCTION__)
-#define BF_FORMAT(x, ...) fmt::format(BF_DEBUG_HEADER + (x), ##__VA_ARGS__)
+#define BF_FORMAT(x, ...) 		fmt::format("{}:{} - {} - {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(x, ##__VA_ARGS__))
 
 #ifdef BF_DEBUG
 //Print

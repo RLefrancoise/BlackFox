@@ -183,8 +183,6 @@ namespace BlackFox
 		 */
 		void cleanup();
 
-		void loadAppData();
-
 		/*! \brief	SDL root */
 		sdl::Root m_root;
 		/*! \brief	SDL window */
