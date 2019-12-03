@@ -1,4 +1,5 @@
 #include "BFIniFile.h"
+#include "BFDebug.h"
 
 namespace BlackFox
 {

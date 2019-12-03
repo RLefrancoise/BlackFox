@@ -21,8 +21,6 @@ namespace BlackFox
 	 */
 	class BFComponentSystem
 	{
-		friend class BFWorld;
-
 		RTTR_ENABLE()
 
 	public:

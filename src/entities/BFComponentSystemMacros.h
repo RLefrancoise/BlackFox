@@ -4,7 +4,6 @@
 #include <rttr/rttr_enable.h>
 #include <rttr/registration.h>
 
-#include "BFDebug.h"
 #include "BFComponentSystemFlags.h"
 
 namespace BlackFox {
@@ -14,9 +13,7 @@ namespace BlackFox {
 #define BF_SYSTEM_AUTO_CREATE(system, group)        RTTR_ENABLE(BlackFox::BFComponentSystem) \
                                                     public: \
                                                         explicit system(BlackFox::BFApplication* application): BlackFox::BFComponentSystem(application) \
-                                                        { \
-                                                            BF_PRINT("{} ctor(BFApplication*)", typeid(this).name()) \
-                                                        } \
+                                                        {} \
                                                         BlackFox::ComponentSystemGroups get_group() const { return group; }
 
 #define BF_SYSTEM_REGISTER(system, systemName)      RTTR_REGISTRATION \

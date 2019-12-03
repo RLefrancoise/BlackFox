@@ -3,8 +3,6 @@
 
 #include <INIReader.h>
 
-#include "BFDebug.h"
-
 namespace BlackFox
 {
     class BFIniFile
