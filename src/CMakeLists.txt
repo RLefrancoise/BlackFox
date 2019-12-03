@@ -53,6 +53,12 @@ find_package(RTTR CONFIG REQUIRED Core)
 # Inih
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/inih)
 
+# Lua
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/lua-5.3.5/src)
+
+# Sol2
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/single/include)
+
 # Files
 file(
     GLOB_RECURSE
@@ -89,9 +95,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib liblua)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib liblua dl pthread)
 ENDIF()
 
 target_link_libraries(

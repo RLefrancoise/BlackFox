@@ -22,3 +22,6 @@
 [submodule "thirdParties/inih"]
 	path = thirdParties/inih
 	url = https://github.com/jtilly/inih.git
+[submodule "thirdParties/sol2"]
+	path = thirdParties/sol2
+	url = https://github.com/ThePhD/sol2.git
