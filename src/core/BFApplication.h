@@ -129,6 +129,16 @@ namespace BlackFox
 		 */
 		const sdl::Renderer& renderer() const;
 
+        /*!
+         * \brief	Gets config data
+         *
+         * \author	Renaud Lefrançoise
+         * \date	03/12/2019
+         *
+         * \returns	Config data.
+         */
+		const BFConfigData::Ptr configData() const;
+
 	private:
 
 		/*!

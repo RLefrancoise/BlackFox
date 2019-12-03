@@ -20,6 +20,7 @@ namespace BlackFox
 {
 	BFApplication::BFApplication(DiContainer container, BFCommandManager::Ptr commandManager, BFConfigData::Ptr configData) :
     m_running(false),
+    m_fps(),
     m_deltaTime(0.0f),
     m_container(std::move(container)),
     m_commandManager(std::move(commandManager)),
@@ -94,6 +95,11 @@ namespace BlackFox
 		return m_renderer;
 	}
 
+    const BFConfigData::Ptr BFApplication::configData() const
+    {
+        return m_configData;
+    }
+
 	bool BFApplication::init()
 	{
 		try 
@@ -110,6 +116,10 @@ namespace BlackFox
 			//FPS manager
             SDL_initFramerate(&m_fps);
             if(SDL_setFramerate(&m_fps, m_configData->appData.frameRate) < 0) BF_EXCEPTION("Failed to set framerate")
+
+            //Register scripting entities
+            const auto& scriptManager = m_container->get<BFScriptingManager>();
+            scriptManager->registerEntities();
 
             //Create default world
             BFWorld::create("default", this);
@@ -169,7 +179,6 @@ namespace BlackFox
 			        SDL_BLENDMODE_BLEND);
 
 			//Test lua scripting
-			const auto& scriptManager = m_container->get<BFScriptingManager>();
 			sol::protected_function_result result = scriptManager->evalFile("data/test.lua");
 			if(!result.valid())
 			{
