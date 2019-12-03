@@ -25,6 +25,3 @@ add_subdirectory(SDL2_gfx_1.0.4)
 
 # Lua
 add_subdirectory(lua-5.3.5)
-
-# Sol2
-add_subdirectory(sol2)

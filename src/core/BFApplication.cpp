@@ -11,6 +11,8 @@
 #include "BFScaleComponent.h"
 #include "BFSpriteComponent.h"
 
+#include "BFScriptingManager.h"
+
 using namespace cinject;
 using namespace BlackFox::Components;
 
@@ -165,6 +167,17 @@ namespace BlackFox
 			        sdl::Color::Red(),
 			        128, //Half transparent
 			        SDL_BLENDMODE_BLEND);
+
+			//Test lua scripting
+			const auto& scriptManager = m_container->get<BFScriptingManager>();
+			sol::protected_function_result result = scriptManager->evalFile("data/test.lua");
+			if(!result.valid())
+			{
+				BF_EXCEPTION("Result of test.lua not valid: {}", (std::string) result)
+			}
+
+			int result_int = result;
+			BF_PRINT("Test.lua result: {}", result_int)
 		}
 		catch (sdl::Exception& err)
 		{
