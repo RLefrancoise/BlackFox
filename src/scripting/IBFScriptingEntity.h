@@ -3,17 +3,26 @@
 
 #include <memory>
 #include <rttr/rttr_enable.h>
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {
     class IBFScriptingEntity
     {
         RTTR_ENABLE()
-
     public:
         typedef std::shared_ptr<IBFScriptingEntity> Ptr;
 
+        explicit IBFScriptingEntity(DiContainer container)
+        : m_container(std::move(container))
+        {
+        }
+
+        virtual ~IBFScriptingEntity() = default;
+
         virtual void registerEntity() = 0;
+    protected:
+        DiContainer m_container;
     };
 }
 

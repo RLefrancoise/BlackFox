@@ -7,9 +7,10 @@
 
 namespace BlackFox
 {
-    BFScriptingManager::BFScriptingManager()
+    BFScriptingManager::BFScriptingManager(DiContainer container)
+    : m_container(std::move(container))
     {
-        m_state.open_libraries(sol::lib::base);
+        m_state.open_libraries(sol::lib::base, sol::lib::package);
 
         //Lua entities
         rttr::type entity_type = rttr::type::get<IBFLuaScriptingEntity>();
@@ -17,7 +18,7 @@ namespace BlackFox
 
         for(const auto& t : lua_entities)
         {
-            auto entity = t.create({&m_state});
+            auto entity = t.create({m_container, &m_state});
             if(!entity.is_valid())
             {
                 BF_WARNING("Failed to create variant for type {}", t.get_name().to_string())

@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "BFNonCopyable.h"
+#include "BFTypeDefs.h"
 #include "IBFScriptingEntity.h"
 
 namespace BlackFox
@@ -16,7 +17,7 @@ namespace BlackFox
 	public:
 	    std::shared_ptr<BFScriptingManager> Ptr;
 
-		BFScriptingManager();
+		CINJECT(BFScriptingManager(DiContainer container));
 		~BFScriptingManager() = default;
 
 		void addEntity(IBFScriptingEntity::Ptr entity);
@@ -26,6 +27,7 @@ namespace BlackFox
         sol::protected_function_result evalFile(const std::string& file);
 
 	private:
+		DiContainer m_container;
 		sol::state m_state;
 		std::vector<IBFScriptingEntity::Ptr> m_entities;
 	};

@@ -185,8 +185,7 @@ namespace BlackFox
 				BF_EXCEPTION("Result of test.lua not valid: {}", (std::string) result)
 			}
 
-			int result_int = result;
-			BF_PRINT("Test.lua result: {}", result_int)
+			BF_PRINT("Test.lua result: {}", (bool) result)
 		}
 		catch (sdl::Exception& err)
 		{

@@ -12,8 +12,9 @@ namespace BlackFox
     {
         RTTR_ENABLE(IBFScriptingEntity)
     public:
-        explicit IBFLuaScriptingEntity(sol::state* state)
-        : m_state(state)
+        explicit IBFLuaScriptingEntity(DiContainer container, sol::state* state)
+        : IBFScriptingEntity(container)
+        , m_state(state)
         {
             //BlackFox namespace
             m_namespace = (*m_state)["BlackFox"].get_or_create<sol::table>();
@@ -27,13 +28,13 @@ namespace BlackFox
 
 #define BF_SCRIPTING_LUA_ENTITY(entityClass)                    RTTR_ENABLE(BlackFox::IBFLuaScriptingEntity) \
                                                                 public: \
-                                                                    explicit entityClass(sol::state* state) : BlackFox::IBFLuaScriptingEntity(state) {}
+                                                                    explicit entityClass(BlackFox::DiContainer container, sol::state* state) : BlackFox::IBFLuaScriptingEntity(container, state) {}
 
 #define BF_SCRIPTING_LUA_ENTITY_REGISTER(entity, entityName)    RTTR_REGISTRATION \
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<entity>(entityName) \
-                                                                        .constructor<sol::state*>()(rttr::policy::ctor::as_raw_ptr); \
+                                                                        .constructor<BlackFox::DiContainer, sol::state*>()(rttr::policy::ctor::as_raw_ptr); \
                                                                 }
 
 #endif //BLACKFOX_ILUASCRIPTINGENTITY_H
