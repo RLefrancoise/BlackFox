@@ -12,6 +12,8 @@
 #include "BFTypeDefs.h"
 #include "BFScene.h"
 #include "BFConfigData.h"
+#include "BFInput.h"
+
 
 namespace BlackFox
 {

@@ -95,9 +95,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib liblua)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core_Lib liblua dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua dl pthread)
 ENDIF()
 
 target_link_libraries(

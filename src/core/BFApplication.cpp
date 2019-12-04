@@ -4,6 +4,7 @@
 #include <INIReader.h>
 
 #include "BFWorld.h"
+#include "BFInput.h"
 #include "BFComponentSystem.h"
 
 #include "BFPositionComponent.h"
@@ -61,6 +62,8 @@ namespace BlackFox
 			{
 				m_polledEvents.emplace_back(ev);
 			}
+
+			BFInput::updateEvents(m_polledEvents);
 
 			//loop
 			loop();
