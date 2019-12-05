@@ -6,8 +6,8 @@
 namespace BlackFox
 {
 	BFWorld::WorldList BFWorld::worlds;
-    std::unordered_map<rttr::type, BFComponentSystem::Ptr> BFWorld::registeredSystems;
-    std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> BFWorld::systemGroups;
+    BFWorld::SystemList BFWorld::registeredSystems;
+    BFWorld::SystemGroupList BFWorld::systemGroups;
 
 	BFWorld::BFWorld(DiContainer container)
 	: m_container(std::move(container))
@@ -55,7 +55,7 @@ namespace BlackFox
 	void BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
 	{
 		//Check if the system is already created or not
-		if(registeredSystems.find(system) != registeredSystems.cend())
+		if(registeredSystems.find(system.get_name().to_string()) != registeredSystems.cend())
 		{
 			BF_WARNING("System {} is already created", system.get_name().to_string())
 			return;
@@ -87,16 +87,28 @@ namespace BlackFox
 		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group)
 
 		//Remember the registration of the system
-		registeredSystems.insert(std::make_pair(system, sharedPtr));
+		registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
 
 		BF_PRINT("System {} created", system.get_name().to_string())
 	}
 
-	void BFWorld::getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems)
-	{
-		if(systemGroups.find(group) == systemGroups.end()) return;
-		*systems = systemGroups.at(group);
-	}
+    BFComponentSystem* BFWorld::createSystemFromName(const std::string& systemName, BFComponentSystem::Ptr system, ComponentSystemGroups group, BFApplication* application)
+    {
+        if(hasSystemByName(systemName))
+        {
+            BF_WARNING("World has already the system {}, create system will return the registered system", systemName)
+            return getSystemByName(systemName);
+        }
+
+        //Add the system to the system list
+        registeredSystems.insert(std::make_pair(systemName, system));
+        //Add the system to its group
+        systemGroups[group].emplace_back(system);
+
+        BF_PRINT("System {} created", systemName)
+
+        return system.get();
+    }
 
 	void BFWorld::refreshSystems(ComponentSystemGroups group, const BFApplication* application)
 	{
@@ -121,4 +133,29 @@ namespace BlackFox
 			}
 		}
 	}
+
+    bool BFWorld::hasSystemByName(const std::string& name)
+    {
+        const auto type = rttr::type::get_by_name(name);
+        if(!type.is_valid())
+        {
+            BF_WARNING("Cannot find type with name {}", name)
+            return false;
+        }
+
+        return registeredSystems.find(name) != registeredSystems.end();
+    }
+
+    BFComponentSystem* BFWorld::getSystemByName(const std::string& name)
+    {
+        if(!hasSystemByName(name))
+        {
+            BF_WARNING("No system found with name {}", name)
+            return nullptr;
+        }
+
+        const auto type = rttr::type::get_by_name(name);
+
+        return registeredSystems[name].get();
+    }
 }

@@ -43,6 +43,8 @@ namespace BlackFox
 		 * \brief	Alias for world list.
 		 */
 		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
+		typedef std::unordered_map<std::string, BFComponentSystem::Ptr> SystemList;
+        typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> SystemGroupList;
 
 		/*!
 		 * \fn	explicit BFWorld::BFWorld(DiContainer container);
@@ -125,7 +127,7 @@ namespace BlackFox
 			//Create system
 			auto system = std::make_shared<S>(application);
 			//Add the system to the system list
-			registeredSystems.insert(std::make_pair(type, system));
+			registeredSystems.insert(std::make_pair(type.get_name().to_string(), system));
 			//Add the system to its group
 			systemGroups[group].emplace_back(system);
 
@@ -135,7 +137,7 @@ namespace BlackFox
 		}
 
 		static void createSystemFromType(const rttr::type& system, BFApplication* application);
-		static void getSystems(ComponentSystemGroups group, std::vector<BFComponentSystem::Ptr>* systems);
+		static BFComponentSystem* createSystemFromName(const std::string& systemName, BFComponentSystem::Ptr system, ComponentSystemGroups group, BFApplication* application);
 
 		static void refreshSystems(ComponentSystemGroups group, const BFApplication* application);
 
@@ -152,8 +154,10 @@ namespace BlackFox
 		static bool hasSystem()
 		{
 			const auto type = rttr::type::get<S>();
-			return registeredSystems.find(type) != registeredSystems.end();
+			return registeredSystems.find(type.get_name().to_string()) != registeredSystems.end();
 		}
+
+		static bool hasSystemByName(const std::string& name);
 
 		/*!
 		 * \fn	template <typename S> static S* BFWorld::getSystem()
@@ -177,8 +181,10 @@ namespace BlackFox
 				return nullptr;
 			}
 
-			return static_cast<S*>(registeredSystems[type].get());
+			return static_cast<S*>(registeredSystems[type.get_name().to_string()].get());
 		}
+
+		static BFComponentSystem* getSystemByName(const std::string& name);
 
 	private:
 		/*! \brief	The level DI container */
@@ -188,9 +194,8 @@ namespace BlackFox
 
 		/*! \brief	The worlds */
 		static WorldList worlds;
-
-		static std::unordered_map<rttr::type, BFComponentSystem::Ptr> registeredSystems;
-		static std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> systemGroups;
+		static SystemList registeredSystems;
+		static SystemGroupList systemGroups;
 	};
 }
 

@@ -1,2 +1,2 @@
-world = BlackFox.create_world("test")
-return BlackFox.has_world("test") == true
+system = BlackFox.create_system("TestSystem", BlackFox.ComponentSystemGroup.Render)
+return system ~= nil
