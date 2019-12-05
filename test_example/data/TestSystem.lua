@@ -1,5 +1,8 @@
 function onCreate()
 	print("Create TestSystem")
+	world = BlackFox.get_world("default")
+	positionId = world:component("Position")
+	print("Position id ", positionId)
 end
 
 function onDestroy()
@@ -11,4 +14,6 @@ function update(dt)
 		print("Escape pressed")
 		application:quit()
 	end
+	
+	view = world:entity_view({Position})
 end

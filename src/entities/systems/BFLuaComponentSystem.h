@@ -14,6 +14,7 @@ namespace BlackFox
         explicit BFLuaComponentSystem(BFApplication* app, const BFLuaScript& script);
         ~BFLuaComponentSystem() override;
         void update(float dt) override;
+        void setWorld(BFWorld* world) override;
     private:
         BFLuaScript m_script;
         sol::function m_onCreateFnc;

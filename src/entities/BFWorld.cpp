@@ -3,6 +3,8 @@
 
 #include <rttr/rttr_cast.h>
 
+#include "BFPositionComponent.h"
+
 namespace BlackFox
 {
 	BFWorld::WorldList BFWorld::worlds;
@@ -18,6 +20,18 @@ namespace BlackFox
 	EntityManager BFWorld::entityManager() const
 	{
 		return m_entityManager;
+	}
+
+    entt::component BFWorld::getComponentIdentifier(const std::string& componentName) const
+    {
+        std::unordered_map<std::string, entt::component> componentTypes;
+        componentTypes["Position"] = m_entityManager->type<Components::BFPositionComponent>();
+        return componentTypes[componentName];
+    }
+
+	entt::runtime_view BFWorld::getEntityView(sol::as_table_t<std::vector<entt::component>> components) const
+	{
+		return entityManager()->runtime_view(components.value().cbegin(), components.value().cend());
 	}
 
 	bool BFWorld::hasWorld(const std::string & worldId)

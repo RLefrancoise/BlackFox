@@ -1,5 +1,7 @@
+#include <entities/components/BFPositionComponent.h>
 #include "BFLuaComponentSystem.h"
 #include "BFApplication.h"
+#include "BFWorld.h"
 
 namespace BlackFox
 {
@@ -22,5 +24,12 @@ namespace BlackFox
     void BFLuaComponentSystem::update(float dt)
     {
         m_updateFnc(dt);
+    }
+
+    void BFLuaComponentSystem::setWorld(BFWorld* world)
+    {
+        BFComponentSystem::setWorld(world);
+
+        m_script.set<entt::component>("Position", world->entityManager()->type<Components::BFPositionComponent>());
     }
 }

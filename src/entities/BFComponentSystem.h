@@ -104,7 +104,7 @@ namespace BlackFox
 		 *
 		 * \param	world	The world.
 		 */
-		void setWorld(BFWorld* world);
+		virtual void setWorld(BFWorld* world);
 
 	protected:
 		/*! \brief	The application */

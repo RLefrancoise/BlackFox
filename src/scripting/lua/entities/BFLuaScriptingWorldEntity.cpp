@@ -1,3 +1,4 @@
+#include <entities/components/BFPositionComponent.h>
 #include "BFLuaScriptingWorldEntity.h"
 #include "BFWorld.h"
 #include "BFApplication.h"
@@ -9,8 +10,17 @@ namespace BlackFox
 {
     void BFLuaScriptingWorldEntity::registerEntity()
     {
+        sol::usertype<entt::component> component_type = m_namespace.new_usertype<entt::component>("Component");
+        sol::usertype<entt::runtime_view> view_type = m_namespace.new_usertype<entt::runtime_view>("EntityView");
+        sol::usertype<entt::entity> entity_type = m_namespace.new_usertype<entt::entity>("Entity");
+
+        //sol::table components = m_namespace["Components"].get_or_create<sol::table>();
+        //sol::usertype<Components::BFPositionComponent> position_t = components.new_usertype<Components::BFPositionComponent>("PositionComponent");
+
         sol::usertype <BFWorld> world_type = m_namespace.new_usertype<BFWorld>("World");
         world_type["entity_manager"] = &BFWorld::entityManager;
+        world_type["component"] = &BFWorld::getComponentIdentifier;
+        world_type["entity_view"] = &BFWorld::getEntityView;
 
         const auto& container = m_container;
 

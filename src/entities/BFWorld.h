@@ -14,6 +14,8 @@
 #include "BFComponentSystem.h"
 #include "BFComponentSystemFlags.h"
 
+#include <sol/sol.hpp>
+
 namespace BlackFox
 {
 	class BFApplication;
@@ -69,6 +71,9 @@ namespace BlackFox
 		 * \returns	An EntityManager.
 		 */
 		EntityManager entityManager() const;
+
+		entt::component getComponentIdentifier(const std::string& componentName) const;
+		entt::runtime_view getEntityView(sol::as_table_t<std::vector<entt::component>> components) const;
 
 		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
