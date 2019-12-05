@@ -36,17 +36,10 @@ namespace BlackFox
         //System
         m_namespace["create_system"] = [&](const std::string& systemName, ComponentSystemGroups group) -> BFComponentSystem*
         {
-            sol::environment systemEnv(*m_state, sol::create, m_state->globals());
-
-            auto res = m_state->safe_script_file(fmt::format("data/{}.lua", systemName), systemEnv);
-            if(!res.valid())
-            {
-                BF_ERROR("Error when loading system from file data/{}.lua", systemName)
-                return nullptr;
-            }
+            BFLuaScript luaScript(fmt::format("data/{}.lua", systemName), m_state);
 
             const auto app = m_container->get<BFApplication>();
-            auto system = std::make_shared<BFLuaComponentSystem>(app.get(), systemEnv);
+            auto system = std::make_shared<BFLuaComponentSystem>(app.get(), luaScript);
 
             return BFWorld::createSystemFromName(systemName, system, group, false);
         };

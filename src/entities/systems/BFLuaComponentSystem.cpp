@@ -3,14 +3,14 @@
 
 namespace BlackFox
 {
-    BFLuaComponentSystem::BFLuaComponentSystem(BFApplication* app, const sol::environment& env)
+    BFLuaComponentSystem::BFLuaComponentSystem(BlackFox::BFApplication *app, const BlackFox::BFLuaScript &script)
     : BFComponentSystem(app)
-    , m_environment(env)
-    , m_onCreateFnc(env["onCreate"])
-    , m_onDestroyFnc(env["onDestroy"])
-    , m_updateFnc(env["update"])
+    , m_script(script)
+    , m_onCreateFnc(script.get<sol::function>("onCreate"))
+    , m_onDestroyFnc(script.get<sol::function>("onDestroy"))
+    , m_updateFnc(script.get<sol::function>("update"))
     {
-        m_environment["application"] = app;
+        m_script.set<BFApplication*>("application", app);
         m_onCreateFnc();
     }
 
