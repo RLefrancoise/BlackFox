@@ -59,6 +59,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/lua-5.3.5/src)
 # Sol2
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/single/include)
 
+# Box2D
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/Box2D)
+
 # Files
 file(
     GLOB_RECURSE
@@ -95,9 +98,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua box2d)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua box2d dl pthread)
 ENDIF()
 
 target_link_libraries(

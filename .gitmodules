@@ -25,3 +25,6 @@
 [submodule "thirdParties/sol2"]
 	path = thirdParties/sol2
 	url = https://github.com/ThePhD/sol2.git
+[submodule "thirdParties/Box2D"]
+	path = thirdParties/Box2D
+	url = https://github.com/erincatto/Box2D.git
