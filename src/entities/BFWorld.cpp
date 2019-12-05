@@ -52,13 +52,13 @@ namespace BlackFox
 		return world;
 	}
 
-	void BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
+	BFComponentSystem* BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
 	{
 		//Check if the system is already created or not
-		if(registeredSystems.find(system.get_name().to_string()) != registeredSystems.cend())
+		if(hasSystemByName(system.get_name().to_string()))
 		{
 			BF_WARNING("System {} is already created", system.get_name().to_string())
-			return;
+			return nullptr;
 		}
 
 		//Create system from type
@@ -66,7 +66,7 @@ namespace BlackFox
 		if(!s.is_valid())
 		{
 			BF_WARNING("Failed to create system {}", system.get_name().to_string())
-			return;
+			return nullptr;
 		}
 
 		//Get the system group
@@ -77,7 +77,7 @@ namespace BlackFox
 		if(!ok)
 		{
 			BF_ERROR("Failed to convert variant for system {} to BFComponentSystem*", system.get_name().to_string())
-			return;
+			return nullptr;
 		}
 
 		BFComponentSystem::Ptr sharedPtr(sPtr);
@@ -90,6 +90,8 @@ namespace BlackFox
 		registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
 
 		BF_PRINT("System {} created", system.get_name().to_string())
+
+		return sPtr;
 	}
 
     BFComponentSystem* BFWorld::createSystemFromName(
@@ -104,11 +106,12 @@ namespace BlackFox
             return getSystemByName(systemName);
         }
 
-        //Add the system to the system list
-        registeredSystems.insert(std::make_pair(systemName, system));
         //Add the system to its group
         systemGroups[group].emplace_back(system);
+		BF_PRINT("System {} added to the group {}", systemName, group)
 
+		//Add the system to the system list
+		registeredSystems.insert(std::make_pair(systemName, system));
         BF_PRINT("System {} created", systemName)
 
         return system.get();

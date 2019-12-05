@@ -5,6 +5,22 @@ namespace BlackFox
     bool BFInput::downKeys[SDL_NUM_SCANCODES];
     std::vector<sdl::Event> BFInput::polledEvents;
 
+    bool BFInput::isKeyDown(SDL_Scancode key)
+    {
+        bool keyDown = false;
+        for(const auto& ev : polledEvents)
+        {
+            if(ev.type != SDL_KEYDOWN) continue;
+            if(ev.key.keysym.scancode == key)
+            {
+                keyDown = true;
+                break;
+            }
+        }
+
+        return keyDown;
+    }
+
     bool BFInput::isKeyDown(SDL_Scancode key, SDL_Keymod mod)
     {
         bool keyDown = false;
@@ -19,6 +35,22 @@ namespace BlackFox
         }
 
         return keyDown;
+    }
+
+    bool BFInput::isKeyUp(SDL_Scancode key)
+    {
+        bool keyUp = false;
+        for(const auto& ev : polledEvents)
+        {
+            if(ev.type != SDL_KEYUP) continue;
+            if(ev.key.keysym.scancode == key)
+            {
+                keyUp = true;
+                break;
+            }
+        }
+
+        return keyUp;
     }
 
     bool BFInput::isKeyUp(SDL_Scancode key, SDL_Keymod mod)

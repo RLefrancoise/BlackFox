@@ -11,15 +11,14 @@ namespace BlackFox
     {
     public:
         explicit BFLuaComponentSystem(BFApplication* app, const sol::environment& env);
+        ~BFLuaComponentSystem() override;
         void update(float dt) override;
     private:
         sol::environment m_environment;
         sol::function m_onCreateFnc;
+        sol::function m_onDestroyFnc;
         sol::function m_updateFnc;
     };
 }
-
-
-
 
 #endif //BLACKFOX_LUACOMPONENTSYSTEM_H

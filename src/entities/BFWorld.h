@@ -136,7 +136,8 @@ namespace BlackFox
 			return system.get();
 		}
 
-		static void createSystemFromType(const rttr::type& system, BFApplication* application);
+		static BFComponentSystem* createSystemFromType(const rttr::type& system, BFApplication* application);
+
 		static BFComponentSystem* createSystemFromName(
 				const std::string& systemName
 				, BFComponentSystem::Ptr system
