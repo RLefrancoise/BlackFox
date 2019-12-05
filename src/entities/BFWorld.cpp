@@ -92,9 +92,13 @@ namespace BlackFox
 		BF_PRINT("System {} created", system.get_name().to_string())
 	}
 
-    BFComponentSystem* BFWorld::createSystemFromName(const std::string& systemName, BFComponentSystem::Ptr system, ComponentSystemGroups group, BFApplication* application)
+    BFComponentSystem* BFWorld::createSystemFromName(
+    		const std::string& systemName
+    		, BFComponentSystem::Ptr system
+    		, ComponentSystemGroups group
+    		, bool nameIsType)
     {
-        if(hasSystemByName(systemName))
+        if(hasSystemByName(systemName, nameIsType))
         {
             BF_WARNING("World has already the system {}, create system will return the registered system", systemName)
             return getSystemByName(systemName);
@@ -134,14 +138,17 @@ namespace BlackFox
 		}
 	}
 
-    bool BFWorld::hasSystemByName(const std::string& name)
+    bool BFWorld::hasSystemByName(const std::string& name, bool nameIsType)
     {
-        const auto type = rttr::type::get_by_name(name);
-        if(!type.is_valid())
-        {
-            BF_WARNING("Cannot find type with name {}", name)
-            return false;
-        }
+		if(nameIsType)
+		{
+			const auto type = rttr::type::get_by_name(name);
+			if(!type.is_valid())
+			{
+				BF_WARNING("Cannot find type with name {}", name)
+				return false;
+			}
+		}
 
         return registeredSystems.find(name) != registeredSystems.end();
     }

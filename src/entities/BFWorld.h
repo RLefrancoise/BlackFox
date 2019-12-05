@@ -137,7 +137,11 @@ namespace BlackFox
 		}
 
 		static void createSystemFromType(const rttr::type& system, BFApplication* application);
-		static BFComponentSystem* createSystemFromName(const std::string& systemName, BFComponentSystem::Ptr system, ComponentSystemGroups group, BFApplication* application);
+		static BFComponentSystem* createSystemFromName(
+				const std::string& systemName
+				, BFComponentSystem::Ptr system
+				, ComponentSystemGroups group
+				, bool nameIsType = true);
 
 		static void refreshSystems(ComponentSystemGroups group, const BFApplication* application);
 
@@ -157,7 +161,7 @@ namespace BlackFox
 			return registeredSystems.find(type.get_name().to_string()) != registeredSystems.end();
 		}
 
-		static bool hasSystemByName(const std::string& name);
+		static bool hasSystemByName(const std::string& name, bool nameIsType = true);
 
 		/*!
 		 * \fn	template <typename S> static S* BFWorld::getSystem()

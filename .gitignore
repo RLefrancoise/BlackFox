@@ -37,3 +37,6 @@ cmake-build-*
 
 # builds
 build/
+
+# Visual studio code
+.vscode/

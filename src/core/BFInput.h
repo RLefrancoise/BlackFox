@@ -3,7 +3,6 @@
 
 #include <cpp-sdl2/event.hpp>
 #include <SDL_keyboard.h>
-#include <unordered_map>
 #include <vector>
 
 namespace BlackFox
