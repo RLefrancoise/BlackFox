@@ -28,3 +28,6 @@
 [submodule "thirdParties/Box2D"]
 	path = thirdParties/Box2D
 	url = https://github.com/RLefrancoise/Box2D.git
+[submodule "thirdParties/luajit"]
+	path = thirdParties/luajit
+	url = https://github.com/RLefrancoise/luajit.git
