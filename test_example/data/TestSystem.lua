@@ -1,8 +1,5 @@
 function onCreate()
 	print("Create TestSystem")
-	world = BlackFox.get_world("default")
-	positionId = world:component("Position")
-	print("Position id ", positionId)
 end
 
 function onDestroy()
@@ -15,5 +12,14 @@ function update(dt)
 		application:quit()
 	end
 	
-	view = world:entity_view({Position})
+	Position = world:component_identifier("Position")
+	entities = world:entities(
+		moveEntity,
+		Position)
+end
+
+function moveEntity(entity)
+	position = world:component(entity, Position)
+	position.x = position.x + 1
+	position.y = position.y + 1
 end

@@ -6,21 +6,44 @@
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "World")
 
+namespace sol {
+    template <>
+    struct is_container<entt::runtime_view> : std::true_type {};
+}
+
 namespace BlackFox
 {
     void BFLuaScriptingWorldEntity::registerEntity()
     {
-        sol::usertype<entt::component> component_type = m_namespace.new_usertype<entt::component>("Component");
-        sol::usertype<entt::runtime_view> view_type = m_namespace.new_usertype<entt::runtime_view>("EntityView");
+        sol::usertype<ComponentId> component_type = m_namespace.new_usertype<ComponentId>("ComponentId");
         sol::usertype<entt::entity> entity_type = m_namespace.new_usertype<entt::entity>("Entity");
 
-        //sol::table components = m_namespace["Components"].get_or_create<sol::table>();
-        //sol::usertype<Components::BFPositionComponent> position_t = components.new_usertype<Components::BFPositionComponent>("PositionComponent");
-
         sol::usertype <BFWorld> world_type = m_namespace.new_usertype<BFWorld>("World");
-        world_type["entity_manager"] = &BFWorld::entityManager;
-        world_type["component"] = &BFWorld::getComponentIdentifier;
-        world_type["entity_view"] = &BFWorld::getEntityView;
+        //world_type["entity_manager"] = &BFWorld::entityManager;
+        world_type["component_identifier"] = &BFWorld::getComponentIdentifier;
+        world_type["entities"] = [](BFWorld& world, const sol::function& callback, sol::variadic_args components)
+        {
+            world.entityManager()->runtime_view(components.cbegin(), components.cend()).each([&](auto entity)
+               {
+                   callback(entity);
+               });
+        };
+        world_type["component_Position"] = &BFWorld::getEntityComponent<Components::BFPositionComponent>;
+        world_type["component"] = [&](BFWorld& world, const entt::entity& entity, ComponentId component) -> sol::object
+        {
+            if(component == world.getComponentIdentifier("Position"))
+            {
+                return sol::make_object(*m_state, Components::BFPositionComponent::get(world.entityManager(), entity));
+            }
+
+            return sol::make_object(*m_state, sol::lua_nil);
+        };
+
+        //Components
+        sol::table components_ns = m_namespace["Components"].get_or_create<sol::table>();
+        auto position_t = components_ns.new_usertype<Components::BFPositionComponent>("Position");
+        position_t["x"] = &Components::BFPositionComponent::x;
+        position_t["y"] = &Components::BFPositionComponent::y;
 
         const auto& container = m_container;
 

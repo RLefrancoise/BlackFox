@@ -30,6 +30,7 @@ namespace BlackFox
     {
         BFComponentSystem::setWorld(world);
 
-        m_script.set<entt::component>("Position", world->entityManager()->type<Components::BFPositionComponent>());
+        m_script.set<BFWorld*>("world", world);
+        //m_script.set<entt::component>("Position", world->getComponentIdentifier("Position"));
     }
 }

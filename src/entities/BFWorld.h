@@ -13,6 +13,9 @@
 #include "BFNonCopyable.h"
 #include "BFComponentSystem.h"
 #include "BFComponentSystemFlags.h"
+#include "BFComponent.h"
+
+#include "BFPositionComponent.h"
 
 #include <sol/sol.hpp>
 
@@ -72,8 +75,13 @@ namespace BlackFox
 		 */
 		EntityManager entityManager() const;
 
-		entt::component getComponentIdentifier(const std::string& componentName) const;
-		entt::runtime_view getEntityView(sol::as_table_t<std::vector<entt::component>> components) const;
+		ComponentId getComponentIdentifier(const std::string& componentName) const;
+
+		template <typename C>
+		C* getEntityComponent(const entt::entity& entity, ComponentId component) const
+        {
+		    return &(entityManager()->get<C>(entity));
+        }
 
 		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);

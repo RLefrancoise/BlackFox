@@ -8,6 +8,7 @@ namespace BlackFox
 {
 	typedef std::shared_ptr<cinject::Container> DiContainer;
 	typedef std::shared_ptr<entt::registry> EntityManager;
+	typedef entt::component ComponentId;
 }
 
 #endif

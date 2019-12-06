@@ -56,6 +56,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/inih)
 # Lua
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/lua-5.3.5/src)
 
+# Lua JIT
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdParties/luajit-2.0/src)
+
 # Sol2
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/single/include)
 
@@ -98,9 +101,9 @@ add_executable(
 target_include_directories(BlackFox PUBLIC ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua box2d)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core libluadll box2d)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core liblua box2d dl pthread)
+    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} sdl2gfx fmt::fmt-header-only RTTR::Core libluadll box2d dl pthread)
 ENDIF()
 
 target_link_libraries(
