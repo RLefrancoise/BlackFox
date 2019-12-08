@@ -31,3 +31,6 @@
 [submodule "thirdParties/luajit"]
 	path = thirdParties/luajit
 	url = https://github.com/RLefrancoise/luajit.git
+[submodule "thirdParties/quickjspp"]
+	path = thirdParties/quickjspp
+	url = https://github.com/ftk/quickjspp.git

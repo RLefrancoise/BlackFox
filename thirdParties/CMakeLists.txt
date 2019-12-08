@@ -31,3 +31,6 @@ add_subdirectory(lua-5.3.5)
 
 # Box2D
 add_subdirectory(Box2D)
+
+# QuickJS++
+add_subdirectory(quickjspp)
