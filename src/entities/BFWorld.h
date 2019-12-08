@@ -15,7 +15,7 @@
 #include "BFComponentSystemFlags.h"
 #include "BFComponent.h"
 
-#include "BFPositionComponent.h"
+#include "entities/components/spatial/BFPositionComponent.h"
 
 #include <sol/sol.hpp>
 

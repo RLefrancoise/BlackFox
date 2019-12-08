@@ -1,4 +1,4 @@
-#include <entities/components/BFPositionComponent.h>
+#include <entities/components/spatial/BFPositionComponent.h>
 #include "BFLuaComponentSystem.h"
 #include "BFApplication.h"
 #include "BFWorld.h"
@@ -10,6 +10,7 @@ namespace BlackFox
     , m_script(script)
     , m_onCreateFnc(script.get<sol::function>("onCreate"))
     , m_onDestroyFnc(script.get<sol::function>("onDestroy"))
+    , m_onWorldChanged(script.get<sol::function>("onWorldChanged"))
     , m_updateFnc(script.get<sol::function>("update"))
     {
         m_script.set<BFApplication*>("application", app);
@@ -31,6 +32,6 @@ namespace BlackFox
         BFComponentSystem::setWorld(world);
 
         m_script.set<BFWorld*>("world", world);
-        //m_script.set<entt::component>("Position", world->getComponentIdentifier("Position"));
+        m_onWorldChanged(world);
     }
 }

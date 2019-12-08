@@ -30,14 +30,14 @@ namespace BlackFox
 
 #define BF_SCRIPTING_LUA_ENTITY(entityClass)                    RTTR_ENABLE(BlackFox::IBFLuaScriptingEntity) \
                                                                 public: \
-                                                                    explicit entityClass(BlackFox::DiContainer container, sol::state* state) \
-                                                                    : BlackFox::IBFLuaScriptingEntity(std::move(container), state) {}
+                                                                    explicit entityClass(const BlackFox::DiContainer& container, sol::state* state) \
+                                                                    : BlackFox::IBFLuaScriptingEntity(std::move(container), state)
 
 #define BF_SCRIPTING_LUA_ENTITY_REGISTER(entity, entityName)    RTTR_REGISTRATION \
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<entity>(entityName) \
-                                                                        .constructor<BlackFox::DiContainer, sol::state*>()(rttr::policy::ctor::as_raw_ptr); \
+                                                                        .constructor<const BlackFox::DiContainer&, sol::state*>()(rttr::policy::ctor::as_raw_ptr); \
                                                                 }
 
 #endif //BLACKFOX_ILUASCRIPTINGENTITY_H

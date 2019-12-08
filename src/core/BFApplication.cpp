@@ -7,10 +7,10 @@
 #include "BFInput.h"
 #include "BFComponentSystem.h"
 
-#include "BFPositionComponent.h"
-#include "BFRotationComponent.h"
-#include "BFScaleComponent.h"
-#include "BFSpriteComponent.h"
+#include "entities/components/spatial/BFPositionComponent.h"
+#include "entities/components/spatial/BFRotationComponent.h"
+#include "entities/components/spatial/BFScaleComponent.h"
+#include "entities/components/render/BFSpriteComponent.h"
 
 #include "BFScriptingManager.h"
 

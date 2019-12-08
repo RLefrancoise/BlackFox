@@ -18,6 +18,8 @@ namespace BlackFox
 
         for(const auto& t : lua_entities)
         {
+            if(t.is_template_instantiation()) continue;
+
             auto entity = t.create({m_container, &m_state});
             if(!entity.is_valid())
             {

@@ -5,20 +5,8 @@
 
 namespace BlackFox
 {
-    /*struct BFComponentBase
-    {
-        constexpr BFComponentBase() = default;
-        constexpr BFComponentBase(const BFComponentBase&) = default;
-        constexpr BFComponentBase(BFComponentBase&&) noexcept = default;
-        virtual ~BFComponentBase() noexcept = default;
-
-        constexpr BFComponentBase& operator=(const BFComponentBase&) = default;
-
-        virtual ComponentId identifier(EntityManager em) = 0;
-    };*/
-
     template <typename C>
-	struct BFComponent //: public BFComponentBase
+	struct BFComponent
 	{
 	    constexpr BFComponent() = default;
 	    constexpr BFComponent(const BFComponent<C>&) = default;
@@ -27,18 +15,18 @@ namespace BlackFox
 
 	    constexpr BFComponent<C>& operator=(const BFComponent<C>&) = default;
 
-	    static ComponentId identifier(EntityManager em)
+	    static ComponentId identifier(const EntityManager& em)
 		{
 	    	return em->type<C>();
 		}
 
-		static C* get(EntityManager em, entt::entity entity)
+		static C* get(const EntityManager& em, const entt::entity& entity)
         {
 	        return &(em->get<C>(entity));
         }
 	};
 }
 
-#define BF_COMPONENT(componentName)	static constexpr const char* name = "componentName";
+#define BF_COMPONENT(componentName)	static constexpr const char* name = componentName;
 
 #endif
