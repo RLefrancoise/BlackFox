@@ -10,13 +10,14 @@ namespace BlackFox
     class BFLuaScriptingComponentEntity : public IBFLuaScriptingEntity
     {
         BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingComponentEntity<C>)
-        {
-            m_componentsNamespace = m_namespace["Components"].template get_or_create<sol::table>();
-        }
     public:
         void registerEntity() final
         {
-            m_type = m_componentsNamespace.new_usertype<C>(C::name);
+            m_componentsNamespace = m_namespace["Components"].template get_or_create<sol::table>();
+            m_type = m_componentsNamespace.new_usertype<C>(
+                    C::name,
+                    sol::base_classes,
+                    sol::bases<BFComponent<C>>());
             m_type["id"] = [](const BFWorld& world) -> ComponentId { return C::identifier(world.entityManager()); };
             m_type["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return C::get(world.entityManager(), entity); };
 

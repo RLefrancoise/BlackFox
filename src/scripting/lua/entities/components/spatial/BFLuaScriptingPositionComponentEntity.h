@@ -1,7 +1,7 @@
 #ifndef BLACKFOX_LUASCRIPTINGPOSITIONCOMPONENTENTITY_H
 #define BLACKFOX_LUASCRIPTINGPOSITIONCOMPONENTENTITY_H
 
-#include "BFLuaScriptingComponentEntity.h"
+#include "scripting/lua/entities/components/BFLuaScriptingComponentEntity.h"
 #include "BFPositionComponent.h"
 
 namespace BlackFox

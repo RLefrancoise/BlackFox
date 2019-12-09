@@ -7,7 +7,7 @@ namespace BlackFox
 {
     class BFLuaScriptingApplicationEntity : public IBFLuaScriptingEntity
     {
-        BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingApplicationEntity) {}
+        BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingApplicationEntity)
     public:
         void registerEntity() override;
     };

@@ -18,17 +18,17 @@ namespace BlackFox::Systems
 
 	void BFRenderSpriteSystem::update(float dt)
 	{
-		auto view = m_world->entityManager()->view<BFPositionComponent, BFSpriteComponent>();
-		for(const auto& entity : view)
+		auto group = m_world->entityManager()->group<BFPositionComponent, BFSpriteComponent>();
+		for(const auto& entity : group)
 		{
 		    //Position
-			const auto& position = view.get<BFPositionComponent>(entity);
+			const auto& position = group.get<BFPositionComponent>(entity);
 			//Rotation is optional, check if entity has rotation
 			const auto* rotation = m_world->entityManager()->try_get<BFRotationComponent>(entity);
 			//Scale is optional, check if entity has scale
 			const auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
 			//Sprite
-			const auto& sprite = view.get<BFSpriteComponent>(entity);
+			const auto& sprite = group.get<BFSpriteComponent>(entity);
 
 			const auto* image = sprite.image;
 			const auto size = sprite.image->size();

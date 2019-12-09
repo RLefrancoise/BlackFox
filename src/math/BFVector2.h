@@ -43,8 +43,7 @@ namespace BlackFox
 		constexpr explicit BFVector2(const sdl::Vec2<T>& v)
 		: x(v.x)
 		, y(v.y)
-		{
-		}
+		{}
 
 		/*!
 		 * \brief	Adds a vector to this vector and returns a new vector
@@ -114,7 +113,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector
 		 */
-		constexpr BFVector2<T>& operator+(const BFVector2<T>& rhs)
+		BFVector2<T>& operator+(const BFVector2<T>& rhs)
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -131,7 +130,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector.
 		 */
-		constexpr BFVector2<T>& operator-(const BFVector2<T>& rhs)
+		BFVector2<T>& operator-(const BFVector2<T>& rhs)
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -146,7 +145,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector
 		 */
-		constexpr BFVector2<T>& operator-()
+		BFVector2<T>& operator-()
 		{
 			x = -x;
 			y = -y;
@@ -163,7 +162,7 @@ namespace BlackFox
 		 *
 		 * \returns	The updated vector.
 		 */
-		constexpr BFVector2<T>& operator*(float scale)
+		BFVector2<T>& operator*(float scale)
 		{
 			x *= scale;
 			y *= scale;
@@ -203,14 +202,14 @@ namespace BlackFox
 		constexpr BFVector2<T>& operator=(const BFVector2<T>& v) = default;
 		constexpr BFVector2<T>& operator=(BFVector2<T>&& v) noexcept = default;
 
-		constexpr BFVector2<T>& operator=(const sdl::Vec2<T>& v)
+		BFVector2<T>& operator=(const sdl::Vec2<T>& v)
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
 
-		constexpr BFVector2<T>& operator=(sdl::Vec2<T>&& v)
+		BFVector2<T>& operator=(sdl::Vec2<T>&& v)
 		{
 			x = v.x;
 			y = v.y;

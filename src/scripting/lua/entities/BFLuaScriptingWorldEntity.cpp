@@ -1,7 +1,7 @@
 #include "BFLuaScriptingWorldEntity.h"
 #include "BFWorld.h"
 #include "BFApplication.h"
-#include "BFLuaComponentSystem.h"
+#include "entities/systems/scripting/BFLuaComponentSystem.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "World")
 

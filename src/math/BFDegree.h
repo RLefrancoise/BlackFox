@@ -69,7 +69,7 @@ namespace BlackFox
 		 */
 		BFDegree& operator=(const BFRadian& radians);
 
-		constexpr BFDegree& operator=(float angle)
+		BFDegree& operator=(float angle)
 		{
 			m_value = angle;
 			return *this;
