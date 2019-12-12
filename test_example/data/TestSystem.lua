@@ -7,7 +7,9 @@ function onDestroy()
 end
 
 function onWorldChanged(world)
-	Position = BlackFox.Components.Position.id(world)
+	Position = BlackFox.Components.Spatial.Position.id(world)
+	Rotation = BlackFox.Components.Spatial.Rotation.id(world)
+	Scale = BlackFox.Components.Spatial.Scale.id(world)
 end
 
 function update(dt)
@@ -16,13 +18,42 @@ function update(dt)
 		application:quit()
 	end
 	
-	entities = world:entities(
-		moveEntity,
-		Position)
+	local entities = world:entities(
+		animateEntity,
+		dt,
+		Rotation,
+		Scale)
 end
 
-function moveEntity(entity)
-	position = BlackFox.Components.Position.get(world, entity)
-	position.x = position.x + 1
-	position.y = position.y + 1
+function animateEntity(entity, dt)
+	local rotation = BlackFox.Components.Spatial.Rotation.get(world, entity)
+	local scale = BlackFox.Components.Spatial.Scale.get(world, entity)
+
+	-- rotate ping pong
+	if rotation.angle > 15 then
+		rotateCW = false
+	elseif rotation.angle < -15 then
+		rotateCW = true
+	end
+
+	if rotateCW then
+		rotation.angle = rotation.angle + 30 * dt
+	else
+		rotation.angle = rotation.angle - 30 * dt
+	end
+
+	-- scale ping pong
+	if scale.x > 2.5 then
+		scaleUp = false
+	elseif scale.x < 1 then
+		scaleUp = true
+	end
+
+	if scaleUp == true then
+		scale.x = scale.x + 2 * dt
+		scale.y = scale.y + 2 * dt
+	else
+		scale.x = scale.x - 2 * dt
+		scale.y = scale.y - 2 * dt
+	end
 end

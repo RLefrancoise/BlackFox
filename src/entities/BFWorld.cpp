@@ -1,7 +1,6 @@
 #include "BFWorld.h"
 #include "BFApplication.h"
-
-#include <rttr/rttr_cast.h>
+#include <rttr/method.h>
 
 namespace BlackFox
 {
@@ -20,13 +19,6 @@ namespace BlackFox
 		return m_entityManager;
 	}
 
-    ComponentId BFWorld::getComponentIdentifier(const std::string& componentName) const
-    {
-        std::unordered_map<std::string, ComponentId> componentTypes;
-        componentTypes["Position"] = m_entityManager->type<Components::BFPositionComponent>();
-        return componentTypes[componentName];
-    }
-
 	bool BFWorld::hasWorld(const std::string & worldId)
 	{
 		return !(worlds.find(worldId) == worlds.end());
@@ -41,16 +33,13 @@ namespace BlackFox
 		return worlds[worldId];
 	}
 
-	BFWorld::Ptr BFWorld::create(const std::string& worldId, BFApplication* application)
+	BFWorld::Ptr BFWorld::create(const std::string& worldId, DiContainer container)
 	{
 		if(hasWorld(worldId))
 		{
 			BF_WARNING("World {} already exists", worldId)
 			return world(worldId);
 		}
-
-		//Get application container
-		const auto& container = application->m_container;
 
 		//Create world
 		auto world = container->get<BFWorld>();
@@ -77,7 +66,7 @@ namespace BlackFox
 		}
 
 		//Get the system group
-		ComponentSystemGroups group = system.get_method("get_group").invoke(s).get_value<ComponentSystemGroups>();
+		const auto group = system.get_method("get_group").invoke(s).get_value<ComponentSystemGroups>();
 
 		bool ok = false;
 		auto sPtr = s.convert<BFComponentSystem*>(&ok);
@@ -124,7 +113,7 @@ namespace BlackFox
         return system.get();
     }
 
-	void BFWorld::refreshSystems(ComponentSystemGroups group, const BFApplication* application)
+	void BFWorld::refreshSystems(ComponentSystemGroups group, const std::vector<sdl::Event>& polledEvents, float deltaTime)
 	{
 		if(systemGroups.find(group) == systemGroups.end()) return;
 
@@ -138,12 +127,12 @@ namespace BlackFox
 			{
 				system->setWorld(world.second.get());
 
-				for (const auto& ev : application->m_polledEvents)
+				for (const auto& ev : polledEvents)
 				{
 					system->onEvent(ev);
 				}
 
-				system->update(application->m_deltaTime);
+				system->update(deltaTime);
 			}
 		}
 	}
@@ -170,8 +159,6 @@ namespace BlackFox
             BF_WARNING("No system found with name {}", name)
             return nullptr;
         }
-
-        const auto type = rttr::type::get_by_name(name);
 
         return registeredSystems[name].get();
     }

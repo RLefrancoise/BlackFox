@@ -3,7 +3,7 @@
 
 namespace BlackFox
 {
-	enum ComponentSystemGroups
+	enum class ComponentSystemGroups
 	{
 		GameLoop		= 1 << 0,
 		Render			= 1 << 1,

@@ -1,9 +1,9 @@
 #include "BFScriptingManager.h"
-
-#include <scripting/lua/IBFLuaScriptingEntity.h>
+#include "IBFLuaScriptingEntity.h"
 #include <rttr/type.h>
 
 #include "BFDebug.h"
+#include "BFLuaScriptingSpatialComponentEntities.h"
 
 namespace BlackFox
 {
@@ -19,6 +19,8 @@ namespace BlackFox
         for(const auto& t : lua_entities)
         {
             if(t.is_template_instantiation()) continue;
+            if (!t.is_valid()) continue;
+            if (t == rttr::type::get<BFLuaScriptingComponentEntity>()) continue; //is pure virtual
 
             auto entity = t.create({m_container, &m_state});
             if(!entity.is_valid())
@@ -37,6 +39,8 @@ namespace BlackFox
 
             IBFScriptingEntity::Ptr entitySharedPtr = std::shared_ptr<IBFScriptingEntity>(entityPtr);
             addEntity(entitySharedPtr);
+
+            BF_PRINT("Add entity {}", t.get_name().to_string())
         }
     }
 

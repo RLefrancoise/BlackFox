@@ -3,6 +3,8 @@
 #include "BFCommandManager.h"
 #include "BFApplication.h"
 #include "BFScriptingManager.h"
+#include "BFInput.h"
+#include "BFConfigData.h"
 
 #include "BFQuitApplicationCommand.h"
 
@@ -21,6 +23,8 @@ namespace BlackFox
 		m_container->bind<BFApplication>().toSelf().inSingletonScope();
 		//Scripting manager
 		m_container->bind<BFScriptingManager>().toSelf().inSingletonScope();
+		//Input
+		m_container->bind<BFInput>().toSelf().inSingletonScope();
 
 		//Commands
 		m_container->bind<BFQuitApplicationCommand>().toSelf();

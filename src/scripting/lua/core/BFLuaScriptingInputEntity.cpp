@@ -7,9 +7,9 @@ namespace BlackFox
 {
     void BFLuaScriptingInputEntity::registerEntity()
     {
-        sol::table input = m_namespace["Input"].get_or_create<sol::table>();
-        sol::table scanCode_t = input["KeyCode"].get_or_create<sol::table>();
-        sol::table keyMod_t = input["KeyMod"].get_or_create<sol::table>();
+        sol::table input_t = m_namespace["Input"].get_or_create<sol::table>();
+        sol::table scanCode_t = input_t["KeyCode"].get_or_create<sol::table>();
+        sol::table keyMod_t = input_t["KeyMod"].get_or_create<sol::table>();
         
         //SDL_Scancode
         scanCode_t["UNKNOWN"] = SDL_SCANCODE_UNKNOWN;
@@ -274,31 +274,36 @@ namespace BlackFox
         keyMod_t["SHIFT"]      = KMOD_SHIFT;
         keyMod_t["ALT"]        = KMOD_ALT;
         keyMod_t["GUI"]        = KMOD_GUI;
-        
+
         //Functions
-        input["is_key_down"] = [](const SDL_Scancode& key) -> bool
+        input_t["is_key_down"] = [&](const SDL_Scancode& key) -> bool
         {
-            return BFInput::isKeyDown(key);
+            const auto& input = m_container->get<BFInput>();
+            return input->isKeyDown(key);
         };
 
-        input["is_key_up"] = [](const SDL_Scancode& key) -> bool
+        input_t["is_key_up"] = [&](const SDL_Scancode& key) -> bool
         {
-            return BFInput::isKeyUp(key);
+            const auto& input = m_container->get<BFInput>();
+            return input->isKeyUp(key);
         };
 
-        input["is_key_pressed"] = [](const SDL_Scancode& key) -> bool
+        input_t["is_key_pressed"] = [&](const SDL_Scancode& key) -> bool
         {
-            return BFInput::isKeyPressed(key);
+            const auto& input = m_container->get<BFInput>();
+            return input->isKeyPressed(key);
         };
         
-        input["is_key_down_with_mod"] = [](const SDL_Scancode& key, const SDL_Keymod& mod) -> bool
+        input_t["is_key_down_with_mod"] = [&](const SDL_Scancode& key, const SDL_Keymod& mod) -> bool
         {
-            return BFInput::isKeyDown(key, mod);
+            const auto& input = m_container->get<BFInput>();
+            return input->isKeyDown(key, mod);
         };
 
-        input["is_key_up_with_mod"] = [](const SDL_Scancode& key, const SDL_Keymod& mod) -> bool
+        input_t["is_key_up_with_mod"] = [&](const SDL_Scancode& key, const SDL_Keymod& mod) -> bool
         {
-            return BFInput::isKeyUp(key, mod);
+            const auto& input = m_container->get<BFInput>();
+            return input->isKeyUp(key, mod);
         };
     }
 }

@@ -7,7 +7,7 @@
 
 #define BF_FORMAT(x, ...) 		fmt::format("{}:{} - {} - {}", __FILE__, __LINE__, __FUNCTION__, fmt::format((std::string) x, ##__VA_ARGS__))
 
-#ifdef BF_DEBUG
+#if defined(BF_DEBUG) || defined(_DEBUG)
 //Print
 #	define BF_PRINT(x, ...)		std::cout << BF_FORMAT(x, ##__VA_ARGS__) << std::endl;
 //Warning

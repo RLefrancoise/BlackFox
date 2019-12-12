@@ -3,7 +3,7 @@
 
 #include <cinject/cinject.h>
 #include <memory>
-#include "BFCommand.h"
+#include "common/BFCommand.h"
 
 namespace BlackFox
 {

@@ -17,7 +17,6 @@ namespace BlackFox
 		constexpr BFNonCopyable() = default;
 		constexpr BFNonCopyable(const BFNonCopyable& app) = delete;
 		constexpr BFNonCopyable& operator=(const BFNonCopyable& app) = delete;
-		constexpr BFNonCopyable& operator=(BFNonCopyable&& app) = delete;
 	};
 }
 

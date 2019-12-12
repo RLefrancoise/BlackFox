@@ -4,23 +4,29 @@
 #include <cpp-sdl2/event.hpp>
 #include <SDL_keyboard.h>
 #include <vector>
+#include <memory>
 
 namespace BlackFox
 {
+    class BFApplication;
+
     class BFInput
     {
+        friend class BFApplication;
+
     public:
-        static bool isKeyDown(SDL_Scancode key);
-        static bool isKeyDown(SDL_Scancode key, SDL_Keymod mod);
-        static bool isKeyUp(SDL_Scancode key);
-        static bool isKeyUp(SDL_Scancode key, SDL_Keymod mod);
-        static bool isKeyPressed(SDL_Scancode key);
+        typedef std::shared_ptr<BFInput> Ptr;
 
-        static void updateEvents(const std::vector<sdl::Event>& events);
-
+        bool isKeyDown(SDL_Scancode key);
+        bool isKeyDown(SDL_Scancode key, SDL_Keymod mod);
+        bool isKeyUp(SDL_Scancode key);
+        bool isKeyUp(SDL_Scancode key, SDL_Keymod mod);
+        bool isKeyPressed(SDL_Scancode key);
     private:
-        static std::vector<sdl::Event> polledEvents;
-        static bool downKeys[SDL_NUM_SCANCODES];
+        void updateEvents(const std::vector<sdl::Event>& events);
+
+        std::vector<sdl::Event> polledEvents;
+        bool downKeys[SDL_NUM_SCANCODES];
     };
 }
 

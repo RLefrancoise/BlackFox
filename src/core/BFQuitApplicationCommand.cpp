@@ -1,5 +1,6 @@
 #include "BFQuitApplicationCommand.h"
 #include "BFApplication.h"
+#include "common/BFDebug.h"
 
 namespace BlackFox
 {

@@ -21,3 +21,10 @@ target_link_libraries(
         sdl2gfx
         LINK_PRIVATE
         ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY})
+
+add_library(sdl2gfxdll SHARED ${SDL2_GFX_SOURCES})
+
+target_link_libraries(
+        sdl2gfxdll
+        LINK_PRIVATE
+        ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY})

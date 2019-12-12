@@ -3,8 +3,6 @@
 
 #include <memory>
 #include <string>
-#include <ostream>
-#include <SDL_hints.h>
 #include <cpp-sdl2/vec2.hpp>
 #include <fmt/format.h>
 
@@ -15,13 +13,14 @@ namespace BlackFox
     struct ConfigApplicationData
     {
         std::string name;
-        Uint32 frameRate;
-        bool fullScreen;
-        sdl::Vec2i windowSize;
+        Uint32 frameRate = 60;
+        bool fullScreen = false;
+        sdl::Vec2i windowSize = sdl::Vec2i(800, 600);
     };
 
-    struct BFConfigData
+    class BFConfigData
     {
+    public:
         typedef std::shared_ptr<BFConfigData> Ptr;
 
         explicit BFConfigData(const BFIniFile& file)

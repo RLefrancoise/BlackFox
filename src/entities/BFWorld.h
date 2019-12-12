@@ -3,21 +3,16 @@
 
 #include <memory>
 #include <typeinfo>
-#include <typeindex>
 #include <rttr/variant.h>
+#include <rttr/type.h>
 #include <vector>
 #include <unordered_map>
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
-#include "BFNonCopyable.h"
+#include "common/BFNonCopyable.h"
 #include "BFComponentSystem.h"
 #include "BFComponentSystemFlags.h"
-#include "BFComponent.h"
-
-#include "entities/components/spatial/BFPositionComponent.h"
-
-#include <sol/sol.hpp>
 
 namespace BlackFox
 {
@@ -75,14 +70,6 @@ namespace BlackFox
 		 */
 		EntityManager entityManager() const;
 
-		ComponentId getComponentIdentifier(const std::string& componentName) const;
-
-		template <typename C>
-		C* getEntityComponent(const entt::entity& entity, ComponentId component) const
-        {
-		    return &(entityManager()->get<C>(entity));
-        }
-
 		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
 		 *
@@ -111,7 +98,7 @@ namespace BlackFox
 		 */
 		static BFWorld::Ptr world(const std::string& worldId);
 
-		static BFWorld::Ptr create(const std::string& worldId, BFApplication* application);
+		static BFWorld::Ptr create(const std::string& worldId, DiContainer container);
 
 		/*!
 		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
@@ -157,7 +144,7 @@ namespace BlackFox
 				, ComponentSystemGroups group
 				, bool nameIsType = true);
 
-		static void refreshSystems(ComponentSystemGroups group, const BFApplication* application);
+		static void refreshSystems(ComponentSystemGroups group, const std::vector<sdl::Event>& polledEvents, float deltaTime);
 
 		/*!
 		 * \fn	template <typename S> static bool BFWorld::hasSystem()

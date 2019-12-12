@@ -7,9 +7,9 @@
 #include <unordered_map>
 #include <fmt/format.h>
 
-#include "BFNonCopyable.h"
-#include "BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
-#include "BFDebug.h"
+#include "common/BFNonCopyable.h"
+#include "common/BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
+#include "common/BFDebug.h"
 #include "BFTypeDefs.h"
 
 namespace BlackFox

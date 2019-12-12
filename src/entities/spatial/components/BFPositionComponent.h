@@ -6,9 +6,14 @@
 
 namespace BlackFox::Components
 {
-	struct BFPositionComponent : public BFComponent<BFPositionComponent>
+	struct BFPositionComponent : public IBFComponent
 	{
 	    BF_COMPONENT("Position")
+
+		constexpr BFPositionComponent() 
+		: x(0)
+		, y(0) 
+		{}
 
 	    constexpr BFPositionComponent(int x, int y)
 	    : x(x)

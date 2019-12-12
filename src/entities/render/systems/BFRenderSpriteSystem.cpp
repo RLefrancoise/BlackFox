@@ -1,9 +1,10 @@
 #include "BFRenderSpriteSystem.h"
 #include "BFApplication.h"
-#include "entities/components/spatial/BFPositionComponent.h"
-#include "entities/components/spatial/BFRotationComponent.h"
-#include "entities/components/spatial/BFScaleComponent.h"
-#include "entities/components/render/BFSpriteComponent.h"
+#include "BFWorld.h"
+#include "entities/spatial/components/BFPositionComponent.h"
+#include "entities/spatial/components/BFRotationComponent.h"
+#include "entities/spatial/components/BFScaleComponent.h"
+#include "entities/render/components/BFSpriteComponent.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "BFRenderSpriteSystem")
 
@@ -69,7 +70,7 @@ namespace BlackFox::Systems
                         image->ptr(),
                         &sprite.rect,
                         &screenRect,
-                        rotation->angle.value(),
+                        rotation->angle,
                         &sprite.center,
                         SDL_FLIP_NONE) < 0)
                 {

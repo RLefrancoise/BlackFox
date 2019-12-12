@@ -1,5 +1,7 @@
 #include "BFLuaScriptingApplicationEntity.h"
 #include "BFApplication.h"
+#include "BFCommandManager.h"
+#include "BFConfigData.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingApplicationEntity, "Application")
 

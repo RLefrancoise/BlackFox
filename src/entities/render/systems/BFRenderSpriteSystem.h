@@ -8,7 +8,7 @@ namespace BlackFox::Systems
 {
 	class BFRenderSpriteSystem : public BFComponentSystem
 	{
-        BF_SYSTEM_AUTO_CREATE(BFRenderSpriteSystem, Render)
+        BF_SYSTEM_AUTO_CREATE(BFRenderSpriteSystem, ComponentSystemGroups::Render)
 
 	public:
 		CINJECT(BFRenderSpriteSystem(std::shared_ptr<BFApplication> application));

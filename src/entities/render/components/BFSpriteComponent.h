@@ -9,9 +9,12 @@
 
 namespace BlackFox::Components
 {
-	struct BFSpriteComponent : BFComponent<BFSpriteComponent>
+	struct BFSpriteComponent : public IBFComponent
 	{
 	    BF_COMPONENT("Sprite")
+
+		constexpr BFSpriteComponent()
+		{}
 
 	    constexpr BFSpriteComponent(sdl::Texture* img, const sdl::Rect& r, const SDL_Point& ctr, const sdl::Color& c, Uint8 a, SDL_BlendMode bm)
 	    : image(img)
@@ -22,9 +25,9 @@ namespace BlackFox::Components
 	    , blendMode(bm)
         {}
 
-		sdl::Texture* image;
-		sdl::Rect rect;
-		SDL_Point center;
+		sdl::Texture* image = nullptr;
+		sdl::Rect rect = sdl::Rect();
+		SDL_Point center = SDL_Point{};
 		sdl::Color color = sdl::Color::White();
 		Uint8 alpha = 255;
 		SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;

@@ -31,6 +31,12 @@ namespace BlackFox
 		: m_value(radians)
 		{}
 
+		constexpr BFRadian(const BFRadian& degree) = default;
+		constexpr BFRadian(BFRadian&& degree) noexcept = default;
+
+		BFRadian& operator=(const BFRadian&) = default;
+		BFRadian& operator=(BFRadian&&) noexcept = default;
+
 		/*!
 		 * \fn	explicit BFRadian::BFRadian(const BFDegree& degrees);
 		 *
@@ -69,10 +75,11 @@ namespace BlackFox
 		 */
 		BFRadian& operator=(const BFDegree& degrees);
 
-		BFRadian& operator=(float angle)
+		BFRadian& operator=(float angle);
+
+		constexpr operator float() const
 		{
-			m_value = angle;
-			return *this;
+			return m_value;
 		}
 
 	private:

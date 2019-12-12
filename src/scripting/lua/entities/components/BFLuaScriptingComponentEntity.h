@@ -3,38 +3,36 @@
 
 #include "IBFLuaScriptingEntity.h"
 #include "BFWorld.h"
+#include "BFComponent.h"
 
 namespace BlackFox
 {
-    template <typename C>
     class BFLuaScriptingComponentEntity : public IBFLuaScriptingEntity
     {
-        BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingComponentEntity<C>)
-    public:
-        void registerEntity() final
-        {
-            m_componentsNamespace = m_namespace["Components"].template get_or_create<sol::table>();
-            m_type = m_componentsNamespace.new_usertype<C>(
-                    C::name,
-                    sol::base_classes,
-                    sol::bases<BFComponent<C>>());
-            m_type["id"] = [](const BFWorld& world) -> ComponentId { return C::identifier(world.entityManager()); };
-            m_type["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return C::get(world.entityManager(), entity); };
-
-            registerAdditionalComponentData();
-        }
+        BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingComponentEntity)
 
     protected:
-        virtual void registerAdditionalComponentData() = 0;
+        template <typename C>
+        sol::usertype<C> registerType()
+        {
+            auto componentsNamespace = m_namespace["Components"].template get_or_create<sol::table>()[namespaceName()].template get_or_create<sol::table>();
+            auto component_t = componentsNamespace.new_usertype<C>(
+                C::name,
+                sol::base_classes,
+                sol::bases<IBFComponent>());
+            component_t["id"] = [](const BFWorld& world) -> ComponentId { return world.entityManager()->type<C>(); };
+            component_t["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return &(world.entityManager()->get<C>(entity)); };
 
-        sol::table m_componentsNamespace;
-        sol::usertype<C> m_type;
+            return component_t;
+        }
+
+        virtual std::string namespaceName() const = 0;
     };
 }
 
-#define BF_SCRIPTING_LUA_COMPONENT_ENTITY(entityClass, component)       RTTR_ENABLE(BlackFox::BFLuaScriptingComponentEntity<component>) \
+#define BF_SCRIPTING_LUA_COMPONENT_ENTITY(entityClass)                  RTTR_ENABLE(BlackFox::BFLuaScriptingComponentEntity) \
                                                                         public: \
                                                                             explicit entityClass(const BlackFox::DiContainer& container, sol::state* state) \
-                                                                            : BlackFox::BFLuaScriptingComponentEntity<component>(std::move(container), state)
+                                                                            : BlackFox::BFLuaScriptingComponentEntity(container, state)
 
 #endif //BLACKFOX_LUASCRIPTINGCOMPONENTENTITY_H

@@ -6,17 +6,15 @@
 #include <cpp-sdl2/sdl.hpp>
 #include <SDL2_framerate.h>
 
-#include "BFWorld.h"
-#include "BFComponentSystemFlags.h"
-#include "BFCommandManager.h"
 #include "BFTypeDefs.h"
-#include "BFScene.h"
-#include "BFConfigData.h"
-#include "BFInput.h"
-
+#include "BFNonCopyable.h"
 
 namespace BlackFox
 {
+	class BFCommandManager;
+	class BFConfigData;
+	class BFInput;
+
 	/*!
 	 * \class	BFApplication
 	 *
@@ -27,8 +25,6 @@ namespace BlackFox
 	 */
 	class BFApplication : private BFNonCopyable
 	{
-		friend class BFWorld;
-
 	public:
 
 		/*!
@@ -39,8 +35,6 @@ namespace BlackFox
 		typedef std::shared_ptr<BFApplication> Ptr;
 
 		/*!
-		 * \fn	BFApplication(DiContainer container, BFCommandManager::Ptr commandManager);
-		 *
 		 * \brief	Constructor
 		 *
 		 * \author	Renaud Lefrançoise
@@ -49,7 +43,11 @@ namespace BlackFox
 		 * \param	container		The DI container.
 		 * \param	commandManager	The command manager.
 		 */
-		CINJECT(BFApplication(DiContainer container, BFCommandManager::Ptr commandManager, BFConfigData::Ptr configData));
+		CINJECT(BFApplication(
+			DiContainer container, 
+			std::shared_ptr<BFCommandManager> commandManager,
+			std::shared_ptr<BFConfigData> configData,
+			std::shared_ptr<BFInput> input));
 
 		/*!
 		 * \fn	BFApplication::~BFApplication();
@@ -59,7 +57,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	12/11/2019
 		 */
-		~BFApplication() noexcept = default;
+		~BFApplication() noexcept;
 
 		/*!
 		 * \fn	BFApplication::BFApplication(BFApplication&& app);
@@ -83,7 +81,7 @@ namespace BlackFox
 		 *
 		 * \returns	Execution return code
 		 */
-		int execute();
+		int execute() const;
 
 		/*!
 		 * \fn	void BFApplication::quit();
@@ -93,7 +91,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	13/11/2019
 		 */
-		void quit();
+		void quit() const;
 
 		/*!
 		 * \fn	BFCommandManager::Ptr BFApplication::commandManager() const;
@@ -105,7 +103,7 @@ namespace BlackFox
 		 *
 		 * \returns	The command manager.
 		 */
-		BFCommandManager::Ptr commandManager() const;
+		std::shared_ptr<BFCommandManager> commandManager() const;
 
 		/*!
 		 * \fn	const sdl::Window& BFApplication::window() const;
@@ -139,87 +137,11 @@ namespace BlackFox
          *
          * \returns	Config data.
          */
-		const BFConfigData::Ptr configData() const;
+		std::shared_ptr<BFConfigData> configData() const;
 
 	private:
-
-		/*!
-		 * \fn	bool BFApplication::init();
-		 *
-		 * \brief	Initializes the application
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 *
-		 * \returns	True if it succeeds, false if it fails.
-		 */
-		bool init();
-
-		/*!
-		 * \fn	void BFApplication::loop();
-		 *
-		 * \brief	Application loop
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 */
-		void loop() const;
-
-		/*!
-		 * \fn	void BFApplication::render();
-		 *
-		 * \brief	Renders the application
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 */
-		void render() const;
-
-		/*!
-		 * \fn	void BFApplication::endOfFrame() const;
-		 *
-		 * \brief	Called at the end of the current frame
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 */
-		void endOfFrame() const;
-
-		/*!
-		 * \fn	void BFApplication::cleanup();
-		 *
-		 * \brief	Cleans up the application
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 */
-		void cleanup();
-
-		/*! \brief	SDL root */
-		sdl::Root m_root;
-		/*! \brief	SDL window */
-		sdl::Window m_window;
-		/*! \brief	SDL renderer */
-		sdl::Renderer m_renderer;
-		/*! \brief	Is application running ? */
-		bool m_running;
-
-		/*! \brief  The FPS manager */
-		FPSmanager m_fps;
-		/*! \brief	The delta time */
-		float m_deltaTime;
-
-		/*! \brief	The polled events */
-		std::vector<sdl::Event> m_polledEvents;
-
-		/*! \brief	DI container */
-		DiContainer m_container;
-
-		/*! \brief	Command Manager */
-		BFCommandManager::Ptr m_commandManager;
-
-		/*! \brief  Config data */
-		BFConfigData::Ptr m_configData;
+	    class impl;
+	    std::unique_ptr<impl> pImpl;
 	};
 }
 

@@ -1,14 +1,19 @@
 #ifndef BLACKFOX_ROTATION_COMPONENT_H
 #define BLACKFOX_ROTATION_COMPONENT_H
 
-#include "BFDegree.h"
 #include "BFComponent.h"
+#include "BFDegree.h"
+#include "BFRadian.h"
 
 namespace BlackFox::Components
 {
-	struct BFRotationComponent : BFComponent<BFRotationComponent>
+	struct BFRotationComponent : public IBFComponent
 	{
 	    BF_COMPONENT("Rotation")
+
+		constexpr BFRotationComponent() 
+		: angle(0) 
+		{}
 
 	    constexpr explicit BFRotationComponent(float degrees)
 	    : angle(degrees)
@@ -18,8 +23,16 @@ namespace BlackFox::Components
 	    : angle(a)
         {}
 
+		constexpr explicit BFRotationComponent(BFDegree&& a)
+		: angle(std::move(a))
+		{}
+
         explicit BFRotationComponent(const BFRadian& a)
         : angle(a)
+		{}
+
+		explicit BFRotationComponent(BFRadian&& a)
+		: angle(a)
 		{}
 
 		BFDegree angle;

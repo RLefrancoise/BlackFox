@@ -3,7 +3,7 @@
 
 #include "IBFInstaller.h"
 #include "BFTypeDefs.h"
-#include "BFDebug.h"
+#include "common/BFDebug.h"
 
 namespace BlackFox
 {

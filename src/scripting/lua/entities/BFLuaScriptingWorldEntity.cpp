@@ -1,9 +1,9 @@
 #include "BFLuaScriptingWorldEntity.h"
 #include "BFWorld.h"
 #include "BFApplication.h"
-#include "entities/systems/scripting/BFLuaComponentSystem.h"
+#include "entities/scripting/systems/BFLuaComponentSystem.h"
 
-BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "World")
+BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
 namespace BlackFox
 {
@@ -13,11 +13,11 @@ namespace BlackFox
         sol::usertype<entt::entity> entity_type = m_namespace.new_usertype<entt::entity>("Entity");
         sol::usertype <BFWorld> world_type = m_namespace.new_usertype<BFWorld>("World");
 
-        world_type["entities"] = [](BFWorld& world, const sol::function& callback, sol::variadic_args components)
+        world_type["entities"] = [](BFWorld& world, const sol::function& callback, float dt, sol::variadic_args components)
         {
-            world.entityManager()->runtime_view(components.cbegin(), components.cend()).each([&](auto entity)
+            world.entityManager()->runtime_view(components.cbegin(), components.cend()).each([callback, dt](auto entity)
                {
-                   callback(entity);
+                   callback(entity, dt);
                });
         };
 
@@ -28,8 +28,7 @@ namespace BlackFox
         //World
         m_namespace["create_world"] = [&](const std::string& worldId) -> BFWorld::Ptr
         {
-            const auto app = container->get<BFApplication>();
-            return BFWorld::create(worldId, app.get());
+            return BFWorld::create(worldId, m_container);
         };
 
         m_namespace["get_world"] = [&](const std::string& worldId) -> BFWorld::Ptr

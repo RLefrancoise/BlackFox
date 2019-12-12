@@ -1,6 +1,8 @@
 #ifndef BLACKFOX_DEGREE_H
 #define BLACKFOX_DEGREE_H
 
+#include <variant>
+
 namespace BlackFox
 {
 	class BFRadian;
@@ -30,6 +32,12 @@ namespace BlackFox
 		constexpr explicit BFDegree(float degrees = 0.f)
 		: m_value(degrees)
 		{}
+
+		constexpr BFDegree(const BFDegree& degree) = default;
+		constexpr BFDegree(BFDegree&& degree) noexcept = default;
+
+		BFDegree& operator=(const BFDegree&) = default;
+		BFDegree& operator=(BFDegree&&) noexcept = default;
 
 		/*!
 		 * \fn	explicit BFDegree::BFDegree(const BFRadian& radians);
@@ -69,10 +77,11 @@ namespace BlackFox
 		 */
 		BFDegree& operator=(const BFRadian& radians);
 
-		BFDegree& operator=(float angle)
+		BFDegree& operator=(float angle);
+
+		constexpr operator float() const
 		{
-			m_value = angle;
-			return *this;
+			return m_value;
 		}
 
 	private:

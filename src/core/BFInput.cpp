@@ -2,9 +2,6 @@
 
 namespace BlackFox
 {
-    bool BFInput::downKeys[SDL_NUM_SCANCODES];
-    std::vector<sdl::Event> BFInput::polledEvents;
-
     bool BFInput::isKeyDown(SDL_Scancode key)
     {
         bool keyDown = false;

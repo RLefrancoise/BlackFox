@@ -6,12 +6,13 @@
 #include <sol/sol.hpp>
 #include <memory>
 
-#include "BFNonCopyable.h"
+#include "common/BFNonCopyable.h"
 #include "BFTypeDefs.h"
-#include "IBFScriptingEntity.h"
 
 namespace BlackFox
 {
+	class IBFScriptingEntity;
+
 	class BFScriptingManager : private BFNonCopyable
 	{
 	public:
@@ -20,7 +21,7 @@ namespace BlackFox
 		CINJECT(BFScriptingManager(DiContainer container));
 		~BFScriptingManager() = default;
 
-		void addEntity(IBFScriptingEntity::Ptr entity);
+		void addEntity(std::shared_ptr<IBFScriptingEntity> entity);
 		void registerEntities();
 
 		sol::protected_function_result evalScript(const std::string& script);
@@ -29,7 +30,7 @@ namespace BlackFox
 	private:
 		DiContainer m_container;
 		sol::state m_state;
-		std::vector<IBFScriptingEntity::Ptr> m_entities;
+		std::vector<std::shared_ptr<IBFScriptingEntity>> m_entities;
 	};
 }
 
