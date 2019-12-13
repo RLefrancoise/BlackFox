@@ -9,7 +9,8 @@ namespace BlackFox
 {
     class BFLuaScriptingComponentEntity : public IBFLuaScriptingEntity
     {
-        BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingComponentEntity)
+    public:
+        explicit BFLuaScriptingComponentEntity(const BlackFox::DiContainer& container, sol::state* state) : IBFLuaScriptingEntity(container, state) {}
 
     protected:
         template <typename C>
@@ -30,7 +31,7 @@ namespace BlackFox
     };
 }
 
-#define BF_SCRIPTING_LUA_COMPONENT_ENTITY(entityClass)                  RTTR_ENABLE(BlackFox::BFLuaScriptingComponentEntity) \
+#define BF_SCRIPTING_LUA_COMPONENT_ENTITY(entityClass)                  RTTR_ENABLE(BlackFox::IBFLuaScriptingEntity) \
                                                                         public: \
                                                                             explicit entityClass(const BlackFox::DiContainer& container, sol::state* state) \
                                                                             : BlackFox::BFLuaScriptingComponentEntity(container, state)

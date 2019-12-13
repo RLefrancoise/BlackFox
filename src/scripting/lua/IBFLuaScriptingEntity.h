@@ -22,6 +22,8 @@ namespace BlackFox
             m_namespace = (*m_state)["BlackFox"].get_or_create<sol::table>();
         }
 
+        virtual ~IBFLuaScriptingEntity() noexcept = default;
+
     protected:
         sol::state* m_state;
         sol::table m_namespace;

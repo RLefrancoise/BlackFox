@@ -20,7 +20,6 @@ namespace BlackFox
         {
             if(t.is_template_instantiation()) continue;
             if (!t.is_valid()) continue;
-            if (t == rttr::type::get<BFLuaScriptingComponentEntity>()) continue; //is pure virtual
 
             auto entity = t.create({m_container, &m_state});
             if(!entity.is_valid())
