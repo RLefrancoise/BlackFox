@@ -18,7 +18,8 @@ namespace BlackFox
 			//Execute the app
 			auto app = container->get<BFApplication>();
 			return app->execute();
-		} catch(const std::exception& err)
+		}
+		catch(const std::exception& err)
 		{
 			BF_ERROR("{}", err.what())
 			return EXIT_FAILURE;

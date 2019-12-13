@@ -13,7 +13,7 @@ function onWorldChanged(world)
 end
 
 function update(dt)
-    if BlackFox.Input.is_key_down(BlackFox.Input.KeyCode.ESCAPE) == true then
+    if BlackFox.Input.isKeyDown(BlackFox.Input.KeyCode.Escape) == true then
 		print("Escape pressed")
 		application:quit()
 	end
@@ -25,22 +25,12 @@ function update(dt)
 		Scale)
 end
 
-function animateEntity(entity, dt)
+function animateEntity(entity, dt)	
 	local rotation = BlackFox.Components.Spatial.Rotation.get(world, entity)
 	local scale = BlackFox.Components.Spatial.Scale.get(world, entity)
 
-	-- rotate ping pong
-	if rotation.angle > 15 then
-		rotateCW = false
-	elseif rotation.angle < -15 then
-		rotateCW = true
-	end
-
-	if rotateCW then
-		rotation.angle = rotation.angle + 30 * dt
-	else
-		rotation.angle = rotation.angle - 30 * dt
-	end
+	-- rotate
+	rotation.angle = rotation.angle + 30 * dt
 
 	-- scale ping pong
 	if scale.x > 2.5 then

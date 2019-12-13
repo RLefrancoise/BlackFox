@@ -23,7 +23,8 @@ set(LIBRARIES bfcommon libluadll)
 target_include_directories(
         bfio
         PUBLIC
-        ${SOURCES_FOLDERS}
+        ${CMAKE_SOURCE_DIR}/src/common
 )
-target_link_libraries(bfio PUBLIC ${LIBRARIES})
+
+target_link_libraries(bfio LINK_PUBLIC ${LIBRARIES})
 target_compile_features(bfio PUBLIC cxx_std_17)

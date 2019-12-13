@@ -14,7 +14,6 @@ namespace BlackFox
         group_t["EndOfFrame"] = ComponentSystemGroups::EndOfFrame;
 
         sol::usertype<BFComponentSystem> t = m_namespace.new_usertype<BFComponentSystem>("ComponentSystem");
-        t["onEvent"] = &BFComponentSystem::onEvent;
         t["update"] = &BFComponentSystem::update;
         t["name"] = &BFComponentSystem::name;
     }

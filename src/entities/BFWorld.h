@@ -8,6 +8,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include <SFML/Window/Event.hpp>
+
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
 #include "common/BFNonCopyable.h"
@@ -144,7 +146,7 @@ namespace BlackFox
 				, ComponentSystemGroups group
 				, bool nameIsType = true);
 
-		static void refreshSystems(ComponentSystemGroups group, const std::vector<sdl::Event>& polledEvents, float deltaTime);
+		static void refreshSystems(ComponentSystemGroups group, float deltaTime);
 
 		/*!
 		 * \fn	template <typename S> static bool BFWorld::hasSystem()

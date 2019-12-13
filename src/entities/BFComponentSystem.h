@@ -2,7 +2,6 @@
 #define BLACKFOX_COMPONENTSYSTEM_H
 
 #include <memory>
-#include <cpp-sdl2/event.hpp>
 #include <cinject/cinject.h>
 #include <rttr/rttr_enable.h>
 
@@ -59,18 +58,6 @@ namespace BlackFox
 		virtual ~BFComponentSystem() noexcept = default;
 
 		/*!
-		 * \fn	virtual void BFComponentSystem::onEvent(const sdl::Event& ev) = 0;
-		 *
-		 * \brief	React to the given event.
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	ev	The event.
-		 */
-		virtual void onEvent(const sdl::Event& ev) {}
-
-		/*!
 		 * \fn	virtual void BFComponentSystem::update(float dt) = 0;
 		 *
 		 * \brief	Updates the system.
@@ -80,7 +67,7 @@ namespace BlackFox
 		 *
 		 * \param	dt	The delta time
 		 */
-		virtual void update(float dt) {}
+		virtual void update(float dt) = 0;
 
 		/*!
 		 * \fn	std::string BFComponentSystem::name() const;

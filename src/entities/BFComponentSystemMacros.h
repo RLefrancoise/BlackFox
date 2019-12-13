@@ -21,7 +21,6 @@ namespace BlackFox {
                                                         using namespace rttr; \
                                                         registration::class_<system>(systemName) \
                                                         .constructor<BlackFox::BFApplication*>()(rttr::policy::ctor::as_raw_ptr) \
-                                                        .method("onEvent", &system::onEvent) \
                                                         .method("update", &system::update) \
                                                         .method("name", &system::name) \
                                                         .method("setWorld", &system::setWorld) \

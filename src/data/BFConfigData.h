@@ -1,10 +1,11 @@
-#ifndef BLACKFOX_APPLICATIONDATA_H
-#define BLACKFOX_APPLICATIONDATA_H
+#ifndef BLACKFOX_CONFIGDATA_H
+#define BLACKFOX_CONFIGDATA_H
 
 #include <memory>
 #include <string>
-#include <cpp-sdl2/vec2.hpp>
 #include <fmt/format.h>
+#include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "BFIniFile.h"
 
@@ -13,9 +14,9 @@ namespace BlackFox
     struct ConfigApplicationData
     {
         std::string name;
-        Uint32 frameRate = 60;
+        sf::Uint32 frameRate = 60;
         bool fullScreen = false;
-        sdl::Vec2i windowSize = sdl::Vec2i(800, 600);
+        sf::Vector2u windowSize = sf::Vector2u(800, 600);
     };
 
     class BFConfigData
@@ -27,9 +28,9 @@ namespace BlackFox
         {
             appData = {
                 file.get("Application", "name", "BlackFox"), //name
-                file.getIntTo<Uint32>("Application", "frameRate", 60), //frame rate
+                file.getIntTo<sf::Uint32>("Application", "frameRate", 60), //frame rate
                 file.getBool("Application", "fullScreen", false), //full screen
-                sdl::Vec2i( //window size
+                sf::Vector2u( //window size
                     file.getInt("Application", "width", 800),
                     file.getInt("Application", "height", 600))};
         }
@@ -48,4 +49,4 @@ namespace BlackFox
     };
 }
 
-#endif //BLACKFOX_APPLICATIONDATA_H
+#endif //BLACKFOX_CONFIGDATA_H

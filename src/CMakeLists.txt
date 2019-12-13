@@ -10,24 +10,11 @@ ENDIF()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# SDL2
-# list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/examples/cmake-modules/")
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
-
-# SDL Image
-find_package(SDL2_image REQUIRED)
-include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
-
-# SDL gfx
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/SDL2_gfx_1.0.4)
+# SFML
+find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED)
 
 # CInject
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cinject/include)
-
-# CPP-SDL2
-add_compile_definitions(CPP_SDL2_USE_SDL_IMAGE)
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cpp-sdl2/sources)
 
 # ENTT
 IF (MSVC)
@@ -106,15 +93,6 @@ ENDMACRO()
 
 HEADER_DIRECTORIES(SOURCES_FOLDERS)
 
-# Executable
-add_executable(
-    BlackFox
-    ${SOURCES}
-)
-
-# Add sources folders to target
-target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
-
 # Common
 add_subdirectory(common)
 
@@ -124,10 +102,19 @@ add_subdirectory(math)
 # IO
 add_subdirectory(io)
 
+# Executable
+add_executable(
+    BlackFox
+    ${SOURCES}
+)
+
+# Add sources folders to target
+target_include_directories(BlackFox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
+
 IF(WIN32)
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} bfcommon bfmath bfio sdl2gfx fmt::fmt-header-only RTTR::Core libluadll)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio fmt::fmt-header-only RTTR::Core libluadll)
 ELSE()
-    set(LIBRARIES ${SDL2_LIBRARY} ${SDL2_SDLMAIN_LIBRARY} ${SDL2_IMAGE_LIBRARIES} bfcommon bfmath bfio sdl2gfx fmt::fmt-header-only RTTR::Core libluadll dl pthread)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio fmt::fmt-header-only RTTR::Core libluadll dl pthread)
 ENDIF()
 
 target_link_libraries(

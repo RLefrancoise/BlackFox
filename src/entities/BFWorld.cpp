@@ -113,7 +113,7 @@ namespace BlackFox
         return system.get();
     }
 
-	void BFWorld::refreshSystems(ComponentSystemGroups group, const std::vector<sdl::Event>& polledEvents, float deltaTime)
+	void BFWorld::refreshSystems(ComponentSystemGroups group, float deltaTime)
 	{
 		if(systemGroups.find(group) == systemGroups.end()) return;
 
@@ -126,12 +126,6 @@ namespace BlackFox
 			for(const auto& world : worlds)
 			{
 				system->setWorld(world.second.get());
-
-				for (const auto& ev : polledEvents)
-				{
-					system->onEvent(ev);
-				}
-
 				system->update(deltaTime);
 			}
 		}

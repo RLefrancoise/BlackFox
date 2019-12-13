@@ -21,7 +21,7 @@ target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(fmt-6.0.0)
 
 # SDL gfx
-add_subdirectory(SDL2_gfx_1.0.4)
+#add_subdirectory(SDL2_gfx_1.0.4)
 
 # Lua
 add_subdirectory(lua-5.3.5)

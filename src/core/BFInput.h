@@ -1,8 +1,7 @@
 #ifndef BLACKFOX_INPUT_H
 #define BLACKFOX_INPUT_H
 
-#include <cpp-sdl2/event.hpp>
-#include <SDL_keyboard.h>
+#include <SFML/Window/Event.hpp>
 #include <vector>
 #include <memory>
 
@@ -15,18 +14,30 @@ namespace BlackFox
         friend class BFApplication;
 
     public:
+
+        enum KeyMod : unsigned int
+        {
+            Alt = 1,
+            Control = 2,
+            Shift = 4,
+            System = 8
+        };
+
         typedef std::shared_ptr<BFInput> Ptr;
 
-        bool isKeyDown(SDL_Scancode key);
-        bool isKeyDown(SDL_Scancode key, SDL_Keymod mod);
-        bool isKeyUp(SDL_Scancode key);
-        bool isKeyUp(SDL_Scancode key, SDL_Keymod mod);
-        bool isKeyPressed(SDL_Scancode key);
-    private:
-        void updateEvents(const std::vector<sdl::Event>& events);
+        bool isKeyDown(sf::Keyboard::Key key);
+        bool isKeyDown(sf::Keyboard::Key key, KeyMod mod);
+        bool isKeyUp(sf::Keyboard::Key key);
+        bool isKeyUp(sf::Keyboard::Key key, KeyMod mod);
+        bool isKeyPressed(sf::Keyboard::Key key);
 
-        std::vector<sdl::Event> polledEvents;
-        bool downKeys[SDL_NUM_SCANCODES];
+    private:
+
+        void updateEvents(const std::vector<sf::Event>& events);
+        bool hasMod(const sf::Event::KeyEvent& ev, KeyMod mod);
+
+        std::vector<sf::Event> polledEvents;
+        bool downKeys[sf::Keyboard::Key::KeyCount];
     };
 }
 

@@ -1,7 +1,6 @@
 #include "BFApplication.h"
 
 #include <iostream>
-#include <INIReader.h>
 
 #include "entities/spatial/components/BFPositionComponent.h"
 #include "entities/spatial/components/BFRotationComponent.h"
@@ -32,7 +31,6 @@ namespace BlackFox
 			BFConfigData::Ptr configData,
 			BFInput::Ptr input)
 			: m_app(app)
-			, m_running(false)
 			, m_deltaTime(0.0f)
 			, m_container(std::move(container))
 			, m_commandManager(std::move(commandManager))
@@ -43,23 +41,23 @@ namespace BlackFox
 
 		int execute()
 		{
-			auto ev = sdl::Event{};
-
 			//init
 			if (!init()) return EXIT_FAILURE;
 
+			sf::Clock clock;
+
 			//run
-			m_running = true;
-			while(m_running)
+			while(m_window.isOpen())
 			{
 				//Update FPS & delta time
-				m_deltaTime = SDL_framerateDelay(&m_fps) / 1000.0f;
+				m_deltaTime = clock.restart().asSeconds();
 
 				//events
+				sf::Event ev;
 				m_polledEvents.clear();
-				while(ev.poll())
+				while(m_window.pollEvent(ev))
 				{
-					if(ev.type == SDL_QUIT)
+					if(ev.type == sf::Event::Closed)
 					{
 						commandManager()->createCommand<BFQuitApplicationCommand>()->execute();
 						continue;
@@ -85,7 +83,7 @@ namespace BlackFox
 
 		void quit()
 		{
-			m_running = false;
+			m_window.close();
 		}
 
 		BFCommandManager::Ptr commandManager() const
@@ -93,14 +91,9 @@ namespace BlackFox
 			return m_commandManager;
 		}
 
-		const sdl::Window& window() const
+		sf::RenderWindow* window()
 		{
-			return m_window;
-		}
-
-		const sdl::Renderer& renderer() const
-		{
-			return m_renderer;
+			return &m_window;
 		}
 
 		BFConfigData::Ptr configData() const
@@ -114,18 +107,13 @@ namespace BlackFox
 		{
 			try
 			{
-				//Root
-				m_root = sdl::Root();
-
 				//Window
-				m_window = sdl::Window(m_configData->appData.name, m_configData->appData.windowSize, SDL_INIT_EVENTS);
+				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
+				if (m_configData->appData.fullScreen) windowFlags |= sf::Style::Fullscreen;
+				m_window.create(sf::VideoMode(m_configData->appData.windowSize.x, m_configData->appData.windowSize.y), m_configData->appData.name, windowFlags);
 
-				//Renderer
-				m_renderer = m_window.make_renderer();
-
-				//FPS manager
-				SDL_initFramerate(&m_fps);
-				if(SDL_setFramerate(&m_fps, m_configData->appData.frameRate) < 0) BF_EXCEPTION("Failed to set framerate")
+				//Framerate
+				m_window.setFramerateLimit(m_configData->appData.frameRate);
 
 				//Register scripting entities
 				const auto& scriptManager = m_container->get<BFScriptingManager>();
@@ -142,7 +130,11 @@ namespace BlackFox
 				}
 
 				//Just for testing, create some entities
-				static sdl::Texture squareImg(m_renderer.ptr(), "test.png");
+				static sf::Texture squareImg;
+				if (!squareImg.loadFromFile("test.png"))
+				{
+					BF_EXCEPTION("Failed to load texture test.png")
+				}
 
 				auto em = defaultWorld->entityManager();
 
@@ -162,16 +154,15 @@ namespace BlackFox
 				blueRot.angle = 0.0f;
 
 				//scale
-				blueScale.scaleX = 1.5f;
-				blueScale.scaleY = 1.5f;
+				blueScale.scaleX = 1.f;
+				blueScale.scaleY = 1.f;
 
 				//sprite
 				blueSprite.image = &squareImg;
-				blueSprite.rect = sdl::Rect(sdl::Vec2i(), squareImg.size());
-				blueSprite.center = SDL_Point{ squareImg.size().x / 2, squareImg.size().y / 2 };
-				blueSprite.color = sdl::Color::Blue();
+				blueSprite.rect = sf::IntRect(sf::Vector2i(), sf::Vector2i(squareImg.getSize().x, squareImg.getSize().y));
+				blueSprite.pivot = sf::Vector2f((float) squareImg.getSize().x / 2, (float) squareImg.getSize().y / 2);
+				blueSprite.color = sf::Color::Blue;
 				blueSprite.alpha = 128;
-				blueSprite.blendMode = SDL_BLENDMODE_BLEND;
 
 				//Test lua scripting
 				sol::protected_function_result result = scriptManager->evalFile("data/test.lua");
@@ -183,7 +174,7 @@ namespace BlackFox
 
 				BF_PRINT("Test.lua result: {}", (bool) result)
 			}
-			catch (sdl::Exception& err)
+			catch (std::exception& err)
 			{
 				BF_ERROR("Failed to init application: {}", err.what())
 				return false;
@@ -194,45 +185,37 @@ namespace BlackFox
 
 		void loop() const
 		{
-			BFWorld::refreshSystems(ComponentSystemGroups::GameLoop, m_polledEvents, m_deltaTime);
+			BFWorld::refreshSystems(ComponentSystemGroups::GameLoop, m_deltaTime);
 		}
 
-		void render() const
+		void render()
 		{
 			//Clear window
-			m_renderer.clear(sdl::Color::White());
+			m_window.clear(sf::Color::White);
 
-			BFWorld::refreshSystems(ComponentSystemGroups::Render, m_polledEvents, m_deltaTime);
+			BFWorld::refreshSystems(ComponentSystemGroups::Render, m_deltaTime);
 
 			//Draw window content
-			m_renderer.present();
+			m_window.display();
 		}
 
 		void endOfFrame() const
 		{
-			BFWorld::refreshSystems(ComponentSystemGroups::EndOfFrame, m_polledEvents, m_deltaTime);
+			BFWorld::refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
 		}
 
 		void cleanup() {}
 
 		BFApplication* m_app;
 
-		/*! \brief	SDL root */
-		sdl::Root m_root;
-		/*! \brief	SDL window */
-		sdl::Window m_window;
-		/*! \brief	SDL renderer */
-		sdl::Renderer m_renderer;
-		/*! \brief	Is application running ? */
-		bool m_running;
+		/*! \brief	window */
+		sf::RenderWindow m_window;
 
-		/*! \brief  The FPS manager */
-		FPSmanager m_fps;
 		/*! \brief	The delta time */
 		float m_deltaTime;
 
 		/*! \brief	The polled events */
-		std::vector<sdl::Event> m_polledEvents;
+		std::vector<sf::Event> m_polledEvents;
 
 		/*! \brief	DI container */
 		DiContainer m_container;
@@ -286,14 +269,9 @@ namespace BlackFox
 		return pImpl->commandManager();
 	}
 
-	const sdl::Window & BFApplication::window() const
+	sf::RenderWindow* BFApplication::window() const
 	{
 		return pImpl->window();
-	}
-
-	const sdl::Renderer & BFApplication::renderer() const
-	{
-		return pImpl->renderer();
 	}
 
     BFConfigData::Ptr BFApplication::configData() const

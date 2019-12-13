@@ -6,9 +6,7 @@
 RTTR_REGISTRATION
 {
 	using namespace rttr;
-	registration::class_<BlackFox::BFComponentSystem>("BFComponentSystem")
-	.constructor<BlackFox::BFApplication*>()(rttr::policy::ctor::as_raw_ptr)
-	.method("onEvent", &BlackFox::BFComponentSystem::onEvent)
+	registration::class_<BlackFox::BFComponentSystem>("ComponentSystem")
 	.method("update", &BlackFox::BFComponentSystem::update)
 	.method("name", &BlackFox::BFComponentSystem::name)
 	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);

@@ -15,23 +15,23 @@ namespace BlackFox::Components
 		, y(0) 
 		{}
 
-	    constexpr BFPositionComponent(int x, int y)
+	    constexpr BFPositionComponent(float x, float y)
 	    : x(x)
 	    , y(y)
 	    {}
 
-	    constexpr explicit BFPositionComponent(const BFVector2i& position)
+	    constexpr explicit BFPositionComponent(const BFVector2f& position)
 	    : x(position.x)
 	    , y(position.y)
         {}
 
-	    constexpr explicit BFPositionComponent(const sdl::Vec2i& position)
+	    constexpr explicit BFPositionComponent(const sf::Vector2f& position)
 	    : x(position.x)
 	    , y(position.y)
         {}
 
-		int x;
-		int y;
+		float x;
+		float y;
 	};
 }
 

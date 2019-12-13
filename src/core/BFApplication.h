@@ -3,8 +3,7 @@
 
 #include <cinject/cinject.h>
 #include <memory>
-#include <cpp-sdl2/sdl.hpp>
-#include <SDL2_framerate.h>
+#include <SFML/Graphics.hpp>
 
 #include "BFTypeDefs.h"
 #include "BFNonCopyable.h"
@@ -106,8 +105,6 @@ namespace BlackFox
 		std::shared_ptr<BFCommandManager> commandManager() const;
 
 		/*!
-		 * \fn	const sdl::Window& BFApplication::window() const;
-		 *
 		 * \brief	Gets the application window
 		 *
 		 * \author	Renaud Lefrançoise
@@ -115,19 +112,7 @@ namespace BlackFox
 		 *
 		 * \returns	The application window.
 		 */
-		const sdl::Window& window() const;
-
-		/*!
-		 * \fn	const sdl::Renderer& BFApplication::renderer() const;
-		 *
-		 * \brief	Gets the application renderer
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	27/11/2019
-		 *
-		 * \returns	The application renderer.
-		 */
-		const sdl::Renderer& renderer() const;
+		sf::RenderWindow* window() const;
 
         /*!
          * \brief	Gets config data

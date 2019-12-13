@@ -1,7 +1,7 @@
 #ifndef BLACKFOX_VECTOR2_H
 #define BLACKFOX_VECTOR2_H
 
-#include <cpp-sdl2/vec2.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace BlackFox
 {
@@ -40,7 +40,7 @@ namespace BlackFox
 		 *
 		 * \param	v	The SDL vector.
 		 */
-		constexpr explicit BFVector2(const sdl::Vec2<T>& v)
+		constexpr explicit BFVector2(const sf::Vector2<T>& v)
 		: x(v.x)
 		, y(v.y)
 		{}
@@ -202,21 +202,21 @@ namespace BlackFox
 		constexpr BFVector2<T>& operator=(const BFVector2<T>& v) = default;
 		constexpr BFVector2<T>& operator=(BFVector2<T>&& v) noexcept = default;
 
-		BFVector2<T>& operator=(const sdl::Vec2<T>& v)
+		BFVector2<T>& operator=(const sf::Vector2<T>& v)
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
 
-		BFVector2<T>& operator=(sdl::Vec2<T>&& v)
+		BFVector2<T>& operator=(sf::Vector2<T>&& v)
 		{
 			x = v.x;
 			y = v.y;
 			return *this;
 		}
 
-		constexpr operator sdl::Vec2<T> () const { return sdl::Vec2<T>(x, y); }
+		constexpr operator sf::Vector2<T> () const { return sf::Vector2<T>(x, y); }
 
 		/*! \brief	X value */
 		T x;

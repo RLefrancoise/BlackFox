@@ -13,7 +13,6 @@ namespace BlackFox
         application_type["quit"] = &BFApplication::quit;
         application_type["command_manager"] = &BFApplication::commandManager;
         application_type["window"] = &BFApplication::window;
-        application_type["renderer"] = &BFApplication::renderer;
         application_type["config_data"] = &BFApplication::configData;
     }
 }

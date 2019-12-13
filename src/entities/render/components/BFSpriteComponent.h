@@ -1,9 +1,10 @@
 #ifndef BLACKFOX_SPRITE_COMPONENT_H
 #define BLACKFOX_SPRITE_COMPONENT_H
 
-#include <cpp-sdl2/rect.hpp>
-#include <cpp-sdl2/texture.hpp>
-#include <cpp-sdl2/color.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Color.hpp>
 
 #include "BFComponent.h"
 
@@ -13,24 +14,22 @@ namespace BlackFox::Components
 	{
 	    BF_COMPONENT("Sprite")
 
-		constexpr BFSpriteComponent()
+		BFSpriteComponent()
 		{}
 
-	    constexpr BFSpriteComponent(sdl::Texture* img, const sdl::Rect& r, const SDL_Point& ctr, const sdl::Color& c, Uint8 a, SDL_BlendMode bm)
-	    : image(img)
-	    , rect(r)
-	    , center(ctr)
-	    , color(c)
-	    , alpha(a)
-	    , blendMode(bm)
-        {}
+		BFSpriteComponent(sf::Texture* image, const sf::IntRect& rect, const sf::Vector2f& pivot, const sf::Color& c, unsigned int a)
+		: image(image)
+		, rect(rect)
+		, pivot(pivot)
+		, color(c)
+		, alpha(a)
+		{}
 
-		sdl::Texture* image = nullptr;
-		sdl::Rect rect = sdl::Rect();
-		SDL_Point center = SDL_Point{};
-		sdl::Color color = sdl::Color::White();
-		Uint8 alpha = 255;
-		SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;
+		sf::Texture* image = nullptr;
+		sf::IntRect rect;
+		sf::Vector2f pivot;
+		sf::Color color = sf::Color::White;
+		unsigned int alpha = 255;
 	};
 }
 
