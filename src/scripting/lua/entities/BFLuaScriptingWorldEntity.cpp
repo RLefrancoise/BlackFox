@@ -26,23 +26,23 @@ namespace BlackFox
         //static methods
 
         //World
-        m_namespace["create_world"] = [&](const std::string& worldId) -> BFWorld::Ptr
+        m_namespace["createWorld"] = [&](const std::string& worldId) -> BFWorld::Ptr
         {
             return BFWorld::create(worldId, m_container);
         };
 
-        m_namespace["get_world"] = [&](const std::string& worldId) -> BFWorld::Ptr
+        m_namespace["getWorld"] = [&](const std::string& worldId) -> BFWorld::Ptr
         {
             return BFWorld::world(worldId);
         };
 
-        m_namespace["has_world"] = [&](const std::string& worldId) -> bool
+        m_namespace["hasWorld"] = [&](const std::string& worldId) -> bool
         {
             return BFWorld::hasWorld(worldId);
         };
 
         //System
-        m_namespace["create_system"] = [&](const std::string& systemName, ComponentSystemGroups group) -> BFComponentSystem*
+        m_namespace["createSystem"] = [&](const std::string& systemName, ComponentSystemGroups group) -> BFComponentSystem*
         {
             BFLuaScript luaScript(fmt::format("data/{}.lua", systemName), m_state);
 
@@ -52,12 +52,12 @@ namespace BlackFox
             return BFWorld::createSystemFromName(systemName, system, group, false);
         };
 
-        m_namespace["has_system"] = [&](const std::string& systemName) -> bool
+        m_namespace["hasSystem"] = [&](const std::string& systemName) -> bool
         {
             return BFWorld::hasSystemByName(systemName);
         };
 
-        m_namespace["get_system"] = [&](const std::string& systemName) -> BFComponentSystem*
+        m_namespace["getSystem"] = [&](const std::string& systemName) -> BFComponentSystem*
         {
             return BFWorld::getSystemByName(systemName);
         };

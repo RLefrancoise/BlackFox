@@ -1,2 +1,2 @@
-system = BlackFox.create_system("TestSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
+system = BlackFox.createSystem("TestSystem", BlackFox.ComponentSystemGroup.GameLoop)
 return system ~= nil

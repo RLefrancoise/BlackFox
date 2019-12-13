@@ -29,7 +29,7 @@ namespace BlackFox::Systems
 			//Scale is optional, check if entity has scale
 			const auto* scale = m_world->entityManager()->try_get<BFScaleComponent>(entity);
 			//Sprite
-			auto& sprite = group.get<BFSpriteComponent>(entity);
+			const auto& sprite = group.get<BFSpriteComponent>(entity);
 
 			sf::Sprite s;
 

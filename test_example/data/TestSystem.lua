@@ -1,11 +1,3 @@
-function onCreate()
-	print("Create TestSystem")
-end
-
-function onDestroy()
-	print("Destroy TestSystem")
-end
-
 function onWorldChanged(world)
 	Position = BlackFox.Components.Spatial.Position.id(world)
 	Rotation = BlackFox.Components.Spatial.Rotation.id(world)

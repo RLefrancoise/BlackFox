@@ -8,23 +8,24 @@ namespace BlackFox
     BFLuaComponentSystem::BFLuaComponentSystem(BlackFox::BFApplication *app, const BlackFox::BFLuaScript &script)
     : BFComponentSystem(app)
     , m_script(script)
-    , m_onCreateFnc(script.get<sol::function>("onCreate"))
-    , m_onDestroyFnc(script.get<sol::function>("onDestroy"))
-    , m_onWorldChanged(script.get<sol::function>("onWorldChanged"))
-    , m_updateFnc(script.get<sol::function>("update"))
     {
+        if (script.has<sol::function>("onCreate")) m_onCreateFnc = (script.get<sol::function>("onCreate"));
+        if (script.has<sol::function>("onDestroy")) m_onDestroyFnc = (script.get<sol::function>("onDestroy"));
+        if (script.has<sol::function>("onWorldChanged")) m_onWorldChanged = (script.get<sol::function>("onWorldChanged"));
+        if (script.has<sol::function>("update")) m_updateFnc = (script.get<sol::function>("update"));
+
         m_script.set<BFApplication*>("application", app);
-        m_onCreateFnc();
+        if(m_onCreateFnc.has_value()) m_onCreateFnc.value()();
     }
 
     BFLuaComponentSystem::~BFLuaComponentSystem()
     {
-        m_onDestroyFnc();
+        if(m_onDestroyFnc.has_value()) m_onDestroyFnc.value()();
     }
 
     void BFLuaComponentSystem::update(float dt)
     {
-        m_updateFnc(dt);
+        if(m_updateFnc.has_value()) m_updateFnc.value()(dt);
     }
 
     void BFLuaComponentSystem::setWorld(BFWorld* world)
@@ -32,6 +33,6 @@ namespace BlackFox
         BFComponentSystem::setWorld(world);
 
         m_script.set<BFWorld*>("world", world);
-        m_onWorldChanged(world);
+        if(m_onWorldChanged.has_value()) m_onWorldChanged.value()(world);
     }
 }

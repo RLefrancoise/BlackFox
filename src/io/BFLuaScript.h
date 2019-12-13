@@ -11,6 +11,12 @@ namespace BlackFox
         explicit BFLuaScript(const std::string& fileName, sol::state* state);
 
         template <typename T>
+        bool has(const std::string& name) const
+        {
+            return get<T>(name) != sol::nil;
+        }
+
+        template <typename T>
         T get(const std::string& name) const
         {
            return m_environment[name];

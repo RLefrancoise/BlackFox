@@ -17,10 +17,10 @@ namespace BlackFox
         void setWorld(BFWorld* world) override;
     private:
         BFLuaScript m_script;
-        sol::function m_onCreateFnc;
-        sol::function m_onDestroyFnc;
-        sol::function m_onWorldChanged;
-        sol::function m_updateFnc;
+        sol::optional<sol::function> m_onCreateFnc;
+        sol::optional<sol::function> m_onDestroyFnc;
+        sol::optional<sol::function> m_onWorldChanged;
+        sol::optional<sol::function> m_updateFnc;
     };
 }
 
