@@ -12,8 +12,7 @@ You will need CMake to build the engine as well as a compiler with C++17 support
 
 You will need to have somewhere on your computer the following libraries. 
 
-* SDL 2.0 : https://libsdl.org/
-* SDL 2 Image : https://www.libsdl.org/projects/SDL_image/
+* SFML 2.5.1 or newer : https://www.sfml-dev.org/index.php
 * RTTR : https://www.rttr.org/
 
 ## Current state
@@ -28,12 +27,12 @@ Below is the details about the current status of the engine.
     * Systems: You can manually create systems or auto creating them at application start (kind of like how ECS works on Unity3D)
     * Components: They are just simple structs
 * Dependency injection by using CInject, and by using contexts and installers (inspired by Zenject on Unity3D)
+* Scripting language : Lua (and Javascript later)
 
 ### What is planned
 
 * Level loading
 * Entity Archetypes
 * Various data (Prefabs, config file, ...)
-* Scripting language (probably Chaiscript, or maybe Lua)
 * An editor obviously !
 * Probably many other stuff that will come when all of the above will be done
