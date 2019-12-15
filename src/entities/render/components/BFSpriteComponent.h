@@ -3,7 +3,6 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Color.hpp>
 
 #include "BFComponent.h"
@@ -12,12 +11,11 @@ namespace BlackFox::Components
 {
 	struct BFSpriteComponent : public IBFComponent
 	{
-	    BF_COMPONENT("Sprite")
+		BF_COMPONENT("Sprite")
 
-		BFSpriteComponent()
-		{}
+		BFSpriteComponent() = default;
 
-		BFSpriteComponent(sf::Texture* image, const sf::IntRect& rect, const sf::Vector2f& pivot, const sf::Color& c, unsigned int a)
+		BFSpriteComponent(sf::Texture* image, const sf::IntRect& rect, const sf::Vector2f& pivot, const sf::Color& c, const unsigned int a)
 		: image(image)
 		, rect(rect)
 		, pivot(pivot)

@@ -13,7 +13,7 @@ namespace BlackFox
 	{
 		clearAllCommands();
 
-		for (auto command : manager.m_commands)
+		for (const auto& command : manager.m_commands)
 		{
 			m_commands.insert(std::make_pair(command.first, command.second));
 		}

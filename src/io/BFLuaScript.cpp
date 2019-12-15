@@ -8,7 +8,7 @@ namespace BlackFox
     BFLuaScript::BFLuaScript(const std::string &fileName, sol::state* state)
     {
         m_environment = sol::environment(*state, sol::create, state->globals());
-        auto res = state->safe_script_file(fileName, m_environment);
+        const auto res = state->safe_script_file(fileName, m_environment);
         if(!res.valid())
         {
             BF_EXCEPTION("Failed to load Lua script {}", fileName)

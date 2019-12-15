@@ -27,6 +27,7 @@ namespace BlackFox
 		 * \date	24/11/2019
 		 *
 		 * \param	container	The container.
+		 * \param	level		The level
 		 */
 		explicit BFSceneInstaller(DiContainer container, BFScene::Ptr level);
 

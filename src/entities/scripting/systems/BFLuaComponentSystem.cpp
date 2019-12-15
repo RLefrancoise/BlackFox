@@ -1,4 +1,3 @@
-#include <entities/spatial/components/BFPositionComponent.h>
 #include "BFLuaComponentSystem.h"
 #include "BFApplication.h"
 #include "BFWorld.h"

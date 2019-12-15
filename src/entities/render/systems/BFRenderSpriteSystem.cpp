@@ -6,7 +6,7 @@
 #include "entities/spatial/components/BFScaleComponent.h"
 #include "entities/render/components/BFSpriteComponent.h"
 
-BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "BFRenderSpriteSystem")
+BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSpriteSystem, "RenderSpriteSystem")
 
 using namespace BlackFox::Components;
 

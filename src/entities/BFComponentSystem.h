@@ -79,7 +79,7 @@ namespace BlackFox
 		 *
 		 * \returns	The name of the system.
 		 */
-		virtual std::string name() const;
+		[[nodiscard]] virtual std::string name() const;
 
 		/*!
 		 * \fn	void BFComponentSystem::setWorld(BFWorld* world);

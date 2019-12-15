@@ -15,7 +15,7 @@ namespace BlackFox::Components
 		, y(0) 
 		{}
 
-	    constexpr BFPositionComponent(float x, float y)
+	    constexpr BFPositionComponent(const float x, const float y)
 	    : x(x)
 	    , y(y)
 	    {}

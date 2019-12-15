@@ -58,7 +58,7 @@ namespace BlackFox
 		}
 
 		//Create system from type
-		rttr::variant s = system.create({application});
+		const auto s = system.create({application});
 		if(!s.is_valid())
 		{
 			BF_WARNING("Failed to create system {}", system.get_name().to_string())
@@ -68,8 +68,8 @@ namespace BlackFox
 		//Get the system group
 		const auto group = system.get_method("get_group").invoke(s).get_value<ComponentSystemGroups>();
 
-		bool ok = false;
-		auto sPtr = s.convert<BFComponentSystem*>(&ok);
+		auto ok = false;
+		const auto sPtr = s.convert<BFComponentSystem*>(&ok);
 		if(!ok)
 		{
 			BF_ERROR("Failed to convert variant for system {} to BFComponentSystem*", system.get_name().to_string())
@@ -94,7 +94,7 @@ namespace BlackFox
     		const std::string& systemName
     		, BFComponentSystem::Ptr system
     		, ComponentSystemGroups group
-    		, bool nameIsType)
+    		, const bool nameIsType)
     {
         if(hasSystemByName(systemName, nameIsType))
         {
@@ -113,7 +113,7 @@ namespace BlackFox
         return system.get();
     }
 
-	void BFWorld::refreshSystems(ComponentSystemGroups group, float deltaTime)
+	void BFWorld::refreshSystems(const ComponentSystemGroups group, const float deltaTime)
 	{
 		if(systemGroups.find(group) == systemGroups.end()) return;
 
@@ -131,7 +131,7 @@ namespace BlackFox
 		}
 	}
 
-    bool BFWorld::hasSystemByName(const std::string& name, bool nameIsType)
+    bool BFWorld::hasSystemByName(const std::string& name, const bool nameIsType)
     {
 		if(nameIsType)
 		{

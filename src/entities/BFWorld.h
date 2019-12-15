@@ -70,7 +70,7 @@ namespace BlackFox
 		 *
 		 * \returns	An EntityManager.
 		 */
-		EntityManager entityManager() const;
+		[[nodiscard]] EntityManager entityManager() const;
 
 		/*!
 		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
@@ -114,7 +114,7 @@ namespace BlackFox
 		 * \returns	The created system.
 		 */
 		template <typename S>
-		static S* createSystem(ComponentSystemGroups group, BFApplication* application)
+		static S* createSystem(const ComponentSystemGroups group, BFApplication* application)
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 

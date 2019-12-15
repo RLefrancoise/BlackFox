@@ -1,7 +1,7 @@
 #ifndef BLACKFOX_SINGLETON_H
 #define BLACKFOX_SINGLETON_H
 
-#include "common/BFNonCopyable.h"
+#include "BFNonCopyable.h"
 
 namespace BlackFox
 {

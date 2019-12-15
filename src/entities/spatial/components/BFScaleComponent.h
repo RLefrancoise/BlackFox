@@ -20,7 +20,7 @@ namespace BlackFox::Components
         , scaleY(scale.y)
         {}
 
-        constexpr explicit BFScaleComponent(float x, float y)
+        constexpr explicit BFScaleComponent(const float x, const float y)
         : scaleX(x)
         , scaleY(y)
         {}

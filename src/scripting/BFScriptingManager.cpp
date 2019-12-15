@@ -13,10 +13,10 @@ namespace BlackFox
         m_state.open_libraries(sol::lib::base, sol::lib::package);
 
         //Lua entities
-        rttr::type entity_type = rttr::type::get<IBFLuaScriptingEntity>();
-        auto lua_entities = entity_type.get_derived_classes();
+        const auto entityType = rttr::type::get<IBFLuaScriptingEntity>();
+        auto luaEntities = entityType.get_derived_classes();
 
-        for(const auto& t : lua_entities)
+        for(const auto& t : luaEntities)
         {
             if(t.is_template_instantiation()) continue;
             if (!t.is_valid()) continue;
@@ -28,7 +28,7 @@ namespace BlackFox
                 continue;
             }
 
-            bool ok = false;
+            auto ok = false;
             auto* entityPtr = entity.convert<IBFLuaScriptingEntity*>(&ok);
             if(!ok)
             {
@@ -36,7 +36,7 @@ namespace BlackFox
                 continue;
             }
 
-            IBFScriptingEntity::Ptr entitySharedPtr = std::shared_ptr<IBFScriptingEntity>(entityPtr);
+            const auto entitySharedPtr = std::shared_ptr<IBFScriptingEntity>(entityPtr);
             addEntity(entitySharedPtr);
 
             BF_PRINT("Add entity {}", t.get_name().to_string())

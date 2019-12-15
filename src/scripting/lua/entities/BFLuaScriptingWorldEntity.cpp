@@ -2,6 +2,7 @@
 #include "BFWorld.h"
 #include "BFApplication.h"
 #include "entities/scripting/systems/BFLuaComponentSystem.h"
+#include "BFComponent.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
@@ -9,21 +10,25 @@ namespace BlackFox
 {
     void BFLuaScriptingWorldEntity::registerEntity()
     {
-        sol::usertype<ComponentId> component_type = m_namespace.new_usertype<ComponentId>("ComponentId");
-        sol::usertype<entt::entity> entity_type = m_namespace.new_usertype<entt::entity>("Entity");
-        sol::usertype <BFWorld> world_type = m_namespace.new_usertype<BFWorld>("World");
+	    auto componentType = m_namespace.new_usertype<ComponentId>("ComponentId");
+	    auto entityType = m_namespace.new_usertype<entt::entity>("Entity");
+	    auto worldType = m_namespace.new_usertype<BFWorld>("World");
 
-        world_type["entities"] = [](BFWorld& world, const sol::function& callback, float dt, sol::variadic_args components)
+        //static methods
+        
+    	//Entities
+        worldType["createEntity"] = [](BFWorld& world) -> entt::entity
+        {
+            return world.entityManager()->create();
+        };
+    	
+        worldType["entities"] = [](BFWorld& world, const sol::function& callback, float dt, const sol::variadic_args components)
         {
             world.entityManager()->runtime_view(components.cbegin(), components.cend()).each([callback, dt](auto entity)
                {
                    callback(entity, dt);
                });
         };
-
-        const auto& container = m_container;
-
-        //static methods
 
         //World
         m_namespace["createWorld"] = [&](const std::string& worldId) -> BFWorld::Ptr
@@ -47,7 +52,7 @@ namespace BlackFox
             BFLuaScript luaScript(fmt::format("data/{}.lua", systemName), m_state);
 
             const auto app = m_container->get<BFApplication>();
-            auto system = std::make_shared<BFLuaComponentSystem>(app.get(), luaScript);
+            const auto system = std::make_shared<BFLuaComponentSystem>(app.get(), luaScript);
 
             return BFWorld::createSystemFromName(systemName, system, group, false);
         };

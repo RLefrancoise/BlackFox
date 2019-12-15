@@ -80,7 +80,7 @@ namespace BlackFox
 		 *
 		 * \returns	Execution return code
 		 */
-		int execute() const;
+		[[nodiscard]] int execute() const;
 
 		/*!
 		 * \fn	void BFApplication::quit();
@@ -102,7 +102,7 @@ namespace BlackFox
 		 *
 		 * \returns	The command manager.
 		 */
-		std::shared_ptr<BFCommandManager> commandManager() const;
+		[[nodiscard]] std::shared_ptr<BFCommandManager> commandManager() const;
 
 		/*!
 		 * \brief	Gets the application window
@@ -112,7 +112,7 @@ namespace BlackFox
 		 *
 		 * \returns	The application window.
 		 */
-		sf::RenderWindow* window() const;
+		[[nodiscard]] sf::RenderWindow* window() const;
 
         /*!
          * \brief	Gets config data
@@ -122,7 +122,7 @@ namespace BlackFox
          *
          * \returns	Config data.
          */
-		std::shared_ptr<BFConfigData> configData() const;
+		[[nodiscard]] std::shared_ptr<BFConfigData> configData() const;
 
 	private:
 	    class impl;

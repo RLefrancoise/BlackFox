@@ -15,7 +15,7 @@ namespace BlackFox::Components
 		: angle(0) 
 		{}
 
-	    constexpr explicit BFRotationComponent(float degrees)
+	    constexpr explicit BFRotationComponent(const float degrees)
 	    : angle(degrees)
         {}
 

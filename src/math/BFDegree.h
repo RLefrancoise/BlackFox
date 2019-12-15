@@ -1,8 +1,6 @@
 #ifndef BLACKFOX_DEGREE_H
 #define BLACKFOX_DEGREE_H
 
-#include <variant>
-
 namespace BlackFox
 {
 	class BFRadian;
@@ -61,7 +59,7 @@ namespace BlackFox
 		 *
 		 * \returns	Number of degrees.
 		 */
-		constexpr float value() const { return m_value; }
+		[[nodiscard]] constexpr float value() const { return m_value; }
 
 		/*!
 		 * \fn	BFDegree BFDegree::operator=(const BFRadian& radians) const;

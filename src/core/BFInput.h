@@ -34,10 +34,10 @@ namespace BlackFox
     private:
 
         void updateEvents(const std::vector<sf::Event>& events);
-        bool hasMod(const sf::Event::KeyEvent& ev, KeyMod mod);
+        static bool hasMod(const sf::Event::KeyEvent& ev, KeyMod mod);
 
-        std::vector<sf::Event> polledEvents;
-        bool downKeys[sf::Keyboard::Key::KeyCount];
+        std::vector<sf::Event> m_polledEvents;
+        bool m_downKeys[sf::Keyboard::Key::KeyCount];
     };
 }
 

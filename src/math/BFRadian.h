@@ -59,7 +59,7 @@ namespace BlackFox
 		 *
 		 * \returns	Number of radians
 		 */
-		constexpr float value() const { return m_value; }
+		[[nodiscard]] constexpr float value() const { return m_value; }
 
 		/*!
 		 * \fn	BFRadian& BFRadian::operator=(const BFDegree& degrees);

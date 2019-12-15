@@ -4,6 +4,6 @@ using namespace BlackFox;
 
 int main(int argc, char** argv)
 {
-	BFBootstrap boot;
+	const BFBootstrap boot;
 	return boot.run();
 }

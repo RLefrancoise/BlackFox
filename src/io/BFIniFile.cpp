@@ -8,7 +8,7 @@ namespace BlackFox
         m_reader = INIReader(fileName);
         if(m_reader.ParseError() == -1)
             BF_EXCEPTION("Failed to open INI file {}", fileName)
-        else if(m_reader.ParseError() > 0)
+        if(m_reader.ParseError() > 0)
             BF_EXCEPTION("Parse error in INI file {} at line {}", fileName, m_reader.ParseError())
     }
 
