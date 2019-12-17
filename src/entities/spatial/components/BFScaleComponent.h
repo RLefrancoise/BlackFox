@@ -6,7 +6,7 @@
 
 namespace BlackFox::Components
 {
-    struct BFScaleComponent : public IBFComponent
+    struct BFScaleComponent : public BFComponent<BFScaleComponent>
     {
         BF_COMPONENT("Scale")
 

@@ -4,6 +4,7 @@
 #include "IBFLuaScriptingEntity.h"
 #include "BFWorld.h"
 #include "BFComponent.h"
+#include "BFLuaRuntimeRegistry.h"
 
 namespace BlackFox
 {
@@ -23,6 +24,10 @@ namespace BlackFox
                 sol::bases<IBFComponent>());
             component_t["id"] = [](const BFWorld& world) -> ComponentId { return world.entityManager()->type<C>(); };
             component_t["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return &(world.entityManager()->get<C>(entity)); };
+
+            //Register component to Lua runtime registry
+            auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+            runtimeRegistry->registerComponent<C>();
 
             return component_t;
         }

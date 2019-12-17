@@ -1,3 +1,5 @@
+entities = {}
+
 function onWorldChanged(world)
 	Position = BlackFox.Components.Spatial.Position.id(world)
 	Rotation = BlackFox.Components.Spatial.Rotation.id(world)
@@ -9,6 +11,15 @@ function update(dt)
 		print("Escape pressed")
 		application:quit()
 	end
+
+	if BlackFox.Input.isKeyDown(BlackFox.Input.KeyCode.Space) == true then
+		print("Create entity")
+		local entity = world:createEntity()
+		local position = world:setComponent(entity, Position)
+		print("Entity position is same: ", position == world:getComponent(entity, Position))
+
+		entities[#entities + 1] = entity
+	end
 	
 	local entities = world:entities(
 		animateEntity,
@@ -18,8 +29,8 @@ function update(dt)
 end
 
 function animateEntity(entity, dt)	
-	local rotation = BlackFox.Components.Spatial.Rotation.get(world, entity)
-	local scale = BlackFox.Components.Spatial.Scale.get(world, entity)
+	local rotation = world:getComponent(entity, Rotation)
+	local scale = world:getComponent(entity, Scale)
 
 	-- rotate
 	rotation.angle = rotation.angle + 30 * dt

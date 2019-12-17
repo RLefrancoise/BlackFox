@@ -2,7 +2,7 @@
 #include "BFWorld.h"
 #include "BFApplication.h"
 #include "entities/scripting/systems/BFLuaComponentSystem.h"
-#include "BFComponent.h"
+#include "BFLuaRuntimeRegistry.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
@@ -13,22 +13,49 @@ namespace BlackFox
 	    auto componentType = m_namespace.new_usertype<ComponentId>("ComponentId");
 	    auto entityType = m_namespace.new_usertype<entt::entity>("Entity");
 	    auto worldType = m_namespace.new_usertype<BFWorld>("World");
-
-        //static methods
         
     	//Entities
         worldType["createEntity"] = [](BFWorld& world) -> entt::entity
         {
             return world.entityManager()->create();
         };
-    	
-        worldType["entities"] = [](BFWorld& world, const sol::function& callback, float dt, const sol::variadic_args components)
+
+        worldType["setComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId) -> sol::object
         {
-            world.entityManager()->runtime_view(components.cbegin(), components.cend()).each([callback, dt](auto entity)
-               {
-                   callback(entity, dt);
-               });
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+            return runtimeRegistry->setComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
         };
+
+		worldType["unsetComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId)
+		{
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+			runtimeRegistry->unsetComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
+		};
+
+		worldType["hasComponent"] = [&](BFWorld& world, const entt::entity entity, const ComponentId componentId) -> bool
+		{
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+			return runtimeRegistry->hasComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
+		};
+    	
+		worldType["getComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId) -> sol::object
+		{
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+			return runtimeRegistry->getComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
+		};
+
+        worldType["entities"] = [&](BFWorld& world, const sol::function& callback, const float dt, const sol::variadic_args& components) -> size_t
+        {
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+            return runtimeRegistry->entities(callback, dt, components);
+        };
+
+        //Static methods
 
         //World
         m_namespace["createWorld"] = [&](const std::string& worldId) -> BFWorld::Ptr

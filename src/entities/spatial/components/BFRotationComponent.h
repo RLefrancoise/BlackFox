@@ -7,7 +7,7 @@
 
 namespace BlackFox::Components
 {
-	struct BFRotationComponent : public IBFComponent
+	struct BFRotationComponent : public BFComponent<BFRotationComponent>
 	{
 	    BF_COMPONENT("Rotation")
 

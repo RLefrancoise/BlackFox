@@ -9,7 +9,7 @@
 
 namespace BlackFox::Components
 {
-	struct BFSpriteComponent : public IBFComponent
+	struct BFSpriteComponent : public BFComponent<BFSpriteComponent>
 	{
 		BF_COMPONENT("Sprite")
 
