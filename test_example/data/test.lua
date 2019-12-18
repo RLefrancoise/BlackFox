@@ -35,11 +35,8 @@ function createEntity()
     -- Pivot at center
     sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
-    sprite.color = BlackFox.Graphics.Color:new(
-        math.floor(math.random() * 255), 
-        math.floor(math.random() * 255), 
-        math.floor(math.random() * 255), 
-        128)
+    sprite.color = BlackFox.Graphics.Color.random()
+    sprite.color.a = 128
 end
 
 -- Create some entities

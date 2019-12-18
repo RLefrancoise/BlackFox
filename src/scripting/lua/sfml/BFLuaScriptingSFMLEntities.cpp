@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <chrono>
+#include <random>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingSFMLEntities, "SFMLEntities")
 
@@ -31,6 +33,15 @@ namespace BlackFox
 		color_t["Magenta"] = sol::var(std::ref(sf::Color::Magenta));			///< Magenta predefined color
 		color_t["Cyan"] = sol::var(std::ref(sf::Color::Cyan));					///< Cyan predefined color
 		color_t["Transparent"] = sol::var(std::ref(sf::Color::Transparent));	///< Transparent (black) predefined color
+
+		//Create a random color
+		color_t["random"] = sol::var([]() -> sf::Color
+		{
+			unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
+			std::minstd_rand0 generator(seed);
+
+			return sf::Color(generator() % 256, generator() % 256, generator() % 256);
+		});
 
 		//IntRect
 		auto intrect_t = graphicsNs.new_usertype<sf::IntRect>("IntRect", 
