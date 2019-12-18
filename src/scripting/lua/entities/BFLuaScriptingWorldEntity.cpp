@@ -20,6 +20,11 @@ namespace BlackFox
             return world.entityManager()->create();
         };
 
+        worldType["destroyEntity"] = [](BFWorld& world, entt::entity entity)
+        {
+            world.entityManager()->destroy(entity);
+        };
+
         worldType["setComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId) -> sol::object
         {
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();

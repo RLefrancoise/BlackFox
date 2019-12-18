@@ -1,5 +1,6 @@
 #include "BFDataInstaller.h"
 #include "BFDebug.h"
+#include "BFResourcesHolder.h"
 
 namespace BlackFox
 {
@@ -13,5 +14,8 @@ namespace BlackFox
         m_configData = std::make_shared<BFConfigData>(BFIniFile("data/config.ini"));
         BF_PRINT(*m_configData)
         m_container->bind<BFConfigData>().toConstant(m_configData);
+
+        //Resources holder
+        m_container->bind<BFResourcesHolder>().toSelf().inSingletonScope();
     }
 }

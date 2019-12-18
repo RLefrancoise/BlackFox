@@ -3,7 +3,7 @@
 #include "BFRadian.h"
 #include "BFVector2.h"
 
-BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingMathEntities, "Math")
+BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingMathEntities, "MathEntities")
 
 namespace BlackFox
 {

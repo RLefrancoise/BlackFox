@@ -14,5 +14,19 @@ namespace BlackFox
         application_type["command_manager"] = &BFApplication::commandManager;
         application_type["window"] = &BFApplication::window;
         application_type["config_data"] = &BFApplication::configData;
+
+        //Screen
+        auto screenNs = m_namespace["Screen"].get_or_create<sol::table>();
+        screenNs["width"] = sol::readonly_property([&]() -> sf::Uint32
+        {
+            const auto& app = m_container->get<BFApplication>();
+            return app->window()->getSize().x;
+        });
+
+		screenNs["height"] = sol::readonly_property([&]() -> sf::Uint32
+		{
+			const auto& app = m_container->get<BFApplication>();
+			return app->window()->getSize().y;
+		});
     }
 }

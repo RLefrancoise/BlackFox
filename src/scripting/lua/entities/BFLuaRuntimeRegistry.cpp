@@ -2,6 +2,11 @@
 
 namespace BlackFox
 {
+	BFLuaRuntimeRegistry::BFLuaRuntimeRegistry()
+	{
+		registerComponent<Components::BFLuaRuntimeComponent>();
+	}
+
 	ENTT_ID_TYPE BFLuaRuntimeRegistry::identifier()
 	{
 		static auto next = runtimeComponentId;

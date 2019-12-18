@@ -1,7 +1,4 @@
-entities = {}
-
 function onWorldChanged(world)
-	Position = BlackFox.Components.Spatial.Position.id(world)
 	Rotation = BlackFox.Components.Spatial.Rotation.id(world)
 	Scale = BlackFox.Components.Spatial.Scale.id(world)
 end
@@ -12,15 +9,10 @@ function update(dt)
 		application:quit()
 	end
 
-	if BlackFox.Input.isKeyDown(BlackFox.Input.KeyCode.Space) == true then
-		print("Create entity")
-		local entity = world:createEntity()
-		local position = world:setComponent(entity, Position)
-		print("Entity position is same: ", position == world:getComponent(entity, Position))
-
-		entities[#entities + 1] = entity
+	if BlackFox.Input.isKeyPressed(BlackFox.Input.KeyCode.Space) == true then
+		print("FPS: ", 1 / dt)
 	end
-	
+
 	local entities = world:entities(
 		animateEntity,
 		dt,
@@ -33,7 +25,7 @@ function animateEntity(entity, dt)
 	local scale = world:getComponent(entity, Scale)
 
 	-- rotate
-	rotation.angle = rotation.angle + 30 * dt
+	rotation.angle = (rotation.angle + 30 * dt) % 360
 
 	-- scale ping pong
 	if scale.x > 2.5 then

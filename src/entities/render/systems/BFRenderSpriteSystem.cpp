@@ -34,12 +34,13 @@ namespace BlackFox::Systems
 			sf::Sprite s;
 
 			//Set sprite image
-			s.setTexture(*sprite.image);
+			if (sprite.image)
+			{
+				s.setTexture(sprite.image);
+			}
 
 			//Set color
-			auto color = sprite.color;
-			color.a = sprite.alpha;
-			s.setColor(color);
+			s.setColor(sprite.color);
 
 			//Set pivot
 			s.setOrigin(sprite.pivot);

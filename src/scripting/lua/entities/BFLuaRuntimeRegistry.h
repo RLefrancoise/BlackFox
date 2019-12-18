@@ -16,22 +16,15 @@ namespace BlackFox
 
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
-			if (!em->has<Components::BFLuaRuntimeComponent>(entity))
-			{
-				auto& luaScriptingComponent = em->assign<Components::BFLuaRuntimeComponent>(entity);
-				luaScriptingComponent.set(componentType, sol::table());
-				return sol::object(view, sol::in_place_type<C*>, &luaScriptingComponent);
-			}
-			else
-			{
-				auto& luaScriptingComponent = em->get<Components::BFLuaRuntimeComponent>(entity);
-				luaScriptingComponent.set(componentType, sol::table());
-				return sol::object(view, sol::in_place_type<C*>, &luaScriptingComponent);
-			}
+			auto& luaScriptingComponent = !em->has<Components::BFLuaRuntimeComponent>(entity) 
+				? em->assign<Components::BFLuaRuntimeComponent>(entity) 
+				: em->get<Components::BFLuaRuntimeComponent>(entity);
+			luaScriptingComponent.set(componentType, sol::table());
+			return sol::object(view, sol::in_place_type<C*>, &luaScriptingComponent);
 		}
 		else
 		{
-			return sol::object(view, sol::in_place_type<C*>, &em->assign_or_replace<C>(entity/*, args*/));
+			return sol::object(view, sol::in_place_type<C*>, &em->assign_or_replace<C>(entity));
 		}
 	}
 
@@ -98,6 +91,8 @@ namespace BlackFox
 	{
 	public:
 		typedef std::shared_ptr<BFLuaRuntimeRegistry> Ptr;
+
+		BFLuaRuntimeRegistry();
 
 		ENTT_ID_TYPE identifier();
 
@@ -192,15 +187,18 @@ namespace BlackFox
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>
 		Ret invoke(const entt::entity& entity, ENTT_ID_TYPE typeId, Args... args)
 		{
-			auto& func = m_func;
-			auto& em = m_entityManager;
-
 			if (typeId >= runtimeComponentId)
 			{
-				typeId = to_integer(em->type<Components::BFLuaRuntimeComponent>());
+				typeId = to_integer(m_entityManager->type<Components::BFLuaRuntimeComponent>());
 			}
 
-			return (func[typeId].*F)(em, entity, typeId, args...);
+			//If component not registered, don't invoke anything, or it will crash
+			if (m_func.find(typeId) == m_func.end())
+			{
+				BF_EXCEPTION("Cannot invoke null function pointer. Component with type id {} is probably not registered", typeId)
+			}
+
+			return (m_func[typeId].*F)(m_entityManager, entity, typeId, args...);
 		}
 
 		std::map<ENTT_ID_TYPE, funcMap> m_func;

@@ -2,11 +2,6 @@
 
 #include <iostream>
 
-#include "entities/spatial/components/BFPositionComponent.h"
-#include "entities/spatial/components/BFRotationComponent.h"
-#include "entities/spatial/components/BFScaleComponent.h"
-#include "entities/render/components/BFSpriteComponent.h"
-
 #include "BFWorld.h"
 #include "BFComponentSystemFlags.h"
 #include "BFCommandManager.h"
@@ -17,7 +12,6 @@
 #include "BFQuitApplicationCommand.h"
 
 using namespace cinject;
-using namespace BlackFox::Components;
 
 namespace BlackFox
 {
@@ -128,41 +122,6 @@ namespace BlackFox
 				{
 					BFWorld::createSystemFromType(s, m_app);
 				}
-
-				//Just for testing, create some entities
-				static sf::Texture squareImg;
-				if (!squareImg.loadFromFile("test.png"))
-				{
-					BF_EXCEPTION("Failed to load texture test.png")
-				}
-
-				auto em = defaultWorld->entityManager();
-
-				//a blue entity
-				auto blueEntity = em->create();
-
-				auto& bluePos = em->assign<BFPositionComponent>(blueEntity);
-				auto& blueRot = em->assign<BFRotationComponent>(blueEntity);
-				auto& blueScale = em->assign<BFScaleComponent>(blueEntity);
-				auto& blueSprite = em->assign<BFSpriteComponent>(blueEntity);
-
-				//position
-				bluePos.x = 256;
-				bluePos.y = 256;
-
-				//rotation
-				blueRot.angle = 0.0f;
-
-				//scale
-				blueScale.scaleX = 1.f;
-				blueScale.scaleY = 1.f;
-
-				//sprite
-				blueSprite.image = &squareImg;
-				blueSprite.rect = sf::IntRect(sf::Vector2i(), sf::Vector2i(squareImg.getSize().x, squareImg.getSize().y));
-				blueSprite.pivot = sf::Vector2f((float) squareImg.getSize().x / 2, (float) squareImg.getSize().y / 2);
-				blueSprite.color = sf::Color::Blue;
-				blueSprite.alpha = 128;
 
 				//Test lua scripting
 				sol::protected_function_result result = scriptManager->evalFile("data/test.lua");

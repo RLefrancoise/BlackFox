@@ -10,7 +10,7 @@ namespace BlackFox
     BFScriptingManager::BFScriptingManager(DiContainer container)
     : m_container(std::move(container))
     {
-        m_state.open_libraries(sol::lib::base, sol::lib::package);
+        m_state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::string);
 
         //Lua entities
         const auto entityType = rttr::type::get<IBFLuaScriptingEntity>();
