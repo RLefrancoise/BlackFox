@@ -10,16 +10,15 @@
 #if defined(BF_DEBUG) || defined(_DEBUG)
 //Print
 #	define BF_PRINT(x, ...)		std::cout << BF_FORMAT(x, ##__VA_ARGS__) << std::endl;
+#else
+#	define BF_PRINT(x, ...)
+#endif
+
 //Warning
 #	define BF_WARNING(x, ...)	std::cout << termcolor::yellow << BF_FORMAT(x, ##__VA_ARGS__) << termcolor::reset << std::endl;
 //Error
 #	define BF_ERROR(x, ...)		std::cout << termcolor::red << BF_FORMAT(x, ##__VA_ARGS__) << termcolor::reset << std::endl; \
 								std::cerr << BF_FORMAT(x, ##__VA_ARGS__) << std::endl;
-#else
-#	define BF_PRINT(x, ...)
-#	define BF_WARNING(x, ...)
-#	define BF_ERROR(x, ...)
-#endif
 
 //Exception
 #define BF_EXCEPTION(x, ...)	throw std::runtime_error(BF_FORMAT(x, ##__VA_ARGS__));
