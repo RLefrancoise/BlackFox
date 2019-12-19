@@ -5,9 +5,9 @@
 #include <string>
 #include <fmt/format.h>
 #include <SFML/Config.hpp>
-#include <SFML/System/Vector2.hpp>
 
 #include "BFIniFile.h"
+#include "BFVector2.h"
 
 namespace BlackFox
 {
@@ -16,7 +16,8 @@ namespace BlackFox
         std::string name;
         sf::Uint32 frameRate = 60;
         bool fullScreen = false;
-        sf::Vector2u windowSize = sf::Vector2u(800, 600);
+        BFVector2u windowSize = BFVector2u(800, 600);
+        bool showFrameRate = false;
     };
 
     class BFConfigData
@@ -30,21 +31,24 @@ namespace BlackFox
                 file.get("Application", "name", "BlackFox"), //name
                 file.getIntTo<sf::Uint32>("Application", "frameRate", 60), //frame rate
                 file.getBool("Application", "fullScreen", false), //full screen
-                sf::Vector2u( //window size
+                BFVector2u( //window size
                     file.getInt("Application", "width", 800),
-                    file.getInt("Application", "height", 600))};
+                    file.getInt("Application", "height", 600)),
+                file.getBool("Application", "showFrameRate", false) //show frame rate
+            };
         }
 
         ConfigApplicationData appData;
 
         explicit operator std::string() const
         {
-            return fmt::format("BFConfigData[name={}, frameRate={}, fullScreen={}, windowSize={},{}]"
+            return fmt::format("BFConfigData[name={}, frameRate={}, fullScreen={}, windowSize=({},{}), showFrameRate={}]"
                     , appData.name
                     , appData.frameRate
                     , appData.fullScreen
                     , appData.windowSize.x
-                    , appData.windowSize.y);
+                    , appData.windowSize.y
+                    , appData.showFrameRate);
         }
     };
 }

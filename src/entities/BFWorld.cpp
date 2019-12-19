@@ -48,6 +48,17 @@ namespace BlackFox
 		return world;
 	}
 
+	std::vector<BFWorld::Ptr> BFWorld::all()
+	{
+		std::vector<BFWorld::Ptr> list;
+		for (const auto& world : worlds)
+		{
+			list.push_back(world.second);
+		}
+
+		return list;
+	}
+
 	BFComponentSystem* BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
 	{
 		//Check if the system is already created or not

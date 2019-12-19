@@ -1,6 +1,7 @@
 #ifndef BLACKFOX_LUASCRIPT_H
 #define BLACKFOX_LUASCRIPT_H
 
+#include <memory>
 #include <sol/sol.hpp>
 
 namespace BlackFox
@@ -8,6 +9,9 @@ namespace BlackFox
     class BFLuaScript
     {
     public:
+
+        typedef std::shared_ptr<BFLuaScript> Ptr;
+
         explicit BFLuaScript(const std::string& fileName, sol::state* state);
 
         template <typename T>
@@ -26,6 +30,11 @@ namespace BlackFox
         void set(const std::string& name, const T& value)
         {
             m_environment[name] = value;
+        }
+
+        explicit operator sol::object() const
+        {
+            return m_environment;
         }
 
     private:

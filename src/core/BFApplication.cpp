@@ -46,6 +46,10 @@ namespace BlackFox
 				//Update FPS & delta time
 				m_deltaTime = clock.restart().asSeconds();
 
+				//Show frame rate in title bar if option is enabled
+				if(m_configData->appData.showFrameRate)
+					m_window.setTitle(fmt::format("{} - [FPS: {}]", m_configData->appData.name, 1.f / m_deltaTime));
+
 				//events
 				sf::Event ev;
 				m_polledEvents.clear();

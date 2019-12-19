@@ -1,5 +1,9 @@
 math.randomseed(os.time())
 
+-- Register runtime components
+BlackFox.World.registerComponent("AutoRotate")
+BlackFox.World.registerComponent("ScalePingPong")
+
 -- Default world
 world = BlackFox.getWorld("default")
 
@@ -8,6 +12,8 @@ Position = BlackFox.Components.Spatial.Position.id(world)
 Rotation = BlackFox.Components.Spatial.Rotation.id(world)
 Scale = BlackFox.Components.Spatial.Scale.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
+AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
+ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
 
 function createEntity()
     local e = world:createEntity()
@@ -21,22 +27,32 @@ function createEntity()
     local rotation = world:setComponent(e, Rotation)
     rotation.angle = math.random() * 360.0
 
+    -- Auto Rotate
+    local autoRotate = world:setComponent(e, AutoRotate)
+    autoRotate.speed = math.random() * 360.0
+
     -- Scale
     local scale = world:setComponent(e, Scale)
     scale.x = 1
-    scale.y = 1
+    scale.y = scale.x
+
+    -- Scale ping pong
+    local scalePingPong = world:setComponent(e, ScalePingPong)
+    scalePingPong.min = scale.x
+    scalePingPong.max = scalePingPong.min + 2 * math.random()
+    scalePingPong.speed = 1 + math.random() * 4 -- Random between 1 and 5
 
     -- Sprite
     local sprite = world:setComponent(e, Sprite)    
     -- Test image
-    sprite.image = BlackFox.Resources.getTexture("test.png")
+    sprite.image = BlackFox.Resources.texture("test.png")
+    sprite.image.smooth = true
     -- Full rect
     sprite.rect = BlackFox.Graphics.IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at center
     sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
-    sprite.color = BlackFox.Graphics.Color.random()
-    sprite.color.a = 128
+    sprite.color = BlackFox.Graphics.Color.random(true)
 end
 
 -- Create some entities
@@ -44,6 +60,9 @@ for i= 1,100 do
     createEntity()
 end
 
--- Create test system
-system = BlackFox.createSystem("TestSystem", BlackFox.ComponentSystemGroup.GameLoop)
-return system ~= nil
+-- Create systems
+BlackFox.createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
+BlackFox.createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
+BlackFox.createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
+
+return true

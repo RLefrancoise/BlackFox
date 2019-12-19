@@ -9,6 +9,20 @@ BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingSFMLEntities, "SFMLEnti
 
 namespace BlackFox
 {
+	sf::Color randomColorWithAlpha(bool randomAlpha)
+	{
+		unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
+		std::minstd_rand0 generator(seed);
+
+		if (randomAlpha) return sf::Color(generator() % 256, generator() % 256, generator() % 256, generator() % 256);
+		return sf::Color(generator() % 256, generator() % 256, generator() % 256);
+	}
+
+	sf::Color randomColor()
+	{
+		return randomColorWithAlpha(false);
+	}
+
 	void BFLuaScriptingSFMLEntities::registerEntity()
 	{
 		//Graphics
@@ -17,7 +31,8 @@ namespace BlackFox
 		//Color
 		auto color_t = graphicsNs.new_usertype<sf::Color>("Color",
 			sol::constructors<
-				sf::Color(), 
+				sf::Color(),
+				sf::Color(sf::Uint8, sf::Uint8, sf::Uint8),
 				sf::Color(sf::Uint8, sf::Uint8, sf::Uint8, sf::Uint8)>());
 		color_t["r"] = &sf::Color::r;
 		color_t["g"] = &sf::Color::g;
@@ -35,13 +50,7 @@ namespace BlackFox
 		color_t["Transparent"] = sol::var(std::ref(sf::Color::Transparent));	///< Transparent (black) predefined color
 
 		//Create a random color
-		color_t["random"] = sol::var([]() -> sf::Color
-		{
-			unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
-			std::minstd_rand0 generator(seed);
-
-			return sf::Color(generator() % 256, generator() % 256, generator() % 256);
-		});
+		color_t["random"] = sol::overload(&randomColor, &randomColorWithAlpha);
 
 		//IntRect
 		auto intrect_t = graphicsNs.new_usertype<sf::IntRect>("IntRect", 

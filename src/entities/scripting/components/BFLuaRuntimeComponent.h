@@ -1,11 +1,11 @@
 #pragma once
 
-#include <sol/sol.hpp>
 #include "BFRuntimeComponent.h"
+#include "BFLuaScript.h"
 
 namespace BlackFox::Components
 {
-	struct BFLuaRuntimeComponent : BFRuntimeComponent<sol::table>
+	struct BFLuaRuntimeComponent : BFRuntimeComponent<BFLuaScript::Ptr>
 	{
 	};
 }

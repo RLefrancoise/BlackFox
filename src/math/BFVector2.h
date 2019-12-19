@@ -226,6 +226,7 @@ namespace BlackFox
 
     typedef BFVector2<float> BFVector2f;
     typedef BFVector2<int> BFVector2i;
+	typedef BFVector2<unsigned int> BFVector2u;
     typedef BFVector2<double> BFVector2d;
 }
 

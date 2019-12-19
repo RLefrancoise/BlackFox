@@ -45,7 +45,9 @@ namespace BlackFox
 		 * \brief	Alias for world list.
 		 */
 		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
+		/// <summary>Alias for system list</summary>
 		typedef std::unordered_map<std::string, BFComponentSystem::Ptr> SystemList;
+        /// <summary>Alias for systems by group</summary>
         typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> SystemGroupList;
 
 		/*!
@@ -100,7 +102,24 @@ namespace BlackFox
 		 */
 		static BFWorld::Ptr world(const std::string& worldId);
 
+		
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Create a new world
+		/// </summary>
+		/// <param name="worldId">Id of the world</param>
+		/// <param name="container">The DI container</param>
+		/// <returns>The created world</returns>
+		/// --------------------------------------------------------------------------------
 		static BFWorld::Ptr create(const std::string& worldId, DiContainer container);
+
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Get all the created worlds
+		/// </summary>
+		/// <returns>The list of created worlds</returns>
+		/// --------------------------------------------------------------------------------
+		static std::vector<BFWorld::Ptr> all();
 
 		/*!
 		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
@@ -138,14 +157,40 @@ namespace BlackFox
 			return system.get();
 		}
 
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Creates a new system from a type.
+		/// </summary>
+		/// <param name="system">Type of the system</param>
+		/// <param name="application">Application</param>
+		/// <returns>The created system</returns>
+		/// --------------------------------------------------------------------------------
 		static BFComponentSystem* createSystemFromType(const rttr::type& system, BFApplication* application);
 
+
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Creates a new system from a name
+		/// </summary>
+		/// <param name="systemName">Name of the system</param>
+		/// <param name="system">System to register</param>
+		/// <param name="group">Group of the system</param>
+		/// <param name="nameIsType">Name is a type name ?</param>
+		/// <returns>The created system</returns>
+		/// --------------------------------------------------------------------------------
 		static BFComponentSystem* createSystemFromName(
 				const std::string& systemName
 				, BFComponentSystem::Ptr system
 				, ComponentSystemGroups group
 				, bool nameIsType = true);
 
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Refresh all the systems of a given group.
+		/// </summary>
+		/// <param name="group">Group to refresh</param>
+		/// <param name="deltaTime">Delta time</param>
+		/// --------------------------------------------------------------------------------
 		static void refreshSystems(ComponentSystemGroups group, float deltaTime);
 
 		/*!
@@ -164,6 +209,14 @@ namespace BlackFox
 			return registeredSystems.find(type.get_name().to_string()) != registeredSystems.end();
 		}
 
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Check if a system is created, by its name
+		/// </summary>
+		/// <param name="name">Name of the system</param>
+		/// <param name="nameIsType">Name is a type name ?</param>
+		/// <returns>True if system exist, false if not</returns>
+		/// --------------------------------------------------------------------------------
 		static bool hasSystemByName(const std::string& name, bool nameIsType = true);
 
 		/*!
@@ -191,6 +244,13 @@ namespace BlackFox
 			return static_cast<S*>(registeredSystems[type.get_name().to_string()].get());
 		}
 
+		/// --------------------------------------------------------------------------------
+		/// <summary>
+		/// Get a system by its name
+		/// </summary>
+		/// <param name="name">Name of the system</param>
+		/// <returns>The system if found, nullptr if not</returns>
+		/// --------------------------------------------------------------------------------
 		static BFComponentSystem* getSystemByName(const std::string& name);
 
 	private:
@@ -201,7 +261,9 @@ namespace BlackFox
 
 		/*! \brief	The worlds */
 		static WorldList worlds;
+		/// <summary>The registered systems</summary>
 		static SystemList registeredSystems;
+		/// <summary>Systems by group</summary>
 		static SystemGroupList systemGroups;
 	};
 }

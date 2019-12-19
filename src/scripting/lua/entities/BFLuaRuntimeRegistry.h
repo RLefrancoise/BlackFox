@@ -6,11 +6,12 @@
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
 #include "BFLuaRuntimeComponent.h"
+#include "BFLuaScript.h"
 
 namespace BlackFox
 {
 	template <typename C>
-	sol::object setComponent(const EntityManager& em, const entt::entity& entity, ENTT_ID_TYPE componentType, sol::state* state)
+	sol::object setComponent(const EntityManager& em, const entt::entity& entity, unsigned int componentType, sol::state* state, const std::string& componentScript)
 	{
 		sol::state_view view(*state);
 
@@ -19,8 +20,10 @@ namespace BlackFox
 			auto& luaScriptingComponent = !em->has<Components::BFLuaRuntimeComponent>(entity) 
 				? em->assign<Components::BFLuaRuntimeComponent>(entity) 
 				: em->get<Components::BFLuaRuntimeComponent>(entity);
-			luaScriptingComponent.set(componentType, sol::table());
-			return sol::object(view, sol::in_place_type<C*>, &luaScriptingComponent);
+
+			luaScriptingComponent.set(componentType, std::make_shared<BFLuaScript>(componentScript, state));
+
+			return static_cast<sol::object>(*luaScriptingComponent.get(componentType));
 		}
 		else
 		{
@@ -29,7 +32,7 @@ namespace BlackFox
 	}
 
 	template <typename C>
-	void unsetComponent(const EntityManager& em, const entt::entity& entity, ENTT_ID_TYPE componentType)
+	void unsetComponent(const EntityManager& em, const entt::entity& entity, unsigned int componentType)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -48,7 +51,7 @@ namespace BlackFox
 	}
 
 	template <typename C>
-	bool hasComponent(const EntityManager& em, const entt::entity& entity, ENTT_ID_TYPE componentType)
+	bool hasComponent(const EntityManager& em, const entt::entity& entity, unsigned int componentType)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -66,7 +69,7 @@ namespace BlackFox
 	}
 
 	template <typename C>
-	sol::object getComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state)
+	sol::object getComponent(const EntityManager& em, const entt::entity& entity, const unsigned int componentType, sol::state* state)
 	{
 		sol::state_view view(*state);
 
@@ -75,7 +78,7 @@ namespace BlackFox
 			if (em->has<Components::BFLuaRuntimeComponent>(entity))
 			{
 				auto& luaScriptingComponent = em->get<Components::BFLuaRuntimeComponent>(entity);
-				return sol::object(view, sol::in_place_type<C*>, &luaScriptingComponent);
+				return static_cast<sol::object>(*luaScriptingComponent.get(componentType));
 			}
 			
 			BF_ERROR("Entity doesn't have component {}", typeid(C).name())
@@ -94,7 +97,8 @@ namespace BlackFox
 
 		BFLuaRuntimeRegistry();
 
-		ENTT_ID_TYPE identifier();
+		unsigned int identifier();
+		unsigned int registerRuntimeComponent(const std::string& componentName, const std::string& scriptPath, sol::state* state);
 
 		template <typename... Comp>
 		void registerComponent()
@@ -107,10 +111,10 @@ namespace BlackFox
 				}), ...);
 		}
 
-		sol::object setComponent(entt::entity entity, ENTT_ID_TYPE typeId, sol::state* state);
-		void unsetComponent(entt::entity entity, ENTT_ID_TYPE typeId);
-		bool hasComponent(entt::entity entity, ENTT_ID_TYPE typeId);
-		sol::object getComponent(entt::entity entity, ENTT_ID_TYPE typeId, sol::state* state);
+		sol::object setComponent(entt::entity entity, unsigned int typeId, sol::state* state);
+		void unsetComponent(entt::entity entity, unsigned int typeId);
+		bool hasComponent(entt::entity entity, unsigned int typeId);
+		sol::object getComponent(entt::entity entity, unsigned int typeId, sol::state* state);
 
 		size_t entities(const sol::function& callback, const float dt, const sol::variadic_args& components)
 		{
@@ -119,16 +123,16 @@ namespace BlackFox
 
 			for (const auto& component : components)
 			{
-				if (!component.is<ComponentId>())
+				if (!component.is<unsigned int>())
 				{
 					BF_EXCEPTION("Unexpected type in components list")
 				}
 
-				ComponentId cid = component.as<ComponentId>();
+				unsigned int type = static_cast<unsigned int>(component);
 
-				if (static_cast<std::underlying_type_t<ComponentId>>(cid) < runtimeComponentId)
+				if (type < runtimeComponentId)
 				{
-					engine_components.push_back(cid);
+					engine_components.push_back(ComponentId{ type });
 				}
 				else
 				{
@@ -137,11 +141,12 @@ namespace BlackFox
 						engine_components.push_back(m_entityManager->type<Components::BFLuaRuntimeComponent>());
 					}
 
-					runtime_components.push_back(cid);
+					runtime_components.push_back(ComponentId{ type });
 				}
 			}
 
 			auto view = m_entityManager->runtime_view(engine_components.begin(), engine_components.end());
+			size_t size = view.size();
 
 			for (const auto& entity : view)
 			{
@@ -160,10 +165,14 @@ namespace BlackFox
 					{
 						callback(entity, dt);
 					}
+					else
+					{
+						size--;
+					}
 				}
 			}
 
-			return view.size();
+			return size;
 		}
 
 		void setEntityManager(EntityManager em);
@@ -173,10 +182,10 @@ namespace BlackFox
 
 		struct funcMap
 		{
-			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, ENTT_ID_TYPE, sol::state*);
-			using funcTypeUnset = void(*)(const EntityManager&, const entt::entity&, ENTT_ID_TYPE);
-			using funcTypeHas = bool(*)(const EntityManager&, const entt::entity&, ENTT_ID_TYPE);
-			using funcTypeGet = sol::object(*)(const EntityManager&, const entt::entity&, ENTT_ID_TYPE, sol::state*);
+			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, unsigned int, sol::state*, const std::string&);
+			using funcTypeUnset = void(*)(const EntityManager&, const entt::entity&, unsigned int);
+			using funcTypeHas = bool(*)(const EntityManager&, const entt::entity&, unsigned int);
+			using funcTypeGet = sol::object(*)(const EntityManager&, const entt::entity&, unsigned int, sol::state*);
 
 			funcTypeSet set;
 			funcTypeUnset unset;
@@ -185,23 +194,25 @@ namespace BlackFox
 		};
 
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>
-		Ret invoke(const entt::entity& entity, ENTT_ID_TYPE typeId, Args... args)
+		Ret invoke(const entt::entity& entity, unsigned int typeId, Args... args)
 		{
+			auto funcId = typeId;
 			if (typeId >= runtimeComponentId)
 			{
-				typeId = to_integer(m_entityManager->type<Components::BFLuaRuntimeComponent>());
+				funcId = to_integer(m_entityManager->type<Components::BFLuaRuntimeComponent>());
 			}
 
 			//If component not registered, don't invoke anything, or it will crash
-			if (m_func.find(typeId) == m_func.end())
+			if (m_func.find(funcId) == m_func.end())
 			{
-				BF_EXCEPTION("Cannot invoke null function pointer. Component with type id {} is probably not registered", typeId)
+				BF_EXCEPTION("Cannot invoke null function pointer. Component with type id {} is probably not registered", funcId)
 			}
 
-			return (m_func[typeId].*F)(m_entityManager, entity, typeId, args...);
+			return (m_func[funcId].*F)(m_entityManager, entity, typeId, args...);
 		}
 
-		std::map<ENTT_ID_TYPE, funcMap> m_func;
+		std::map<unsigned int, funcMap> m_func;
+		std::map<std::string, std::tuple<unsigned int, std::string>> m_runtimeComponentLuaScripts;
 		EntityManager m_entityManager;
 	};
 }
