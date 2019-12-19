@@ -39,8 +39,8 @@ function createEntity()
     -- Scale ping pong
     local scalePingPong = world:setComponent(e, ScalePingPong)
     scalePingPong.min = scale.x
-    scalePingPong.max = scalePingPong.min + 2 * math.random()
-    scalePingPong.speed = 1 + math.random() * 4 -- Random between 1 and 5
+    scalePingPong.max = scalePingPong.min + 1 + math.random()
+    scalePingPong.speed = 1 + math.random() * 2 -- Random between 1 and 3
 
     -- Sprite
     local sprite = world:setComponent(e, Sprite)    
@@ -56,7 +56,7 @@ function createEntity()
 end
 
 -- Create some entities
-for i= 1,100 do
+for i= 1,250 do
     createEntity()
 end
 
