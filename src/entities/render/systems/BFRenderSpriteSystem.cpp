@@ -53,7 +53,11 @@ namespace BlackFox::Systems
 			s.setPosition(m_application->configData()->gameData.worldToPixels(position.x, position.y));
 
 			//Rotate sprite
-			if(scale != nullptr) s.scale(scale->scaleX, scale->scaleY);
+			if (scale != nullptr)
+			{
+				const auto pixelsScale = m_application->configData()->gameData.worldToPixels(scale->scaleX, scale->scaleY);
+				s.scale(pixelsScale.x / sprite.image->getSize().x, pixelsScale.y / sprite.image->getSize().y);
+			}
 
 			//Scale sprite
 			if(rotation != nullptr) s.rotate(rotation->angle);

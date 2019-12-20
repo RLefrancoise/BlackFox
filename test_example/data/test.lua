@@ -1,9 +1,5 @@
 math.randomseed(os.time())
 
--- Register runtime components
--- BlackFox.World.registerComponent("AutoRotate")
--- BlackFox.World.registerComponent("ScalePingPong")
-
 -- Default world
 world = BlackFox.getWorld("default")
 
