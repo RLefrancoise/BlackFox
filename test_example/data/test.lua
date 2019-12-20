@@ -56,7 +56,7 @@ function createEntity()
 end
 
 -- Create some entities
-for i= 1,250 do
+for i= 1,100 do
     createEntity()
 end
 

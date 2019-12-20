@@ -8,20 +8,9 @@ BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEnti
 
 namespace BlackFox
 {
-    template <typename... Components>
-    auto getComponents(
-        BFWorld& world, 
-        BFLuaRuntimeRegistry::Ptr reg, 
-        sol::state* state, 
-        const entt::entity& entity, 
-        const Components... args)
-	{
-        return std::make_tuple(reg->getComponent(entity, args, state)...);
-	}
-
     void BFLuaScriptingWorldEntity::registerEntity()
     {
-	    //auto componentType = m_namespace.new_usertype<ComponentId>("ComponentId");
+	    auto componentType = m_namespace.new_usertype<ComponentId>("ComponentId");
 	    auto entityType = m_namespace.new_usertype<entt::entity>("Entity");
 	    auto worldType = m_namespace.new_usertype<BFWorld>("World");
         
@@ -51,76 +40,57 @@ namespace BlackFox
             auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
             component_t["id"] = [=](BFWorld* world) -> auto
             {
-                return cid; //runtimeRegistry->getRegisteredComponentId(componentName);
+                return cid;
             };
         };
 
         // Set component
-        worldType["setComponent"] = [&](BFWorld& world, const entt::entity& entity, const unsigned int componentId) -> sol::object
+        worldType["setComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId) -> sol::object
         {
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-            return runtimeRegistry->setComponent(entity, componentId, m_state);
+            return runtimeRegistry->setComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
         };
 
         // Unset component
-		worldType["unsetComponent"] = [&](BFWorld& world, const entt::entity& entity, const unsigned int componentId)
+		worldType["unsetComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId)
 		{
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			runtimeRegistry->unsetComponent(entity, componentId);
+			runtimeRegistry->unsetComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
 		};
 
         // Has component
-		worldType["hasComponent"] = [&](BFWorld& world, const entt::entity entity, const unsigned int componentId) -> bool
+		worldType["hasComponent"] = [&](BFWorld& world, const entt::entity entity, const ComponentId componentId) -> bool
 		{
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			return runtimeRegistry->hasComponent(entity, componentId);
+			return runtimeRegistry->hasComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
 		};
     	
         // Get component
-		worldType["getComponent"] = [&](BFWorld& world, const entt::entity& entity, const unsigned int componentId) -> sol::object
+		worldType["getComponent"] = [&](BFWorld& world, const entt::entity& entity, const ComponentId componentId) -> sol::object
 		{
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			return runtimeRegistry->getComponent(entity, componentId, m_state);
+			return runtimeRegistry->getComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
 		};
 
         // Get components (from 1 to 5)
-        worldType["getComponents"] = sol::overload(
-            [&](BFWorld& world, const entt::entity & entity, const unsigned int c1, const unsigned int c2) -> auto
-        {
-			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-            runtimeRegistry->setEntityManager(world.entityManager());
-            return getComponents<unsigned int, unsigned int>(world, runtimeRegistry, m_state, entity, c1, c2);
-        },
-			[&](BFWorld& world, const entt::entity& entity, const unsigned int c1, const unsigned int c2, const unsigned int c3) -> auto
-		{
-			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-            runtimeRegistry->setEntityManager(world.entityManager());
-			return getComponents<unsigned int, unsigned int, unsigned int>(world, runtimeRegistry, m_state, entity, c1, c2, c3);
-		},
-			[&](BFWorld& world, const entt::entity& entity, const unsigned int c1, const unsigned int c2, const unsigned int c3, const unsigned int c4) -> auto
-		{
-			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-            runtimeRegistry->setEntityManager(world.entityManager());
-			return getComponents<unsigned int, unsigned int, unsigned int, unsigned int>(world, runtimeRegistry, m_state, entity, c1, c2, c3, c4);
-		},
-			[&](BFWorld& world, const entt::entity& entity, const unsigned int c1, const unsigned int c2, const unsigned int c3, const unsigned int c4, const unsigned int c5) -> auto
-		{
-			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-            runtimeRegistry->setEntityManager(world.entityManager());
-			return getComponents<unsigned int, unsigned int, unsigned int, unsigned int, unsigned int>(world, runtimeRegistry, m_state, entity, c1, c2, c3, c4, c5);
-		});
-
-        // Iterate entities
-        worldType["entities"] = [&](BFWorld& world, const sol::function& callback, const float dt, const sol::variadic_args& components) -> size_t
+        worldType["getComponents"] = [&](BFWorld& world, const entt::entity& entity, const sol::variadic_args& components) -> auto
         {
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-            return runtimeRegistry->entities(callback, dt, components);
+            return sol::as_returns(runtimeRegistry->getComponents(m_state, entity, components));
         };
+
+        // Iterate entities
+        worldType["entities"] = [&](BFWorld& world, const sol::function& callback, const float dt, const sol::variadic_args& components) -> size_t
+		{
+			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			runtimeRegistry->setEntityManager(world.entityManager());
+			return runtimeRegistry->entities(callback, dt, components, m_state);
+		};
 
         //Static methods
 

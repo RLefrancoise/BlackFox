@@ -11,9 +11,7 @@ function update(dt)
 		AutoRotate)
 end
 
-function rotateEntity(entity, dt)	
-	local rotation, autoRotate = world:getComponents(entity, Rotation, AutoRotate)
-
+function rotateEntity(entity, dt, rotation, autoRotate)	
 	-- rotate
 	rotation.angle = (rotation.angle + autoRotate.speed * dt) % 360
 end

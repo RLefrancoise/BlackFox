@@ -29,6 +29,9 @@ namespace BlackFox
 
     void BFLuaComponentSystem::setWorld(BFWorld* world)
     {
+        //If world is same as before, don't assign again (useless call to onWorldChanged)
+        if (m_world == world) return;
+
         BFComponentSystem::setWorld(world);
 
         m_script.set<BFWorld*>("world", world);

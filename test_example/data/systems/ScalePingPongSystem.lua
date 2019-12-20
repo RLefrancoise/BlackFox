@@ -11,9 +11,7 @@ function update(dt)
 		ScalePingPong)
 end
 
-function scaleEntity(entity, dt)	
-	local scale, scalePingPong = world:getComponents(entity, Scale, ScalePingPong)
-
+function scaleEntity(entity, dt, scale, scalePingPong)	
 	-- scale ping pong
 	if scale.x > scalePingPong.max then
 		scalePingPong.scaleUp = false
