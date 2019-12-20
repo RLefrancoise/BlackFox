@@ -1,8 +1,8 @@
 math.randomseed(os.time())
 
 -- Register runtime components
-BlackFox.World.registerComponent("AutoRotate")
-BlackFox.World.registerComponent("ScalePingPong")
+-- BlackFox.World.registerComponent("AutoRotate")
+-- BlackFox.World.registerComponent("ScalePingPong")
 
 -- Default world
 world = BlackFox.getWorld("default")
@@ -20,8 +20,11 @@ function createEntity()
 
     -- Position
     local position = world:setComponent(e, Position)
-    position.x = math.random() * BlackFox.Screen.width()
-    position.y = math.random() * BlackFox.Screen.height()
+    local worldPosition = BlackFox.Screen.pixelsToWorld(
+        math.random() * BlackFox.Screen.width(), 
+        math.random() * BlackFox.Screen.height())
+    position.x = worldPosition.x
+    position.y = worldPosition.y
 
     -- Rotation
     local rotation = world:setComponent(e, Rotation)

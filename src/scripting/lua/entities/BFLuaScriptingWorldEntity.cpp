@@ -76,7 +76,7 @@ namespace BlackFox
 			return runtimeRegistry->getComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
 		};
 
-        // Get components (from 1 to 5)
+        // Get components
         worldType["getComponents"] = [&](BFWorld& world, const entt::entity& entity, const sol::variadic_args& components) -> auto
         {
 			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();

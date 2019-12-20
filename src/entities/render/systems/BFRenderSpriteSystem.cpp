@@ -1,6 +1,7 @@
 #include "BFRenderSpriteSystem.h"
 #include "BFApplication.h"
 #include "BFWorld.h"
+#include "BFConfigData.h"
 #include "entities/spatial/components/BFPositionComponent.h"
 #include "entities/spatial/components/BFRotationComponent.h"
 #include "entities/spatial/components/BFScaleComponent.h"
@@ -49,7 +50,7 @@ namespace BlackFox::Systems
 			s.setTextureRect(sprite.rect);
 
 			//Set sprite position
-			s.setPosition(position.x, position.y);
+			s.setPosition(m_application->configData()->gameData.worldToPixels(position.x, position.y));
 
 			//Rotate sprite
 			if(scale != nullptr) s.scale(scale->scaleX, scale->scaleY);

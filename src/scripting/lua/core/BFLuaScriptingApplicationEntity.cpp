@@ -28,5 +28,17 @@ namespace BlackFox
 			const auto& app = m_container->get<BFApplication>();
 			return app->window()->getSize().y;
 		});
+
+        screenNs["worldToPixels"] = [&](float x, float y) -> BFVector2f
+        {
+            const auto& app = m_container->get<BFApplication>();
+            return app->configData()->gameData.worldToPixels(x, y);
+        };
+
+		screenNs["pixelsToWorld"] = [&](float x, float y) -> BFVector2f
+		{
+			const auto& app = m_container->get<BFApplication>();
+			return app->configData()->gameData.pixelsToWorld(x, y);
+		};
     }
 }

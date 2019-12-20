@@ -69,6 +69,19 @@ namespace BlackFox
         {
             return BFVector2f(x * worldUnitPixels, y * worldUnitPixels);
         }
+
+        /// --------------------------------------------------------------------------------
+        /// <summary>
+        /// Convert pixels to world units
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        /// --------------------------------------------------------------------------------
+        BFVector2f pixelsToWorld(float x, float y)
+        {
+            return BFVector2f(x / worldUnitPixels, y / worldUnitPixels);
+        }
     };
 
     /// --------------------------------------------------------------------------------
