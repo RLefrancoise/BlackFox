@@ -70,18 +70,6 @@ namespace BlackFox
 		virtual void update(float dt) = 0;
 
 		/*!
-		 * \fn	std::string BFComponentSystem::name() const;
-		 *
-		 * \brief	Gets the name of the system.
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	27/11/2019
-		 *
-		 * \returns	The name of the system.
-		 */
-		[[nodiscard]] virtual std::string name() const;
-
-		/*!
 		 * \fn	void BFComponentSystem::setWorld(BFWorld* world);
 		 *
 		 * \brief	Sets the world owning the system.

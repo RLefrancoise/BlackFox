@@ -43,6 +43,31 @@ namespace BlackFox
 
             BF_PRINT("Add entity {}", t.get_name().to_string())
         }
+
+		//Register all Lua runtime components
+		for (auto& dir : std::filesystem::recursive_directory_iterator("data/components/", std::filesystem::directory_options::skip_permission_denied))
+		{
+			if (dir.is_directory()) continue;
+			if (dir.path().extension().string() != ".lua") continue;
+
+			const std::string componentName = dir.path().filename().replace_extension("").string();
+			const std::string componentPath = dir.path().string();
+
+			BF_PRINT("Register Lua component {} ({})", componentName, componentPath)
+
+				auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, componentPath, &m_state);
+
+			auto blackFoxNs = m_state["BlackFox"].get_or_create<sol::table>();
+			auto componentsNs = blackFoxNs["Components"].get_or_create<sol::table>();
+			auto runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
+
+			auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
+			component_t["id"] = [=](BFWorld* world) -> auto
+			{
+				return cid;
+			};
+		}
     }
 
     void BFScriptingManager::addEntity(IBFScriptingEntity::Ptr entity)
@@ -55,31 +80,6 @@ namespace BlackFox
         for(auto& entity : m_entities)
         {
             entity->registerEntity();
-        }
-
-        //Register all Lua runtime components
-        for (auto& dir : std::filesystem::recursive_directory_iterator("data/components/", std::filesystem::directory_options::skip_permission_denied))
-        {
-            if (dir.is_directory()) continue;
-            if (dir.path().extension().string() != ".lua") continue;
-
-            const std::string componentName = dir.path().filename().replace_extension("").string();
-            const std::string componentPath = dir.path().string();
-
-            BF_PRINT("Register Lua component {} ({})", componentName, componentPath)
-
-			auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-			const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, componentPath, &m_state);
-
-            auto blackFoxNs = m_state["BlackFox"].get_or_create<sol::table>();
-			auto componentsNs = blackFoxNs["Components"].get_or_create<sol::table>();
-			auto runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
-
-			auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
-			component_t["id"] = [=](BFWorld* world) -> auto
-			{
-				return cid;
-			};
         }
     }
 

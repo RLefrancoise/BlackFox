@@ -1,16 +1,19 @@
 #pragma once
 
-#include "BFRuntimeComponent.h"
-#include "BFLuaScript.h"
+#include "BFComponent.h"
 
 namespace BlackFox::Components
 {
 	/// --------------------------------------------------------------------------------
 	/// <summary>
-	/// BlackFox runtime component for Lua scripting. Component data is a Lua script object.
+	/// Depth component
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	struct BFLuaRuntimeComponent : BFRuntimeComponent<BFLuaScript::Ptr>
+	struct BFDepthComponent : IBFComponent
 	{
+		BF_COMPONENT("Depth")
+
+		/// <summary>Depth value</summary>
+		int depth;
 	};
 }

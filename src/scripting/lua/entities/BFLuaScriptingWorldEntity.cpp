@@ -17,9 +17,23 @@ namespace BlackFox
     	//Entities
 
         // Create entity
-        worldType["createEntity"] = [](BFWorld& world) -> entt::entity
+        worldType["createEntity"] = [&](BFWorld& world, const sol::variadic_args& components)
         {
-            return world.entityManager()->create();
+            auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+            runtimeRegistry->setEntityManager(world.entityManager());
+
+            const auto entity = world.entityManager()->create();
+
+			sol::variadic_results result;
+			result.push_back({ *m_state, sol::in_place_type<entt::entity>, entity });
+
+            for (const auto& component : components)
+            {
+                const auto c = runtimeRegistry->setComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(component.as<ComponentId>()), m_state);
+                result.push_back(c);
+            }
+
+            return result;
         };
 
         // Destroy entity

@@ -4,45 +4,45 @@ math.randomseed(os.time())
 world = BlackFox.getWorld("default")
 
 -- Component IDs
-Position = BlackFox.Components.Spatial.Position.id(world)
-Rotation = BlackFox.Components.Spatial.Rotation.id(world)
-Scale = BlackFox.Components.Spatial.Scale.id(world)
+Transform = BlackFox.Components.Spatial.Transform.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
+Depth = BlackFox.Components.Render.Depth.id(world)
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
 ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
 
 function createEntity()
-    local e = world:createEntity()
+    local e, 
+    transform, 
+    autoRotate, 
+    scalePingPong, 
+    sprite, 
+    depth = world:createEntity(
+        Transform, 
+        AutoRotate, 
+        ScalePingPong, 
+        Sprite, 
+        Depth)
 
     -- Position
-    local position = world:setComponent(e, Position)
-    local worldPosition = BlackFox.Screen.pixelsToWorld(
+    transform.position = BlackFox.Screen.pixelsToWorld(
         math.random() * BlackFox.Screen.width(), 
         math.random() * BlackFox.Screen.height())
-    position.x = worldPosition.x
-    position.y = worldPosition.y
 
     -- Rotation
-    local rotation = world:setComponent(e, Rotation)
-    rotation.angle = math.random() * 360.0
-
-    -- Auto Rotate
-    local autoRotate = world:setComponent(e, AutoRotate)
-    autoRotate.speed = math.random() * 360.0
+    transform.rotation.degrees = math.random() * 360.0
 
     -- Scale
-    local scale = world:setComponent(e, Scale)
-    scale.x = 1
-    scale.y = scale.x
+    transform.scale = BlackFox.Math.Vector2f:new(1,1)
+
+    -- Auto Rotate
+    autoRotate.speed = math.random() * 360.0
 
     -- Scale ping pong
-    local scalePingPong = world:setComponent(e, ScalePingPong)
-    scalePingPong.min = scale.x
+    scalePingPong.min = transform.scale.x
     scalePingPong.max = scalePingPong.min + 1 + math.random()
     scalePingPong.speed = 1 + math.random() * 2 -- Random between 1 and 3
 
     -- Sprite
-    local sprite = world:setComponent(e, Sprite)    
     -- Test image
     sprite.image = BlackFox.Resources.texture("test.png")
     sprite.image.smooth = true
@@ -52,6 +52,9 @@ function createEntity()
     sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
     sprite.color = BlackFox.Graphics.Color.random(true)
+
+    -- Depth (between 0 and 5)
+    depth.depth = math.floor(math.random() * 5)
 end
 
 -- Create some entities

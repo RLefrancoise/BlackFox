@@ -1,5 +1,5 @@
 function onWorldChanged(world)
-	Scale = BlackFox.Components.Spatial.Scale.id(world)
+	Transform = BlackFox.Components.Spatial.Transform.id(world)
 	ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
 end
 
@@ -7,23 +7,23 @@ function update(dt)
 	local entities = world:entities(
 		scaleEntity,
 		dt,
-		Scale,
+		Transform,
 		ScalePingPong)
 end
 
-function scaleEntity(entity, dt, scale, scalePingPong)	
+function scaleEntity(entity, dt, transform, scalePingPong)	
 	-- scale ping pong
-	if scale.x > scalePingPong.max then
+	if transform.scale.x > scalePingPong.max then
 		scalePingPong.scaleUp = false
-	elseif scale.x < scalePingPong.min then
+	elseif transform.scale.x < scalePingPong.min then
 		scalePingPong.scaleUp = true
 	end
 
 	if scalePingPong.scaleUp == true then
-		scale.x = scale.x + scalePingPong.speed * dt
-		scale.y = scale.y + scalePingPong.speed * dt
+		transform.scale.x = transform.scale.x + scalePingPong.speed * dt
+		transform.scale.y = transform.scale.y + scalePingPong.speed * dt
 	else
-		scale.x = scale.x - scalePingPong.speed * dt
-		scale.y = scale.y - scalePingPong.speed * dt
+		transform.scale.x = transform.scale.x - scalePingPong.speed * dt
+		transform.scale.y = transform.scale.y - scalePingPong.speed * dt
 	end
 end

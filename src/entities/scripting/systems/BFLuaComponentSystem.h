@@ -8,6 +8,11 @@
 
 namespace BlackFox
 {
+    /// --------------------------------------------------------------------------------
+    /// <summary>
+    /// BlackFox system for Lua scripting
+    /// </summary>
+    /// --------------------------------------------------------------------------------
     class BFLuaComponentSystem : public BFComponentSystem
     {
     public:
@@ -16,10 +21,15 @@ namespace BlackFox
         void update(float dt) override;
         void setWorld(BFWorld* world) override;
     private:
+        /// <summary>Lua script containing the system</summary>
         BFLuaScript m_script;
+        /// <summary>onCreate function of the system</summary>
         sol::optional<sol::function> m_onCreateFnc;
+        /// <summary>onDestroy function of the system</summary>
         sol::optional<sol::function> m_onDestroyFnc;
+        /// <summary>onWorldChanged function of the system</summary>
         sol::optional<sol::function> m_onWorldChanged;
+        /// <summary>update function of the system</summary>
         sol::optional<sol::function> m_updateFnc;
     };
 }

@@ -119,34 +119,34 @@ namespace BlackFox
         keyMod_t["System"]      = BFInput::KeyMod::System;
 
         //Functions
-        input_t["isKeyDown"] = [&](const sf::Keyboard::Key& key) -> bool
+        input_t["isKeyDown"] = sol::overload(
+			[&](const sf::Keyboard::Key& key) -> bool
         {
             const auto& input = m_container->get<BFInput>();
             return input->isKeyDown(key);
-        };
+        },
+			[&](const sf::Keyboard::Key& key, const BFInput::KeyMod& mod) -> bool
+		{
+			const auto& input = m_container->get<BFInput>();
+			return input->isKeyDown(key, mod);
+		});
 
-        input_t["isKeyUp"] = [&](const sf::Keyboard::Key& key) -> bool
+        input_t["isKeyUp"] = sol::overload(
+			[&](const sf::Keyboard::Key& key) -> bool
         {
             const auto& input = m_container->get<BFInput>();
             return input->isKeyUp(key);
-        };
+        },
+			[&](const sf::Keyboard::Key& key, const BFInput::KeyMod& mod) -> bool
+		{
+			const auto& input = m_container->get<BFInput>();
+			return input->isKeyUp(key, mod);
+		});
 
         input_t["isKeyPressed"] = [&](const sf::Keyboard::Key& key) -> bool
         {
             const auto& input = m_container->get<BFInput>();
             return input->isKeyPressed(key);
-        };
-        
-        input_t["isKeyDownWithMod"] = [&](const sf::Keyboard::Key& key, const BFInput::KeyMod& mod) -> bool
-        {
-            const auto& input = m_container->get<BFInput>();
-            return input->isKeyDown(key, mod);
-        };
-
-        input_t["isKeyUpWithMod"] = [&](const sf::Keyboard::Key& key, const BFInput::KeyMod& mod) -> bool
-        {
-            const auto& input = m_container->get<BFInput>();
-            return input->isKeyUp(key, mod);
         };
     }
 }

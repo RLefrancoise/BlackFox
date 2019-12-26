@@ -15,6 +15,5 @@ namespace BlackFox
 
         sol::usertype<BFComponentSystem> t = m_namespace.new_usertype<BFComponentSystem>("ComponentSystem");
         t["update"] = &BFComponentSystem::update;
-        t["name"] = &BFComponentSystem::name;
     }
 }

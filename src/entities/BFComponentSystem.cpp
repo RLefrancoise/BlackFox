@@ -8,7 +8,6 @@ RTTR_REGISTRATION
 	using namespace rttr;
 	registration::class_<BlackFox::BFComponentSystem>("ComponentSystem")
 	.method("update", &BlackFox::BFComponentSystem::update)
-	.method("name", &BlackFox::BFComponentSystem::name)
 	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);
 }
 
@@ -24,11 +23,6 @@ namespace BlackFox
 	: m_application(application.get())
 	, m_world(nullptr)
 	{
-	}
-
-	std::string BFComponentSystem::name() const
-	{
-		return typeid(this).name();
 	}
 
 	void BFComponentSystem::setWorld(BFWorld* world)

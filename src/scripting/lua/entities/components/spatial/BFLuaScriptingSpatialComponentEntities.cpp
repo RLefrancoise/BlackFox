@@ -1,5 +1,6 @@
 #include "BFLuaScriptingSpatialComponentEntities.h"
 
+#include "BFTransformComponent.h"
 #include "BFPositionComponent.h"
 #include "BFRotationComponent.h"
 #include "BFScaleComponent.h"
@@ -12,6 +13,12 @@ namespace BlackFox
 {
     void BFLuaScriptingSpatialComponentEntities::registerEntity()
     {
+        //Transform
+        auto transformType = registerType<BFTransformComponent>();
+        transformType["position"] = &BFTransformComponent::position;
+        transformType["rotation"] = &BFTransformComponent::rotation;
+        transformType["scale"] = &BFTransformComponent::scale;
+
         //Position
         auto position_t = registerType<BFPositionComponent>();
         position_t["x"] = &BFPositionComponent::x;
