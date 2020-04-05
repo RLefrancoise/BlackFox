@@ -1,6 +1,7 @@
 #include "BFLuaScriptingRenderComponentEntities.h"
 
 #include "BFDepthComponent.h"
+#include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
 
 using namespace BlackFox::Components;
@@ -11,6 +12,9 @@ namespace BlackFox
 {
 	void BFLuaScriptingRenderComponentEntities::registerEntity()
 	{
+		//Renderable
+		registerType<BFRenderableComponent>();
+		
 		//Depth
 		auto depth_t = registerType<BFDepthComponent>();
 		depth_t["depth"] = &BFDepthComponent::depth;

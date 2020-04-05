@@ -9,6 +9,14 @@ using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
 {
+	struct DepthComparer
+	{
+		bool operator()(const BFDepthComponent& lhs, const BFDepthComponent& rhs) const
+		{
+			return lhs.depth < rhs.depth;
+		}
+	};
+	
 	void sortDepth(entt::entity e, entt::registry& r, BFDepthComponent& c)
 	{
 		r.sort<BFDepthComponent>([](const auto& lhs, const auto& rhs) -> bool
@@ -20,22 +28,23 @@ namespace BlackFox::Systems
 	BFSortByDepthSystem::BFSortByDepthSystem(BFApplication::Ptr application)
 	: BFComponentSystem(std::move(application))
 	{
-		m_world->entityManager()->on_construct<BFDepthComponent>().connect<&sortDepth>();
-		m_world->entityManager()->on_replace<BFDepthComponent>().connect<&sortDepth>();
+		/*m_world->entityManager()->on_construct<BFDepthComponent>().connect<&sortDepth>();
+		m_world->entityManager()->on_replace<BFDepthComponent>().connect<&sortDepth>();*/
 	}
 
 	BFSortByDepthSystem::~BFSortByDepthSystem()
 	{
-		m_world->entityManager()->on_construct<BFDepthComponent>().disconnect<&sortDepth>();
-		m_world->entityManager()->on_replace<BFDepthComponent>().disconnect<&sortDepth>();
+		/*m_world->entityManager()->on_construct<BFDepthComponent>().disconnect<&sortDepth>();
+		m_world->entityManager()->on_replace<BFDepthComponent>().disconnect<&sortDepth>();*/
 	}
 
 	void BFSortByDepthSystem::update(float dt)
 	{
-		auto group = m_world->entityManager()->group(entt::get<const BFDepthComponent>);
-		group.sort<const BFDepthComponent>([](const BFDepthComponent& left, const BFDepthComponent& right)
+		/*auto group = m_world->entityManager()->group(entt::get<BFDepthComponent>);
+		//group.sort<const BFDepthComponent, DepthComparer>(DepthComparer());
+		group.sort([&](const entt::entity lhs, const entt::entity rhs)
 		{
-			return left.depth < right.depth;
-		});
+			return group.get<BFDepthComponent>(lhs).depth < group.get<BFDepthComponent>(rhs).depth;
+		});*/
 	}
 }

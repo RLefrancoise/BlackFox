@@ -9,7 +9,7 @@ namespace BlackFox::Components
 	/// Depth component
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	struct BFDepthComponent : IBFComponent
+	struct BFDepthComponent final : IBFComponent
 	{
 		BF_COMPONENT("Depth")
 

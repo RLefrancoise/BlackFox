@@ -5,6 +5,7 @@ world = BlackFox.getWorld("default")
 
 -- Component IDs
 Transform = BlackFox.Components.Spatial.Transform.id(world)
+Renderable = BlackFox.Components.Render.Renderable.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
 Depth = BlackFox.Components.Render.Depth.id(world)
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
@@ -14,12 +15,14 @@ function createEntity()
     local e, 
     transform, 
     autoRotate, 
-    scalePingPong, 
+    scalePingPong,
+    renderable,
     sprite, 
     depth = world:createEntity(
         Transform, 
         AutoRotate, 
-        ScalePingPong, 
+        ScalePingPong,
+        Renderable,
         Sprite, 
         Depth)
 
