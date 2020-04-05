@@ -5,7 +5,7 @@
 
 namespace BlackFox
 {
-	class BFEntitiesInstaller : public BFBaseInstaller
+	class BFEntitiesInstaller final : public BFBaseInstaller
 	{
 	public:
 

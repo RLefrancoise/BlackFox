@@ -70,7 +70,7 @@ namespace BlackFox
 	typedef std::shared_ptr<IBFContext> DiContext;
 
 	/*!
-	 * \fn	template <typename C, typename... Args> static DiContext makeContext(DiContainer container, Args... args, bool run = true)
+	 * \fn	template <typename C, typename... Args> static DiContext makeContext(DiContainer container, Args... args, const bool run = true)
 	 *
 	 * \brief	Makes a DI context
 	 *
@@ -83,7 +83,7 @@ namespace BlackFox
 	 * \returns	The DiContext.
 	 */
 	template <typename C, typename... Args>
-	static DiContext makeContext(DiContainer container, Args... args, bool run = true)
+	static DiContext makeContext(DiContainer container, Args... args, const bool run = true)
 	{
 		static_assert(std::is_base_of<IBFContext, C>::value, "Type parameter of makeContext must derive from IBFContext");
 

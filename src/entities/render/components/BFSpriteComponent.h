@@ -1,18 +1,16 @@
 #ifndef BLACKFOX_SPRITE_COMPONENT_H
 #define BLACKFOX_SPRITE_COMPONENT_H
 
-#include <memory>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Texture.hpp>
 
 #include "BFComponent.h"
 #include "BFVector2.h"
 
 namespace BlackFox::Components
 {
-	struct BFSpriteComponent : public BFComponent<BFSpriteComponent>
+	struct BFSpriteComponent final : public BFComponent<BFSpriteComponent>
 	{
 		BF_COMPONENT("Sprite")
 

@@ -28,17 +28,17 @@ namespace BlackFox
 		//Smooth
 		textureHandle_t["smooth"] = sol::property(
 			[](TextureHandle& handle) -> bool { return handle->isSmooth(); }, 
-			[](TextureHandle& handle, bool smooth) { handle->setSmooth(smooth); });
+			[](TextureHandle& handle, const bool smooth) { handle->setSmooth(smooth); });
 
 		//Srgb
 		textureHandle_t["srgb"] = sol::property(
 			[](TextureHandle& handle) -> bool { return handle->isSrgb(); }, 
-			[](TextureHandle& handle, bool srgb) { handle->setSrgb(srgb); });
+			[](TextureHandle& handle, const bool srgb) { handle->setSrgb(srgb); });
 
 		//Repeated
 		textureHandle_t["repeated"] = sol::property(
 			[](TextureHandle& handle) -> bool { return handle->isRepeated(); }, 
-			[](TextureHandle& handle, bool repeated) { handle->setRepeated(repeated); });
+			[](TextureHandle& handle, const bool repeated) { handle->setRepeated(repeated); });
 
 		//Get / Load a texture
 		resourcesNs["texture"] = sol::overload([&](const std::string& path) -> TextureHandle

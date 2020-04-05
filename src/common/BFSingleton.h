@@ -16,7 +16,7 @@ namespace BlackFox
 	 * \tparam	T	Class type to be templated
 	 */
 	template<class T>
-	class BFSingleton : private BFNonCopyable
+	class BFSingleton : public BFNonCopyable
 	{
 	public:
 

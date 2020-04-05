@@ -1,14 +1,20 @@
 #ifndef BLACKFOX_BOOTSTRAP_H
 #define BLACKFOX_BOOTSTRAP_H
 
-#include "BFNonCopyable.h"
-
 namespace BlackFox
 {
-	class BFBootstrap : private BFNonCopyable
+	class BFBootstrap
 	{
 	public:
-		int run() const;
+		constexpr BFBootstrap() = default;
+		~BFBootstrap() = default;
+		constexpr BFBootstrap(BFBootstrap&& bootstrap) noexcept = default;
+		constexpr BFBootstrap& operator=(BFBootstrap&& bootstrap) = default;
+		
+		constexpr BFBootstrap(const BFBootstrap& app) = delete;
+		constexpr BFBootstrap& operator=(const BFBootstrap& app) = delete;
+
+		[[nodiscard]] int run() const;
 	};
 }
 

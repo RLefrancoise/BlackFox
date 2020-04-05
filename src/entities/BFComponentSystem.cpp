@@ -19,6 +19,19 @@ namespace BlackFox
 	{
 	}
 
+	BFComponentSystem::BFComponentSystem(BFComponentSystem&& system) noexcept
+	: m_application(system.m_application)
+	, m_world(system.m_world)
+	{
+	}
+
+	BFComponentSystem& BFComponentSystem::operator=(BFComponentSystem&& system) noexcept
+	{
+		m_application = system.m_application;
+		m_world = system.m_world;
+		return *this;
+	}
+
 	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application)
 	: m_application(application.get())
 	, m_world(nullptr)

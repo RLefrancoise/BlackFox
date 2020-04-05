@@ -9,9 +9,9 @@ BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingSFMLEntities, "SFMLEnti
 
 namespace BlackFox
 {
-	sf::Color randomColorWithAlpha(bool randomAlpha)
+	sf::Color randomColorWithAlpha(const bool randomAlpha)
 	{
-		unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
+		const auto seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
 		std::minstd_rand0 generator(seed);
 
 		if (randomAlpha) return sf::Color(generator() % 256, generator() % 256, generator() % 256, generator() % 256);

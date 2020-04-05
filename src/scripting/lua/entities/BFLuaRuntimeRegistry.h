@@ -10,11 +10,20 @@
 
 namespace BlackFox
 {
+	// ********************************************************************************
+	/// <summary>
+	/// Set a lua component to an entity
+	/// </summary>
+	/// <param name="em">Entity manager</param>
+	/// <param name="entity">Entity</param>
+	/// <param name="componentType">Type of the component</param>
+	/// <param name="state">Sol state</param>
+	/// <param name="componentScript">Script path of the component</param>
+	/// <returns>The component set to the entity</returns>
+	// ********************************************************************************
 	template <typename C>
 	static sol::object setComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state, const std::string& componentScript)
 	{
-		sol::state_view view(*state);
-
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
 			auto& luaScriptingComponent = !em->has<Components::BFLuaRuntimeComponent>(entity) 
@@ -27,10 +36,19 @@ namespace BlackFox
 		}
 		else
 		{
+			sol::state_view view(*state);
 			return sol::object(view, sol::in_place_type<C*>, &em->assign_or_replace<C>(entity));
 		}
 	}
-
+	
+	// ********************************************************************************
+	/// <summary>
+	/// Unset a lua component from an entity
+	/// </summary>
+	/// <param name="em">Entity manager</param>
+	/// <param name="entity">Entity</param>
+	/// <param name="componentType">Type of the component to unset</param>
+	// ********************************************************************************
 	template <typename C>
 	static void unsetComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
 	{
@@ -50,6 +68,15 @@ namespace BlackFox
 		}
 	}
 
+	// ********************************************************************************
+	/// <summary>
+	/// Check if entity has a component
+	/// </summary>
+	/// <param name="em">Entity manager</param>
+	/// <param name="entity">Entity</param>
+	/// <param name="componentType">Component type</param>
+	/// <returns>True if entity has the component</returns>
+	// ********************************************************************************
 	template <typename C>
 	static bool hasComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
 	{
@@ -68,11 +95,19 @@ namespace BlackFox
 		}
 	}
 
+	// ********************************************************************************
+	/// <summary>
+	/// Get a component from an entity
+	/// </summary>
+	/// <param name="em">Entity manager</param>
+	/// <param name="entity">Entity</param>
+	/// <param name="componentType">Type of the component</param>
+	/// <param name="state">Sol state</param>
+	/// <returns>Sol object representing the component</returns>
+	// ********************************************************************************
 	template <typename C>
 	static sol::object getComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state)
 	{
-		sol::state_view view(*state);
-
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
 			if (em->has<Components::BFLuaRuntimeComponent>(entity))
@@ -86,6 +121,7 @@ namespace BlackFox
 		}
 		else
 		{
+			sol::state_view view(*state);
 			return sol::object(view, sol::in_place_type<C*>, &em->get<C>(entity));
 		}
 	}
@@ -145,7 +181,7 @@ namespace BlackFox
 			sol::state* state)
 		{
 			const auto [view, engine_components, runtime_components] = getView(components);
-			size_t size = view.size();
+			auto size = view.size();
 
 			for (const auto& entity : view)
 			{
@@ -192,7 +228,7 @@ namespace BlackFox
 			funcTypeGet get;
 		};
 
-		std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components);
+		std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components) const;
 
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>
 		Ret invoke(const entt::entity& entity, const ENTT_ID_TYPE typeId, Args... args)

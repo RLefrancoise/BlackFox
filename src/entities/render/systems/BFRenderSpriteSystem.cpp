@@ -19,37 +19,37 @@ namespace BlackFox::Systems
 	void BFRenderSpriteSystem::update(float dt)
 	{
 		//Render
-		m_world->entityManager()->group<const BFTransformComponent, BFSpriteComponent>().each(
+		m_world->entityManager()->group<const BFTransformComponent, const BFSpriteComponent>().each(
 			[&](auto entity, const auto& transform, auto& sprite)
-		{
-			sf::Sprite s;
+				{
+					sf::Sprite s;
 
-			//Set sprite image
-			if (sprite.image)
-			{
-				s.setTexture(sprite.image);
-			}
+					//Set sprite image
+					if (sprite.image)
+					{
+						s.setTexture(sprite.image);
+					}
 
-			//Set color
-			s.setColor(sprite.color);
+					//Set color
+					s.setColor(sprite.color);
 
-			//Set pivot
-			s.setOrigin(sprite.pivot);
+					//Set pivot
+					s.setOrigin(sprite.pivot);
 
-			//Set sprite rect
-			s.setTextureRect(sprite.rect);
+					//Set sprite rect
+					s.setTextureRect(sprite.rect);
 
-			//Set sprite position
-			s.setPosition(m_application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y));
+					//Set sprite position
+					s.setPosition(m_application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y));
 
-			//Scale sprite
-			const auto pixelsScale = m_application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
-			s.setScale(pixelsScale.x / sprite.image->getSize().x, pixelsScale.y / sprite.image->getSize().y);
+					//Scale sprite
+					const auto pixelsScale = m_application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
+					s.setScale(pixelsScale.x / sprite.image->getSize().x, pixelsScale.y / sprite.image->getSize().y);
 
-			//Rotate sprite
-			s.setRotation(transform.rotation.value());
+					//Rotate sprite
+					s.setRotation(transform.rotation.value());
 
-			m_application->window()->draw(s);
-		});
+					m_application->window()->draw(s);
+				});
 	}
 }

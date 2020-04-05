@@ -4,7 +4,7 @@
 
 namespace BlackFox
 {
-	class BFLuaScriptingRenderComponentEntities : public BFLuaScriptingComponentEntity
+	class BFLuaScriptingRenderComponentEntities final : public BFLuaScriptingComponentEntity
 	{
 		BF_SCRIPTING_LUA_COMPONENT_ENTITY(BFLuaScriptingRenderComponentEntities) {}
 

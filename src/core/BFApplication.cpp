@@ -128,14 +128,7 @@ namespace BlackFox
 				}
 
 				//Test lua scripting
-				sol::protected_function_result result = scriptManager->evalFile("data/test.lua");
-				if(!result.valid())
-				{
-					std::string result_s = result;
-					BF_EXCEPTION("Result of test.lua not valid: {}", result_s)
-				}
-
-				BF_PRINT("Test.lua result: {}", (bool) result)
+				BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"))
 			}
 			catch (std::exception& err)
 			{
@@ -213,6 +206,12 @@ namespace BlackFox
 	BFApplication::BFApplication(BFApplication&& app) noexcept
 	: pImpl(std::move(app.pImpl))
 	{
+	}
+
+	BFApplication& BFApplication::operator=(BFApplication&& app) noexcept
+	{
+		pImpl = std::move(app.pImpl);
+		return *this;
 	}
 
 	BFApplication::~BFApplication() noexcept = default;

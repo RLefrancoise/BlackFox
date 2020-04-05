@@ -4,7 +4,7 @@
 
 namespace BlackFox
 {
-	class BFLuaScriptingDataEntities : public IBFLuaScriptingEntity
+	class BFLuaScriptingDataEntities final : public IBFLuaScriptingEntity
 	{
 		BF_SCRIPTING_LUA_ENTITY(BFLuaScriptingDataEntities)
 	public:

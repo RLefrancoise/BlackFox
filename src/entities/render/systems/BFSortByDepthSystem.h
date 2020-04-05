@@ -10,7 +10,7 @@ namespace BlackFox::Systems
 	/// Sort By Depth System, from the lowest to the highest.
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	class BFSortByDepthSystem : public BFComponentSystem
+	class BFSortByDepthSystem final : public BFComponentSystem
 	{
 		BF_SYSTEM_AUTO_CREATE(BFSortByDepthSystem, ComponentSystemGroups::Render, "SortByDepthSystem")
 

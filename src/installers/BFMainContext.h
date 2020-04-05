@@ -13,7 +13,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	22/11/2019
 	 */
-	class BFMainContext : public BFBaseContext
+	class BFMainContext final : public BFBaseContext
 	{
 	public:
 

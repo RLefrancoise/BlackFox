@@ -22,7 +22,7 @@ namespace BlackFox
 		return id;
 	}
 
-	sol::object BFLuaRuntimeRegistry::setComponent(entt::entity entity, const ENTT_ID_TYPE typeId, sol::state* state)
+	sol::object BFLuaRuntimeRegistry::setComponent(const entt::entity entity, const ENTT_ID_TYPE typeId, sol::state* state)
 	{
 		auto it = std::find_if(m_runtimeComponentLuaScripts.begin(), m_runtimeComponentLuaScripts.end(), [&](const auto& entry) -> bool
 		{
@@ -38,17 +38,17 @@ namespace BlackFox
 			: std::string());
 	}
 
-	void BFLuaRuntimeRegistry::unsetComponent(entt::entity entity, const ENTT_ID_TYPE typeId)
+	void BFLuaRuntimeRegistry::unsetComponent(const entt::entity entity, const ENTT_ID_TYPE typeId)
 	{
 		invoke<funcMap::funcTypeUnset, void, &funcMap::unset>(entity, typeId);
 	}
 
-	bool BFLuaRuntimeRegistry::hasComponent(entt::entity entity, const ENTT_ID_TYPE typeId)
+	bool BFLuaRuntimeRegistry::hasComponent(const entt::entity entity, const ENTT_ID_TYPE typeId)
 	{
 		return invoke<funcMap::funcTypeHas, bool, &funcMap::has>(entity, typeId);
 	}
 
-	sol::object BFLuaRuntimeRegistry::getComponent(entt::entity entity, const ENTT_ID_TYPE typeId, sol::state* state)
+	sol::object BFLuaRuntimeRegistry::getComponent(const entt::entity entity, const ENTT_ID_TYPE typeId, sol::state* state)
 	{
 		return invoke<funcMap::funcTypeGet, sol::object, &funcMap::get, sol::state*>(entity, typeId, state);
 	}
@@ -58,7 +58,7 @@ namespace BlackFox
 		m_entityManager = em;
 	}
 
-	std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> BFLuaRuntimeRegistry::getView(const sol::variadic_args& components)
+	std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> BFLuaRuntimeRegistry::getView(const sol::variadic_args& components) const
 	{
 		std::vector<ComponentId> engine_components;
 		std::vector<ComponentId> runtime_components;

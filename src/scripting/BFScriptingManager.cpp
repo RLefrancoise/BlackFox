@@ -5,7 +5,8 @@
 #include <filesystem>
 
 #include "BFDebug.h"
-#include "BFLuaScriptingSpatialComponentEntities.h"
+#include "BFLuaRuntimeRegistry.h"
+#include "BFWorld.h"
 
 namespace BlackFox
 {
@@ -50,27 +51,40 @@ namespace BlackFox
 			if (dir.is_directory()) continue;
 			if (dir.path().extension().string() != ".lua") continue;
 
-			const std::string componentName = dir.path().filename().replace_extension("").string();
-			const std::string componentPath = dir.path().string();
+			const auto componentName = dir.path().filename().replace_extension("").string();
+			const auto componentPath = dir.path().string();
 
 			BF_PRINT("Register Lua component {} ({})", componentName, componentPath)
 
-				auto& runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, componentPath, &m_state);
 
-			auto blackFoxNs = m_state["BlackFox"].get_or_create<sol::table>();
-			auto componentsNs = blackFoxNs["Components"].get_or_create<sol::table>();
-			auto runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
+			sol::table blackFoxNs = m_state["BlackFox"].get_or_create<sol::table>();
+			sol::table componentsNs = blackFoxNs["Components"].get_or_create<sol::table>();
+			sol::table runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
 
 			auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
-			component_t["id"] = [=](BFWorld* world) -> auto
+			component_t["id"] = [=](BFWorld*) -> auto
 			{
 				return cid;
 			};
 		}
     }
 
-    void BFScriptingManager::addEntity(IBFScriptingEntity::Ptr entity)
+    BFScriptingManager::BFScriptingManager(BFScriptingManager&& manager) noexcept
+	: m_container(std::move(manager.m_container))
+	, m_entities(std::move(manager.m_entities))
+    {
+    }
+
+    BFScriptingManager& BFScriptingManager::operator=(BFScriptingManager&& manager) noexcept
+    {
+        m_container = std::move(manager.m_container);
+        m_entities = std::move(manager.m_entities);
+        return *this;
+    }
+
+    void BFScriptingManager::addEntity(std::shared_ptr<IBFScriptingEntity> entity)
     {
         m_entities.emplace_back(entity);
     }
@@ -81,15 +95,5 @@ namespace BlackFox
         {
             entity->registerEntity();
         }
-    }
-
-    sol::protected_function_result BFScriptingManager::evalScript(const std::string& script)
-    {
-        return m_state.safe_script(script);
-    }
-
-    sol::protected_function_result BFScriptingManager::evalFile(const std::string& file)
-    {
-        return m_state.safe_script_file(file);
     }
 }

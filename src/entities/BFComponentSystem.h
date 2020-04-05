@@ -31,9 +31,12 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<BFComponentSystem> Ptr;
 
-        constexpr BFComponentSystem() = delete;
-
+		constexpr BFComponentSystem(const BFComponentSystem& app) = delete;
+		constexpr BFComponentSystem& operator=(const BFComponentSystem& app) = delete;
+		
         explicit BFComponentSystem(BFApplication* application);
+		BFComponentSystem(BFComponentSystem&& system) noexcept;
+		BFComponentSystem& operator=(BFComponentSystem&& system) noexcept;
 
 		/*!
 		 * \fn	BFComponentSystem::BFComponentSystem(std::shared_ptr<BFApplication> application);

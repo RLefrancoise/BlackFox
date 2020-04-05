@@ -13,7 +13,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	22/11/2019
 	 */
-	class BFCoreInstaller : public BFBaseInstaller
+	class BFCoreInstaller final : public BFBaseInstaller
 	{
 	public:
 

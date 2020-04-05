@@ -6,7 +6,7 @@
 
 namespace BlackFox::Components
 {
-	struct BFTransformComponent : IBFComponent
+	struct BFTransformComponent final : IBFComponent
 	{
 		BF_COMPONENT("Transform")
 

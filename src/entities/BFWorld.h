@@ -8,11 +8,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include <SFML/Window/Event.hpp>
-
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
-#include "common/BFNonCopyable.h"
 #include "BFComponentSystem.h"
 #include "BFComponentSystemFlags.h"
 
@@ -28,7 +25,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	24/11/2019
 	 */
-	class BFWorld : private BFNonCopyable
+	class BFWorld
 	{
 	public:
 
@@ -50,6 +47,9 @@ namespace BlackFox
         /// <summary>Alias for systems by group</summary>
         typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> SystemGroupList;
 
+		constexpr BFWorld(const BFWorld& app) = delete;
+		constexpr BFWorld& operator=(const BFWorld& app) = delete;
+		
 		/*!
 		 * \fn	explicit BFWorld::BFWorld(DiContainer container);
 		 *
@@ -62,6 +62,11 @@ namespace BlackFox
 		 */
 		CINJECT(BFWorld(DiContainer container));
 
+		~BFWorld() = default;
+
+		BFWorld(BFWorld&& world) noexcept;
+		BFWorld& operator=(BFWorld&& world) noexcept;
+		
 		/*!
 		 * \fn	EntityManager BFWorld::entityManager() const;
 		 *

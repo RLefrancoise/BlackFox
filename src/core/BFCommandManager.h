@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <fmt/format.h>
 
-#include "common/BFNonCopyable.h"
 #include "common/BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "common/BFDebug.h"
 #include "BFTypeDefs.h"
@@ -22,7 +21,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	15/11/2019
 	 */
-	class BFCommandManager : private BFNonCopyable
+	class BFCommandManager
 	{
 	public:
 
@@ -33,6 +32,9 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<BFCommandManager> Ptr;
 
+		constexpr BFCommandManager(const BFCommandManager& app) = delete;
+		constexpr BFCommandManager& operator=(const BFCommandManager& app) = delete;
+		
 		/*!
 		 * \fn	BFCommandManager::BFCommandManager();
 		 *
@@ -55,6 +57,8 @@ namespace BlackFox
 		 */
 		BFCommandManager(BFCommandManager&& manager) noexcept;
 
+		BFCommandManager& operator=(BFCommandManager&& manager) noexcept;
+		
 		/*!
 		 * \fn	BFCommandManager::~BFCommandManager();
 		 *
@@ -132,11 +136,11 @@ namespace BlackFox
 		 * \returns	True if the command is registered, false if not.
 		 */
 		template <typename C>
-		bool isCommandRegistered() const
+		[[nodiscard]] bool isCommandRegistered() const
 		{
-			for (const auto& m_command : m_commands)
+			for (const auto& command : m_commands)
 			{
-				if (m_command.first.hash_code() == typeid(C).hash_code()) return true;
+				if (command.first.hash_code() == typeid(C).hash_code()) return true;
 			}
 
 			return false;

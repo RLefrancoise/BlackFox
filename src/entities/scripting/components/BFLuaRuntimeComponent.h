@@ -10,7 +10,7 @@ namespace BlackFox::Components
 	/// BlackFox runtime component for Lua scripting. Component data is a Lua script object.
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	struct BFLuaRuntimeComponent : BFRuntimeComponent<BFLuaScript::Ptr>
+	struct BFLuaRuntimeComponent final : BFRuntimeComponent<BFLuaScript::Ptr>
 	{
 	};
 }

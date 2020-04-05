@@ -4,7 +4,7 @@
 
 namespace BlackFox
 {
-	class BFScriptingInstaller : public BFBaseInstaller
+	class BFScriptingInstaller final : public BFBaseInstaller
 	{
 	public:
 		explicit BFScriptingInstaller(DiContainer container);

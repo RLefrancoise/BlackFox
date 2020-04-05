@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "BFTypeDefs.h"
-#include "BFNonCopyable.h"
 
 namespace BlackFox
 {
@@ -22,7 +21,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	12/11/2019
 	 */
-	class BFApplication : private BFNonCopyable
+	class BFApplication
 	{
 	public:
 
@@ -33,6 +32,10 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<BFApplication> Ptr;
 
+		constexpr BFApplication() = delete;
+		constexpr BFApplication(const BFApplication& app) = delete;
+		constexpr BFApplication& operator=(const BFApplication& app) = delete;
+		
 		/*!
 		 * \brief	Constructor
 		 *
@@ -70,6 +73,8 @@ namespace BlackFox
 		 */
 		BFApplication(BFApplication&& app) noexcept;
 
+		BFApplication& operator=(BFApplication&& app) noexcept;
+		
 		/*!
 		 * \fn	int BFApplication::execute();
 		 *

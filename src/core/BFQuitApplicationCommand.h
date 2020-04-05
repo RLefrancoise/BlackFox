@@ -9,7 +9,7 @@ namespace BlackFox
 {
 	class BFApplication;
 
-	class BFQuitApplicationCommand : public BFCommand
+	class BFQuitApplicationCommand final : public BFCommand
 	{
 	private:
 		std::shared_ptr<BFApplication> m_application;
@@ -18,7 +18,7 @@ namespace BlackFox
 		CINJECT(BFQuitApplicationCommand(std::shared_ptr<BFApplication> application));
 
 		void execute(void) override;
-		BFQuitApplicationCommand* clone(void) const override;
+		[[nodiscard]] BFQuitApplicationCommand* clone(void) const override;
 	};
 }
 

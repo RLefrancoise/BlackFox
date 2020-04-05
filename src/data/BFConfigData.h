@@ -65,7 +65,7 @@ namespace BlackFox
         /// <param name="y">Y coordinate in world unit</param>
         /// <returns>Position in pixels</returns>
         /// --------------------------------------------------------------------------------
-        BFVector2f worldToPixels(float x, float y)
+        BFVector2f worldToPixels(const float x, const float y) const
         {
             return BFVector2f(x * worldUnitPixels, y * worldUnitPixels);
         }
@@ -78,7 +78,7 @@ namespace BlackFox
         /// <param name="y"></param>
         /// <returns></returns>
         /// --------------------------------------------------------------------------------
-        BFVector2f pixelsToWorld(float x, float y)
+        BFVector2f pixelsToWorld(const float x, const float y) const
         {
             return BFVector2f(x / worldUnitPixels, y / worldUnitPixels);
         }

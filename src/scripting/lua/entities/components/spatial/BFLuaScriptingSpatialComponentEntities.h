@@ -5,7 +5,7 @@
 
 namespace BlackFox
 {
-    class BFLuaScriptingSpatialComponentEntities : public BFLuaScriptingComponentEntity
+    class BFLuaScriptingSpatialComponentEntities final : public BFLuaScriptingComponentEntity
     {
         BF_SCRIPTING_LUA_COMPONENT_ENTITY(BFLuaScriptingSpatialComponentEntities) {}
 

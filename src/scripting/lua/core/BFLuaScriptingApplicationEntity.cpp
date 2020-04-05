@@ -9,11 +9,11 @@ namespace BlackFox
 {
     void BFLuaScriptingApplicationEntity::registerEntity()
     {
-        sol::usertype <BFApplication> application_type = m_namespace.new_usertype<BFApplication>("Application");
-        application_type["quit"] = &BFApplication::quit;
-        application_type["command_manager"] = &BFApplication::commandManager;
-        application_type["window"] = &BFApplication::window;
-        application_type["config_data"] = &BFApplication::configData;
+	    auto applicationType = m_namespace.new_usertype<BFApplication>("Application");
+        applicationType["quit"] = &BFApplication::quit;
+        applicationType["command_manager"] = &BFApplication::commandManager;
+        applicationType["window"] = &BFApplication::window;
+        applicationType["config_data"] = &BFApplication::configData;
 
         //Screen
         auto screenNs = m_namespace["Screen"].get_or_create<sol::table>();

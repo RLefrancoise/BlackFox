@@ -11,7 +11,7 @@ namespace BlackFox::Systems
 	/// Render Sprite system.
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	class BFRenderSpriteSystem : public BFComponentSystem
+	class BFRenderSpriteSystem final : public BFComponentSystem
 	{
         BF_SYSTEM_AUTO_CREATE(BFRenderSpriteSystem, ComponentSystemGroups::Render, "RenderSpriteSystem")
 

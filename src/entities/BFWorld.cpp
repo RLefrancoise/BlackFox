@@ -14,6 +14,19 @@ namespace BlackFox
 		m_entityManager = std::make_shared<entt::registry>();
 	}
 
+	BFWorld::BFWorld(BFWorld&& world) noexcept
+	: m_container(std::move(world.m_container))
+	, m_entityManager(std::move(world.m_entityManager))
+	{
+	}
+
+	BFWorld& BFWorld::operator=(BFWorld&& world) noexcept
+	{
+		m_container = std::move(world.m_container);
+		m_entityManager = std::move(world.m_entityManager);
+		return *this;
+	}
+
 	EntityManager BFWorld::entityManager() const
 	{
 		return m_entityManager;

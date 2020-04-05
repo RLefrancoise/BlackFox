@@ -10,13 +10,16 @@ namespace BlackFox
 	}
 
 	BFCommandManager::BFCommandManager(BFCommandManager&& manager) noexcept
+	: m_commands(std::move(manager.m_commands))
+	, m_container(manager.m_container)
 	{
-		clearAllCommands();
+	}
 
-		for (const auto& command : manager.m_commands)
-		{
-			m_commands.insert(std::make_pair(command.first, command.second));
-		}
+	BFCommandManager& BFCommandManager::operator=(BFCommandManager&& manager) noexcept
+	{
+		m_commands = std::move(manager.m_commands);
+		m_container = manager.m_container;
+		return *this;
 	}
 
 	BFCommandManager::~BFCommandManager()

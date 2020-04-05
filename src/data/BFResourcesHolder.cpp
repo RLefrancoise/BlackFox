@@ -6,9 +6,20 @@
 
 namespace BlackFox
 {
+	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
+		: m_textureCache(std::move(holder.m_textureCache))
+	{
+	}
+
+	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
+	{
+		m_textureCache = std::move(holder.m_textureCache);
+		return *this;
+	}
+
 	TextureHandle BFResourcesHolder::loadTexture(const std::string& path, const sf::IntRect& rect)
 	{
-		auto id = TextureId{ entt::hashed_string(path.c_str()) };
+		const auto id = TextureId{ entt::hashed_string(path.c_str()) };
 		if (m_textureCache.contains(id))
 		{
 			return m_textureCache.handle(id);
