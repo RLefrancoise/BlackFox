@@ -11,12 +11,12 @@ namespace BlackFox::Systems
 	/// Render Sprite system.
 	/// </summary>
 	/// --------------------------------------------------------------------------------
-	class BFRenderSpriteSystem final : public BFComponentSystem
+	class BFRenderSystem final : public BFComponentSystem
 	{
-        BF_SYSTEM_AUTO_CREATE(BFRenderSpriteSystem, ComponentSystemGroups::Render, "RenderSpriteSystem")
+        BF_SYSTEM_AUTO_CREATE(BFRenderSystem, ComponentSystemGroups::Render, "RenderSystem")
 
 	public:
-		CINJECT(BFRenderSpriteSystem(std::shared_ptr<BFApplication> application));
+		CINJECT(BFRenderSystem(std::shared_ptr<BFApplication> application));
 		void update(float dt) override;
 	};
 }
