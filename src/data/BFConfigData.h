@@ -86,6 +86,23 @@ namespace BlackFox
 
     /// --------------------------------------------------------------------------------
     /// <summary>
+    /// Time Data in config.ini file
+    /// </summary>
+    /// --------------------------------------------------------------------------------
+    struct ConfigTimeData
+    {
+        /// <summary>Fixed update interval in seconds</summary>
+        float fixedUpdateInterval = 0.1f;
+
+        explicit operator std::string() const
+        {
+            return fmt::format("--- Physics Data ---\nfixedUpdateInterval={}"
+                , fixedUpdateInterval);
+        }
+    };
+
+    /// --------------------------------------------------------------------------------
+    /// <summary>
     /// BlackFox config data
     /// </summary>
     /// --------------------------------------------------------------------------------
@@ -111,18 +128,26 @@ namespace BlackFox
             gameData = {
                 file.getFloat("Game", "worldUnitPixels", 32) // world unit pixels
             };
+
+            //Physics data
+            timeData = {
+                file.getFloat("Time", "fixedUpdateInterval") // fixed update interval
+            };
         }
 
         /// <summary>Application data</summary>
         ConfigApplicationData appData;
         /// <summary>Game data</summary>
         ConfigGameData gameData;
+        /// <summary>Time data</summary>
+        ConfigTimeData timeData;
 
         explicit operator std::string() const
         {
-            return fmt::format("=== BFConfigData ===\n{}\n{}\n"
+            return fmt::format("=== BFConfigData ===\n{}\n{}\n{}\n"
                 , static_cast<std::string>(appData)
-                , static_cast<std::string>(gameData));
+                , static_cast<std::string>(gameData)
+                , static_cast<std::string>(timeData));
         }
     };
 }

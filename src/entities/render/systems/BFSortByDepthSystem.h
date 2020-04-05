@@ -16,6 +16,7 @@ namespace BlackFox::Systems
 
 	public:
 		CINJECT(BFSortByDepthSystem(std::shared_ptr<BFApplication> application));
+		~BFSortByDepthSystem();
 		void update(float dt) override;
 	};
 }

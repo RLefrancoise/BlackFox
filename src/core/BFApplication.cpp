@@ -1,6 +1,7 @@
 #include "BFApplication.h"
 
 #include <iostream>
+#include <thread>
 
 #include "BFWorld.h"
 #include "BFComponentSystemFlags.h"
@@ -40,6 +41,21 @@ namespace BlackFox
 
 			sf::Clock clock;
 
+			//Fixed update thread
+			m_fixedUpdateThread = std::thread([&]()
+			{
+				sf::Clock fixedUpdateClock;
+
+				while (m_window.isOpen())
+				{
+					if (fixedUpdateClock.getElapsedTime().asSeconds() >= m_configData->timeData.fixedUpdateInterval)
+					{
+						fixedUpdateClock.restart();
+						fixedUpdate();
+					}
+				}
+			});
+
 			//run
 			while(m_window.isOpen())
 			{
@@ -74,6 +90,10 @@ namespace BlackFox
 				endOfFrame();
 			}
 
+			//Wait end of fixed update thread
+			m_fixedUpdateThread.join();
+			
+			//Cleanup
 			cleanup();
 
 			return EXIT_SUCCESS;
@@ -160,6 +180,11 @@ namespace BlackFox
 			BFWorld::refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
 		}
 
+		void fixedUpdate() const
+		{
+			BFWorld::refreshSystems(ComponentSystemGroups::FixedTime, m_configData->timeData.fixedUpdateInterval);
+		}
+
 		void cleanup() {}
 
 		BFApplication* m_app;
@@ -184,6 +209,8 @@ namespace BlackFox
 
 		/*! \brief	Input */
 		BFInput::Ptr m_input;
+
+		std::thread m_fixedUpdateThread;
 	};
 
 
