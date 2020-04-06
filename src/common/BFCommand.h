@@ -1,5 +1,6 @@
-#ifndef BLACKFOX_COMMAND_H
-#define BLACKFOX_COMMAND_H
+#pragma once
+
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {
@@ -11,7 +12,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	13/11/2019
 	 */
-	class BFCommand
+	class BLACKFOX_EXPORT BFCommand
 	{
 	public:
 
@@ -47,5 +48,3 @@ namespace BlackFox
 		virtual BFCommand* clone(void) const = 0;
 	};
 }
-
-#endif

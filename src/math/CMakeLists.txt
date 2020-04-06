@@ -1,5 +1,8 @@
 project(bfmath)
 
+# SFML
+find_package(SFML 2.5.1 COMPONENTS system REQUIRED)
+
 # Files
 file(
         GLOB_RECURSE

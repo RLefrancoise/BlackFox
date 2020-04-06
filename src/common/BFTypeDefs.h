@@ -18,4 +18,6 @@ namespace BlackFox
 	typedef entt::handle<sf::Texture> TextureHandle;
 }
 
+#define BLACKFOX_EXPORT __declspec(dllexport)
+
 #endif
