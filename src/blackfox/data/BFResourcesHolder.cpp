@@ -25,7 +25,7 @@ namespace BlackFox
 			return m_textureCache.handle(id);
 		}
 
-		BF_PRINT("Load texture {}", path)
+		print("Load texture {}", path);
 		return m_textureCache.load<BFTextureResourceLoader>(id, path, rect);
 	}
 }

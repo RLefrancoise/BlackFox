@@ -14,7 +14,7 @@ namespace BlackFox
 			rttr::library lib("blackfox");
 			if(!lib.load())
 			{
-				BF_EXCEPTION("Failed to load blackfox library: {}", lib.get_error_string().to_string())
+				exception("Failed to load blackfox library: {}", lib.get_error_string().to_string());
 			}
 			
 			//Create DI Container
@@ -25,12 +25,12 @@ namespace BlackFox
 			auto mainContext = makeContext<BFMainContext>(container, true);
 
 			//Execute the app
-			auto app = container->get<BFApplication>();
+			const auto app = container->get<BFApplication>();
 			return app->execute();
 		}
 		catch(const std::exception& err)
 		{
-			BF_ERROR("{}", err.what())
+			error("{}", err.what());
 			return EXIT_FAILURE;
 		}
 	}

@@ -40,7 +40,7 @@ namespace BlackFox
 			if(!result.valid())
 			{
 				std::string resultStr = result;
-				BF_EXCEPTION("Result of script not valid: {}", resultStr)
+				exception("Result of script not valid: {}", resultStr);
 			}
 			
 			return static_cast<T>(result);
@@ -52,8 +52,8 @@ namespace BlackFox
 			auto result = m_state.safe_script_file(file);
 			if (!result.valid())
 			{
-				std::string resultStr = result;
-				BF_EXCEPTION("Result of file {} not valid: {}", file, resultStr)
+				const std::string resultStr = result;
+				exception("Result of file {} not valid: {}", file, resultStr);
 			}
 			
 			return static_cast<T>(result);

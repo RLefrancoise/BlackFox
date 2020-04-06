@@ -9,7 +9,7 @@ namespace BlackFox
 		if (!texture->loadFromFile(path, rect))
 		{
 			delete texture;
-			BF_EXCEPTION("Failed to load texture {}", path)
+			exception("Failed to load texture {}", path);
 		}
 
 		return std::shared_ptr<sf::Texture>(texture);

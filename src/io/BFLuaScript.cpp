@@ -11,7 +11,7 @@ namespace BlackFox
         const auto res = state->safe_script_file(fileName, m_environment);
         if(!res.valid())
         {
-            BF_EXCEPTION("Failed to load Lua script {}", fileName)
+            exception("Failed to load Lua script {}", fileName);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace BlackFox
             auto entity = t.create({m_container, &m_state});
             if(!entity.is_valid())
             {
-                BF_WARNING("Failed to create variant for type {}", t.get_name().to_string())
+                warning("Failed to create variant for type {}", t.get_name().to_string());
                 continue;
             }
 
@@ -35,14 +35,14 @@ namespace BlackFox
             auto* entityPtr = entity.convert<IBFLuaScriptingEntity*>(&ok);
             if(!ok)
             {
-                BF_WARNING("Failed to convert lua entity variant to pointer for type {}", t.get_name().to_string())
+                warning("Failed to convert lua entity variant to pointer for type {}", t.get_name().to_string());
                 continue;
             }
 
             const auto entitySharedPtr = std::shared_ptr<IBFScriptingEntity>(entityPtr);
             addEntity(entitySharedPtr);
 
-            BF_PRINT("Add entity {}", t.get_name().to_string())
+            print("Add entity {}", t.get_name().to_string());
         }
 
 		//Register all Lua runtime components
@@ -54,7 +54,7 @@ namespace BlackFox
 			const auto componentName = dir.path().filename().replace_extension("").string();
 			const auto componentPath = dir.path().string();
 
-			BF_PRINT("Register Lua component {} ({})", componentName, componentPath)
+            print("Register Lua component {} ({})", componentName, componentPath);
 
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, componentPath, &m_state);

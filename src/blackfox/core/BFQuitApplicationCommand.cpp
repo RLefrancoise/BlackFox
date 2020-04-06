@@ -11,7 +11,7 @@ namespace BlackFox
 
 	void BFQuitApplicationCommand::execute(void)
 	{
-		BF_PRINT("Quit application")
+		print("Quit application");
 		m_application->quit();
 	}
 

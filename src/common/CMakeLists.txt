@@ -1,5 +1,9 @@
 project(bfcommon)
 
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    add_compile_definitions(BF_DEBUG)
+ENDIF()
+
 # Files
 file(
         GLOB_RECURSE

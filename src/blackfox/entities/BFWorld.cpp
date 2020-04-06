@@ -41,7 +41,7 @@ namespace BlackFox
 	{
 		if(!hasWorld(worldId))
 		{
-			BF_EXCEPTION("World {} does not exist", worldId)
+			exception("World {} does not exist", worldId);
 		}
 		return worlds[worldId];
 	}
@@ -50,7 +50,7 @@ namespace BlackFox
 	{
 		if(hasWorld(worldId))
 		{
-			BF_WARNING("World {} already exists", worldId)
+			warning("World {} already exists", worldId);
 			return world(worldId);
 		}
 
@@ -58,7 +58,7 @@ namespace BlackFox
 		auto world = container->get<BFWorld>();
 		worlds[worldId] = world;
 
-		BF_PRINT("Create world {}", worldId)
+		print("Create world {}", worldId);
 
 		return world;
 	}
@@ -79,7 +79,7 @@ namespace BlackFox
 		//Check if the system is already created or not
 		if(hasSystemByName(system.get_name().to_string()))
 		{
-			BF_WARNING("System {} is already created", system.get_name().to_string())
+			warning("System {} is already created", system.get_name().to_string());
 			return nullptr;
 		}
 
@@ -87,7 +87,7 @@ namespace BlackFox
 		const auto s = system.create({application});
 		if(!s.is_valid())
 		{
-			BF_WARNING("Failed to create system {}", system.get_name().to_string())
+			warning("Failed to create system {}", system.get_name().to_string());
 			return nullptr;
 		}
 
@@ -98,7 +98,7 @@ namespace BlackFox
 		const auto sPtr = s.convert<BFComponentSystem*>(&ok);
 		if(!ok)
 		{
-			BF_ERROR("Failed to convert variant for system {} to BFComponentSystem*", system.get_name().to_string())
+			error("Failed to convert variant for system {} to BFComponentSystem*", system.get_name().to_string());
 			return nullptr;
 		}
 
@@ -106,12 +106,12 @@ namespace BlackFox
 
 		//Add the system to the systems map
 		systemGroups[group].emplace_back(sharedPtr);
-		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group)
+		print("System {} added to the group {}", system.get_name().to_string(), group);
 
 		//Remember the registration of the system
 		registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
 
-		BF_PRINT("System {} created", system.get_name().to_string())
+		print("System {} created", system.get_name().to_string());
 
 		return sPtr;
 	}
@@ -124,17 +124,17 @@ namespace BlackFox
     {
         if(hasSystemByName(systemName, nameIsType))
         {
-            BF_WARNING("World has already the system {}, create system will return the registered system", systemName)
+			warning("World has already the system {}, create system will return the registered system", systemName);
             return getSystemByName(systemName);
         }
 
         //Add the system to its group
         systemGroups[group].emplace_back(system);
-		BF_PRINT("System {} added to the group {}", systemName, group)
+		print("System {} added to the group {}", systemName, group);
 
 		//Add the system to the system list
 		registeredSystems.insert(std::make_pair(systemName, system));
-        BF_PRINT("System {} created", systemName)
+		print("System {} created", systemName);
 
         return system.get();
     }
@@ -164,7 +164,7 @@ namespace BlackFox
 			const auto type = rttr::type::get_by_name(name);
 			if(!type.is_valid())
 			{
-				BF_WARNING("Cannot find type with name {}", name)
+				warning("Cannot find type with name {}", name);
 				return false;
 			}
 		}
@@ -176,7 +176,7 @@ namespace BlackFox
     {
         if(!hasSystemByName(name))
         {
-            BF_WARNING("No system found with name {}", name)
+			warning("No system found with name {}", name);
             return nullptr;
         }
 

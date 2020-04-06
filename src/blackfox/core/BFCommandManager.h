@@ -92,7 +92,7 @@ namespace BlackFox
 			}
 
 			auto command = getRegisteredCommand<C>();
-			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).name())
+			if (command == nullptr) exception("Command {} is not registered", typeid(C).name());
 
 			return std::shared_ptr<C>(static_cast<C*>(command->clone()));
 		}
@@ -211,12 +211,12 @@ namespace BlackFox
 			//if command is already registered, don't register again
 			if (isCommandRegistered<C>())
 			{
-				BF_PRINT("Command {} already registered", typeid(C).name())
+				print("Command {} already registered", typeid(C).name());
 				return;
 			}
 
 			m_commands[typeid(C)] = m_container->get<C>();
-			BF_PRINT("{} registered", typeid(C).name())
+			print("{} registered", typeid(C).name());
 		}
 
 		/*!
@@ -236,14 +236,14 @@ namespace BlackFox
 
 			if (!isCommandRegistered<C>(&pos))
 			{
-				BF_PRINT("Command {} is not registered", typeid(C).name())
+				print("Command {} is not registered", typeid(C).name());
 				return;
 			}
 
 			//Delete command
 			m_commands.erase(pos);
 
-			BF_PRINT("{} unregistered", typeid(C).name())
+			print("{} unregistered", typeid(C).name());
 		}
 
 		/*! \brief	The registered commands */

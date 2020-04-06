@@ -146,7 +146,7 @@ namespace BlackFox
 
 			if(hasSystem<S>())
 			{
-				BF_WARNING("World has already the system {}, create system will return the registered system", type.get_name().to_string())
+				warning("World has already the system {}, create system will return the registered system", type.get_name().to_string());
 				return getSystem<S>();
 			}
 
@@ -157,7 +157,7 @@ namespace BlackFox
 			//Add the system to its group
 			systemGroups[group].emplace_back(system);
 
-			BF_PRINT("System {} created", type.get_name().to_string())
+			print("System {} created", type.get_name().to_string());
 
 			return system.get();
 		}
@@ -242,7 +242,7 @@ namespace BlackFox
 
 			if (!hasSystem<S>())
 			{
-				BF_WARNING("World has no system {}. getSystem will return a null pointer", type.get_name().to_string())
+				warning("World has no system {}. getSystem will return a null pointer", type.get_name().to_string());
 				return nullptr;
 			}
 

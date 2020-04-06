@@ -85,7 +85,7 @@ namespace BlackFox
 		 *
 		 * \returns	Execution return code
 		 */
-		[[nodiscard]] int execute();
+		[[nodiscard]] int execute() const;
 
 		/*!
 		 * \fn	void BFApplication::quit();
@@ -95,7 +95,7 @@ namespace BlackFox
 		 * \author	Renaud Lefrançoise
 		 * \date	13/11/2019
 		 */
-		void quit();
+		void quit() const;
 
 		/*!
 		 * \fn	BFCommandManager::Ptr BFApplication::commandManager() const;

@@ -148,11 +148,11 @@ namespace BlackFox
 				}
 
 				//Test lua scripting
-				BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"))
+				print("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
 			}
 			catch (std::exception& err)
 			{
-				BF_ERROR("Failed to init application: {}", err.what())
+				error("Failed to init application: {}", err.what());
 				return false;
 			}
 
@@ -243,12 +243,12 @@ namespace BlackFox
 
 	BFApplication::~BFApplication() noexcept = default;
 
-	int BFApplication::execute()
+	int BFApplication::execute() const
 	{
 		return pImpl->execute();
 	}
 
-	void BFApplication::quit()
+	void BFApplication::quit() const
 	{
 		pImpl->quit();
 	}

@@ -1,26 +1,41 @@
-#ifndef BLACKFOX_DEBUG_H
-#define BLACKFOX_DEBUG_H
+#pragma once
 
 #include <iostream>
 #include <fmt/format.h>
 #include <termcolor/termcolor.hpp>
 
-#define BF_FORMAT(x, ...) 		fmt::format("{}:{} - {} - {}", __FILE__, __LINE__, __FUNCTION__, fmt::format((std::string) x, ##__VA_ARGS__))
+namespace BlackFox
+{
+	template<typename FormatType, typename ...Args>
+	static constexpr std::string format(FormatType str, Args... args)
+	{
+		return fmt::format("{}:{} - {} - {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(static_cast<std::string>(str), args...));
+	}
 
+	template<typename FormatType, typename ...Args>
+	static constexpr void print(FormatType str, Args... args)
+	{
 #if defined(BF_DEBUG) || defined(_DEBUG)
-//Print
-#	define BF_PRINT(x, ...)		std::cout << BF_FORMAT(x, ##__VA_ARGS__) << std::endl;
-#else
-#	define BF_PRINT(x, ...)
+		std::cout << format(str, args...) << std::endl;
 #endif
+	}
 
-//Warning
-#	define BF_WARNING(x, ...)	std::cout << termcolor::yellow << BF_FORMAT(x, ##__VA_ARGS__) << termcolor::reset << std::endl;
-//Error
-#	define BF_ERROR(x, ...)		std::cout << termcolor::red << BF_FORMAT(x, ##__VA_ARGS__) << termcolor::reset << std::endl; \
-								std::cerr << BF_FORMAT(x, ##__VA_ARGS__) << std::endl;
+	template<typename FormatType, typename ...Args>
+	static constexpr void warning(FormatType str, Args... args)
+	{
+		std::cout << termcolor::yellow << format(str, args...) << termcolor::reset << std::endl;
+	}
 
-//Exception
-#define BF_EXCEPTION(x, ...)	throw std::runtime_error(BF_FORMAT(x, ##__VA_ARGS__));
+	template<typename FormatType, typename ...Args>
+	static constexpr void error(FormatType str, Args... args)
+	{
+		std::cout << termcolor::red << format(str, args...) << termcolor::reset << std::endl;
+		std::cerr << BlackFox::format(str, args...) << std::endl;
+	}
 
-#endif
+	template<typename FormatType, typename ...Args>
+	static constexpr void exception(FormatType str, Args... args)
+	{
+		throw std::runtime_error(format(str, args...));
+	}
+}
