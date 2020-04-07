@@ -1,5 +1,5 @@
 # Project
-project(BlackFox)
+project(Editor)
 
 # Build
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
@@ -21,6 +21,12 @@ IF (MSVC)
 	add_compile_definitions(NOMINMAX)
 ENDIF()
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/entt/src)
+
+# ImGui
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui)
+
+# ENTT ImGui Entity Editor
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)
 
 # TermColor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
@@ -69,19 +75,11 @@ file(
     SOURCES
     RELATIVE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    "core/*.h"
-    "core/*.cpp"
-    "data/*.h"
-    "data/*.cpp"
-    "entities/*.h"
-    "entities/*.cpp"
-    "installers/*.h"
-    "installers/*.cpp"
-    "scripting/*.h"
-    "scripting/*.cpp"
+    "*.h"
+    "*.cpp"
 )
 
-#list(APPEND SOURCES main.cpp)
+list(APPEND SOURCES main.cpp)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
 # Scan folders macro
@@ -99,25 +97,24 @@ ENDMACRO()
 HEADER_DIRECTORIES(SOURCES_FOLDERS)
 
 # Executable
-add_library(
-    blackfox
-    SHARED
+add_executable(
+    Editor
     ${SOURCES}
 )
 
 # Add sources folders to target
-target_include_directories(blackfox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
+target_include_directories(Editor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio fmt::fmt-header-only RTTR::Core libluadll)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll)
 ELSE()
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio fmt::fmt-header-only RTTR::Core libluadll dl pthread)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll dl pthread)
 ENDIF()
 
 target_link_libraries(
-    blackfox
+    Editor
 	LINK_PUBLIC
 	${LIBRARIES}
 )
 
-target_compile_features(blackfox PRIVATE cxx_std_17)
+target_compile_features(Editor PRIVATE cxx_std_17)

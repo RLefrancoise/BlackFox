@@ -18,4 +18,4 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/blackfox)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/game)
 
 # Editor
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/editor)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/editor)
