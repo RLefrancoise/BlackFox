@@ -11,6 +11,11 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui)
 # ENTT ImGui Entity Editor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)
 
+# IMGUI SFML
+add_compile_definitions(IMGUI_USER_CONFIG="imconfig-SFML.h")
+#add_compile_definitions(IMGUI_SFML_SHARED_LIB)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui-sfml)
+
 # Files
 file(
     GLOB_RECURSE
@@ -48,9 +53,9 @@ add_executable(
 target_include_directories(editor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui)
 ELSE()
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll dl pthread)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui dl pthread)
 ENDIF()
 
 target_link_libraries(

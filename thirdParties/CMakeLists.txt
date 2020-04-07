@@ -11,11 +11,27 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}
     "imgui/*.h"
     "imgui/*.cpp"
+    "imgui/misc/cpp/*.h"
+    "imgui/misc/cpp/*.cpp"
 )
+
+add_compile_definitions(IMGUI_USER_CONFIG="imconfig-SFML.h")
 
 add_library(imgui STATIC ${IMGUI_SOURCES})
 
-target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(
+    imgui
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui-sfml)
+
+target_link_libraries(
+    imgui
+    LINK_PUBLIC
+    sfml-graphics)
+
+# IMGUI SFML
+add_subdirectory(imgui-sfml)
 
 # fmt
 add_subdirectory(fmt-6.0.0)

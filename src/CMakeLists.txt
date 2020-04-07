@@ -6,10 +6,10 @@ IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     add_compile_definitions(BF_DEBUG)
 ENDIF()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # SFML
-find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED)
+#find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED)
 
 # CInject
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cinject/include)
