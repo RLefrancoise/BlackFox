@@ -34,3 +34,6 @@
 [submodule "thirdParties/quickjspp"]
 	path = thirdParties/quickjspp
 	url = https://github.com/ftk/quickjspp.git
+[submodule "thirdParties/yaml-cpp"]
+	path = thirdParties/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git

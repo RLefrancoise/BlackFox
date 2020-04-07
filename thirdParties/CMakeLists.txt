@@ -34,3 +34,6 @@ add_subdirectory(Box2D)
 
 # QuickJS++
 # add_subdirectory(quickjspp)
+
+# YAML CPP
+add_subdirectory(yaml-cpp)
