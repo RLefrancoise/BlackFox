@@ -26,6 +26,12 @@ file(
     "*.cpp"
     "contexts/*.h"
     "contexts/*.cpp"
+    "core/*.h"
+    "core/*.cpp"
+    "installers/*.h"
+    "installers/*.cpp"
+    "windows/*.h"
+    "windows/*.cpp"
 )
 
 list(APPEND SOURCES main.cpp)

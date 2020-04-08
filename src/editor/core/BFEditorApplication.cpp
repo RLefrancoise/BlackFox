@@ -1,6 +1,7 @@
 #include "BFEditorApplication.h"
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
+#include "BFCommandManager.h"
 #include "imgui.h"
 #include "imgui-SFML.h"
 
@@ -8,14 +9,23 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "BFQuitEditorCommand.h"
+#include "windows/BFMenuBar.h"
+
 namespace BlackFox::Editor
 {
 	class BFEditorApplication::impl
 	{
 	public:
-		impl(BFEditorApplication* app, DiContainer container)
+		impl(
+			BFEditorApplication* app, 
+			DiContainer container, 
+			BFCommandManager::Ptr commandManager,
+			BFMenuBar::Ptr menuBar)
 			: m_app(app)
 			, m_container(std::move(container))
+			, m_commandManager(std::move(commandManager))
+			, m_menuBar(std::move(menuBar))
 		{
 		}
 
@@ -30,15 +40,14 @@ namespace BlackFox::Editor
 					ImGui::SFML::ProcessEvent(event);
 
 					if (event.type == sf::Event::Closed) {
-						m_window.close();
+						commandManager()->createCommand<BFQuitEditorCommand>()->execute();
 					}
 				}
 
 				ImGui::SFML::Update(m_window, deltaClock.restart());
 
-				ImGui::Begin("Hello, world!");
-				ImGui::Button("Look at this pretty button");
-				ImGui::End();
+				//Menu bar
+				m_menuBar->draw();
 
 				m_window.clear();
 				ImGui::SFML::Render(m_window);
@@ -53,6 +62,11 @@ namespace BlackFox::Editor
 		void quit()
 		{
 			m_window.close();
+		}
+
+		BFCommandManager::Ptr commandManager() const
+		{
+			return m_commandManager;
 		}
 
 	private:
@@ -85,10 +99,15 @@ namespace BlackFox::Editor
 		BFEditorApplication* m_app;
 		sf::RenderWindow m_window;
 		DiContainer m_container;
+		BFCommandManager::Ptr m_commandManager;
+		BFMenuBar::Ptr m_menuBar;
 	};
 
-	BFEditorApplication::BFEditorApplication(DiContainer container)
-		: pImpl{ std::make_unique<impl>(this, std::move(container)) }
+	BFEditorApplication::BFEditorApplication(
+		DiContainer container, 
+		BFCommandManager::Ptr commandManager,
+		BFMenuBar::Ptr menuBar)
+		: pImpl{ std::make_unique<impl>(this, std::move(container), std::move(commandManager), std::move(menuBar)) }
 	{
 	}
 
@@ -113,5 +132,10 @@ namespace BlackFox::Editor
 	void BFEditorApplication::quit() const
 	{
 		pImpl->quit();
+	}
+
+	std::shared_ptr<BFCommandManager> BFEditorApplication::commandManager() const
+	{
+		return pImpl->commandManager();
 	}
 }
