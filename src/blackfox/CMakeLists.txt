@@ -39,12 +39,21 @@ ENDMACRO()
 
 HEADER_DIRECTORIES(SOURCES_FOLDERS)
 
-# Executable
-add_library(
-    blackfox
-    SHARED
-    ${SOURCES}
-)
+# Library
+IF(BLACKFOX_SHARED_LIB)
+    add_library(
+        blackfox
+        SHARED
+        ${SOURCES}
+    )
+    target_compile_definitions(blackfox PRIVATE BLACKFOX_SHARED_LIB_EXPORT)
+ELSE()
+    add_library(
+        blackfox
+        STATIC
+        ${SOURCES}
+    )
+ENDIF()
 
 # Add sources folders to target
 target_include_directories(blackfox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})

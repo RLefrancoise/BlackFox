@@ -3,6 +3,8 @@
 #include "BFApplication.h"
 #include "BFComponentSystemMacros.h"
 
+#ifdef BLACKFOX_SHARED_LIB
+
 RTTR_PLUGIN_REGISTRATION
 {
 	using namespace rttr;
@@ -10,6 +12,18 @@ RTTR_PLUGIN_REGISTRATION
 	.method("update", &BlackFox::BFComponentSystem::update)
 	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);
 }
+
+#else
+
+RTTR_REGISTRATION
+{
+	using namespace rttr;
+	registration::class_<BlackFox::BFComponentSystem>("ComponentSystem")
+	.method("update", &BlackFox::BFComponentSystem::update)
+	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);
+}
+
+#endif
 
 namespace BlackFox
 {

@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_BOOTSTRAP_H
-#define BLACKFOX_BOOTSTRAP_H
+#pragma once
 
 namespace BlackFox
 {
@@ -17,5 +16,3 @@ namespace BlackFox
 		[[nodiscard]] int run() const;
 	};
 }
-
-#endif

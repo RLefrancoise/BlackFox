@@ -16,6 +16,8 @@ namespace BlackFox {
                                                                     BlackFox::ComponentSystemGroups get_group() const { return group; } \
                                                                     static constexpr const char* name = systemName;
 
+#ifdef BLACKFOX_SHARED_LIB
+
 #define BF_SYSTEM_REGISTER(system)                              RTTR_PLUGIN_REGISTRATION \
                                                                 { \
                                                                     using namespace rttr; \
@@ -26,5 +28,19 @@ namespace BlackFox {
                                                                     .method("setWorld", &system::setWorld) \
                                                                     .method("get_group", &system::get_group); \
                                                                 }
+
+#else
+
+#define BF_SYSTEM_REGISTER(system)                              RTTR_REGISTRATION \
+                                                                { \
+                                                                    using namespace rttr; \
+                                                                    registration::class_<system>(system::name) \
+                                                                    .constructor<BlackFox::BFApplication*>()(rttr::policy::ctor::as_raw_ptr) \
+                                                                    .method("update", &system::update) \
+                                                                    .method("name", []() { return system::name; }) \
+                                                                    .method("setWorld", &system::setWorld) \
+                                                                    .method("get_group", &system::get_group); \
+                                                                }
+#endif
 
 #endif //BLACKFOX_COMPONENTSYSTEMMACROS_H

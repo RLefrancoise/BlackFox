@@ -10,12 +10,14 @@ namespace BlackFox
 	{
 		try
 		{
+#ifdef BLACKFOX_SHARED_LIB
 			//Load blackfox dll
 			rttr::library lib("blackfox");
 			if(!lib.load())
 			{
 				exception("Failed to load blackfox library: {}", lib.get_error_string().to_string());
 			}
+#endif
 			
 			//Create DI Container
 			auto container = std::make_shared<cinject::Container>();
