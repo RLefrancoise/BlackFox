@@ -24,6 +24,8 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}
     "*.h"
     "*.cpp"
+    "contexts/*.h"
+    "contexts/*.cpp"
 )
 
 list(APPEND SOURCES main.cpp)
