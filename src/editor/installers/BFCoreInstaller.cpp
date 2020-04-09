@@ -2,8 +2,8 @@
 
 #include "core/BFEditorApplication.h"
 #include "BFCommandManager.h"
+#include "BFWindowManager.h"
 #include "core/BFQuitEditorCommand.h"
-#include "windows/BFMenuBar.h"
 
 namespace BlackFox::Editor
 {
@@ -16,6 +16,7 @@ namespace BlackFox::Editor
 	{
 		m_container->bind<BFEditorApplication>().toSelf().inSingletonScope();
 		m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
+		m_container->bind<BFWindowManager>().toSelf().inSingletonScope();
 
 		m_container->bind<BFQuitEditorCommand>().toSelf();
 	}

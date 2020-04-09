@@ -14,6 +14,7 @@ namespace BlackFox::Editor
 
 		CINJECT(BFMenuBar(BFCommandManager::Ptr commandManager));
 		void draw() override;
+		[[nodiscard]] BFMenuBar* clone() const override;
 
 	private:
 		BFCommandManager::Ptr m_commandManager;

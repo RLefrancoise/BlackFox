@@ -45,6 +45,6 @@ namespace BlackFox
 		 *
 		 * \returns	A copy of this object.
 		 */
-		virtual BFCommand* clone(void) const = 0;
+		[[nodiscard]] virtual BFCommand* clone(void) const = 0;
 	};
 }

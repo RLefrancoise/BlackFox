@@ -32,4 +32,9 @@ namespace BlackFox::Editor
 			ImGui::EndMainMenuBar();
 		}
 	}
+
+	BFMenuBar* BFMenuBar::clone() const
+	{
+		return new BFMenuBar(m_commandManager);
+	}
 }

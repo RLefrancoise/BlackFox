@@ -12,7 +12,7 @@ namespace BlackFox
 
 namespace BlackFox::Editor
 {
-	class BFMenuBar;
+	class BFWindowManager;
 	
 	class BFEditorApplication
 	{
@@ -26,7 +26,7 @@ namespace BlackFox::Editor
 		CINJECT(BFEditorApplication(
 			DiContainer container, 
 			std::shared_ptr<BFCommandManager> commandManager,
-			std::shared_ptr<BFMenuBar> menuBar));
+			std::shared_ptr<BFWindowManager> windowManager));
 		
 		~BFEditorApplication() noexcept;
 		BFEditorApplication(BFEditorApplication&& app) noexcept;
@@ -35,10 +35,12 @@ namespace BlackFox::Editor
 		[[nodiscard]] int execute() const;
 		void quit() const;
 
-		[[nodiscard]] std::shared_ptr<BFCommandManager> commandManager() const;
-
 	private:
+		DiContainer m_container;
+		
 		class impl;
 		std::unique_ptr<impl> pImpl;
+
+		friend class impl;
 	};
 }

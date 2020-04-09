@@ -2,6 +2,7 @@
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
 #include "BFCommandManager.h"
+#include "BFWindowManager.h"
 #include "imgui.h"
 #include "imgui-SFML.h"
 
@@ -21,11 +22,11 @@ namespace BlackFox::Editor
 			BFEditorApplication* app, 
 			DiContainer container, 
 			BFCommandManager::Ptr commandManager,
-			BFMenuBar::Ptr menuBar)
+			BFWindowManager::Ptr windowManager)
 			: m_app(app)
 			, m_container(std::move(container))
 			, m_commandManager(std::move(commandManager))
-			, m_menuBar(std::move(menuBar))
+			, m_windowManager(std::move(windowManager))
 		{
 		}
 
@@ -34,20 +35,22 @@ namespace BlackFox::Editor
 			if (!init()) return EXIT_FAILURE;
 
 			sf::Clock deltaClock;
-			while (m_window.isOpen()) {
-				sf::Event event;
-				while (m_window.pollEvent(event)) {
+			while (m_window.isOpen())
+			{
+				sf::Event event{};
+				while (m_window.pollEvent(event))
+				{
 					ImGui::SFML::ProcessEvent(event);
 
-					if (event.type == sf::Event::Closed) {
-						commandManager()->createCommand<BFQuitEditorCommand>()->execute();
+					if (event.type == sf::Event::Closed)
+					{
+						m_commandManager->createCommand<BFQuitEditorCommand>()->execute();
 					}
 				}
 
 				ImGui::SFML::Update(m_window, deltaClock.restart());
 
-				//Menu bar
-				m_menuBar->draw();
+				render();
 
 				m_window.clear();
 				ImGui::SFML::Render(m_window);
@@ -64,11 +67,6 @@ namespace BlackFox::Editor
 			m_window.close();
 		}
 
-		BFCommandManager::Ptr commandManager() const
-		{
-			return m_commandManager;
-		}
-
 	private:
 		int init()
 		{
@@ -80,6 +78,8 @@ namespace BlackFox::Editor
 
 				ImGui::SFML::Init(m_window);
 
+				//Menu bar
+				m_windowManager->createWindow<BFMenuBar>();
 			}
 			catch (const std::exception& err)
 			{
@@ -95,19 +95,30 @@ namespace BlackFox::Editor
 			ImGui::SFML::Shutdown();
 		}
 
+		void render() const
+		{
+			m_windowManager->update();
+			
+			/*for (const auto& windowEntry : m_app->m_windows)
+				for(const auto& window : windowEntry.second)
+					window->draw();*/
+			
+		}
+
 	private:
 		BFEditorApplication* m_app;
 		sf::RenderWindow m_window;
 		DiContainer m_container;
 		BFCommandManager::Ptr m_commandManager;
-		BFMenuBar::Ptr m_menuBar;
+		BFWindowManager::Ptr m_windowManager;
 	};
 
 	BFEditorApplication::BFEditorApplication(
 		DiContainer container, 
 		BFCommandManager::Ptr commandManager,
-		BFMenuBar::Ptr menuBar)
-		: pImpl{ std::make_unique<impl>(this, std::move(container), std::move(commandManager), std::move(menuBar)) }
+		BFWindowManager::Ptr windowManager)
+		: m_container(std::move(container))
+		, pImpl{ std::make_unique<impl>(this, m_container, std::move(commandManager), std::move(windowManager)) }
 	{
 	}
 
@@ -132,10 +143,5 @@ namespace BlackFox::Editor
 	void BFEditorApplication::quit() const
 	{
 		pImpl->quit();
-	}
-
-	std::shared_ptr<BFCommandManager> BFEditorApplication::commandManager() const
-	{
-		return pImpl->commandManager();
 	}
 }
