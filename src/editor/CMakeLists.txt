@@ -24,6 +24,8 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}
     "*.h"
     "*.cpp"
+    "commands/*.h"
+    "commands/*.cpp"
     "contexts/*.h"
     "contexts/*.cpp"
     "core/*.h"

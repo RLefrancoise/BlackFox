@@ -23,10 +23,10 @@ namespace BlackFox::Editor
 			DiContainer container, 
 			BFCommandManager::Ptr commandManager,
 			BFWindowManager::Ptr windowManager)
-			: m_app(app)
-			, m_container(std::move(container))
-			, m_commandManager(std::move(commandManager))
-			, m_windowManager(std::move(windowManager))
+			: m_app{ app }
+			, m_container{ std::move(container) }
+			, m_commandManager{ std::move(commandManager) }
+			, m_windowManager{ std::move(windowManager) }
 		{
 		}
 
@@ -72,8 +72,8 @@ namespace BlackFox::Editor
 		{
 			try
 			{
-				const sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
-				m_window.create(sf::VideoMode(640, 480), "BlackFox editor", windowFlags);
+				const sf::Uint32 windowFlags = sf::Style::Default;
+				m_window.create(sf::VideoMode(800, 600), "BlackFox editor", windowFlags);
 				m_window.setFramerateLimit(60);
 
 				ImGui::SFML::Init(m_window);
@@ -98,11 +98,6 @@ namespace BlackFox::Editor
 		void render() const
 		{
 			m_windowManager->update();
-			
-			/*for (const auto& windowEntry : m_app->m_windows)
-				for(const auto& window : windowEntry.second)
-					window->draw();*/
-			
 		}
 
 	private:
@@ -117,7 +112,7 @@ namespace BlackFox::Editor
 		DiContainer container, 
 		BFCommandManager::Ptr commandManager,
 		BFWindowManager::Ptr windowManager)
-		: m_container(std::move(container))
+		: m_container{ std::move(container) }
 		, pImpl{ std::make_unique<impl>(this, m_container, std::move(commandManager), std::move(windowManager)) }
 	{
 	}
@@ -125,7 +120,7 @@ namespace BlackFox::Editor
 	BFEditorApplication::~BFEditorApplication() noexcept = default;
 
 	BFEditorApplication::BFEditorApplication(BFEditorApplication&& app) noexcept
-		: pImpl(std::move(app.pImpl))
+		: pImpl{ std::move(app.pImpl) }
 	{
 	}
 

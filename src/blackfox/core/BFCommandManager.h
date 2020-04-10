@@ -94,7 +94,10 @@ namespace BlackFox
 			auto command = getRegisteredCommand<C>();
 			if (command == nullptr) exception("Command {} is not registered", typeid(C).name());
 
-			return std::shared_ptr<C>(static_cast<C*>(command->clone()));
+			auto c = static_cast<C*>(command->clone());
+			if (c == nullptr) exception("Failed to clone command {}", typeid(C).name());
+			
+			return std::shared_ptr<C>(c);
 		}
 
 	private:

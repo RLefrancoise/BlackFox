@@ -1,6 +1,8 @@
 #include "BFWindowInstaller.h"
 
+#include "BFSceneListWindow.h"
 #include "windows/BFMenuBar.h"
+#include "BFWindowManager.h"
 
 namespace BlackFox::Editor
 {
@@ -12,5 +14,6 @@ namespace BlackFox::Editor
 	void BFWindowInstaller::installBindings()
 	{
 		m_container->bind<BFMenuBar>().toSelf().inSingletonScope();
+		m_container->bind<BFSceneListWindow>().toSelf().inSingletonScope();
 	}
 }
