@@ -19,12 +19,10 @@ namespace BlackFox::Editor
 	{
 	public:
 		impl(
-			BFEditorApplication* app, 
 			DiContainer container, 
 			BFCommandManager::Ptr commandManager,
 			BFWindowManager::Ptr windowManager)
-			: m_app{ app }
-			, m_container{ std::move(container) }
+			: m_container{ std::move(container) }
 			, m_commandManager{ std::move(commandManager) }
 			, m_windowManager{ std::move(windowManager) }
 		{
@@ -79,7 +77,7 @@ namespace BlackFox::Editor
 				ImGui::SFML::Init(m_window);
 
 				//Menu bar
-				m_windowManager->createWindow<BFMenuBar>();
+				m_menuBar = m_container->get<BFMenuBar>();
 			}
 			catch (const std::exception& err)
 			{
@@ -97,15 +95,15 @@ namespace BlackFox::Editor
 
 		void render() const
 		{
+			m_menuBar->render();
 			m_windowManager->update();
 		}
 
-	private:
-		BFEditorApplication* m_app;
 		sf::RenderWindow m_window;
 		DiContainer m_container;
 		BFCommandManager::Ptr m_commandManager;
 		BFWindowManager::Ptr m_windowManager;
+		BFMenuBar::Ptr m_menuBar;
 	};
 
 	BFEditorApplication::BFEditorApplication(
@@ -113,7 +111,7 @@ namespace BlackFox::Editor
 		BFCommandManager::Ptr commandManager,
 		BFWindowManager::Ptr windowManager)
 		: m_container{ std::move(container) }
-		, pImpl{ std::make_unique<impl>(this, m_container, std::move(commandManager), std::move(windowManager)) }
+		, pImpl{ std::make_unique<impl>(m_container, std::move(commandManager), std::move(windowManager)) }
 	{
 	}
 

@@ -9,14 +9,15 @@ namespace BlackFox::Editor
 {
 	BFMenuBar::BFMenuBar(
 		BFCommandManager::Ptr commandManager,
-		BFWindowManager::Ptr windowManager)
-		: IBFWindow("MenuBar")
-		, m_commandManager{ std::move(commandManager) }
+		BFWindowManager::Ptr windowManager,
+		BFDataManager::Ptr dataManager)
+		: m_commandManager{ std::move(commandManager) }
 		, m_windowManager{ std::move(windowManager) }
+		, m_dataManager { std::move(dataManager) }
 	{
 	}
 	
-	bool BFMenuBar::draw()
+	void BFMenuBar::render() const
 	{
 		if(ImGui::BeginMainMenuBar())
 		{
@@ -25,27 +26,29 @@ namespace BlackFox::Editor
 
 			ImGui::EndMainMenuBar();
 		}
-
-		return true;
-	}
-
-	BFMenuBar* BFMenuBar::clone() const
-	{
-		return new BFMenuBar(m_commandManager, m_windowManager);
 	}
 
 	void BFMenuBar::fileMenu() const
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New Scene")) {}
-			if (ImGui::MenuItem("Load Scene")) {}
+			//Project
+			if (ImGui::MenuItem("New Project")) {}
+			if (ImGui::MenuItem("Load Project")) {}
+			if (ImGui::MenuItem("Save Project", nullptr, false, m_dataManager->hasActiveProject())) {}
+			if (ImGui::MenuItem("Close Project", nullptr, false, m_dataManager->hasActiveProject())) {}
 
 			ImGui::Separator();
 
+			//Scene
+			if (ImGui::MenuItem("New Scene", nullptr, false, m_dataManager->hasActiveProject())) {}
+			if (ImGui::MenuItem("Load Scene", nullptr, false, m_dataManager->hasActiveProject())) {}
+
+			ImGui::Separator();
+			
 			if (ImGui::MenuItem("Quit"))
 			{
-				m_commandManager->createCommand<BFQuitEditorCommand>()->execute();
+				m_commandManager->executeCommand<BFQuitEditorCommand>();
 			}
 
 			ImGui::EndMenu();
@@ -56,9 +59,9 @@ namespace BlackFox::Editor
 	{
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Scenes List"))
+			if (ImGui::MenuItem("Scenes List", nullptr, false, m_dataManager->hasActiveProject()))
 			{
-				if(!m_windowManager->hasWindow<BFSceneListWindow>()) m_windowManager->createWindow<BFSceneListWindow>();
+				m_windowManager->createWindow<BFSceneListWindow>();
 			}
 
 			ImGui::EndMenu();

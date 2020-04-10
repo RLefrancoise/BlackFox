@@ -100,6 +100,13 @@ namespace BlackFox
 			return std::shared_ptr<C>(c);
 		}
 
+		template <typename C>
+		void executeCommand()
+		{
+			auto command = createCommand<C>();
+			command->execute();
+		}
+
 	private:
 
 		/*!

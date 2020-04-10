@@ -3,22 +3,21 @@
 #include <memory>
 
 #include "BFCommandManager.h"
-#include "IBFWindow.h"
+#include "BFWindowManager.h"
+#include "BFDataManager.h"
 
 namespace BlackFox::Editor
-{
-	class BFWindowManager;
-	
-	class BFMenuBar final : public IBFWindow
+{	
+	class BFMenuBar
 	{
 	public:
 		typedef std::shared_ptr<BFMenuBar> Ptr;
 
 		CINJECT(BFMenuBar(
 			BFCommandManager::Ptr commandManager,
-			std::shared_ptr<BFWindowManager> windowManager));
-		bool draw() override;
-		[[nodiscard]] BFMenuBar* clone() const override;
+			BFWindowManager::Ptr windowManager,
+			BFDataManager::Ptr dataManager));
+		void render() const;
 
 	private:
 
@@ -26,6 +25,7 @@ namespace BlackFox::Editor
 		void windowMenu() const;
 		
 		BFCommandManager::Ptr m_commandManager;
-		std::shared_ptr<BFWindowManager> m_windowManager;
+		BFWindowManager::Ptr m_windowManager;
+		BFDataManager::Ptr m_dataManager;
 	};
 }

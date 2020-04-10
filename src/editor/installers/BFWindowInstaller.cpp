@@ -2,7 +2,6 @@
 
 #include "BFSceneListWindow.h"
 #include "windows/BFMenuBar.h"
-#include "BFWindowManager.h"
 
 namespace BlackFox::Editor
 {

@@ -6,7 +6,7 @@
 
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
-#include "windows/IBFWindow.h"
+#include "windows/BFWindow.h"
 
 namespace BlackFox::Editor
 {
