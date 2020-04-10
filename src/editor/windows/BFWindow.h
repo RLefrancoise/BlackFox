@@ -68,9 +68,11 @@ namespace BlackFox::Editor
 			{
 				//Set initial size if needed
 				if(m_initialSize.x > 0 && m_initialSize.y > 0) ImGui::SetNextWindowSize(m_initialSize, ImGuiCond_FirstUseEver);
-				if (ImGui::Begin(uniqueId(m_title).c_str(), &m_opened))
+				if (ImGui::Begin(uniqueId(m_title).c_str(), &m_opened, m_flags))
 				{
+					ImGui::PushID(m_imguiId.c_str());
 					drawContent();
+					ImGui::PopID();
 				}
 
 				ImGui::End();
@@ -79,7 +81,7 @@ namespace BlackFox::Editor
 			return m_opened;
 		}
 
-		BFWindow* clone() const override = 0;
+		[[nodiscard]] BFWindow* clone() const override = 0;
 
 	protected:
 		static std::string generateId()

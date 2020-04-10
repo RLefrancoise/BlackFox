@@ -6,7 +6,9 @@ IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 ENDIF()
 
 # ImGui
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/thirdParties/imgui 
+    ${CMAKE_SOURCE_DIR}/thirdParties/imgui/misc/cpp)
 
 # ENTT ImGui Entity Editor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/imgui_entt_entity_editor)

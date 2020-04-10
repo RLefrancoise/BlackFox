@@ -1,18 +1,15 @@
 #pragma once
-#include <string>
-#include <yaml-cpp/yaml.h>
+
+#include "BFYamlFile.h"
 
 namespace BlackFox::Editor
 {
-	struct BFProjectData
+	struct BFProjectData : BFYamlFile<BFProjectData>
 	{
 		typedef std::shared_ptr<BFProjectData> Ptr;
 		
 		std::string name;
 		std::vector<std::string> scenes;
-
-		static BFProjectData load(const std::string& file);
-		[[nodiscard]] bool save(const std::string& file) const;
 	};
 }
 
@@ -43,24 +40,5 @@ namespace YAML
 		}
 	};
 
-	inline Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
-	{
-		out << BeginMap;
-		
-		//Name
-		out << Key << "name" << Value << data.name;
-		
-		//Scenes
-		out << Key << "scenes";
-		out << Value << BeginSeq;
-		for(const auto& scene : data.scenes)
-		{
-			out << scene;
-		}
-		out << EndSeq;
-		
-		out << EndMap;
-		
-		return out;
-	}
+	inline Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data);
 }

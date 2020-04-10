@@ -18,7 +18,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
 add_library(bfio STATIC ${SOURCES})
 
-set(LIBRARIES bfcommon libluadll)
+set(LIBRARIES bfcommon libluadll yaml-cpp)
 
 target_include_directories(
         bfio

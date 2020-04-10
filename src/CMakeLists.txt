@@ -46,7 +46,10 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/Box2D)
 # include_directories(${CMAKE_SOURCE_DIR}/thirdParties/quickjspp)
 
 # YAML-CPP
-include_directories(${CMAKE_SOURCE_DIR}/yaml-cpp/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-cpp/include)
+
+# YAML-Convert
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-convert)
 
 # Common
 include_directories(common)

@@ -1,22 +1,25 @@
 #include "BFProjectData.h"
-#include <fstream>
 
-namespace BlackFox::Editor
+namespace YAML
 {
-	BFProjectData BFProjectData::load(const std::string& file)
+	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
 	{
-		const auto f = YAML::LoadFile(file);
-		return f.as<BFProjectData>();
-	}
+		out << BeginMap;
 
-	bool BFProjectData::save(const std::string& file) const
-	{
-		YAML::Emitter out;
-		out << *this;
-		
-		std::ofstream ofs(file);
-		ofs << out.c_str();
+		//Name
+		out << Key << "name" << Value << data.name;
 
-		return ofs.good();
+		//Scenes
+		out << Key << "scenes";
+		out << Value << BeginSeq;
+		for (const auto& scene : data.scenes)
+		{
+			out << scene;
+		}
+		out << EndSeq;
+
+		out << EndMap;
+
+		return out;
 	}
 }

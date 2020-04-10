@@ -18,7 +18,7 @@ namespace BlackFox::Editor
 
 	void BFSceneListWindow::drawContent()
 	{
-		if (ImGui::BeginChild(uniqueId("Scene List").c_str()))
+		if (ImGui::BeginChild("Scene List"))
 		{
 			for (auto i = 0; i < 5; ++i)
 			{

@@ -1,6 +1,8 @@
 #include "BFMenuBar.h"
 #include <imgui.h>
 
+
+#include "BFNewProjectWindow.h"
 #include "BFWindowManager.h"
 #include "BFQuitEditorCommand.h"
 #include "BFSceneListWindow.h"
@@ -33,7 +35,10 @@ namespace BlackFox::Editor
 		if (ImGui::BeginMenu("File"))
 		{
 			//Project
-			if (ImGui::MenuItem("New Project")) {}
+			if (ImGui::MenuItem("New Project"))
+			{
+				m_windowManager->createWindow<BFNewProjectWindow>();
+			}
 			if (ImGui::MenuItem("Load Project")) {}
 			if (ImGui::MenuItem("Save Project", nullptr, false, m_dataManager->hasActiveProject())) {}
 			if (ImGui::MenuItem("Close Project", nullptr, false, m_dataManager->hasActiveProject())) {}

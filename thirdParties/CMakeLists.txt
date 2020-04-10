@@ -55,3 +55,6 @@ add_subdirectory(Box2D)
 
 # YAML CPP
 add_subdirectory(yaml-cpp)
+
+# YAML Convert
+add_subdirectory(yaml-convert)
