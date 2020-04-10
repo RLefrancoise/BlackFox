@@ -16,3 +16,5 @@ target_include_directories(imgui-sfml INTERFACE
 )
 
 target_link_libraries(imgui-sfml LINK_PUBLIC opengl32 glu32 imgui sfml-graphics sfml-system)
+
+target_compile_features(imgui-sfml PUBLIC cxx_std_17)

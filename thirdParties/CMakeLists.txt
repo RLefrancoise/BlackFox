@@ -30,6 +30,8 @@ target_link_libraries(
     LINK_PUBLIC
     sfml-graphics)
 
+target_compile_features(imgui PUBLIC cxx_std_17)
+
 # IMGUI SFML
 add_subdirectory(imgui-sfml)
 

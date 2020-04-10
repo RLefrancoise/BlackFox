@@ -207,6 +207,8 @@ void Init(sf::Window& window, const sf::Vector2f& displaySize, bool loadDefaultF
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
 
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	
     // tell ImGui which features we support
     io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
