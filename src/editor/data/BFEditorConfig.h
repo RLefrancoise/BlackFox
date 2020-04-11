@@ -28,9 +28,8 @@ namespace YAML
 		static bool decode(const Node& node, BlackFox::Editor::BFEditorConfig& config)
 		{
 			if (!node.IsMap()) return false;
-			if (!node["backgroundColor"]) return false;
 
-			config.backgroundColor = node["backgroundColor"].as<ImColor>();
+			if (node["backgroundColor"]) config.backgroundColor = node["backgroundColor"].as<ImColor>();
 
 			return true;
 		}

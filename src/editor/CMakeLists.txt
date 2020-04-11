@@ -34,6 +34,8 @@ file(
     "core/*.cpp"
     "installers/*.h"
     "installers/*.cpp"
+    "utils/*.h"
+    "utils/*.cpp"
     "windows/*.h"
     "windows/*.cpp"
 )

@@ -1,8 +1,6 @@
 #include "BFNewProjectWindow.h"
 #include <imgui_stdlib.h>
-#include <regex>
-#include <sstream>
-#include "BFDebug.h"
+#include "BFImguiUtils.h"
 
 namespace BlackFox::Editor
 {
@@ -19,19 +17,7 @@ namespace BlackFox::Editor
 
 	void BFNewProjectWindow::drawContent()
 	{
-		ImGui::InputText("Project Name", &m_projectName, ImGuiInputTextFlags_CallbackCharFilter, [](ImGuiInputTextCallbackData* data) -> int
-		{
-			//Check alpha numeric
-			if( (data->EventChar >= 'A' && data->EventChar <= 'Z') || 
-				(data->EventChar >= 'a' && data->EventChar <= 'z') ||
-				(data->EventChar >= '0' && data->EventChar <= '9') ||
-				data->EventChar == ' ' || data->EventChar == '-' || data->EventChar == '_')
-			{
-				return 0;
-			}
-
-			return 1;
-		});
+		ImGui::InputText("Project Name", &m_projectName, ImGuiInputTextFlags_CallbackCharFilter, Callbacks::CharFilters::alphaNumeric);
 		
 	}
 }
