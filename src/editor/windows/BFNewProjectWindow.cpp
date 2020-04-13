@@ -1,5 +1,7 @@
 #include "BFNewProjectWindow.h"
 #include <imgui_stdlib.h>
+
+#include "BFCreateProjectCommand.h"
 #include "BFImguiUtils.h"
 #include "imgui_internal.h"
 
@@ -7,14 +9,15 @@ using namespace imgui_addons;
 
 namespace BlackFox::Editor
 {	
-	BFNewProjectWindow::BFNewProjectWindow()
-		: BFWindow("New Project", BFWindowData{ ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse, true })
+	BFNewProjectWindow::BFNewProjectWindow(BFCommandManager::Ptr commandManager)
+	: BFWindow("New Project", BFWindowData{ ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse, true })
+	, m_commandManager(std::move(commandManager))
 	{
 	}
 
 	BFNewProjectWindow* BFNewProjectWindow::clone() const
 	{
-		return new BFNewProjectWindow();
+		return new BFNewProjectWindow(m_commandManager);
 	}
 
 	bool BFNewProjectWindow::drawContent()
@@ -31,7 +34,7 @@ namespace BlackFox::Editor
 		{
 			openFileBrowser = true;
 		}
-
+		
 		//Choose project folder file browser
 		if(openFileBrowser)
 		{
@@ -40,7 +43,7 @@ namespace BlackFox::Editor
 
 		if(m_fileBrowser.showFileDialog("Choose project folder", ImGuiFileBrowser::DialogMode::SELECT))
 		{
-			print("Selected directory {}", m_fileBrowser.selected_path);
+			BF_PRINT("Selected directory {}", m_fileBrowser.selected_path)
 			m_projectDirName = m_fileBrowser.selected_path;
 			m_projectPath = m_fileBrowser.selected_path;
 		}
@@ -49,7 +52,7 @@ namespace BlackFox::Editor
 		const auto canCreateProject = !m_projectName.empty() && !m_projectPath.empty();
 		if(ImGui::ButtonEx("Create project", ImVec2(), canCreateProject ? 0 : ImGuiButtonFlags_Disabled))
 		{
-			print("Create project {} in folder {}", m_projectName, m_projectPath.string());
+			createProject();
 			return false;
 		}
 
@@ -62,5 +65,11 @@ namespace BlackFox::Editor
 		}
 
 		return true;
+	}
+
+	void BFNewProjectWindow::createProject()
+	{
+		BF_PRINT("Create project {} in folder {}", m_projectName, m_projectPath.string())
+		m_commandManager->executeCommand<BFCreateProjectCommand>(m_projectPath);
 	}
 }

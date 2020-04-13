@@ -5,7 +5,6 @@
 #include <typeinfo>
 #include <typeindex>
 #include <unordered_map>
-#include <fmt/format.h>
 
 #include "common/IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "common/BFDebug.h"
@@ -94,10 +93,10 @@ namespace BlackFox
 			}
 
 			auto command = getRegisteredCommand<C>();
-			if (command == nullptr) exception("Command {} is not registered", typeid(C).name());
+			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).name())
 
 			auto c = static_cast<C*>(command->clone());
-			if (c == nullptr) exception("Failed to clone command {}", typeid(C).name());
+			if (c == nullptr) BF_EXCEPTION("Failed to clone command {}", typeid(C).name())
 			
 			return std::shared_ptr<C>(c);
 		}
@@ -242,12 +241,12 @@ namespace BlackFox
 			//if command is already registered, don't register again
 			if (isCommandRegistered<C>())
 			{
-				print("Command {} already registered", typeid(C).name());
+				BF_PRINT("Command {} already registered", typeid(C).name())
 				return;
 			}
 
 			m_commands[typeid(C)] = m_container->get<C>();
-			print("{} registered", typeid(C).name());
+			BF_PRINT("{} registered", typeid(C).name())
 		}
 
 		/*!
@@ -269,14 +268,14 @@ namespace BlackFox
 
 			if (!isCommandRegistered<C>(&pos))
 			{
-				print("Command {} is not registered", typeid(C).name());
+				BF_PRINT("Command {} is not registered", typeid(C).name())
 				return;
 			}
 
 			//Delete command
 			m_commands.erase(pos);
 
-			print("{} unregistered", typeid(C).name());
+			BF_PRINT("{} unregistered", typeid(C).name())
 		}
 
 		/*! \brief	The registered commands */

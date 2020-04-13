@@ -15,7 +15,7 @@ namespace BlackFox
 			rttr::library lib("blackfox");
 			if(!lib.load())
 			{
-				exception("Failed to load blackfox library: {}", lib.get_error_string().to_string());
+				BF_EXCEPTION("Failed to load blackfox library: {}", lib.get_error_string().to_string())
 			}
 #endif
 			
@@ -32,7 +32,7 @@ namespace BlackFox
 		}
 		catch(const std::exception& err)
 		{
-			error("{}", err.what());
+			BF_ERROR("{}", err.what())
 			return EXIT_FAILURE;
 		}
 	}

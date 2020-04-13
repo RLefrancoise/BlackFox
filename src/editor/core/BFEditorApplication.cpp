@@ -81,7 +81,7 @@ namespace BlackFox::Editor
 			}
 			catch (const std::exception& err)
 			{
-				error("Failed to initialize editor: {}", err.what());
+				BF_ERROR("Failed to initialize editor: {}", err.what())
 				return false;
 			}
 

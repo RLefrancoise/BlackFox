@@ -83,11 +83,10 @@ namespace BlackFox::Editor
 
 				if(m_data.isModal)
 				{
-					static auto modalOpened = false;
-					if(!modalOpened)
+					if(!m_modalOpened)
 					{
 						ImGui::OpenPopup(uniqueId(m_title).c_str());
-						modalOpened = true;
+						m_modalOpened = true;
 					}
 					
 					if(ImGui::BeginPopupModal(uniqueId(m_title).c_str(), &m_opened, m_data.flags))
@@ -97,6 +96,11 @@ namespace BlackFox::Editor
 							ImGui::PushID(m_imguiId.c_str());
 							m_opened = drawContent();
 							ImGui::PopID();
+						}
+
+						if(!m_opened)
+						{
+							m_modalOpened = false;
 						}
 						
 						ImGui::EndPopup();
@@ -127,7 +131,7 @@ namespace BlackFox::Editor
 		static std::string generateId()
 		{
 			const auto id = fmt::format("{}_{}", typeid(WindowType).hash_code(), ++m_windowIdGenerator[typeid(WindowType)]);
-			print("Generate id {} for window {}", id, typeid(WindowType).name());
+			BF_PRINT("Generate id {} for window {}", id, typeid(WindowType).name())
 			
 			return id;
 		}
@@ -140,6 +144,7 @@ namespace BlackFox::Editor
 		explicit BFWindow(const std::string& title, const BFWindowData& data = BFWindowData())
 		: IBFWindow(title, data)
 		, m_opened{ true }
+		, m_modalOpened{ false }
 		, m_imguiId{ generateId() }
 		{
 		}
@@ -147,6 +152,7 @@ namespace BlackFox::Editor
 		virtual bool drawContent() = 0;
 
 		bool m_opened;
+		bool m_modalOpened;
 		std::string m_imguiId;
 	};
 }

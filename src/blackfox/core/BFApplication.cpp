@@ -148,11 +148,11 @@ namespace BlackFox
 				}
 
 				//Test lua scripting
-				print("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
+				BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"))
 			}
 			catch (std::exception& err)
 			{
-				error("Failed to init application: {}", err.what());
+				BF_ERROR("Failed to init application: {}", err.what())
 				return false;
 			}
 

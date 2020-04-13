@@ -5,7 +5,7 @@ namespace BlackFox::Editor
 {
 	void BFSelectSceneCommand::execute(const int scene)
 	{
-		print("Select scene {}", scene);
+		BF_PRINT("Select scene {}", scene)
 	}
 
 	BFSelectSceneCommand* BFSelectSceneCommand::clone() const
