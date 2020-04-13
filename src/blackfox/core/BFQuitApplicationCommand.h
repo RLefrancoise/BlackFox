@@ -3,14 +3,14 @@
 
 #include <cinject/cinject.h>
 #include <memory>
-#include "common/BFCommand.h"
+#include "common/IBFCommand.h"
 #include "BFTypeDefs.h"
 
 namespace BlackFox
 {
 	class BFApplication;
 
-	class BLACKFOX_EXPORT BFQuitApplicationCommand final : public BFCommand
+	class BLACKFOX_EXPORT BFQuitApplicationCommand final : public BFCommandBase<BFQuitApplicationCommand>
 	{
 	private:
 		std::shared_ptr<BFApplication> m_application;
@@ -18,7 +18,7 @@ namespace BlackFox
 	public:
 		CINJECT(BFQuitApplicationCommand(std::shared_ptr<BFApplication> application));
 
-		void execute(void) override;
+		void execute();
 		[[nodiscard]] BFQuitApplicationCommand* clone(void) const override;
 	};
 }

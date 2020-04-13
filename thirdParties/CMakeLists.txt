@@ -35,6 +35,31 @@ target_compile_features(imgui PUBLIC cxx_std_17)
 # IMGUI SFML
 add_subdirectory(imgui-sfml)
 
+# IMGUI FileBrowser
+file(
+    GLOB
+    IMGUI_FILEBROWSER_SOURCES
+    RELATIVE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+    "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
+)
+
+add_library(imgui-filebrowser STATIC ${IMGUI_FILEBROWSER_SOURCES})
+
+target_include_directories(
+    imgui-filebrowser
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImGui-Addons/FileBrowser
+)
+
+target_link_libraries(
+    imgui-filebrowser
+    LINK_PUBLIC
+    imgui
+)
+
 # fmt
 add_subdirectory(fmt-6.0.0)
 

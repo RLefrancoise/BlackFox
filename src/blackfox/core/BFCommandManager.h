@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <fmt/format.h>
 
-#include "common/BFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
+#include "common/IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "common/BFDebug.h"
 #include "BFTypeDefs.h"
 
@@ -86,6 +86,8 @@ namespace BlackFox
 		template <typename C>
 		std::shared_ptr<C> createCommand()
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of createCommand must derive from IBFCommand");
+			
 			if (!isCommandRegistered<C>())
 			{
 				registerCommand<C>();
@@ -103,8 +105,19 @@ namespace BlackFox
 		template <typename C>
 		void executeCommand()
 		{
+			static_assert(std::is_base_of<BFCommandBase<C>, C>::value, "Type parameter of executeCommand must derive from BFCommandBase");
+
 			auto command = createCommand<C>();
 			command->execute();
+		}
+		
+		template <typename C, typename... Args>
+		void executeCommand(Args&&... args)
+		{
+			static_assert(std::is_base_of<BFCommandBase<C>, C>::value, "Type parameter of executeCommand must derive from BFCommandBase");
+			
+			auto command = createCommand<C>();
+			command->execute(std::forward<Args>(args)...);
 		}
 
 	private:
@@ -114,14 +127,14 @@ namespace BlackFox
 		 *
 		 * \brief	Defines an alias representing the commands map
 		 */
-		typedef std::unordered_map<std::type_index, BFCommand::Ptr> CommandsMap;
+		typedef std::unordered_map<std::type_index, IBFCommand::Ptr> CommandsMap;
 
 		/*!
 		 * \typedef	std::unordered_map<std::type_index, BFCommand*>::iterator CommandsMapIterator
 		 *
 		 * \brief	Defines an alias representing the commands map iterator
 		 */
-		typedef std::unordered_map<std::type_index, BFCommand::Ptr>::iterator CommandsMapIterator;
+		typedef std::unordered_map<std::type_index, IBFCommand::Ptr>::iterator CommandsMapIterator;
 
 		/*!
 		 * \fn	void BFCommandManager::clearAllCommands();
@@ -148,6 +161,8 @@ namespace BlackFox
 		template <typename C>
 		[[nodiscard]] bool isCommandRegistered() const
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of isCommandRegistered must derive from IBFCommand");
+			
 			for (const auto& command : m_commands)
 			{
 				if (command.first.hash_code() == typeid(C).hash_code()) return true;
@@ -173,6 +188,8 @@ namespace BlackFox
 		template <typename C>
 		bool isCommandRegistered(CommandsMapIterator* pos)
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of isCommandRegistered must derive from IBFCommand");
+			
 			for (auto it = m_commands.begin(); it != m_commands.end(); ++it)
 			{
 				if (it->first.hash_code() == typeid(C).hash_code())
@@ -199,8 +216,10 @@ namespace BlackFox
 		 * \returns	Null if it fails, else the registered command.
 		 */
 		template <typename C>
-		BFCommand* getRegisteredCommand()
+		IBFCommand* getRegisteredCommand()
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of getRegisteredCommand must derive from IBFCommand");
+			
 			if (!isCommandRegistered<C>()) return nullptr;
 			return m_commands[typeid(C)].get();
 		}
@@ -218,6 +237,8 @@ namespace BlackFox
 		template <typename C>
 		void registerCommand()
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of registerCommand must derive from IBFCommand");
+			
 			//if command is already registered, don't register again
 			if (isCommandRegistered<C>())
 			{
@@ -242,6 +263,8 @@ namespace BlackFox
 		template <typename C>
 		void unregisterCommand()
 		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of unregisterCommand must derive from IBFCommand");
+			
 			CommandsMapIterator pos;
 
 			if (!isCommandRegistered<C>(&pos))

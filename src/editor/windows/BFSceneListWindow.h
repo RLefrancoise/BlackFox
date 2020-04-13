@@ -12,7 +12,7 @@ namespace BlackFox::Editor
 		[[nodiscard]] BFSceneListWindow* clone() const override;
 
 	protected:
-		void drawContent() override;
+		bool drawContent() override;
 	
 	private:
 		void selectScene(int scene);

@@ -70,9 +70,12 @@ namespace BlackFox::Editor
 				if(m_initialSize.x > 0 && m_initialSize.y > 0) ImGui::SetNextWindowSize(m_initialSize, ImGuiCond_FirstUseEver);
 				if (ImGui::Begin(uniqueId(m_title).c_str(), &m_opened, m_flags))
 				{
-					ImGui::PushID(m_imguiId.c_str());
-					drawContent();
-					ImGui::PopID();
+					if(m_opened)
+					{
+						ImGui::PushID(m_imguiId.c_str());
+						m_opened = drawContent();
+						ImGui::PopID();
+					}
 				}
 
 				ImGui::End();
@@ -104,7 +107,7 @@ namespace BlackFox::Editor
 		{
 		}
 		
-		virtual void drawContent() = 0;
+		virtual bool drawContent() = 0;
 
 		bool m_opened;
 		std::string m_imguiId;

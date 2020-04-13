@@ -1,6 +1,7 @@
 #include "BFSceneListWindow.h"
 #include "imgui.h"
 #include "BFDebug.h"
+#include "BFSelectSceneCommand.h"
 
 namespace BlackFox::Editor
 {
@@ -16,7 +17,7 @@ namespace BlackFox::Editor
 		return new BFSceneListWindow(m_commandManager);
 	}
 
-	void BFSceneListWindow::drawContent()
+	bool BFSceneListWindow::drawContent()
 	{
 		if (ImGui::BeginChild("Scene List"))
 		{
@@ -30,10 +31,13 @@ namespace BlackFox::Editor
 		}
 
 		ImGui::EndChild();
+
+		return true;
 	}
 
 	void BFSceneListWindow::selectScene(const int scene)
 	{
 		m_selectedScene = scene;
+		m_commandManager->executeCommand<BFSelectSceneCommand>(m_selectedScene);
 	}
 }

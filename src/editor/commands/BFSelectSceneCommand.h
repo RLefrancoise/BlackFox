@@ -1,18 +1,15 @@
 #pragma once
 
-#include "BFCommand.h"
+#include "IBFCommand.h"
 
 namespace BlackFox::Editor
 {
-	class BFSelectSceneCommand final: public BFCommand
+	class BFSelectSceneCommand final: public BFCommandBase<BFSelectSceneCommand>
 	{
 	public:
-		BFSelectSceneCommand();
-		void setScene(int scene);
-		void execute() override;
+		BFSelectSceneCommand() = default;
+		void execute(int scene);
+		
 		[[nodiscard]] BFSelectSceneCommand* clone() const override;
-
-	private:
-		int m_scene;
 	};
 }

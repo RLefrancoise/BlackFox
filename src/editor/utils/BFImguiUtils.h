@@ -1,5 +1,6 @@
 #pragma once
 
+#include <regex>
 #include "imgui.h"
 
 namespace BlackFox::Editor
@@ -8,18 +9,17 @@ namespace BlackFox::Editor
 	{
 		namespace CharFilters
 		{
+			/// Alpha numeric filter
 			static auto alphaNumeric = [](ImGuiInputTextCallbackData* data) -> int
-			{			
-				//Check alpha numeric
-				if ((data->EventChar >= 'A' && data->EventChar <= 'Z') ||
-					(data->EventChar >= 'a' && data->EventChar <= 'z') ||
-					(data->EventChar >= '0' && data->EventChar <= '9') ||
-					data->EventChar == ' ' || data->EventChar == '-' || data->EventChar == '_')
+			{
+				const wchar_t str[2] = { data->EventChar, '\0' };
+
+				if(!std::regex_match(str, std::wregex(L"[A-Za-z0-9_\\-\\s]")))
 				{
-					return 0;
+					return 1;
 				}
 
-				return 1;
+				return 0;
 			};
 		}
 	}
