@@ -7,9 +7,7 @@ namespace BlackFox::Editor
 	class BFSelectSceneCommand final: public BFCommandBase<BFSelectSceneCommand>
 	{
 	public:
-		BFSelectSceneCommand() = default;
 		void execute(int scene);
-		
 		[[nodiscard]] BFSelectSceneCommand* clone() const override;
 	};
 }

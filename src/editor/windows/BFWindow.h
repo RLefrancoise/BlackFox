@@ -8,9 +8,18 @@
 #include <imgui.h>
 
 #include "BFDebug.h"
+#include "BFUtils.h"
 
 namespace BlackFox::Editor
-{	
+{
+	struct BFWindowData
+	{
+		ImGuiWindowFlags flags = ImGuiWindowFlags_None;
+		bool isModal = false;
+		ImVec2 initialSize = ImVec2();
+		ImVec2 size = ImVec2(400, 300);
+	};
+	
 	class IBFWindow
 	{
 	public:
@@ -33,18 +42,18 @@ namespace BlackFox::Editor
 		[[nodiscard]] virtual IBFWindow* clone() const = 0;
 		
 		[[nodiscard]] virtual const std::string& title() const { return m_title; }
+		[[nodiscard]] const BFWindowData& data() const { return m_data; }
+		void data(const BFWindowData& data) { m_data = data; }
 
 	protected:
-		explicit IBFWindow(std::string title, const ImGuiWindowFlags flags = ImGuiWindowFlags_None, ImVec2 initialSize = ImVec2())
-		: m_title{ std::move(title) }
-		, m_flags { flags }
-		, m_initialSize { initialSize }
+		explicit IBFWindow(std::string title, const BFWindowData& data)
+		: m_title{std::move(title)}
+		, m_data{data}
 		{
 		}
 		
 		std::string m_title;
-		ImGuiWindowFlags m_flags;
-		ImVec2 m_initialSize;
+		BFWindowData m_data;
 
 		static std::unordered_map<std::type_index, unsigned int> m_windowIdGenerator;
 	};
@@ -67,18 +76,46 @@ namespace BlackFox::Editor
 			if (m_opened)
 			{
 				//Set initial size if needed
-				if(m_initialSize.x > 0 && m_initialSize.y > 0) ImGui::SetNextWindowSize(m_initialSize, ImGuiCond_FirstUseEver);
-				if (ImGui::Begin(uniqueId(m_title).c_str(), &m_opened, m_flags))
+				if(m_data.initialSize.x > 0 && m_data.initialSize.y > 0) ImGui::SetNextWindowSize(m_data.initialSize, ImGuiCond_FirstUseEver);
+
+				//Set window size
+				if(!hasFlag(m_data.flags, ImGuiWindowFlags_AlwaysAutoResize)) ImGui::SetNextWindowSize(m_data.size, ImGuiCond_Always);
+
+				if(m_data.isModal)
 				{
-					if(m_opened)
+					static auto modalOpened = false;
+					if(!modalOpened)
 					{
-						ImGui::PushID(m_imguiId.c_str());
-						m_opened = drawContent();
-						ImGui::PopID();
+						ImGui::OpenPopup(uniqueId(m_title).c_str());
+						modalOpened = true;
+					}
+					
+					if(ImGui::BeginPopupModal(uniqueId(m_title).c_str(), &m_opened, m_data.flags))
+					{
+						if (m_opened)
+						{
+							ImGui::PushID(m_imguiId.c_str());
+							m_opened = drawContent();
+							ImGui::PopID();
+						}
+						
+						ImGui::EndPopup();
 					}
 				}
+				else
+				{
+					if (ImGui::Begin(uniqueId(m_title).c_str(), &m_opened, m_data.flags))
+					{
+						if (m_opened)
+						{
+							ImGui::PushID(m_imguiId.c_str());
+							m_opened = drawContent();
+							ImGui::PopID();
+						}
+					}
 
-				ImGui::End();
+					ImGui::End();
+				}
 			}
 
 			return m_opened;
@@ -100,8 +137,8 @@ namespace BlackFox::Editor
 			return fmt::format("{}##{}", id, m_imguiId);
 		}
 		
-		explicit BFWindow(std::string title, const ImGuiWindowFlags flags = ImGuiWindowFlags_None, const ImVec2 initialSize = ImVec2())
-		: IBFWindow(std::move(title), flags, initialSize)
+		explicit BFWindow(const std::string& title, const BFWindowData& data = BFWindowData())
+		: IBFWindow(title, data)
 		, m_opened{ true }
 		, m_imguiId{ generateId() }
 		{

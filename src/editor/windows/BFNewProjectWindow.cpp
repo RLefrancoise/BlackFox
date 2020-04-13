@@ -8,11 +8,10 @@ using namespace imgui_addons;
 namespace BlackFox::Editor
 {	
 	BFNewProjectWindow::BFNewProjectWindow()
-	: BFWindow("New Project", ImGuiWindowFlags_Modal | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse)
+		: BFWindow("New Project", BFWindowData{ ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse, true })
 	{
 	}
 
-	
 	BFNewProjectWindow* BFNewProjectWindow::clone() const
 	{
 		return new BFNewProjectWindow();

@@ -23,17 +23,13 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<IBFCommand> Ptr;
 
+		IBFCommand(const IBFCommand&) = delete;
+		IBFCommand& operator=(const IBFCommand&) = delete;
+
+		IBFCommand() = default;
 		virtual ~IBFCommand(void) noexcept = default;
-		
-		/*!
-		 * \fn	virtual void BFCommand::execute(void) = 0;
-		 *
-		 * \brief	Executes the command
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	13/11/2019
-		 */
-		//virtual void execute(void) = 0;
+		constexpr IBFCommand(IBFCommand&&) noexcept = default;
+		constexpr IBFCommand& operator=(IBFCommand&&) noexcept = default;
 
 		/*!
 		 * \fn	virtual BFCommand* BFCommand::clone(void) const = 0;
