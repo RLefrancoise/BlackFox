@@ -128,7 +128,5 @@ namespace BlackFox::Editor
 			if (m_projectName.empty()) return;
 			m_projectPath /= m_projectName;
 		}
-
-		BF_PRINT("Project path: {}", m_projectPath.string());
 	}
 }

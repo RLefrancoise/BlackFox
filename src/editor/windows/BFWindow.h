@@ -18,6 +18,8 @@ namespace BlackFox::Editor
 		bool isModal = false;
 		ImVec2 initialSize = ImVec2();
 		ImVec2 size = ImVec2(400, 300);
+		ImVec2 minSize = ImVec2();
+		ImVec2 maxSize = ImGui::GetIO().DisplaySize;
 	};
 	
 	class IBFWindow
@@ -82,6 +84,9 @@ namespace BlackFox::Editor
 				//Set window size
 				if(!hasFlag(m_data.flags, ImGuiWindowFlags_AlwaysAutoResize)) ImGui::SetNextWindowSize(m_data.size, ImGuiCond_Always);
 
+				//Set size constraints
+				ImGui::SetNextWindowSizeConstraints(m_data.minSize, m_data.maxSize);
+				
 				if(m_data.isModal)
 				{
 					if(!m_modalOpened)

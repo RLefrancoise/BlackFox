@@ -16,22 +16,36 @@ namespace BlackFox::Editor
 		{
 			BF_PRINT("Create project at {}", projectData.folder.string());
 
+			if(!exists(projectData.folder) && !create_directory(projectData.folder))
+				throw std::runtime_error(fmt::format("Failed to create project folder {}", projectData.folder.string()));
+			
 			if (!is_directory(projectData.folder))
-				BF_EXCEPTION("Project folder {} is not a directory", projectData.folder.string());
+				throw std::runtime_error(fmt::format("Project folder {} is not a directory", projectData.folder.string()));
 
 			auto projectFile(projectData.folder);
 			projectFile /= "project.yaml";
 
 			if (exists(projectFile))
-				BF_EXCEPTION("Project file already exists in folder {}", projectData.folder.string());
+				throw std::runtime_error(fmt::format("Project file already exists in folder {}", projectData.folder.string()));
 
-			//Create project
+			//Create project file
 			auto project = std::make_shared<BFProjectData>();
 			project->name = projectData.name;
 
 			if (!project->save(projectFile.string()))
-				BF_EXCEPTION("Failed to save project file in project folder {}", projectData.folder.string());
+				throw std::runtime_error(fmt::format("Failed to save project file in project folder {}", projectData.folder.string()));
 
+			//Create folders
+
+			//data folder
+			auto dataFolder(projectData.folder);
+			dataFolder /= "data";
+
+			if(!exists(dataFolder) && !create_directory(dataFolder))
+			{
+				throw std::runtime_error(fmt::format("Failed to create data folder in project folder {}", projectData.folder.string()));
+			}
+			
 			//Assign project to current project
 			m_dataManager->setActiveProject(project);
 		} catch(const std::exception& err)

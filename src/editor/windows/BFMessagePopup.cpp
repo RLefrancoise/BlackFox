@@ -3,7 +3,14 @@
 namespace BlackFox::Editor
 {
 	BFMessagePopup::BFMessagePopup()
-	: BFWindow<BFMessagePopup>("Message", BFWindowData{ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking, true})
+	: BFWindow<BFMessagePopup>(
+		"Message", 
+		BFWindowData{
+			ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking
+			, true
+			, ImVec2()
+			, ImVec2()
+			, ImVec2(300, 0)})
 	{
 	}
 
@@ -28,8 +35,16 @@ namespace BlackFox::Editor
 
 	bool BFMessagePopup::drawContent()
 	{
+		//Message
 		ImGui::TextWrapped("%s", m_message.c_str());
-		if(ImGui::Button(m_validateButtonText.c_str()))
+
+		//Validate button
+		const auto buttonWidth = ImGui::GetWindowWidth() * 0.2f;
+		ImGui::SetNextItemWidth(buttonWidth);
+
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.f - buttonWidth / 2.f);
+		
+		if(ImGui::Button(m_validateButtonText.c_str(), ImVec2(buttonWidth, 0.0f)))
 		{
 			return false;
 		}
