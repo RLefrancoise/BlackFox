@@ -24,6 +24,7 @@ namespace BlackFox::Editor
 		if(ImGui::BeginMainMenuBar())
 		{
 			fileMenu();
+			editMenu();
 			windowMenu();
 
 			ImGui::EndMainMenuBar();
@@ -55,6 +56,23 @@ namespace BlackFox::Editor
 			{
 				m_commandManager->executeCommand<BFQuitEditorCommand>();
 			}
+
+			ImGui::EndMenu();
+		}
+	}
+
+	void BFMenuBar::editMenu() const
+	{
+		if(ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo", "Ctrl+Z", false, m_commandManager->canUndo()))
+				m_commandManager->undo();
+			if (ImGui::MenuItem("Redo", "Ctrl+Y", false, m_commandManager->canRedo()))
+				m_commandManager->redo();
+			
+			ImGui::Separator();
+			
+			if (ImGui::MenuItem("Settings")) {}
 
 			ImGui::EndMenu();
 		}

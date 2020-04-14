@@ -9,5 +9,7 @@ namespace BlackFox::Editor
 	public:
 		void execute(int scene);
 		[[nodiscard]] BFSelectSceneCommand* clone() const override;
+		void undo() override {}
+		void redo() override {}
 	};
 }

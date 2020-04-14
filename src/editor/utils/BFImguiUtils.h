@@ -5,6 +5,15 @@
 
 namespace BlackFox::Editor
 {
+	namespace Layout
+	{
+		static void addVerticalSpace(const float space)
+		{
+			const auto cursorPosY = ImGui::GetCursorPosY();
+			ImGui::SetCursorPosY(cursorPosY + space);
+		}
+	}
+	
 	namespace Callbacks
 	{
 		namespace CharFilters

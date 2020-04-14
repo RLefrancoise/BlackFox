@@ -27,6 +27,36 @@ namespace BlackFox
 		clearAllCommands();
 	}
 
+	void BFCommandManager::undo()
+	{
+		if(!canUndo()) return;
+		
+		auto command = m_commandStack.top();
+		command->undo();
+		m_commandStack.pop();
+		m_commandRedoStack.push(command);
+	}
+
+	void BFCommandManager::redo()
+	{
+		if (!canRedo()) return;
+		
+		auto command = m_commandRedoStack.top();
+		command->redo();
+		m_commandRedoStack.pop();
+		m_commandStack.push(command);
+	}
+
+	bool BFCommandManager::canUndo() const
+	{
+		return !m_commandStack.empty();
+	}
+	
+	bool BFCommandManager::canRedo() const
+	{
+		return !m_commandRedoStack.empty();
+	}
+
 	void BFCommandManager::clearAllCommands()
 	{
 		m_commands.clear();

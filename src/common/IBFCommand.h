@@ -26,7 +26,7 @@ namespace BlackFox
 		IBFCommand(const IBFCommand&) = delete;
 		IBFCommand& operator=(const IBFCommand&) = delete;
 
-		IBFCommand() = default;
+		explicit IBFCommand(const bool isUndoable = true) : m_undoable(isUndoable) {}
 		virtual ~IBFCommand(void) noexcept = default;
 		constexpr IBFCommand(IBFCommand&&) noexcept = default;
 		constexpr IBFCommand& operator=(IBFCommand&&) noexcept = default;
@@ -42,12 +42,22 @@ namespace BlackFox
 		 * \returns	A copy of this object.
 		 */
 		[[nodiscard]] virtual IBFCommand* clone(void) const = 0;
+
+		virtual void undo() = 0;
+		virtual void redo() = 0;
+
+		[[nodiscard]] bool isUndoable() const { return m_undoable; }
+		
+	private:
+		bool m_undoable;
 	};
 
 	template <class T>
 	class BFCommandBase: public IBFCommand
 	{
 	public:
+		explicit BFCommandBase(const bool isUndoable = true): IBFCommand(isUndoable) {}
+		
 		template <typename ...Args>
 		void execute(Args&& ...args)
 		{

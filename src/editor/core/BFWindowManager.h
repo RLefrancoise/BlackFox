@@ -6,6 +6,7 @@
 
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
+#include "BFMessagePopup.h"
 #include "windows/BFWindow.h"
 
 namespace BlackFox::Editor
@@ -104,6 +105,14 @@ namespace BlackFox::Editor
 			}
 
 			return false;
+		}
+
+		void createMessagePopup(const std::string& title, const std::string& message, const std::string& validateButtonMessage = "OK")
+		{
+			auto popup = createWindow<BFMessagePopup>();
+			popup->title(title);
+			popup->message(message);
+			popup->validateButtonText(validateButtonMessage);
 		}
 
 	private:

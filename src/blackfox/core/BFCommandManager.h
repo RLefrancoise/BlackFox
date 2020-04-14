@@ -5,6 +5,7 @@
 #include <typeinfo>
 #include <typeindex>
 #include <unordered_map>
+#include <stack>
 
 #include "common/IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "common/BFDebug.h"
@@ -23,7 +24,6 @@ namespace BlackFox
 	class BLACKFOX_EXPORT BFCommandManager
 	{
 	public:
-
 		/*!
 		 * \typedef	std::shared_ptr<BFCommandManager> Ptr
 		 *
@@ -101,14 +101,14 @@ namespace BlackFox
 			return std::shared_ptr<C>(c);
 		}
 
-		template <typename C>
+		/*template <typename C>
 		void executeCommand()
 		{
 			static_assert(std::is_base_of<BFCommandBase<C>, C>::value, "Type parameter of executeCommand must derive from BFCommandBase");
 
 			auto command = createCommand<C>();
 			command->execute();
-		}
+		}*/
 		
 		template <typename C, typename... Args>
 		void executeCommand(Args&&... args)
@@ -117,7 +117,19 @@ namespace BlackFox
 			
 			auto command = createCommand<C>();
 			command->execute(std::forward<Args>(args)...);
+
+			if(command->isUndoable())
+			{
+				//Add command to stack
+				m_commandStack.push(command);
+			}
 		}
+
+		void undo();
+		void redo();
+
+		[[nodiscard]] bool canUndo() const;
+		[[nodiscard]] bool canRedo() const;
 
 	private:
 
@@ -283,6 +295,12 @@ namespace BlackFox
 
 		/*! \brief	DI container */
 		DiContainer m_container;
+
+		/*! \brief	Command stack for undo */
+		std::stack<IBFCommand::Ptr> m_commandStack;
+
+		/*! \brief	Command stack for redo */
+		std::stack<IBFCommand::Ptr> m_commandRedoStack;
 	};
 }
 

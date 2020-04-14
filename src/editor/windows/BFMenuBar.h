@@ -22,6 +22,7 @@ namespace BlackFox::Editor
 	private:
 
 		void fileMenu() const;
+		void editMenu() const;
 		void windowMenu() const;
 		
 		BFCommandManager::Ptr m_commandManager;

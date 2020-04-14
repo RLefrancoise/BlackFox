@@ -41,7 +41,8 @@ namespace BlackFox::Editor
 		
 		[[nodiscard]] virtual IBFWindow* clone() const = 0;
 		
-		[[nodiscard]] virtual const std::string& title() const { return m_title; }
+		[[nodiscard]] const std::string& title() const { return m_title; }
+		void title(const std::string& title) { m_title = title; }
 		[[nodiscard]] const BFWindowData& data() const { return m_data; }
 		void data(const BFWindowData& data) { m_data = data; }
 

@@ -1,25 +1,24 @@
 #include "BFProjectData.h"
 
-namespace YAML
+using namespace YAML;
+
+Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
 {
-	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
+	out << BeginMap;
+
+	//Name
+	out << Key << "name" << Value << data.name;
+
+	//Scenes
+	out << Key << "scenes";
+	out << Value << BeginSeq;
+	for (const auto& scene : data.scenes)
 	{
-		out << BeginMap;
-
-		//Name
-		out << Key << "name" << Value << data.name;
-
-		//Scenes
-		out << Key << "scenes";
-		out << Value << BeginSeq;
-		for (const auto& scene : data.scenes)
-		{
-			out << scene;
-		}
-		out << EndSeq;
-
-		out << EndMap;
-
-		return out;
+		out << scene;
 	}
+	out << EndSeq;
+
+	out << EndMap;
+
+	return out;
 }

@@ -22,6 +22,7 @@ namespace BlackFox::Editor
 
 		[[nodiscard]] bool hasActiveProject() const;
 		[[nodiscard]] BFProjectData::Ptr getActiveProject() const;
+		void setActiveProject(BFProjectData::Ptr projectData);
 		
 	private:
 		BFProjectData::Ptr m_projectData;

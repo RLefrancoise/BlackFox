@@ -11,7 +11,7 @@ namespace BlackFox
 	class BFApplication;
 
 	class BLACKFOX_EXPORT BFQuitApplicationCommand final : public BFCommandBase<BFQuitApplicationCommand>
-	{
+	{		
 	private:
 		std::shared_ptr<BFApplication> m_application;
 
@@ -20,6 +20,8 @@ namespace BlackFox
 
 		void execute();
 		[[nodiscard]] BFQuitApplicationCommand* clone(void) const override;
+		void undo() override {}
+		void redo() override {}
 	};
 }
 

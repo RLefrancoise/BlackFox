@@ -20,12 +20,18 @@ namespace BlackFox::Editor
 
 	private:
 		void createProject();
+		void checkProjectDir();
+		void updateProjectPath();
 
 		BFCommandManager::Ptr m_commandManager;
 		
 		std::string m_projectName;
 		std::string m_projectDirName;
 		std::filesystem::path m_projectPath;
+		bool m_createProjectFolder;
+		bool m_projectDirExists;
+		bool m_projectDirEmpty;
+		bool m_canCreateProject;
 
 		imgui_addons::ImGuiFileBrowser m_fileBrowser;
 	};

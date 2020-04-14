@@ -24,4 +24,9 @@ namespace BlackFox::Editor
 	{
 		return m_projectData;
 	}
+
+	void BFDataManager::setActiveProject(BFProjectData::Ptr projectData)
+	{
+		m_projectData = std::move(projectData);
+	}
 }

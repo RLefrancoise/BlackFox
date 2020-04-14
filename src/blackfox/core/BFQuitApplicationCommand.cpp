@@ -5,7 +5,8 @@
 namespace BlackFox
 {
 	BFQuitApplicationCommand::BFQuitApplicationCommand(BFApplication::Ptr application)
-	: m_application(std::move(application))
+		: BFCommandBase<BFQuitApplicationCommand>(false)
+		, m_application(std::move(application))
 	{
 	}
 

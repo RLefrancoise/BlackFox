@@ -12,6 +12,8 @@ namespace BlackFox::Editor
 		CINJECT(BFQuitEditorCommand(BFEditorApplication::Ptr application));
 		void execute();
 		[[nodiscard]] BFQuitEditorCommand* clone() const override;
+		void undo() override {}
+		void redo() override {}
 
 	private:
 		BFEditorApplication::Ptr m_application;
