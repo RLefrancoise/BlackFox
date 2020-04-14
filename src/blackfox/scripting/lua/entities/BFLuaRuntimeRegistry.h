@@ -116,7 +116,7 @@ namespace BlackFox
 				return static_cast<sol::object>(*luaScriptingComponent.get(componentType));
 			}
 			
-			BF_ERROR("Entity doesn't have component {}", typeid(C).name())
+			BF_ERROR("Entity doesn't have component {}", typeid(C).name());
 			return sol::nil;
 		}
 		else
@@ -242,7 +242,7 @@ namespace BlackFox
 			//If component not registered, don't invoke anything, or it will crash
 			if (m_func.find(funcId) == m_func.end())
 			{
-				BF_EXCEPTION("Cannot invoke null function pointer. Component with type id {} is probably not registered", funcId)
+				BF_EXCEPTION("Cannot invoke null function pointer. Component with type id {} is probably not registered", funcId);
 			}
 
 			return (m_func[funcId].*F)(m_entityManager, entity, typeId, args...);

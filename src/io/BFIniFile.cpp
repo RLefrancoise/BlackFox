@@ -7,9 +7,9 @@ namespace BlackFox
     {
         m_reader = INIReader(fileName);
         if (m_reader.ParseError() == -1)
-            BF_EXCEPTION("Failed to open INI file {}", fileName)
+            BF_EXCEPTION("Failed to open INI file {}", fileName);
         if (m_reader.ParseError() > 0)
-            BF_EXCEPTION("Parse error in INI file {} at line {}", fileName, m_reader.ParseError())
+            BF_EXCEPTION("Parse error in INI file {} at line {}", fileName, m_reader.ParseError());
     }
 
     std::string BFIniFile::get(const std::string& section, const std::string& key, const std::string& defaultValue) const

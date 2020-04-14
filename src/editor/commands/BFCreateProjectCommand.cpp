@@ -1,6 +1,5 @@
 #include "BFCreateProjectCommand.h"
 #include "BFDebug.h"
-#include "BFMessagePopup.h"
 
 namespace BlackFox::Editor
 {
@@ -15,26 +14,26 @@ namespace BlackFox::Editor
 	{
 		try
 		{
-			BF_PRINT("Create project at {}", projectData.folder.string())
+			BF_PRINT("Create project at {}", projectData.folder.string());
 
-				if (!is_directory(projectData.folder))
-					BF_EXCEPTION("Project folder {} is not a directory", projectData.folder.string())
+			if (!is_directory(projectData.folder))
+				BF_EXCEPTION("Project folder {} is not a directory", projectData.folder.string());
 
-					auto projectFile(projectData.folder);
+			auto projectFile(projectData.folder);
 			projectFile /= "project.yaml";
 
 			if (exists(projectFile))
-				BF_EXCEPTION("Project file already exists in folder {}", projectData.folder.string())
+				BF_EXCEPTION("Project file already exists in folder {}", projectData.folder.string());
 
-				//Create project
-				auto project = std::make_shared<BFProjectData>();
+			//Create project
+			auto project = std::make_shared<BFProjectData>();
 			project->name = projectData.name;
 
 			if (!project->save(projectFile.string()))
-				BF_EXCEPTION("Failed to save project file in project folder {}", projectData.folder.string())
+				BF_EXCEPTION("Failed to save project file in project folder {}", projectData.folder.string());
 
-				//Assign project to current project
-				m_dataManager->setActiveProject(project);
+			//Assign project to current project
+			m_dataManager->setActiveProject(project);
 		} catch(const std::exception& err)
 		{
 			m_windowManager->createMessagePopup("Error", err.what());

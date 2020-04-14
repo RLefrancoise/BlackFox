@@ -53,7 +53,7 @@ namespace BlackFox::Editor
 		//Choose project folder file browser
 		if(m_fileBrowser.showFileDialog("Choose project folder", ImGuiFileBrowser::DialogMode::SELECT))
 		{
-			BF_PRINT("Selected directory {}", m_fileBrowser.selected_path)
+			BF_PRINT("Selected directory {}", m_fileBrowser.selected_path);
 			m_projectDirName = m_fileBrowser.selected_path;
 
 			//Check if project directory exists
@@ -88,7 +88,7 @@ namespace BlackFox::Editor
 
 	void BFNewProjectWindow::createProject()
 	{
-		BF_PRINT("Create project {} in folder {}", m_projectName, m_projectPath.string())
+		BF_PRINT("Create project {} in folder {}", m_projectName, m_projectPath.string());
 
 		updateProjectPath();
 		
@@ -129,6 +129,6 @@ namespace BlackFox::Editor
 			m_projectPath /= m_projectName;
 		}
 
-		BF_PRINT("Project path: {}", m_projectPath.string())
+		BF_PRINT("Project path: {}", m_projectPath.string());
 	}
 }

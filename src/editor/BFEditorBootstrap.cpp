@@ -19,7 +19,7 @@ int BFEditorBootstrap::run() const
 		rttr::library lib("blackfox");
 		if (!lib.load())
 		{
-			BF_EXCEPTION("Failed to load blackfox library: {}", lib.get_error_string().to_string())
+			BF_EXCEPTION("Failed to load blackfox library: {}", lib.get_error_string().to_string());
 		}
 #endif
 
@@ -36,7 +36,7 @@ int BFEditorBootstrap::run() const
 	}
 	catch(const std::exception& err)
 	{
-		BF_ERROR("{}", err.what())
+		BF_ERROR("{}", err.what());
 		return EXIT_FAILURE;
 	}
 }

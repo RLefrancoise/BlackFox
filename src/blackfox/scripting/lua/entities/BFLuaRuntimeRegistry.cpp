@@ -15,7 +15,7 @@ namespace BlackFox
 
 	unsigned int BFLuaRuntimeRegistry::registerRuntimeComponent(const std::string& componentName, const std::string& scriptPath, sol::state* state)
 	{
-		BF_PRINT("Register runtime component {} ({})", componentName, scriptPath)
+		BF_PRINT("Register runtime component {} ({})", componentName, scriptPath);
 		auto id = identifier();
 		m_runtimeComponentLuaScripts[componentName] = std::make_tuple(id, scriptPath);
 

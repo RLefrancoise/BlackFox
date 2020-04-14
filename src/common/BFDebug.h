@@ -41,7 +41,7 @@ namespace BlackFox
 	}
 }
 
-#define BF_PRINT(fmt, ...)		BlackFox::print(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##);
-#define BF_WARNING(fmt, ...)	BlackFox::warning(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##);
-#define BF_ERROR(fmt, ...)		BlackFox::error(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##);
-#define BF_EXCEPTION(fmt, ...)	BlackFox::exception(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##);
+#define BF_PRINT(fmt, ...)		BlackFox::print(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##)
+#define BF_WARNING(fmt, ...)	BlackFox::warning(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##)
+#define BF_ERROR(fmt, ...)		BlackFox::error(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##)
+#define BF_EXCEPTION(fmt, ...)	BlackFox::exception(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__##)

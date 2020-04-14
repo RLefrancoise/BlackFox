@@ -41,11 +41,11 @@ namespace BlackFox::Editor
 			}
 			
 			auto window = getRegisteredWindow<WindowType>();
-			if (window == nullptr) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name())
+			if (window == nullptr) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name());
 			
 			//Create new window and return it
 			auto w = window->clone();
-			if (w == nullptr) BF_EXCEPTION("Failed to clone window {}", typeid(WindowType).name())
+			if (w == nullptr) BF_EXCEPTION("Failed to clone window {}", typeid(WindowType).name());
 			
 			m_windows[typeid(WindowType)].push_back(w);
 			return static_cast<WindowType*>(m_windows[typeid(WindowType)].back());
@@ -77,8 +77,8 @@ namespace BlackFox::Editor
 		{
 			static_assert(std::is_base_of<IBFWindow, WindowType>::value, "Type parameter of getWindow must derive from IBFWindow");
 			
-			if (!isWindowRegistered<WindowType>()) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name())
-			if (!hasWindow<WindowType>()) BF_EXCEPTION("Window {} not found", typeid(WindowType).name())
+			if (!isWindowRegistered<WindowType>()) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name());
+			if (!hasWindow<WindowType>()) BF_EXCEPTION("Window {} not found", typeid(WindowType).name());
 			
 			return m_windows[typeid(WindowType)].front();
 		}
@@ -88,8 +88,8 @@ namespace BlackFox::Editor
 		{
 			static_assert(std::is_base_of<IBFWindow, WindowType>::value, "Type parameter of getWindows must derive from IBFWindow");
 
-			if (!isWindowRegistered<WindowType>()) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name())
-			if (!hasWindow<WindowType>()) BF_EXCEPTION("Window {} not found", typeid(WindowType).name())
+			if (!isWindowRegistered<WindowType>()) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name());
+			if (!hasWindow<WindowType>()) BF_EXCEPTION("Window {} not found", typeid(WindowType).name());
 
 			return m_windows[typeid(WindowType)];
 		}
@@ -137,12 +137,12 @@ namespace BlackFox::Editor
 			
 			if (isWindowRegistered<WindowType>())
 			{
-				BF_PRINT("Window {} already registered", typeid(WindowType).name())
+				BF_PRINT("Window {} already registered", typeid(WindowType).name());
 				return;
 			}
 
 			m_registeredWindows[typeid(WindowType)] = m_container->get<WindowType>();
-			BF_PRINT("Window {} registered", typeid(WindowType).name())
+			BF_PRINT("Window {} registered", typeid(WindowType).name());
 		}
 
 		template <typename WindowType>

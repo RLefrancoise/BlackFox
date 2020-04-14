@@ -12,7 +12,7 @@ namespace BlackFox
     {
         //Config data
         m_configData = std::make_shared<BFConfigData>(BFIniFile("data/config.ini"));
-        BF_PRINT(*m_configData)
+        BF_PRINT(*m_configData);
         m_container->bind<BFConfigData>().toConstant(m_configData);
 
         //Resources holder

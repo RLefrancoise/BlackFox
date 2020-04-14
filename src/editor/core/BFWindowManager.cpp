@@ -45,7 +45,7 @@ namespace BlackFox::Editor
 			{
 				if (*it == window)
 				{
-					BF_PRINT("Window {} destroyed", window->title())
+					BF_PRINT("Window {} destroyed", window->title());
 					delete* it;
 					windowTypes.second.erase(it);
 					break;

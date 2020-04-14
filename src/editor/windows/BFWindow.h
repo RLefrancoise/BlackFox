@@ -132,7 +132,7 @@ namespace BlackFox::Editor
 		static std::string generateId()
 		{
 			const auto id = fmt::format("{}_{}", typeid(WindowType).hash_code(), ++m_windowIdGenerator[typeid(WindowType)]);
-			BF_PRINT("Generate id {} for window {}", id, typeid(WindowType).name())
+			BF_PRINT("Generate id {} for window {}", id, typeid(WindowType).name());
 			
 			return id;
 		}
