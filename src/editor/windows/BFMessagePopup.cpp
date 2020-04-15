@@ -33,7 +33,7 @@ namespace BlackFox::Editor
 		m_validateButtonText = validateButtonText;
 	}
 
-	bool BFMessagePopup::drawContent()
+	bool BFMessagePopup::drawContent(float delta)
 	{
 		//Message
 		ImGui::TextWrapped("%s", m_message.c_str());

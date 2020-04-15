@@ -17,7 +17,7 @@ namespace BlackFox::Editor
 		return new BFSceneListWindow(m_commandManager);
 	}
 
-	bool BFSceneListWindow::drawContent()
+	bool BFSceneListWindow::drawContent(float delta)
 	{
 		if (ImGui::BeginChild("Scene List"))
 		{

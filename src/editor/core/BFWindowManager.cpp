@@ -9,12 +9,10 @@ namespace BlackFox::Editor
 
 	BFWindowManager::~BFWindowManager() noexcept
 	{
-		for (const auto& windowEntry : m_windows)
-			for (auto* window : windowEntry.second)
-				delete window;
+		destroyAllWindows();
 	}
 
-	void BFWindowManager::update()
+	void BFWindowManager::update(const float delta)
 	{
 		std::vector<IBFWindow*> windowsToDestroy;
 
@@ -23,7 +21,7 @@ namespace BlackFox::Editor
 		{
 			for (auto* window : windowEntry.second)
 			{
-				if (!window->draw())
+				if (!window->draw(delta))
 				{
 					windowsToDestroy.push_back(window);
 				}
@@ -52,5 +50,19 @@ namespace BlackFox::Editor
 				}
 			}
 		}
+	}
+
+	void BFWindowManager::destroyAllWindows()
+	{
+		for (auto& windowTypes : m_windows)
+		{
+			for (const auto& it : windowTypes.second)
+			{
+				BF_PRINT("Window {} destroyed", it->title());
+				delete it;				
+			}
+		}
+
+		m_windows.clear();
 	}
 }

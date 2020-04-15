@@ -1,6 +1,6 @@
 #include "BFWindowInstaller.h"
 
-
+#include "BFLoadProjectWindow.h"
 #include "BFNewProjectWindow.h"
 #include "BFSceneListWindow.h"
 #include "BFMenuBar.h"
@@ -14,6 +14,7 @@ namespace BlackFox::Editor
 
 	void BFWindowInstaller::installBindings()
 	{
+		m_container->bind<BFLoadProjectWindow>().toSelf().inSingletonScope();
 		m_container->bind<BFMenuBar>().toSelf().inSingletonScope();
 		m_container->bind<BFMessagePopup>().toSelf().inSingletonScope();
 		m_container->bind<BFNewProjectWindow>().toSelf().inSingletonScope();

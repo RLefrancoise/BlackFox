@@ -100,15 +100,6 @@ namespace BlackFox
 			
 			return std::shared_ptr<C>(c);
 		}
-
-		/*template <typename C>
-		void executeCommand()
-		{
-			static_assert(std::is_base_of<BFCommandBase<C>, C>::value, "Type parameter of executeCommand must derive from BFCommandBase");
-
-			auto command = createCommand<C>();
-			command->execute();
-		}*/
 		
 		template <typename C, typename... Args>
 		void executeCommand(Args&&... args)
@@ -120,6 +111,9 @@ namespace BlackFox
 
 			if(command->isUndoable())
 			{
+				//Clear redo stack
+				while (!m_commandRedoStack.empty()) m_commandRedoStack.pop();
+				
 				//Add command to stack
 				m_commandStack.push(command);
 			}

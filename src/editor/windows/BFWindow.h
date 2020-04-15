@@ -39,7 +39,7 @@ namespace BlackFox::Editor
 		
 		virtual ~IBFWindow() = default;
 		
-		virtual bool draw() = 0;
+		virtual bool draw(float delta) = 0;
 		
 		[[nodiscard]] virtual IBFWindow* clone() const = 0;
 		
@@ -74,7 +74,7 @@ namespace BlackFox::Editor
 		BFWindow& operator=(BFWindow&&) = default;
 		
 		virtual ~BFWindow() noexcept = default;
-		bool draw() override
+		bool draw(const float delta) override
 		{
 			if (m_opened)
 			{
@@ -100,7 +100,7 @@ namespace BlackFox::Editor
 						if (m_opened)
 						{
 							ImGui::PushID(m_imguiId.c_str());
-							m_opened = drawContent();
+							m_opened = drawContent(delta);
 							ImGui::PopID();
 						}
 
@@ -119,7 +119,7 @@ namespace BlackFox::Editor
 						if (m_opened)
 						{
 							ImGui::PushID(m_imguiId.c_str());
-							m_opened = drawContent();
+							m_opened = drawContent(delta);
 							ImGui::PopID();
 						}
 					}
@@ -155,7 +155,7 @@ namespace BlackFox::Editor
 		{
 		}
 		
-		virtual bool drawContent() = 0;
+		virtual bool drawContent(float delta) = 0;
 
 		bool m_opened;
 		bool m_modalOpened;

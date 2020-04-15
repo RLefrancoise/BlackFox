@@ -2,6 +2,7 @@
 
 
 #include "BFCreateProjectCommand.h"
+#include "BFLoadProjectCommand.h"
 #include "BFQuitEditorCommand.h"
 #include "BFSelectSceneCommand.h"
 
@@ -15,6 +16,7 @@ namespace BlackFox::Editor
 	void BFCommandInstaller::installBindings()
 	{
 		m_container->bind<BFCreateProjectCommand>().toSelf();
+		m_container->bind<BFLoadProjectCommand>().toSelf();
 		m_container->bind<BFQuitEditorCommand>().toSelf();
 		m_container->bind<BFSelectSceneCommand>().toSelf();
 	}

@@ -24,7 +24,7 @@ namespace BlackFox::Editor
 		return new BFNewProjectWindow(m_commandManager);
 	}
 
-	bool BFNewProjectWindow::drawContent()
+	bool BFNewProjectWindow::drawContent(float delta)
 	{		
 		//Project name
 		if(ImGui::InputText("Project Name", &m_projectName, ImGuiInputTextFlags_CallbackCharFilter, Callbacks::CharFilters::alphaNumeric))

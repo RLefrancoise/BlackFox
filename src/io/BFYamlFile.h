@@ -5,6 +5,8 @@
 #include <fstream>
 #include <filesystem>
 
+#include "BFDebug.h"
+
 namespace BlackFox
 {
 	template <class T>
@@ -14,6 +16,20 @@ namespace BlackFox
 		{
 			const auto f = YAML::LoadFile(file);
 			return f.as<T>();
+		}
+
+		static bool tryLoad(const std::string& file, T& data)
+		{
+			try
+			{
+				data = load(file);
+				return true;
+			}
+			catch(const std::exception& err)
+			{
+				BF_ERROR(err.what());
+				return false;
+			}
 		}
 		
 		[[nodiscard]] bool save(const std::string& file) const

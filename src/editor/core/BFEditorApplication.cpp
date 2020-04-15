@@ -46,9 +46,10 @@ namespace BlackFox::Editor
 					}
 				}
 
-				ImGui::SFML::Update(m_window, deltaClock.restart());
+				const auto delta = deltaClock.restart();
+				ImGui::SFML::Update(m_window, delta);
 
-				render();
+				render(delta.asSeconds());
 
 				m_window.clear();
 				ImGui::SFML::Render(m_window);
@@ -93,10 +94,10 @@ namespace BlackFox::Editor
 			ImGui::SFML::Shutdown();
 		}
 
-		void render() const
+		void render(const float delta) const
 		{
 			m_menuBar->render();
-			m_windowManager->update();
+			m_windowManager->update(delta);
 		}
 
 		sf::RenderWindow m_window;

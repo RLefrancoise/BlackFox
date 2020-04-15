@@ -12,7 +12,7 @@ namespace BlackFox::Editor
 		void message(const std::string& message);
 		void validateButtonText(const std::string& validateButtonText);
 	protected:
-		bool drawContent() override;
+		bool drawContent(float delta) override;
 
 	private:
 		std::string m_message;

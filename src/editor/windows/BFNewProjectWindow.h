@@ -16,7 +16,7 @@ namespace BlackFox::Editor
 		[[nodiscard]] BFNewProjectWindow* clone() const override;
 
 	protected:
-		bool drawContent() override;
+		bool drawContent(float delta) override;
 
 	private:
 		void createProject();
