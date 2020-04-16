@@ -73,7 +73,7 @@ namespace BlackFox
 				{
 					if(ev.type == sf::Event::Closed)
 					{
-						commandManager()->createCommand<BFQuitApplicationCommand>()->execute();
+						commandManager()->executeCommand<BFQuitApplicationCommand>();
 						continue;
 					}
 

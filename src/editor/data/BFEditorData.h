@@ -2,14 +2,23 @@
 
 #include <imgui.h>
 #include <yaml-convert.h>
+#include <memory>
 #include "BFYamlFile.h"
 
 namespace BlackFox::Editor
 {
-	struct BFEditorConfig : BFYamlFile<BFEditorConfig>
+	struct BFEditorConfig
 	{
 		ImColor backgroundColor;
 	};
+	
+	struct BFEditorData final: BFYamlFile<BFEditorData>
+	{
+		typedef std::shared_ptr<BFEditorData> Ptr;
+		
+		BFEditorConfig config;
+	};
+	
 }
 
 namespace YAML
@@ -36,4 +45,5 @@ namespace YAML
 	};
 
 	inline Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorConfig& config);
+	inline Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorData& data);
 }

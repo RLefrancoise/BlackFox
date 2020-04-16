@@ -69,9 +69,9 @@ namespace BlackFox::Editor
 	{
 		if(ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Undo", "Ctrl+Z", false, m_commandManager->canUndo()))
+			if (ImGui::MenuItem(m_commandManager->canUndo() ? fmt::format("Undo {}", m_commandManager->getUndoCommandName()).c_str() : "Undo", "Ctrl+Z", false, m_commandManager->canUndo()))
 				m_commandManager->undo();
-			if (ImGui::MenuItem("Redo", "Ctrl+Y", false, m_commandManager->canRedo()))
+			if (ImGui::MenuItem(m_commandManager->canRedo() ? fmt::format("Redo {}", m_commandManager->getRedoCommandName()).c_str() : "Redo", "Ctrl+Y", false, m_commandManager->canRedo()))
 				m_commandManager->redo();
 			
 			ImGui::Separator();

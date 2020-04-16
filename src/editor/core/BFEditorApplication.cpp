@@ -3,7 +3,7 @@
 #include "BFDebug.h"
 #include "BFCommandManager.h"
 #include "BFWindowManager.h"
-#include "imgui.h"
+#include "BFDataManager.h"
 #include "imgui-SFML.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -21,10 +21,12 @@ namespace BlackFox::Editor
 		impl(
 			DiContainer container, 
 			BFCommandManager::Ptr commandManager,
-			BFWindowManager::Ptr windowManager)
+			BFWindowManager::Ptr windowManager,
+			BFDataManager::Ptr dataManager)
 			: m_container{ std::move(container) }
 			, m_commandManager{ std::move(commandManager) }
 			, m_windowManager{ std::move(windowManager) }
+			, m_dataManager{ std::move(dataManager) }
 		{
 		}
 
@@ -42,7 +44,7 @@ namespace BlackFox::Editor
 
 					if (event.type == sf::Event::Closed)
 					{
-						m_commandManager->createCommand<BFQuitEditorCommand>()->execute();
+						m_commandManager->executeCommand<BFQuitEditorCommand>();
 					}
 				}
 
@@ -51,7 +53,7 @@ namespace BlackFox::Editor
 
 				render(delta.asSeconds());
 
-				m_window.clear();
+				m_window.clear(m_dataManager->hasEditorData() ? sf::Color(m_dataManager->getEditorData()->config.backgroundColor) : sf::Color::Black);
 				ImGui::SFML::Render(m_window);
 				m_window.display();
 			}
@@ -104,15 +106,17 @@ namespace BlackFox::Editor
 		DiContainer m_container;
 		BFCommandManager::Ptr m_commandManager;
 		BFWindowManager::Ptr m_windowManager;
+		BFDataManager::Ptr m_dataManager;
 		BFMenuBar::Ptr m_menuBar;
 	};
 
 	BFEditorApplication::BFEditorApplication(
 		DiContainer container, 
 		BFCommandManager::Ptr commandManager,
-		BFWindowManager::Ptr windowManager)
+		BFWindowManager::Ptr windowManager,
+		BFDataManager::Ptr dataManager)
 		: m_container{ std::move(container) }
-		, pImpl{ std::make_unique<impl>(m_container, std::move(commandManager), std::move(windowManager)) }
+		, pImpl{ std::make_unique<impl>(m_container, std::move(commandManager), std::move(windowManager), std::move(dataManager)) }
 	{
 	}
 

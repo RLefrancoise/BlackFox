@@ -4,7 +4,7 @@
 namespace BlackFox::Editor
 {
 	BFLoadProjectCommand::BFLoadProjectCommand(BFDataManager::Ptr dataManager)
-	: BFCommandBase<BFLoadProjectCommand>(false)
+	: BFCommandBase<BFLoadProjectCommand>("Load Project", false)
 	, m_dataManager(std::move(dataManager))
 	{
 	}

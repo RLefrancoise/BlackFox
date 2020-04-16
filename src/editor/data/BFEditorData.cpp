@@ -1,4 +1,4 @@
-#include "BFEditorConfig.h"
+#include "BFEditorData.h"
 
 namespace YAML
 {
@@ -8,6 +8,18 @@ namespace YAML
 
 		//Background Color
 		out << Key << "backgroundColor" << Value << config.backgroundColor;
+
+		out << EndMap;
+
+		return out;
+	}
+
+	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorData& data)
+	{
+		out << BeginMap;
+
+		//Config
+		out << Key << "config" << Value << data.config;
 
 		out << EndMap;
 

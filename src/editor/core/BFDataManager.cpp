@@ -1,5 +1,7 @@
 #include "BFDataManager.h"
 
+#include <utility>
+
 namespace BlackFox::Editor
 {
 	BFDataManager::BFDataManager() = default;
@@ -28,5 +30,20 @@ namespace BlackFox::Editor
 	void BFDataManager::setActiveProject(BFProjectData::Ptr projectData)
 	{
 		m_projectData = std::move(projectData);
+	}
+
+	bool BFDataManager::hasEditorData() const
+	{
+		return m_editorData.get() != nullptr;
+	}
+
+	BFEditorData::Ptr BFDataManager::getEditorData() const
+	{
+		return m_editorData;
+	}
+
+	void BFDataManager::setEditorData(BFEditorData::Ptr editorData)
+	{
+		m_editorData = std::move(editorData);
 	}
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <utility>
+
+
 #include "BFTypeDefs.h"
 
 namespace BlackFox
@@ -26,7 +29,7 @@ namespace BlackFox
 		IBFCommand(const IBFCommand&) = delete;
 		IBFCommand& operator=(const IBFCommand&) = delete;
 
-		explicit IBFCommand(const bool isUndoable = true) : m_undoable(isUndoable) {}
+		explicit IBFCommand(std::string name, const bool isUndoable = true) : m_name(std::move(name)), m_undoable(isUndoable) {}
 		virtual ~IBFCommand(void) noexcept = default;
 		constexpr IBFCommand(IBFCommand&&) noexcept = default;
 		constexpr IBFCommand& operator=(IBFCommand&&) noexcept = default;
@@ -46,9 +49,11 @@ namespace BlackFox
 		virtual void undo() = 0;
 		virtual void redo() = 0;
 
+		[[nodiscard]] const std::string& name() const { return m_name; }
 		[[nodiscard]] bool isUndoable() const { return m_undoable; }
 		
 	private:
+		std::string m_name;
 		bool m_undoable;
 	};
 
@@ -56,7 +61,7 @@ namespace BlackFox
 	class BFCommandBase: public IBFCommand
 	{
 	public:
-		explicit BFCommandBase(const bool isUndoable = true): IBFCommand(isUndoable) {}
+		explicit BFCommandBase(const std::string& name, const bool isUndoable = true): IBFCommand(name, isUndoable) {}
 		
 		template <typename ...Args>
 		void execute(Args&& ...args)

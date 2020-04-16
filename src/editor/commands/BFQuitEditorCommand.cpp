@@ -3,7 +3,7 @@
 namespace BlackFox::Editor
 {
 	BFQuitEditorCommand::BFQuitEditorCommand(BFEditorApplication::Ptr application)
-		: BFCommandBase<BFQuitEditorCommand>(false)
+		: BFCommandBase<BFQuitEditorCommand>("Quit Editor", false)
 		, m_application(std::move(application))
 	{
 	}

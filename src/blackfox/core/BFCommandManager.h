@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include <typeindex>
 #include <unordered_map>
-#include <stack>
+#include <vector>
 
 #include "common/IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
 #include "common/BFDebug.h"
@@ -68,39 +68,6 @@ namespace BlackFox
 		 */
 		~BFCommandManager();
 
-		/*!
-		 * \fn	template <typename C> std::shared_ptr<C> BFCommandManager::createCommand()
-		 *
-		 * \brief	Creates a command
-		 * 			
-		 * \author	Renaud Lefrançoise
-		 * \date	15/11/2019
-		 *
-		 * \exception	std::runtime_error	Raised when the command could not be created.
-		 *
-		 * \tparam	C	Type of the command.
-		 *
-		 * \returns	The created command.
-		 */
-		template <typename C>
-		std::shared_ptr<C> createCommand()
-		{
-			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of createCommand must derive from IBFCommand");
-			
-			if (!isCommandRegistered<C>())
-			{
-				registerCommand<C>();
-			}
-
-			auto command = getRegisteredCommand<C>();
-			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).name());
-
-			auto c = static_cast<C*>(command->clone());
-			if (c == nullptr) BF_EXCEPTION("Failed to clone command {}", typeid(C).name());
-			
-			return std::shared_ptr<C>(c);
-		}
-		
 		template <typename C, typename... Args>
 		void executeCommand(Args&&... args)
 		{
@@ -112,18 +79,23 @@ namespace BlackFox
 			if(command->isUndoable())
 			{
 				//Clear redo stack
-				while (!m_commandRedoStack.empty()) m_commandRedoStack.pop();
+				m_commandRedoStack.clear();
 				
 				//Add command to stack
-				m_commandStack.push(command);
+				m_commandStack.push_back(command);
 			}
 		}
 
+		void removeCommand(IBFCommand* command);
+		
 		void undo();
 		void redo();
 
 		[[nodiscard]] bool canUndo() const;
 		[[nodiscard]] bool canRedo() const;
+
+		[[nodiscard]] std::string getUndoCommandName() const;
+		[[nodiscard]] std::string getRedoCommandName() const;
 
 	private:
 
@@ -151,6 +123,39 @@ namespace BlackFox
 		 */
 		void clearAllCommands();
 
+		/*!
+		 * \fn	template <typename C> std::shared_ptr<C> BFCommandManager::createCommand()
+		 *
+		 * \brief	Creates a command
+		 *
+		 * \author	Renaud Lefrançoise
+		 * \date	15/11/2019
+		 *
+		 * \exception	std::runtime_error	Raised when the command could not be created.
+		 *
+		 * \tparam	C	Type of the command.
+		 *
+		 * \returns	The created command.
+		 */
+		template <typename C>
+		std::shared_ptr<C> createCommand()
+		{
+			static_assert(std::is_base_of<IBFCommand, C>::value, "Type parameter of createCommand must derive from IBFCommand");
+
+			if (!isCommandRegistered<C>())
+			{
+				registerCommand<C>();
+			}
+
+			auto command = getRegisteredCommand<C>();
+			if (command == nullptr) BF_EXCEPTION("Command {} is not registered", typeid(C).name());
+
+			auto c = static_cast<C*>(command->clone());
+			if (c == nullptr) BF_EXCEPTION("Failed to clone command {}", typeid(C).name());
+
+			return std::shared_ptr<C>(c);
+		}
+		
 		/*!
 		 * \fn	template <typename C> bool BFCommandManager::isCommandRegistered()
 		 *
@@ -291,10 +296,10 @@ namespace BlackFox
 		DiContainer m_container;
 
 		/*! \brief	Command stack for undo */
-		std::stack<IBFCommand::Ptr> m_commandStack;
+		std::vector<IBFCommand::Ptr> m_commandStack;
 
 		/*! \brief	Command stack for redo */
-		std::stack<IBFCommand::Ptr> m_commandRedoStack;
+		std::vector<IBFCommand::Ptr> m_commandRedoStack;
 	};
 }
 

@@ -65,7 +65,13 @@ namespace BlackFox::Editor
 	template<typename WindowType>
 	class BFWindow : public IBFWindow, public entt::emitter<WindowType>
 	{
-	public:		
+	public:
+
+		/// <summary>
+		/// Window closed event
+		/// </summary>
+		struct BFWindowClosedEvent{};
+		
 		//No copy
 		BFWindow(const BFWindow&) = delete;
 		BFWindow& operator=(const BFWindow&) = delete;
@@ -129,6 +135,12 @@ namespace BlackFox::Editor
 				}
 			}
 
+			//If window is closed, publish window closed event
+			if(!m_opened)
+			{
+				static_cast<entt::emitter<WindowType>*>(this)->template publish<BFWindowClosedEvent>();
+			}
+			
 			return m_opened;
 		}
 

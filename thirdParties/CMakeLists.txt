@@ -60,6 +60,32 @@ target_link_libraries(
     imgui
 )
 
+# IMGUI Color Text Edit
+file(
+    GLOB
+    IMGUI_COLORTEXTEDIT_SOURCES
+    RELATIVE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "ImGuiColorTextEdit/TextEditor.h"
+    "ImGuiColorTextEdit/TextEditor.cpp"
+)
+
+add_library(imgui-colortextedit STATIC ${IMGUI_COLORTEXTEDIT_SOURCES})
+
+target_include_directories(
+    imgui-colortextedit
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui-sfml
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImGuiColorTextEdit
+)
+
+target_link_libraries(
+    imgui-colortextedit
+    LINK_PUBLIC
+    sfml-graphics
+)
+
 # fmt
 add_subdirectory(fmt-6.0.0)
 

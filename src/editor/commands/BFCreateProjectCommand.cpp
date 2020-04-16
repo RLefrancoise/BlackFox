@@ -4,7 +4,7 @@
 namespace BlackFox::Editor
 {
 	BFCreateProjectCommand::BFCreateProjectCommand(BFDataManager::Ptr dataManager, BFWindowManager::Ptr windowManager)
-	: BFCommandBase<BFCreateProjectCommand>(false)
+	: BFCommandBase<BFCreateProjectCommand>("Create Project", false)
 	, m_dataManager(std::move(dataManager))
 	, m_windowManager(std::move(windowManager))
 	{

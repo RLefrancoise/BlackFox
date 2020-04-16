@@ -37,3 +37,6 @@
 [submodule "thirdParties/yaml-cpp"]
 	path = thirdParties/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "thirdParties/ImGuiColorTextEdit"]
+	path = thirdParties/ImGuiColorTextEdit
+	url = https://github.com/BalazsJako/ImGuiColorTextEdit.git
