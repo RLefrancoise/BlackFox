@@ -34,7 +34,7 @@ namespace BlackFox::Editor
 		{
 			for(const auto& projectEntry : m_projects)
 			{
-				if (ImGui::Selectable(fmt::format("{}", projectEntry.second.name).c_str(), m_selectedProject == projectEntry.first))
+				if (ImGui::Selectable(projectEntry.second.name.c_str(), m_selectedProject == projectEntry.first))
 				{
 					m_selectedProject = projectEntry.first;
 				}
@@ -49,7 +49,7 @@ namespace BlackFox::Editor
 			ImGui::OpenPopup("Choose project file");
 		}
 
-		if (m_fileBrowser.showFileDialog("Choose project file", ImGuiFileBrowser::DialogMode::OPEN, ImVec2(), "*.yaml"))
+		if (m_fileBrowser.showFileDialog("Choose project file", ImGuiFileBrowser::DialogMode::OPEN, ImVec2(), ".yaml"))
 		{
 			BF_PRINT("Selected project {}", m_fileBrowser.selected_path);
 			BFProjectData data;
@@ -70,7 +70,7 @@ namespace BlackFox::Editor
 		//Open project button
 		if(ImGui::ButtonEx("Open selected project", ImVec2(), m_selectedProject.empty() ? ImGuiButtonFlags_Disabled : ImGuiButtonFlags_None))
 		{
-			m_commandManager->executeCommand<BFLoadProjectCommand>(m_selectedProject);
+			m_commandManager->executeCommand<BFLoadProjectCommand>(m_projects[m_selectedProject]);
 			return false;
 		}
 

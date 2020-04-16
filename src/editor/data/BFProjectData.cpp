@@ -10,14 +10,8 @@ Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
 	out << Key << "name" << Value << data.name;
 
 	//Scenes
-	out << Key << "scenes";
-	out << Value << BeginSeq;
-	for (const auto& scene : data.scenes)
-	{
-		out << scene;
-	}
-	out << EndSeq;
-
+	out << Key << "scenes" << Value << data.scenes;
+	
 	out << EndMap;
 
 	return out;

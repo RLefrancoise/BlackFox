@@ -3,13 +3,32 @@
 
 namespace BlackFox::Editor
 {
-	void BFSelectSceneCommand::execute(const int scene)
+	BFSelectSceneCommand::BFSelectSceneCommand()
+		: m_window(nullptr)
+		, m_previousScene(-1)
 	{
-		BF_PRINT("Select scene {}", scene);
+	}
+
+	void BFSelectSceneCommand::execute(BFSceneListWindow* w, const int selectedScene)
+	{
+		m_window = w;
+		m_previousScene = w->selectedScene();
+		BF_PRINT("Select scene {}", selectedScene);
+		w->selectedScene(selectedScene);
 	}
 
 	BFSelectSceneCommand* BFSelectSceneCommand::clone() const
 	{
 		return new BFSelectSceneCommand();
+	}
+
+	void BFSelectSceneCommand::undo()
+	{
+		execute(m_window, m_previousScene);
+	}
+
+	void BFSelectSceneCommand::redo()
+	{
+		execute(m_window, m_previousScene);
 	}
 }

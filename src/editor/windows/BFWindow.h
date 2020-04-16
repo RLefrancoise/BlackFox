@@ -6,12 +6,13 @@
 #include <utility>
 #include <fmt/format.h>
 #include <imgui.h>
+#include <entt/signal/emitter.hpp>
 
 #include "BFDebug.h"
 #include "BFUtils.h"
 
 namespace BlackFox::Editor
-{
+{	
 	struct BFWindowData
 	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_None;
@@ -62,9 +63,9 @@ namespace BlackFox::Editor
 	};
 	
 	template<typename WindowType>
-	class BFWindow : public IBFWindow
+	class BFWindow : public IBFWindow, public entt::emitter<WindowType>
 	{
-	public:
+	public:		
 		//No copy
 		BFWindow(const BFWindow&) = delete;
 		BFWindow& operator=(const BFWindow&) = delete;
@@ -132,6 +133,35 @@ namespace BlackFox::Editor
 		}
 
 		[[nodiscard]] BFWindow* clone() const override = 0;
+
+		template<typename EventType>
+		typename entt::emitter<WindowType>::template connection<EventType> connect(const std::function<void(const EventType&, BFWindow<WindowType>&)>& fnc)
+		{
+			return on<EventType>(fnc);
+		}
+
+		template<typename EventType>
+		typename entt::emitter<WindowType>::template connection<EventType> connectOnce(const std::function<void(const EventType&, BFWindow<WindowType>&)>& fnc)
+		{
+			return once<EventType>(fnc);
+		}
+
+		template<typename EventType>
+		void detach(const typename entt::emitter<WindowType>::template connection<EventType>& conn)
+		{
+			erase(conn);
+		}
+
+		template<typename EventType>
+		void detachListeners()
+		{
+			static_cast<entt::emitter<WindowType>*>(this)->template clear<EventType>();
+		}
+		
+		void detachAllListeners()
+		{
+			static_cast<entt::emitter<WindowType>*>(this)->clear();
+		}
 
 	protected:
 		static std::string generateId()

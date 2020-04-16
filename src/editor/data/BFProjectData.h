@@ -1,6 +1,8 @@
 #pragma once
 
+#include <filesystem>
 #include "BFYamlFile.h"
+#include <yaml-convert.h>
 
 namespace BlackFox::Editor
 {
@@ -9,7 +11,7 @@ namespace BlackFox::Editor
 		typedef std::shared_ptr<BFProjectData> Ptr;
 		
 		std::string name;
-		std::vector<std::string> scenes;
+		std::vector<std::filesystem::path> scenes;
 	};
 }
 
@@ -34,7 +36,7 @@ namespace YAML
 			if (!node["scenes"]) return false;
 			
 			projectData.name = node["name"].as<std::string>();
-			projectData.scenes = node["scenes"].as <std::vector<std::string>>();
+			projectData.scenes = node["scenes"].as <std::vector<std::filesystem::path>>();
 
 			return true;
 		}

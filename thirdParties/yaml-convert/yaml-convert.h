@@ -2,9 +2,35 @@
 
 #include <yaml-cpp/yaml.h>
 #include <imgui.h>
+#include <filesystem>
 
 namespace YAML
 {
+    //file system path
+    inline Emitter& operator<<(Emitter& out, const std::filesystem::path& path)
+    {
+        out << path.string();
+        return out;
+    }
+	
+	template<>
+	struct convert<std::filesystem::path>
+	{
+		static Node encode(const std::filesystem::path& path)
+		{
+            Node node;
+			node = path.string();
+            return node;
+		}
+
+		static bool decode(const Node& node, std::filesystem::path& path)
+		{
+            if (!node.IsScalar()) return false;
+            path = node.as<std::string>();
+            return true;
+		}
+	};
+	
     // ImVec2
     template <>
     struct convert<ImVec2>

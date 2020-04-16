@@ -17,6 +17,11 @@ namespace BlackFox::Editor
 		return new BFSceneListWindow(m_commandManager);
 	}
 
+	int BFSceneListWindow::selectedScene() const
+	{
+		return m_selectedScene;
+	}
+
 	bool BFSceneListWindow::drawContent(float delta)
 	{
 		if (ImGui::BeginChild("Scene List"))
@@ -25,7 +30,7 @@ namespace BlackFox::Editor
 			{
 				if (ImGui::Selectable(fmt::format("Scene {}", i).c_str(), m_selectedScene == i))
 				{
-					selectScene(i);
+					m_commandManager->executeCommand<BFSelectSceneCommand>(this, i);
 				}
 			}
 		}
@@ -35,9 +40,9 @@ namespace BlackFox::Editor
 		return true;
 	}
 
-	void BFSceneListWindow::selectScene(const int scene)
+	void BFSceneListWindow::selectedScene(const int scene)
 	{
 		m_selectedScene = scene;
-		m_commandManager->executeCommand<BFSelectSceneCommand>(m_selectedScene);
+		publish<BFSelectedSceneChangedEvent>(m_selectedScene);
 	}
 }
