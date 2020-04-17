@@ -66,7 +66,9 @@ namespace BlackFox::Editor
 	class BFWindow : public IBFWindow, public entt::emitter<WindowType>
 	{
 	public:
-
+		/*! \brief	Shortcut for subclasses to reference parent type */
+		using Super = BFWindow<WindowType>;
+		
 		/// <summary>
 		/// Window closed event
 		/// </summary>

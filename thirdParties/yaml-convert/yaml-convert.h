@@ -56,6 +56,12 @@ namespace YAML
             return true;
         }
     };
+
+    inline Emitter& operator << (Emitter& out, const ImVec2& v) {
+        out << Flow;
+        out << BeginSeq << v.x << v.y << EndSeq;
+        return out;
+    }
 	
 	// ImVec4
     template <>
@@ -87,6 +93,12 @@ namespace YAML
         }
     };
 
+    inline Emitter& operator << (Emitter& out, const ImVec4& v) {
+        out << Flow;
+        out << BeginSeq << v.x << v.y << v.z << v.w << EndSeq;
+        return out;
+    }
+
 	//ImColor
 	template <>
 	struct convert<ImColor>
@@ -94,18 +106,23 @@ namespace YAML
 	    static Node encode(const ImColor &color)
 	    {
 	        Node node;
-	        const ImU32 v = color;
+	        const ImVec4 v = color;
 			node = v;
 	        return node;
 	    }
 
 	    static bool decode(const Node &node, ImColor &color)
 	    {
-			if (!node.IsScalar()) return false;
+			if (!node.IsSequence()) return false;
 
-			color = node.as<ImU32>();
+			color = node.as<ImVec4>();
 	        return true;
 	    }
 	};
+
+    inline Emitter& operator << (Emitter& out, const ImColor& c) {
+        out << c.Value;
+        return out;
+    }
 
 }

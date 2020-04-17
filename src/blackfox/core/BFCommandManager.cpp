@@ -29,7 +29,8 @@ namespace BlackFox
 
 	void BFCommandManager::removeCommand(IBFCommand* command)
 	{
-		BF_PRINT("Removed command {}", command->name());
+		auto found = false;
+		const auto commandName = command->name();
 
 		if (!m_commandStack.empty())
 		{
@@ -41,6 +42,7 @@ namespace BlackFox
 			if (it != m_commandStack.end())
 			{
 				m_commandStack.erase(it);
+				found = true;
 			}
 		}
 
@@ -54,7 +56,13 @@ namespace BlackFox
 			if (it != m_commandRedoStack.end())
 			{
 				m_commandRedoStack.erase(it);
+				found = true;
 			}
+		}
+
+		if(found)
+		{
+			BF_PRINT("Removed command {}", commandName);
 		}
 	}
 	

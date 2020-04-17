@@ -3,17 +3,17 @@
 #include <utility>
 
 namespace BlackFox::Editor
-{
-	BFDataManager::BFDataManager() = default;
-	
+{	
 	BFDataManager::BFDataManager(BFDataManager&& dataManager) noexcept
-		: m_projectData(std::move(dataManager.m_projectData))
+	: m_projectData(std::move(dataManager.m_projectData))
+	, m_editorData(std::move(dataManager.m_editorData))
 	{
 	}
 
 	BFDataManager& BFDataManager::operator=(BFDataManager&& dataManager) noexcept
 	{
 		m_projectData = std::move(dataManager.m_projectData);
+		m_editorData = std::move(dataManager.m_editorData);
 		return *this;
 	}
 
@@ -30,6 +30,7 @@ namespace BlackFox::Editor
 	void BFDataManager::setActiveProject(BFProjectData::Ptr projectData)
 	{
 		m_projectData = std::move(projectData);
+		BF_PRINT(*m_projectData);
 	}
 
 	bool BFDataManager::hasEditorData() const
@@ -45,5 +46,6 @@ namespace BlackFox::Editor
 	void BFDataManager::setEditorData(BFEditorData::Ptr editorData)
 	{
 		m_editorData = std::move(editorData);
+		BF_PRINT(*m_editorData);
 	}
 }

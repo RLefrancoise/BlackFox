@@ -6,11 +6,29 @@
 
 namespace BlackFox::Editor
 {
-	struct BFProjectData : BFYamlFile<BFProjectData>
-	{
+	/**
+	 * Project data
+	 */
+	struct BFProjectData final: BFYamlFile<BFProjectData>
+	{		
 		typedef std::shared_ptr<BFProjectData> Ptr;
+
+		/**
+		 * You are not supposed to use the default constructor.
+		 * It is here because it is required by YAML to decode from file
+		 */
+		BFProjectData() = default;
+		explicit BFProjectData(const std::filesystem::path& filePath);
+
+		explicit operator std::string() const override;
 		
+		/**
+		 * Project name
+		 */
 		std::string name;
+		/**
+		 * Scenes contained in the project
+		 */
 		std::vector<std::filesystem::path> scenes;
 	};
 }

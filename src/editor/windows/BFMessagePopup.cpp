@@ -3,7 +3,7 @@
 namespace BlackFox::Editor
 {
 	BFMessagePopup::BFMessagePopup()
-	: BFWindow<BFMessagePopup>(
+	: Super(
 		"Message", 
 		BFWindowData{
 			ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking

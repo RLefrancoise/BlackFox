@@ -50,10 +50,10 @@ namespace BlackFox::Editor
 
 				const auto delta = deltaClock.restart();
 				ImGui::SFML::Update(m_window, delta);
-
+				
 				render(delta.asSeconds());
 
-				m_window.clear(m_dataManager->hasEditorData() ? sf::Color(m_dataManager->getEditorData()->config.backgroundColor) : sf::Color::Black);
+				m_window.clear(m_dataManager->hasEditorData() ? sf::Color(m_dataManager->getEditorData()->config.backgroundColor.Value) : sf::Color::Black);
 				ImGui::SFML::Render(m_window);
 				m_window.display();
 			}
@@ -81,6 +81,36 @@ namespace BlackFox::Editor
 
 				//Menu bar
 				m_menuBar = m_container->get<BFMenuBar>();
+
+				//check editor folder
+				const std::filesystem::path editorFolder = "./editor";
+				
+				if (!exists(editorFolder))
+				{
+					if (!create_directory(editorFolder))
+						BF_EXCEPTION("Failed to create editor folder");
+
+					BF_PRINT("Create editor folder at {}", absolute(editorFolder).string());
+				}
+
+				//Load or create editor data
+				const auto editorData = editorFolder / "data.yaml";
+				BFEditorData::Ptr dataPtr;
+				if(!exists(editorData))
+				{
+					BFEditorData data(editorData);
+					data.config.backgroundColor = ImVec4(sf::Color::Black);
+					if (!data.save())
+						BF_EXCEPTION("Failed to create editor data");
+
+					dataPtr = std::make_shared<BFEditorData>(data);
+				}
+				else
+				{
+					dataPtr = std::make_shared<BFEditorData>(BFEditorData::load(editorData));
+				}
+
+				m_dataManager->setEditorData(dataPtr);
 			}
 			catch (const std::exception& err)
 			{

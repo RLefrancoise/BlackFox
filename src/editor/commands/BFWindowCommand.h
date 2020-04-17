@@ -1,3 +1,10 @@
+/*********************************************************************
+ * \file   BFWindowCommand.h
+ * \brief  Base class for Blackfox commands executing for windows
+ * 
+ * \author Renaud Lefrançoise
+ * \date   April 2020
+***********************************************************************/
 #pragma once
 
 #include "IBFCommand.h"
@@ -10,12 +17,15 @@ namespace BlackFox::Editor
 	class BFWindowCommand : public BFCommandBase<C>
 	{
 	public:
+		/*! \brief Shortcut for subclasses to reference parent type */
+		using Super = BFWindowCommand<C, W>;
+		
 		CINJECT(BFWindowCommand(const std::string& name, BFCommandManager::Ptr commandManager))
 		: BFCommandBase<C>(name)
 		, m_window { nullptr }
 		, m_commandManager { std::move(commandManager) }
 		{}
-		
+
 		template<typename ...Args>
 		void execute(W* window, Args ...args)
 		{

@@ -9,7 +9,7 @@ using namespace imgui_addons;
 namespace BlackFox::Editor
 {
 	BFLoadProjectWindow::BFLoadProjectWindow(BFCommandManager::Ptr commandManager, BFWindowManager::Ptr windowManager)
-	: BFWindow<BFLoadProjectWindow>(
+	: Super(
 		"Load project", 
 		BFWindowData{
 			ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize,
@@ -52,7 +52,7 @@ namespace BlackFox::Editor
 		if (m_fileBrowser.showFileDialog("Choose project file", ImGuiFileBrowser::DialogMode::OPEN, ImVec2(), ".yaml"))
 		{
 			BF_PRINT("Selected project {}", m_fileBrowser.selected_path);
-			BFProjectData data;
+			BFProjectData::Ptr data;
 
 			if (!BFProjectData::tryLoad(m_fileBrowser.selected_path, data))
 			{
@@ -61,7 +61,7 @@ namespace BlackFox::Editor
 			}
 			else
 			{
-				m_projects.insert(std::make_pair(m_fileBrowser.selected_path, data));
+				m_projects.insert(std::make_pair(m_fileBrowser.selected_path, *data));
 			}
 		}
 

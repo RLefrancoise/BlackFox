@@ -1,4 +1,5 @@
 #include "BFEditorData.h"
+#include "BFStringUtils.h"
 
 namespace YAML
 {
@@ -26,3 +27,19 @@ namespace YAML
 		return out;
 	}
 }
+
+namespace BlackFox::Editor
+{
+	BFEditorData::BFEditorData(const std::filesystem::path& filePath) : Super(filePath)
+	{
+	}
+
+	BFEditorData::operator std::string() const
+	{
+		return fmt::format(R""""(===Editor Data===
+* Config:
+	backgroundColor: {}
+)"""", Utils::join(std::vector<float>{config.backgroundColor.Value.x, config.backgroundColor.Value.y, config.backgroundColor.Value.z, config.backgroundColor.Value.w}));
+	}
+}
+

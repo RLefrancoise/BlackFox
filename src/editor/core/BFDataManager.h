@@ -12,7 +12,7 @@ namespace BlackFox::Editor
 	public:
 		typedef std::shared_ptr<BFDataManager> Ptr;
 		
-		CINJECT(BFDataManager());
+		CINJECT(BFDataManager()) = default;
 		~BFDataManager() = default;
 
 		BFDataManager(const BFDataManager&) = delete;

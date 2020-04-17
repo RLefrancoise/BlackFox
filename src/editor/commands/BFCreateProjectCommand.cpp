@@ -29,10 +29,10 @@ namespace BlackFox::Editor
 				throw std::runtime_error(fmt::format("Project file already exists in folder {}", projectData.folder.string()));
 
 			//Create project file
-			auto project = std::make_shared<BFProjectData>();
+			auto project = std::make_shared<BFProjectData>(projectFile);
 			project->name = projectData.name;
 
-			if (!project->save(projectFile.string()))
+			if (!project->save())
 				throw std::runtime_error(fmt::format("Failed to save project file in project folder {}", projectData.folder.string()));
 
 			//Create folders

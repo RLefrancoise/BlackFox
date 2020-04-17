@@ -3,7 +3,6 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include <fstream>
-#include <filesystem>
 
 #include "BFDebug.h"
 
@@ -11,18 +10,30 @@ namespace BlackFox
 {
 	template <class T>
 	struct BFYamlFile
-	{
-		static T load(const std::string& file)
+	{		
+		using Super = BFYamlFile<T>;
+
+		BFYamlFile() = default;
+		explicit BFYamlFile(const std::filesystem::path& path) : m_filePath(path) {}
+		virtual ~BFYamlFile() = default;
+		BFYamlFile(const BFYamlFile&) = default;
+		BFYamlFile& operator=(const BFYamlFile&) = default;
+		BFYamlFile(BFYamlFile&&) = default;
+		BFYamlFile& operator=(BFYamlFile&&) = default;
+		
+		static T load(const std::filesystem::path& file)
 		{
-			const auto f = YAML::LoadFile(file);
-			return f.as<T>();
+			const auto f = YAML::LoadFile(file.string());
+			auto res = f.as<T>();
+			res.m_filePath = file;
+			return res;
 		}
 
-		static bool tryLoad(const std::string& file, T& data)
+		static bool tryLoad(const std::string& file, std::shared_ptr<T>& data)
 		{
 			try
 			{
-				data = load(file);
+				data = std::make_shared<T>(load(file));
 				return true;
 			}
 			catch(const std::exception& err)
@@ -32,12 +43,12 @@ namespace BlackFox
 			}
 		}
 		
-		[[nodiscard]] bool save(const std::string& file) const
+		[[nodiscard]] bool save() const
 		{
 			YAML::Emitter out;
 			out << static_cast<const T&>(*this);
 			
-			std::ofstream ofs(file);
+			std::ofstream ofs(m_filePath);
 			if (!ofs.is_open()) return false;
 			
 			ofs << out.c_str();
@@ -45,5 +56,25 @@ namespace BlackFox
 
 			return ofs.good();
 		}
+
+		void saveOrThrow() const
+		{
+			if(!save())
+			{
+				BF_EXCEPTION("Failed to save YAML file {}", m_filePath.string());
+			}
+		}
+
+		static void revertToFile(T& data)
+		{
+			const auto beforeRestore = static_cast<std::string>(data);
+			data = load(data.m_filePath);
+			BF_PRINT("Restored to file\nbefore -> {}\nafter -> {}", beforeRestore, static_cast<std::string>(data));
+		}
+
+		virtual explicit operator std::string() const = 0;
+
+	private:
+		std::filesystem::path m_filePath;
 	};
 }

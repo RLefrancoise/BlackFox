@@ -10,7 +10,7 @@ using namespace imgui_addons;
 namespace BlackFox::Editor
 {	
 	BFNewProjectWindow::BFNewProjectWindow(BFCommandManager::Ptr commandManager)
-	: BFWindow("New Project", BFWindowData{ ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse, true })
+	: Super("New Project", BFWindowData{ ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse, true })
 	, m_commandManager(std::move(commandManager))
 	, m_createProjectFolder(false)
 	, m_projectDirExists(false)

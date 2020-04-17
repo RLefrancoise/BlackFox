@@ -6,6 +6,7 @@
 #include "BFWindowManager.h"
 #include "BFQuitEditorCommand.h"
 #include "BFSceneListWindow.h"
+#include "BFSettingsWindow.h"
 
 namespace BlackFox::Editor
 {
@@ -36,23 +37,17 @@ namespace BlackFox::Editor
 		if (ImGui::BeginMenu("File"))
 		{
 			//Project
-			if (ImGui::MenuItem("New Project"))
+			if (ImGui::MenuItem("New Project", nullptr, false, !m_dataManager->hasActiveProject()))
 			{
 				m_windowManager->createWindow<BFNewProjectWindow>();
 			}
-			if (ImGui::MenuItem("Load Project"))
+			if (ImGui::MenuItem("Load Project", nullptr, false, !m_dataManager->hasActiveProject()))
 			{
 				m_windowManager->createWindow<BFLoadProjectWindow>();
 			}
 			
 			if (ImGui::MenuItem("Save Project", nullptr, false, m_dataManager->hasActiveProject())) {}
 			if (ImGui::MenuItem("Close Project", nullptr, false, m_dataManager->hasActiveProject())) {}
-
-			ImGui::Separator();
-
-			//Scene
-			if (ImGui::MenuItem("New Scene", nullptr, false, m_dataManager->hasActiveProject())) {}
-			if (ImGui::MenuItem("Load Scene", nullptr, false, m_dataManager->hasActiveProject())) {}
 
 			ImGui::Separator();
 			
@@ -69,14 +64,17 @@ namespace BlackFox::Editor
 	{
 		if(ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem(m_commandManager->canUndo() ? fmt::format("Undo {}", m_commandManager->getUndoCommandName()).c_str() : "Undo", "Ctrl+Z", false, m_commandManager->canUndo()))
+			if (ImGui::MenuItem(m_commandManager->canUndo() ? fmt::format("Undo {}", m_commandManager->getUndoCommandName()).c_str() : "Undo", nullptr, false, m_commandManager->canUndo()))
 				m_commandManager->undo();
-			if (ImGui::MenuItem(m_commandManager->canRedo() ? fmt::format("Redo {}", m_commandManager->getRedoCommandName()).c_str() : "Redo", "Ctrl+Y", false, m_commandManager->canRedo()))
+			if (ImGui::MenuItem(m_commandManager->canRedo() ? fmt::format("Redo {}", m_commandManager->getRedoCommandName()).c_str() : "Redo", nullptr, false, m_commandManager->canRedo()))
 				m_commandManager->redo();
 			
 			ImGui::Separator();
 			
-			if (ImGui::MenuItem("Settings")) {}
+			if (ImGui::MenuItem("Settings"))
+			{
+				m_windowManager->createWindow<BFSettingsWindow>();
+			}
 
 			ImGui::EndMenu();
 		}

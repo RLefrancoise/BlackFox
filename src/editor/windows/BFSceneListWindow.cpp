@@ -6,7 +6,7 @@
 namespace BlackFox::Editor
 {
 	BFSceneListWindow::BFSceneListWindow(BFCommandManager::Ptr commandManager)
-		: BFWindow("Scene Selector")
+		: Super("Scene Selector", BFWindowData{ ImGuiWindowFlags_MenuBar})
 		, m_commandManager{ std::move(commandManager) }
 		, m_selectedScene {0}
 	{
@@ -24,6 +24,22 @@ namespace BlackFox::Editor
 
 	bool BFSceneListWindow::drawContent(float delta)
 	{
+		//Menu bar
+		if(ImGui::BeginMenuBar())
+		{
+			//Scene
+			if (ImGui::BeginMenu("Scene"))
+			{
+				if (ImGui::MenuItem("New Scene")) {}
+				if (ImGui::MenuItem("Load Scene")) {}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
+
+		//Scenes list
 		if (ImGui::BeginChild("Scene List"))
 		{
 			for (auto i = 0; i < 5; ++i)

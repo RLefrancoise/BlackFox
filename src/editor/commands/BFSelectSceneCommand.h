@@ -1,3 +1,10 @@
+/*********************************************************************
+ * \file   BFSelectSceneCommand.h
+ * \brief  Command to select a scene in the scene list window
+ * 
+ * \author Renaud Lefrançoise
+ * \date   April 2020
+***********************************************************************/
 #pragma once
 
 #include "BFSceneListWindow.h"
@@ -10,18 +17,11 @@ namespace BlackFox::Editor
 	public:
 		CINJECT(BFSelectSceneCommand(BFCommandManager::Ptr commandManager));
 
-		void execute(BFSceneListWindow* window, const int selectedScene)
-		{
-			BFWindowCommand<BFSelectSceneCommand, BFSceneListWindow>::execute(window);
-			
-			m_previousScene = m_window->selectedScene();
-			BF_PRINT("Select scene {}", selectedScene);
-			m_window->selectedScene(selectedScene);
-		}
+		void execute(BFSceneListWindow* window, int selectedScene);
 		
 		[[nodiscard]] BFSelectSceneCommand* clone() const override;
-		void undo() override { execute(m_window, m_previousScene); }
-		void redo() override { execute(m_window, m_previousScene); }
+		void undo() override;
+		void redo() override;
 
 	private:
 		int m_previousScene;
