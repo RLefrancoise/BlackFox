@@ -38,6 +38,8 @@ namespace BlackFox
 			out << static_cast<const T&>(*this);
 			
 			std::ofstream ofs(file);
+			if (!ofs.is_open()) return false;
+			
 			ofs << out.c_str();
 			ofs.close();
 
