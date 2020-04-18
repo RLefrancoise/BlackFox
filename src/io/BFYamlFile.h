@@ -74,6 +74,8 @@ namespace BlackFox
 
 		virtual explicit operator std::string() const = 0;
 
+		const std::filesystem::path& file() const { return m_filePath; }
+
 	private:
 		std::filesystem::path m_filePath;
 	};

@@ -38,6 +38,13 @@ namespace BlackFox::Editor
 		BFEditorData& operator=(BFEditorData&&) = default;
 
 		explicit operator std::string() const override;
+
+		void addProjectToHistory(const std::filesystem::path& projectFile);
+
+		/**
+		 * Recent projects opened in the editor
+		 */
+		std::vector<std::filesystem::path> recentProjects;
 		
 		/**
 		 * Editor config
@@ -76,6 +83,7 @@ namespace YAML
 		static Node encode(const BlackFox::Editor::BFEditorData& data)
 		{
 			Node node;
+			node["recentProjects"] = data.recentProjects;
 			node["config"] = data.config;;
 
 			return node;
@@ -85,6 +93,7 @@ namespace YAML
 		{
 			if (!node.IsMap()) return false;
 
+			if (node["recentProjects"]) data.recentProjects = node["recentProjects"].as<std::vector<std::filesystem::path>>();
 			if (node["config"]) data.config = node["config"].as<BlackFox::Editor::BFEditorConfig>();
 
 			return true;

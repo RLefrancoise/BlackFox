@@ -8,7 +8,7 @@ using namespace imgui_addons;
 
 namespace BlackFox::Editor
 {
-	BFLoadProjectWindow::BFLoadProjectWindow(BFCommandManager::Ptr commandManager, BFWindowManager::Ptr windowManager)
+	BFLoadProjectWindow::BFLoadProjectWindow(BFCommandManager::Ptr commandManager, BFWindowManager::Ptr windowManager, BFDataManager::Ptr dataManager)
 	: Super(
 		"Load project", 
 		BFWindowData{
@@ -16,12 +16,20 @@ namespace BlackFox::Editor
 			true})
 	, m_commandManager(std::move(commandManager))
 	, m_windowManager(std::move(windowManager))
+	, m_dataManager(std::move(dataManager))
 	{
+		//Init project list with recently opened projects
+		auto editorData = m_dataManager->getEditorData();
+		for(const auto& prj : editorData->recentProjects)
+		{
+			if (!exists(prj)) continue;
+			m_projects.insert(std::make_pair(prj, BFProjectData::load(prj)));
+		}
 	}
 
 	BFLoadProjectWindow* BFLoadProjectWindow::clone() const
 	{
-		return new BFLoadProjectWindow(m_commandManager, m_windowManager);
+		return new BFLoadProjectWindow(m_commandManager, m_windowManager, m_dataManager);
 	}
 
 	bool BFLoadProjectWindow::drawContent(float delta)

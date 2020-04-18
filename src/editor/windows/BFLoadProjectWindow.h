@@ -7,6 +7,7 @@
 #include "BFWindow.h"
 #include "BFCommandManager.h"
 #include "BFWindowManager.h"
+#include "BFDataManager.h"
 #include "BFProjectData.h"
 #include "ImGuiFileBrowser.h"
 
@@ -15,7 +16,7 @@ namespace BlackFox::Editor
 	class BFLoadProjectWindow final : public BFWindow<BFLoadProjectWindow>
 	{
 	public:
-		CINJECT(BFLoadProjectWindow(BFCommandManager::Ptr commandManager, BFWindowManager::Ptr windowManager));
+		CINJECT(BFLoadProjectWindow(BFCommandManager::Ptr commandManager, BFWindowManager::Ptr windowManager, BFDataManager::Ptr dataManager));
 		[[nodiscard]] BFLoadProjectWindow* clone() const override;
 
 	protected:
@@ -37,6 +38,7 @@ namespace BlackFox::Editor
 		
 		BFCommandManager::Ptr m_commandManager;
 		BFWindowManager::Ptr m_windowManager;
+		BFDataManager::Ptr m_dataManager;
 		imgui_addons::ImGuiFileBrowser m_fileBrowser;
 
 		std::filesystem::path m_selectedProject;
