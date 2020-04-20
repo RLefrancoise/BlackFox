@@ -22,8 +22,8 @@ namespace BlackFox::Editor
 		auto editorData = m_dataManager->getEditorData();
 		for(const auto& prj : editorData->recentProjects)
 		{
-			if (!exists(prj)) continue;
-			m_projects.insert(std::make_pair(prj, BFProjectData::load(prj)));
+			if (!exists(prj.path)) continue;
+			m_projects.insert(std::make_pair(prj, BFProjectData::load(prj.path)));
 		}
 	}
 
@@ -42,7 +42,7 @@ namespace BlackFox::Editor
 		{
 			for(const auto& projectEntry : m_projects)
 			{
-				if (ImGui::Selectable(projectEntry.second.name.c_str(), m_selectedProject == projectEntry.first))
+				if (ImGui::Selectable(projectEntry.second.name.c_str(), m_selectedProject.path == projectEntry.first.path))
 				{
 					m_selectedProject = projectEntry.first;
 				}
@@ -69,14 +69,29 @@ namespace BlackFox::Editor
 			}
 			else
 			{
-				m_projects.insert(std::make_pair(m_fileBrowser.selected_path, *data));
+				const auto it = std::find_if(m_projects.cbegin(), m_projects.cend(), [&](const std::pair<BFEditorProjectHistory, BFProjectData>& h)
+				{
+					return h.first.path == m_fileBrowser.selected_path;
+				});
+				
+				if(it != m_projects.cend())
+				{
+					m_projects.insert(std::make_pair(it->first, *data));
+				}
+				else
+				{
+					BFEditorProjectHistory history;
+					history.path = m_fileBrowser.selected_path;
+					history.lastUpdateTime = std::time(nullptr);
+					m_projects.insert(std::make_pair(history, *data));
+				}
 			}
 		}
 
 		Layout::addVerticalSpace(20.f);
 
 		//Open project button
-		if(ImGui::ButtonEx("Open selected project", ImVec2(), m_selectedProject.empty() ? ImGuiButtonFlags_Disabled : ImGuiButtonFlags_None))
+		if(ImGui::ButtonEx("Open selected project", ImVec2(), m_selectedProject.path.empty() ? ImGuiButtonFlags_Disabled : ImGuiButtonFlags_None))
 		{
 			m_commandManager->executeCommand<BFLoadProjectCommand>(m_projects[m_selectedProject]);
 			return false;

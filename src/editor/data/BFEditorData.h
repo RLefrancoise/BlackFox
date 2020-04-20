@@ -3,10 +3,38 @@
 #include <imgui.h>
 #include <yaml-convert.h>
 #include <memory>
+#include <ctime>
 #include "BFYamlFile.h"
 
 namespace BlackFox::Editor
 {
+	/**
+	 * Editor project history
+	 */
+	struct BFEditorProjectHistory
+	{
+		BFEditorProjectHistory() : lastUpdateTime(0) {}
+
+		bool operator==(const BFEditorProjectHistory& h) const
+		{
+			return path == h.path;
+		}
+
+		bool operator>(const BFEditorProjectHistory& h) const
+		{
+			return lastUpdateTime > h.lastUpdateTime;
+		}
+		
+		/**
+		 * Path of the project
+		 */
+		std::filesystem::path path;
+		/**
+		 * Last update time of the project
+		 */
+		std::time_t lastUpdateTime;
+	};
+	
 	/**
 	 * Editor config
 	 */
@@ -39,12 +67,12 @@ namespace BlackFox::Editor
 
 		explicit operator std::string() const override;
 
-		void addProjectToHistory(const std::filesystem::path& projectFile);
+		void addProjectToHistory(const BFEditorProjectHistory& project);
 
 		/**
 		 * Recent projects opened in the editor
 		 */
-		std::vector<std::filesystem::path> recentProjects;
+		std::vector<BFEditorProjectHistory> recentProjects;
 		
 		/**
 		 * Editor config
@@ -56,6 +84,30 @@ namespace BlackFox::Editor
 
 namespace YAML
 {
+	template<>
+	struct convert<BlackFox::Editor::BFEditorProjectHistory>
+	{
+		static Node encode(const BlackFox::Editor::BFEditorProjectHistory& h)
+		{
+			Node node;
+			node["path"] = h.path;
+			node["lastUpdateTime"] = h.lastUpdateTime;
+
+			return node;
+		}
+
+		static bool decode(const Node& node, BlackFox::Editor::BFEditorProjectHistory& h)
+		{
+			if (!node.IsMap()) return false;
+			if (!node["path"]) return false;
+
+			h.path = node["path"].as<std::filesystem::path>();
+			if (node["lastUpdateTime"]) h.lastUpdateTime = node["lastUpdateTime"].as<std::time_t>();
+
+			return true;
+		}
+	};
+	
 	template<>
 	struct convert<BlackFox::Editor::BFEditorConfig>
 	{
@@ -93,13 +145,14 @@ namespace YAML
 		{
 			if (!node.IsMap()) return false;
 
-			if (node["recentProjects"]) data.recentProjects = node["recentProjects"].as<std::vector<std::filesystem::path>>();
+			if (node["recentProjects"]) data.recentProjects = node["recentProjects"].as<std::vector<BlackFox::Editor::BFEditorProjectHistory>>();
 			if (node["config"]) data.config = node["config"].as<BlackFox::Editor::BFEditorConfig>();
 
 			return true;
 		}
 	};
 
+	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorProjectHistory& history);
 	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorConfig& config);
 	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFEditorData& data);
 }

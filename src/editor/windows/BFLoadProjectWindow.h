@@ -2,7 +2,7 @@
 
 #include <cinject/cinject.h>
 #include <filesystem>
-#include <unordered_map>
+#include <map>
 
 #include "BFWindow.h"
 #include "BFCommandManager.h"
@@ -23,25 +23,25 @@ namespace BlackFox::Editor
 		bool drawContent(float delta) override;
 
 	private:
-		struct pathcomp
+		/*struct BFProjectHistoryCompare
 		{
-			bool operator()(const std::filesystem::path& lhs, const std::filesystem::path& rhs) const
+			bool operator()(const BFEditorProjectHistory& lhs, const BFEditorProjectHistory& rhs) const
 			{
-				return lhs.compare(rhs) < 0;
+				return lhs.path.compare(rhs.path) < 0;
 			}
 
-			size_t operator()(const std::filesystem::path& path) const
+			size_t operator()(const BFEditorProjectHistory& prj) const
 			{
-				return hash_value(path);
+				return hash_value(prj.path);
 			}
-		};
+		};*/
 		
 		BFCommandManager::Ptr m_commandManager;
 		BFWindowManager::Ptr m_windowManager;
 		BFDataManager::Ptr m_dataManager;
 		imgui_addons::ImGuiFileBrowser m_fileBrowser;
 
-		std::filesystem::path m_selectedProject;
-		std::unordered_map<std::filesystem::path, BFProjectData, pathcomp> m_projects;
+		BFEditorProjectHistory m_selectedProject;
+		std::map<BFEditorProjectHistory, BFProjectData, std::greater<>> m_projects;
 	};
 }

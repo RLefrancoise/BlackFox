@@ -104,14 +104,8 @@ namespace BlackFox::Editor
 		
 		if (!m_projectName.empty() && !m_projectPath.empty())
 		{
-			auto dir(m_projectPath);
-
-			if (m_createProjectFolder) dir /= m_projectName;
-			
-			dir /= m_projectName;
-
-			m_projectDirExists = exists(dir);
-			m_projectDirEmpty = m_projectDirExists && is_empty(dir);
+			m_projectDirExists = exists(m_projectPath);
+			m_projectDirEmpty = m_projectDirExists && is_empty(m_projectPath);
 		}
 
 		const auto dirOk = !m_projectDirExists || m_projectDirEmpty;

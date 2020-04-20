@@ -17,7 +17,10 @@ namespace BlackFox::Editor
 		m_dataManager->setActiveProject(data);
 
 		//Add project to editor history
-		m_dataManager->getEditorData()->addProjectToHistory(projectData.file());
+		BFEditorProjectHistory projectHistory;
+		projectHistory.path = projectData.file();
+		projectHistory.lastUpdateTime = std::time(nullptr);
+		m_dataManager->getEditorData()->addProjectToHistory(projectHistory);
 		m_dataManager->getEditorData()->saveOrThrow();
 	}
 

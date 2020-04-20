@@ -48,7 +48,8 @@ namespace BlackFox::Editor
 			
 			//Assign project to current project
 			m_dataManager->setActiveProject(project);
-		} catch(const std::exception& err)
+		}
+		catch(const std::exception& err)
 		{
 			m_windowManager->createMessagePopup("Error", err.what());
 		}
