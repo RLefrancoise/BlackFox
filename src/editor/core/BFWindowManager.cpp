@@ -65,4 +65,19 @@ namespace BlackFox::Editor
 
 		m_windows.clear();
 	}
+
+	std::vector<IBFWindow*> BFWindowManager::getWindows() const
+	{
+		std::vector<IBFWindow*> windows;
+
+		for (const auto& windowEntry : m_windows)
+		{
+			for(const auto w : windowEntry.second)
+			{
+				windows.push_back(w);
+			}
+		}
+
+		return windows;
+	}
 }

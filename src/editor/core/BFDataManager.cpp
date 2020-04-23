@@ -31,6 +31,15 @@ namespace BlackFox::Editor
 	{
 		m_projectData = std::move(projectData);
 		BF_PRINT(*m_projectData);
+		publish<BFProjectChangedEvent>(m_projectData);
+	}
+
+	void BFDataManager::closeActiveProject()
+	{
+		const std::shared_ptr<BFProjectData> emptyData;
+		m_projectData = emptyData;
+		BF_PRINT("Closed project");
+		publish<BFProjectClosedEvent>();
 	}
 
 	bool BFDataManager::hasEditorData() const

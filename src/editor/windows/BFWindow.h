@@ -17,6 +17,7 @@ namespace BlackFox::Editor
 	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 		bool isModal = false;
+		bool closeWhenProjectClosed = false;
 		ImVec2 initialSize = ImVec2();
 		ImVec2 size = ImVec2(400, 300);
 		ImVec2 minSize = ImVec2();
@@ -43,21 +44,32 @@ namespace BlackFox::Editor
 		virtual bool draw(float delta) = 0;
 		
 		[[nodiscard]] virtual IBFWindow* clone() const = 0;
+
+		virtual void close() = 0;
 		
 		[[nodiscard]] const std::string& title() const { return m_title; }
 		void title(const std::string& title) { m_title = title; }
 		[[nodiscard]] const BFWindowData& data() const { return m_data; }
 		void data(const BFWindowData& data) { m_data = data; }
 
+		/*!
+		 * \brief		Is the window unique ? (It is not possible to open multiple instances of the window)
+		 * 
+		 * \return		True if window is unique, false otherwise.
+		 */
+		[[nodiscard]] bool isUnique() const { return m_isUnique; }
+
 	protected:
-		explicit IBFWindow(std::string title, const BFWindowData& data)
+		explicit IBFWindow(std::string title, const BFWindowData& data, const bool isUnique = false)
 		: m_title{std::move(title)}
 		, m_data{data}
+		, m_isUnique{isUnique}
 		{
 		}
 		
 		std::string m_title;
 		BFWindowData m_data;
+		bool m_isUnique;
 
 		static std::unordered_map<std::type_index, unsigned int> m_windowIdGenerator;
 	};
@@ -148,6 +160,11 @@ namespace BlackFox::Editor
 
 		[[nodiscard]] BFWindow* clone() const override = 0;
 
+		void close() override
+		{
+			m_opened = false;
+		}
+
 		template<typename EventType>
 		typename entt::emitter<WindowType>::template connection<EventType> connect(const std::function<void(const EventType&, BFWindow<WindowType>&)>& fnc)
 		{
@@ -191,8 +208,8 @@ namespace BlackFox::Editor
 			return fmt::format("{}##{}", id, m_imguiId);
 		}
 		
-		explicit BFWindow(const std::string& title, const BFWindowData& data = BFWindowData())
-		: IBFWindow(title, data)
+		explicit BFWindow(const std::string& title, const BFWindowData& data = BFWindowData(), const bool isUnique = false)
+		: IBFWindow(title, data, isUnique)
 		, m_opened{ true }
 		, m_modalOpened{ false }
 		, m_imguiId{ generateId() }

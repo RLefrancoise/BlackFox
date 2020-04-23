@@ -6,7 +6,7 @@
 namespace BlackFox::Editor
 {
 	BFSceneListWindow::BFSceneListWindow(BFCommandManager::Ptr commandManager)
-		: Super("Scene Selector", BFWindowData{ ImGuiWindowFlags_MenuBar})
+		: Super("Scene Selector", BFWindowData{ ImGuiWindowFlags_MenuBar, false, true})
 		, m_commandManager{ std::move(commandManager) }
 		, m_selectedScene {0}
 	{

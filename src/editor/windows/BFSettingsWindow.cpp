@@ -10,7 +10,7 @@ namespace BlackFox::Editor
 		, m_dataManager{ std::move(dataManager) }
 	{
 		//Let's make copies of all data, so we can cancel modifications if we click on cancel
-		m_projectData = *m_dataManager->getActiveProject();
+		if(m_dataManager->hasActiveProject()) m_projectData = *m_dataManager->getActiveProject();
 		m_editorData = *m_dataManager->getEditorData();
 	}
 
@@ -26,12 +26,12 @@ namespace BlackFox::Editor
 		if(ImGui::BeginTabBar("TabBar"))
 		{
 			//Project
-			if(ImGui::BeginTabItem("Project", nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
+			if (m_dataManager->hasActiveProject() && ImGui::BeginTabItem("Project", nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
 			{
 				opened = showProjectSettings();
 				ImGui::EndTabItem();
 			}
-
+			
 			//Editor
 			if(ImGui::BeginTabItem("Editor", nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
 			{
@@ -72,9 +72,13 @@ namespace BlackFox::Editor
 
 	void BFSettingsWindow::applyChanges()
 	{
-		m_projectData.saveOrThrow();
+		if(m_dataManager->hasActiveProject())
+		{
+			m_projectData.saveOrThrow();
+			m_dataManager->setActiveProject(std::make_shared<BFProjectData>(m_projectData));
+		}
+		
 		m_editorData.saveOrThrow();
-		m_dataManager->setActiveProject(std::make_shared<BFProjectData>(m_projectData));
 		m_dataManager->setEditorData(std::make_shared<BFEditorData>(m_editorData));
 	}
 

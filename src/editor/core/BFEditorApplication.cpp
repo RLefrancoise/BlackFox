@@ -37,6 +37,7 @@ namespace BlackFox::Editor
 			sf::Clock deltaClock;
 			while (m_window.isOpen())
 			{
+				//Process events
 				sf::Event event{};
 				while (m_window.pollEvent(event))
 				{
@@ -48,9 +49,11 @@ namespace BlackFox::Editor
 					}
 				}
 
+				//Update window
 				const auto delta = deltaClock.restart();
 				ImGui::SFML::Update(m_window, delta);
-				
+
+				//Render window
 				render(delta.asSeconds());
 
 				m_window.clear(m_dataManager->hasEditorData() ? sf::Color(m_dataManager->getEditorData()->config.backgroundColor.Value) : sf::Color::Black);
@@ -111,6 +114,20 @@ namespace BlackFox::Editor
 				}
 
 				m_dataManager->setEditorData(dataPtr);
+
+				//Data manager events
+
+				//Project opened
+				m_dataManager->on<BFDataManager::BFProjectChangedEvent>([&](const BFDataManager::BFProjectChangedEvent& ev, BFDataManager&)
+				{
+					m_window.setTitle(fmt::format("BlackFox Editor - {}", ev.project->name));
+				});
+
+				//Project closed
+				m_dataManager->on<BFDataManager::BFProjectClosedEvent>([&](const BFDataManager::BFProjectClosedEvent&, BFDataManager&)
+				{
+					m_window.setTitle("BlackFox Editor");
+				});
 			}
 			catch (const std::exception& err)
 			{

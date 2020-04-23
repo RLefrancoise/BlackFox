@@ -1,15 +1,35 @@
 #pragma once
 
 #include <cinject/cinject.h>
+#include <entt/signal/emitter.hpp>
 
 #include "data/BFProjectData.h"
 #include "data/BFEditorData.h"
 
 namespace BlackFox::Editor
 {
-	class BFDataManager
+	class BFDataManager final : public entt::emitter<BFDataManager>
 	{
 	public:
+
+		/// Events
+		
+		/*!
+		 * Project changed event
+		 */
+		struct BFProjectChangedEvent
+		{
+			BFProjectData::Ptr project;
+		};
+
+		/*!
+		 * Project closed event
+		 */
+		struct BFProjectClosedEvent
+		{};
+
+		/// Class
+
 		typedef std::shared_ptr<BFDataManager> Ptr;
 		
 		CINJECT(BFDataManager()) = default;
@@ -24,6 +44,7 @@ namespace BlackFox::Editor
 		[[nodiscard]] bool hasActiveProject() const;
 		[[nodiscard]] BFProjectData::Ptr getActiveProject() const;
 		void setActiveProject(BFProjectData::Ptr projectData);
+		void closeActiveProject();
 
 		[[nodiscard]] bool hasEditorData() const;
 		[[nodiscard]] BFEditorData::Ptr getEditorData() const;

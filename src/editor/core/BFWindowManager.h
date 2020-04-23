@@ -27,8 +27,10 @@ namespace BlackFox::Editor
 		constexpr BFWindowManager() = delete;
 		constexpr BFWindowManager(const BFWindowManager&) = delete;
 		constexpr BFWindowManager& operator=(const BFWindowManager&) = delete;
-
 		void update(float delta);
+
+
+
 		
 		template <typename WindowType>
 		WindowType* createWindow()
@@ -93,6 +95,8 @@ namespace BlackFox::Editor
 
 			return m_windows[typeid(WindowType)];
 		}
+
+		[[nodiscard]] std::vector<IBFWindow*> getWindows() const;
 		
 		template<typename WindowType>
 		bool hasWindow()

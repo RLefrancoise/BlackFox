@@ -3,6 +3,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <utility>
 
 #include "BFDebug.h"
 
@@ -14,7 +15,7 @@ namespace BlackFox
 		using Super = BFYamlFile<T>;
 
 		BFYamlFile() = default;
-		explicit BFYamlFile(const std::filesystem::path& path) : m_filePath(path) {}
+		explicit BFYamlFile(std::filesystem::path path) : m_filePath(std::move(path)) {}
 		virtual ~BFYamlFile() = default;
 		BFYamlFile(const BFYamlFile&) = default;
 		BFYamlFile& operator=(const BFYamlFile&) = default;
@@ -74,7 +75,7 @@ namespace BlackFox
 
 		virtual explicit operator std::string() const = 0;
 
-		const std::filesystem::path& file() const { return m_filePath; }
+		[[nodiscard]] const std::filesystem::path& file() const { return m_filePath; }
 
 	private:
 		std::filesystem::path m_filePath;

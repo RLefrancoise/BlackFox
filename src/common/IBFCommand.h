@@ -61,6 +61,8 @@ namespace BlackFox
 	class BFCommandBase: public IBFCommand
 	{
 	public:
+		using Super = BFCommandBase<T>;
+		
 		explicit BFCommandBase(const std::string& name, const bool isUndoable = true): IBFCommand(name, isUndoable) {}
 		
 		template <typename ...Args>

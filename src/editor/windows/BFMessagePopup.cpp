@@ -8,6 +8,7 @@ namespace BlackFox::Editor
 		BFWindowData{
 			ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking
 			, true
+			, false
 			, ImVec2()
 			, ImVec2()
 			, ImVec2(300, 0)})
