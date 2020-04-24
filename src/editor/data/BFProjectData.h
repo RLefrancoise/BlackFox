@@ -22,7 +22,7 @@ namespace BlackFox::Editor
 
 		explicit operator std::string() const override;
 
-		std::filesystem::path rootPath() const;
+		[[nodiscard]] std::filesystem::path rootPath() const;
 		
 		/**
 		 * Project name
