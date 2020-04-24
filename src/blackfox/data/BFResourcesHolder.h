@@ -2,6 +2,7 @@
 
 #include "BFTypeDefs.h"
 #include <memory>
+#include <filesystem>
 #include <SFML/Graphics/Rect.hpp>
 #include <string>
 
@@ -22,6 +23,8 @@ namespace BlackFox
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
 		
 		TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect = sf::IntRect());
+		TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect());
+		TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect());
 
 	private:
 		TextureCache m_textureCache{};

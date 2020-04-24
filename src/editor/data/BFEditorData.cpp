@@ -20,6 +20,9 @@ namespace YAML
 	{
 		out << BeginMap;
 
+		//Resources path
+		out << Key << "resourcesPath" << Value << config.resourcesPath;
+		
 		//Background Color
 		out << Key << "backgroundColor" << Value << config.backgroundColor;
 
@@ -48,14 +51,13 @@ namespace BlackFox::Editor
 {
 	BFEditorData::BFEditorData(const std::filesystem::path& filePath) : Super(filePath)
 	{
+		config.resourcesPath = BLACKFOX_EDITOR_RESOURCES_PATH;
+		config.backgroundColor = ImVec4(sf::Color::Black);
 	}
 
 	BFEditorData::operator std::string() const
 	{
-		return fmt::format(R""""(===Editor Data===
-* Config:
-	backgroundColor: {}
-)"""", Utils::join(std::vector<float>{config.backgroundColor.Value.x, config.backgroundColor.Value.y, config.backgroundColor.Value.z, config.backgroundColor.Value.w}));
+		return fmt::format("===Editor Data===\n\t* Config:{}\n", static_cast<std::string>(config));
 	}
 
 	void BFEditorData::addProjectToHistory(const BFEditorProjectHistory& project)

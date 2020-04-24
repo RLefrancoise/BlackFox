@@ -6,16 +6,14 @@
 
 namespace BlackFox
 {
-    class BFLuaScript
+    struct BFLuaScript
     {
-    public:
-
         typedef std::shared_ptr<BFLuaScript> Ptr;
 
         explicit BFLuaScript(const std::string& fileName, sol::state* state);
 
         template <typename T>
-        bool has(const std::string& name) const
+        [[nodiscard]] bool has(const std::string& name) const
         {
             return get<T>(name) != sol::nil;
         }

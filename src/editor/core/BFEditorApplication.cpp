@@ -102,7 +102,6 @@ namespace BlackFox::Editor
 				if(!exists(editorData))
 				{
 					BFEditorData data(editorData);
-					data.config.backgroundColor = ImVec4(sf::Color::Black);
 					if (!data.save())
 						BF_EXCEPTION("Failed to create editor data");
 

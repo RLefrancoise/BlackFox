@@ -1,8 +1,8 @@
 #include "BFMenuBar.h"
 #include <imgui.h>
 
-
 #include "BFCloseProjectCommand.h"
+#include "BFDataBrowserWindow.h"
 #include "BFLoadProjectWindow.h"
 #include "BFNewProjectWindow.h"
 #include "BFWindowManager.h"
@@ -97,9 +97,16 @@ namespace BlackFox::Editor
 	{
 		if (ImGui::BeginMenu("Window"))
 		{
+			//Scenes list
 			if (ImGui::MenuItem("Scenes List", nullptr, false, m_dataManager->hasActiveProject()))
 			{
 				m_windowManager->createWindow<BFSceneListWindow>();
+			}
+
+			//Data browser
+			if(ImGui::MenuItem("Data Browser", nullptr, false, m_dataManager->hasActiveProject()))
+			{
+				m_windowManager->createWindow<BFDataBrowserWindow>();
 			}
 
 			ImGui::EndMenu();

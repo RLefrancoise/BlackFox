@@ -4,6 +4,8 @@
 #include <yaml-convert.h>
 #include <memory>
 #include <ctime>
+
+#include "BFStringUtils.h"
 #include "BFYamlFile.h"
 
 namespace BlackFox::Editor
@@ -29,6 +31,7 @@ namespace BlackFox::Editor
 		 * Path of the project
 		 */
 		std::filesystem::path path;
+		
 		/**
 		 * Last update time of the project
 		 */
@@ -41,9 +44,21 @@ namespace BlackFox::Editor
 	struct BFEditorConfig
 	{
 		/**
+		 * Resources path for the editor
+		 */
+		std::filesystem::path resourcesPath;
+		
+		/**
 		 * Background color
 		 */
 		ImColor backgroundColor;
+
+		explicit operator std::string() const
+		{
+			return fmt::format("resourcesPath: {}\nbackgroundColor: {}\n"
+				, resourcesPath.string()
+				, Utils::join(std::vector<float>{backgroundColor.Value.x, backgroundColor.Value.y, backgroundColor.Value.z, backgroundColor.Value.w}));
+		}
 	};
 
 	/**
@@ -114,6 +129,7 @@ namespace YAML
 		static Node encode(const BlackFox::Editor::BFEditorConfig& config)
 		{
 			Node node;
+			node["resourcesPath"] = config.resourcesPath;
 			node["backgroundColor"] = config.backgroundColor;
 
 			return node;
@@ -123,6 +139,7 @@ namespace YAML
 		{
 			if (!node.IsMap()) return false;
 
+			if (node["resourcesPath"]) config.resourcesPath = node["resourcesPath"].as<std::filesystem::path>();
 			if (node["backgroundColor"]) config.backgroundColor = node["backgroundColor"].as<ImColor>();
 
 			return true;

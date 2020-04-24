@@ -4,6 +4,10 @@ if(MSVC)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 ENDIF()
 
+# STD UUID
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/catch)
+
 # Files
 file(
         GLOB_RECURSE

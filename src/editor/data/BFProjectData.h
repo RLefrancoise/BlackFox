@@ -21,11 +21,14 @@ namespace BlackFox::Editor
 		explicit BFProjectData(const std::filesystem::path& filePath);
 
 		explicit operator std::string() const override;
+
+		std::filesystem::path rootPath() const;
 		
 		/**
 		 * Project name
 		 */
 		std::string name;
+		
 		/**
 		 * Scenes contained in the project
 		 */

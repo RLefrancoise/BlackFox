@@ -24,6 +24,10 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ImGui-Addons/FileBrowser)
 # IMGUI Color Text Edit
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ImGuiColorTextEdit)
 
+# STD UUID
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/catch)
+
 # Files
 file(
     GLOB_RECURSE
@@ -85,3 +89,16 @@ target_link_libraries(
 )
 
 target_compile_features(editor PRIVATE cxx_std_17)
+
+set(BLACKFOX_EDITOR_RESOURCES_PATH "" CACHE FILEPATH "Editor resources folder path")
+IF(EXISTS ${BLACKFOX_EDITOR_RESOURCES_PATH})
+    string(REGEX REPLACE "[\\]" "/" BLACKFOX_EDITOR_RESOURCES_PATH ${BLACKFOX_EDITOR_RESOURCES_PATH})
+    add_compile_definitions(BLACKFOX_EDITOR_RESOURCES_PATH="${BLACKFOX_EDITOR_RESOURCES_PATH}")
+ELSE()
+    message("Please specify where the resources folder of the editor is located")
+ENDIF()
+
+# Set working directory to root folder to be able to load resoources
+#IF(MSVC)
+#    set_property(TARGET editor PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+#ENDIF()

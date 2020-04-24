@@ -36,4 +36,10 @@ name: {}
 scenes: {}
 )"""", name, Utils::join<std::filesystem::path>(scenes, ',', stringifyPath));
 	}
+
+	std::filesystem::path BFProjectData::rootPath() const
+	{
+		auto p = file();
+		return p.remove_filename();
+	}
 }

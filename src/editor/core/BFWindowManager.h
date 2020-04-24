@@ -44,6 +44,9 @@ namespace BlackFox::Editor
 			
 			auto window = getRegisteredWindow<WindowType>();
 			if (window == nullptr) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name());
+
+			//Check if window is flagged unique or not. If unique, return it if it is already created
+			if (window->isUnique() && hasWindow<WindowType>()) return getWindow<WindowType>();
 			
 			//Create new window and return it
 			auto w = window->clone();
@@ -82,7 +85,7 @@ namespace BlackFox::Editor
 			if (!isWindowRegistered<WindowType>()) BF_EXCEPTION("Window {} is not registered", typeid(WindowType).name());
 			if (!hasWindow<WindowType>()) BF_EXCEPTION("Window {} not found", typeid(WindowType).name());
 			
-			return m_windows[typeid(WindowType)].front();
+			return static_cast<WindowType*>(m_windows[typeid(WindowType)].front());
 		}
 
 		template <typename WindowType>
