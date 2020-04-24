@@ -5,6 +5,7 @@
 #include "BFNewProjectWindow.h"
 #include "BFSceneListWindow.h"
 #include "BFMenuBar.h"
+#include "BFScriptEditorWindow.h"
 #include "BFSettingsWindow.h"
 
 namespace BlackFox::Editor
@@ -25,5 +26,6 @@ namespace BlackFox::Editor
 
 		m_container->bind<BFSceneListWindow>().toSelf().inSingletonScope();
 		m_container->bind<BFDataBrowserWindow>().toSelf().inSingletonScope();
+		m_container->bind<BFScriptEditorWindow>().toSelf().inSingletonScope();
 	}
 }

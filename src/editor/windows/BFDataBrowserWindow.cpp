@@ -2,6 +2,8 @@
 #include "BFFileSelectedEvent.h"
 #include <imgui-SFML.h>
 
+#include "BFOpenFileCommand.h"
+
 namespace BlackFox::Editor
 {
 	BFDataBrowserWindow::BFDataBrowserWindow(BFCommandManager::Ptr commandManager, BFDataManager::Ptr dataManager)
@@ -174,6 +176,7 @@ namespace BlackFox::Editor
 			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
 				BF_PRINT("Open file {}", filename);
+				m_commandManager->executeCommand<BFOpenFileCommand>(entry.path());
 			}
 			//If simple click, only select file by sending file selected event
 			else
