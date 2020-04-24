@@ -18,8 +18,8 @@ namespace BlackFox::Editor
 		ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 		bool isModal = false;
 		bool closeWhenProjectClosed = false;
-		ImVec2 initialSize = ImVec2();
-		ImVec2 size = ImVec2(400, 300);
+		ImVec2 initialSize = ImVec2(400, 300);
+		ImVec2 size = ImVec2();
 		ImVec2 minSize = ImVec2();
 		ImVec2 maxSize = ImGui::GetIO().DisplaySize;
 	};
@@ -103,7 +103,7 @@ namespace BlackFox::Editor
 				if(m_data.initialSize.x > 0 && m_data.initialSize.y > 0) ImGui::SetNextWindowSize(m_data.initialSize, ImGuiCond_FirstUseEver);
 
 				//Set window size
-				if(!hasFlag(m_data.flags, ImGuiWindowFlags_AlwaysAutoResize)) ImGui::SetNextWindowSize(m_data.size, ImGuiCond_Always);
+				if(!hasFlag(m_data.flags, ImGuiWindowFlags_AlwaysAutoResize) && m_data.size.x > 0 && m_data.size.y > 0) ImGui::SetNextWindowSize(m_data.size, ImGuiCond_Always);
 
 				//Set size constraints
 				ImGui::SetNextWindowSizeConstraints(m_data.minSize, m_data.maxSize);

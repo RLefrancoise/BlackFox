@@ -4,12 +4,19 @@
 #include <yaml-convert.h>
 #include <memory>
 #include <ctime>
+#include <entt/core/hashed_string.hpp>
 
 #include "BFStringUtils.h"
 #include "BFYamlFile.h"
 
 namespace BlackFox::Editor
 {
+	namespace Icons
+	{
+		constexpr static entt::hashed_string FOLDER_ICON = "icons/folder.png"_hs;
+		constexpr static entt::hashed_string FILE_ICON = "icons/file.png"_hs;
+	}
+	
 	/**
 	 * Editor project history
 	 */

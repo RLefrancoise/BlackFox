@@ -3,15 +3,22 @@
 #include <utility>
 
 namespace BlackFox::Editor
-{	
+{
+	BFDataManager::BFDataManager(BFResourcesHolder::Ptr resourcesHolder)
+		: m_resourcesHolder(std::move(resourcesHolder))
+	{
+	}
+
 	BFDataManager::BFDataManager(BFDataManager&& dataManager) noexcept
-	: m_projectData(std::move(dataManager.m_projectData))
+	: m_resourcesHolder(std::move(dataManager.m_resourcesHolder))
+	, m_projectData(std::move(dataManager.m_projectData))
 	, m_editorData(std::move(dataManager.m_editorData))
 	{
 	}
 
 	BFDataManager& BFDataManager::operator=(BFDataManager&& dataManager) noexcept
 	{
+		m_resourcesHolder = std::move(dataManager.m_resourcesHolder);
 		m_projectData = std::move(dataManager.m_projectData);
 		m_editorData = std::move(dataManager.m_editorData);
 		return *this;
@@ -56,5 +63,10 @@ namespace BlackFox::Editor
 	{
 		m_editorData = std::move(editorData);
 		BF_PRINT(*m_editorData);
+	}
+
+	TextureHandle BFDataManager::getTextureResource(const entt::hashed_string& resource) const
+	{
+		return m_resourcesHolder->loadTexture(m_editorData->config.resourcesPath / resource.data());
 	}
 }

@@ -4,11 +4,10 @@
 
 namespace BlackFox::Editor
 {
-	BFDataBrowserWindow::BFDataBrowserWindow(BFCommandManager::Ptr commandManager, BFDataManager::Ptr dataManager, BFResourcesHolder::Ptr resourcesHolder)
+	BFDataBrowserWindow::BFDataBrowserWindow(BFCommandManager::Ptr commandManager, BFDataManager::Ptr dataManager)
 	: Super("Data Browser", BFWindowData {ImGuiWindowFlags_MenuBar, false, true})
 	, m_commandManager(std::move(commandManager))
 	, m_dataManager(std::move(dataManager))
-	, m_resourcesHolder(std::move(resourcesHolder))
 	{
 		//Root folder
 		m_rootFolder = m_dataManager->getActiveProject()->rootPath();
@@ -21,13 +20,13 @@ namespace BlackFox::Editor
 		m_currentFolder = m_rootFolder / "data";
 
 		//Resources
-		m_folderIcon = m_resourcesHolder->loadTextureOrThrow(m_dataManager->getEditorData()->config.resourcesPath / "icons/folder.png");
-		m_fileIcon = m_resourcesHolder->loadTextureOrThrow(m_dataManager->getEditorData()->config.resourcesPath / "icons/file.png");
+		m_folderIcon = m_dataManager->getTextureResource(Icons::FOLDER_ICON);
+		m_fileIcon = m_dataManager->getTextureResource(Icons::FILE_ICON);
 	}
 
 	BFDataBrowserWindow* BFDataBrowserWindow::clone() const
 	{
-		return new BFDataBrowserWindow(m_commandManager, m_dataManager, m_resourcesHolder);
+		return new BFDataBrowserWindow(m_commandManager, m_dataManager);
 	}
 
 	bool BFDataBrowserWindow::drawContent(float delta)

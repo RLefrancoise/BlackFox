@@ -109,6 +109,3 @@ add_subdirectory(yaml-cpp)
 
 # YAML Convert
 add_subdirectory(yaml-convert)
-
-# STD UUID
-add_subdirectory(stduuid)
