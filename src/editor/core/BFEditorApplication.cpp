@@ -109,7 +109,9 @@ namespace BlackFox::Editor
 				}
 				else
 				{
-					dataPtr = std::make_shared<BFEditorData>(BFEditorData::load(editorData));
+					BFEditorData d;
+					d.loadOrThrow(editorData);
+					dataPtr = std::make_shared<BFEditorData>(d);
 				}
 
 				m_dataManager->setEditorData(dataPtr);

@@ -60,6 +60,14 @@ namespace BlackFox::Editor
 				ImGui::EndMenu();
 			}
 
+			if(ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem("Undo", nullptr, false, m_textEditor.CanUndo())) m_textEditor.Undo();
+				if (ImGui::MenuItem("Redo", nullptr, false, m_textEditor.CanRedo())) m_textEditor.Redo();
+				
+				ImGui::EndMenu();
+			}
+			
 			if(ImGui::BeginMenu("Options"))
 			{
 				if(ImGui::Checkbox("Show white spaces", &m_showWhiteSpaces))

@@ -24,10 +24,6 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ImGui-Addons/FileBrowser)
 # IMGUI Color Text Edit
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ImGuiColorTextEdit)
 
-# STD UUID
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/include)
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/catch)
-
 # Files
 file(
     GLOB_RECURSE

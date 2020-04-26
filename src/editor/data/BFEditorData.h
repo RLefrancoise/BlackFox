@@ -79,7 +79,7 @@ namespace BlackFox::Editor
 		 * You are not supposed to use the default constructor.
 		 * It is here because it is required by YAML to decode from file
 		 */
-		BFEditorData() = default;
+		BFEditorData();
 		explicit BFEditorData(const std::filesystem::path& filePath);
 		~BFEditorData() = default;
 		BFEditorData(const BFEditorData& data) = default;
@@ -89,6 +89,11 @@ namespace BlackFox::Editor
 
 		explicit operator std::string() const override;
 
+		/**
+		 * Add project to editor history.
+		 * 
+		 * \param project	Project to add.
+		 */
 		void addProjectToHistory(const BFEditorProjectHistory& project);
 
 		/**

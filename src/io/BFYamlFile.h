@@ -6,64 +6,48 @@
 #include <utility>
 
 #include "BFDebug.h"
+#include "BFTextResource.h"
 
 namespace BlackFox
 {
 	template <class T>
-	struct BFYamlFile
+	struct BFYamlFile : BFTextResource
 	{		
 		using Super = BFYamlFile<T>;
 
-		BFYamlFile() = default;
-		explicit BFYamlFile(std::filesystem::path path) : m_filePath(std::move(path)) {}
+		explicit BFYamlFile(const ResourceType& type, std::filesystem::path path) : BFTextResource(type, std::move(path)) {}
 		virtual ~BFYamlFile() = default;
 		BFYamlFile(const BFYamlFile&) = default;
 		BFYamlFile& operator=(const BFYamlFile&) = default;
 		BFYamlFile(BFYamlFile&&) = default;
 		BFYamlFile& operator=(BFYamlFile&&) = default;
-		
-		static T load(const std::filesystem::path& file)
-		{
-			const auto f = YAML::LoadFile(file.string());
-			auto res = f.as<T>();
-			res.m_filePath = file;
-			return res;
-		}
 
-		static bool tryLoad(const std::string& file, std::shared_ptr<T>& data)
+		bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override
 		{
 			try
 			{
-				data = std::make_shared<T>(load(file));
-				return true;
+				const auto f = YAML::LoadFile(file.string());
+				auto res = f.as<T>();
+				res.m_filePath = file;
+
+				T* thisP = static_cast<T*>(this);
+				*thisP = res;
 			}
 			catch(const std::exception& err)
 			{
-				BF_ERROR(err.what());
+				if (errorMessage) *errorMessage = err.what();
 				return false;
 			}
+
+			return true;
 		}
-		
-		[[nodiscard]] bool save() const
+
+		[[nodiscard]] std::string content() const override
 		{
 			YAML::Emitter out;
 			out << static_cast<const T&>(*this);
-			
-			std::ofstream ofs(m_filePath);
-			if (!ofs.is_open()) return false;
-			
-			ofs << out.c_str();
-			ofs.close();
 
-			return ofs.good();
-		}
-
-		void saveOrThrow() const
-		{
-			if(!save())
-			{
-				BF_EXCEPTION("Failed to save YAML file {}", m_filePath.string());
-			}
+			return out.c_str();
 		}
 
 		static void revertToFile(T& data)
@@ -74,10 +58,5 @@ namespace BlackFox
 		}
 
 		virtual explicit operator std::string() const = 0;
-
-		[[nodiscard]] const std::filesystem::path& file() const { return m_filePath; }
-
-	private:
-		std::filesystem::path m_filePath;
 	};
 }

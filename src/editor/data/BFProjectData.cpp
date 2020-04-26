@@ -24,8 +24,12 @@ namespace BlackFox::Editor
 	{
 		return p.string();
 	};
-	
-	BFProjectData::BFProjectData(const std::filesystem::path& filePath) : Super(filePath)
+
+	BFProjectData::BFProjectData() : Super(PROJECT_DATA, "")
+	{
+	}
+
+	BFProjectData::BFProjectData(const std::filesystem::path& filePath) : Super(PROJECT_DATA, filePath)
 	{
 	}
 

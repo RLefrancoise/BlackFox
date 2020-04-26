@@ -17,11 +17,16 @@ namespace BlackFox::Editor
 		 * You are not supposed to use the default constructor.
 		 * It is here because it is required by YAML to decode from file
 		 */
-		BFProjectData() = default;
+		BFProjectData();
 		explicit BFProjectData(const std::filesystem::path& filePath);
 
 		explicit operator std::string() const override;
 
+		/**
+		 * Get the root path of the project.
+		 * 
+		 * \return The root path of the project
+		 */
 		[[nodiscard]] std::filesystem::path rootPath() const;
 		
 		/**

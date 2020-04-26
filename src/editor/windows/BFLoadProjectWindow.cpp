@@ -23,7 +23,11 @@ namespace BlackFox::Editor
 		for(const auto& prj : editorData->recentProjects)
 		{
 			if (!exists(prj.path)) continue;
-			m_projects.insert(std::make_pair(prj, BFProjectData::load(prj.path)));
+			
+			BFProjectData projectData;
+			if (!projectData.load(prj.path)) continue;
+			
+			m_projects.insert(std::make_pair(prj, projectData));
 		}
 	}
 
@@ -60,9 +64,9 @@ namespace BlackFox::Editor
 		if (m_fileBrowser.showFileDialog("Choose project file", ImGuiFileBrowser::DialogMode::OPEN, ImVec2(), ".yaml"))
 		{
 			BF_PRINT("Selected project {}", m_fileBrowser.selected_path);
-			BFProjectData::Ptr data;
+			BFProjectData data;
 
-			if (!BFProjectData::tryLoad(m_fileBrowser.selected_path, data))
+			if (!data.load(m_fileBrowser.selected_path))
 			{
 				BF_ERROR("Failed to load project file at {}", m_fileBrowser.selected_path);
 				m_windowManager->createMessagePopup("Error", fmt::format("Failed to load project {}", m_fileBrowser.selected_path));
@@ -76,14 +80,14 @@ namespace BlackFox::Editor
 				
 				if(it != m_projects.cend())
 				{
-					m_projects.insert(std::make_pair(it->first, *data));
+					m_projects.insert(std::make_pair(it->first, data));
 				}
 				else
 				{
 					BFEditorProjectHistory history;
 					history.path = m_fileBrowser.selected_path;
 					history.lastUpdateTime = std::time(nullptr);
-					m_projects.insert(std::make_pair(history, *data));
+					m_projects.insert(std::make_pair(history, data));
 				}
 			}
 		}
