@@ -17,7 +17,7 @@ namespace BlackFox
 		 * 
 		 * \return The type of the resource.
 		 */
-		[[nodiscard]] virtual const ResourceType& type() const = 0;
+		[[nodiscard]] virtual const Resources::ResourceType& type() const = 0;
 		
 		/**
 		 * Get the file representing the resource.
@@ -67,15 +67,15 @@ namespace BlackFox
 		BFResource(BFResource&&) = default;
 		BFResource& operator=(BFResource&&) = default;
 
-		[[nodiscard]] const ResourceType& type() const override;
+		[[nodiscard]] const Resources::ResourceType& type() const override;
 		[[nodiscard]] const std::filesystem::path& file() const override;
 		void saveOrThrow() const override;
 		void loadOrThrow(const std::filesystem::path& file) override;
 		
 	protected:
-		explicit BFResource(const ResourceType& type, std::filesystem::path file);
+		explicit BFResource(const Resources::ResourceType& type, std::filesystem::path file);
 
-		ResourceType m_type;
+		Resources::ResourceType m_type;
 		std::filesystem::path m_filePath;
 	};
 }

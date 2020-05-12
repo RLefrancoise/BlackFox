@@ -127,7 +127,7 @@ namespace BlackFox
         //System
         m_namespace["createSystem"] = [&](const std::string& systemName, ComponentSystemGroups group) -> BFComponentSystem*
         {
-            BFLuaScript luaScript(fmt::format("data/systems/{}.lua", systemName), m_state);
+            BFLuaScript luaScript(Resources::LUA_SYSTEM_SCRIPT, fmt::format("data/systems/{}.lua", systemName), m_state);
 
             const auto app = m_container->get<BFApplication>();
             const auto system = std::make_shared<BFLuaComponentSystem>(app.get(), luaScript);

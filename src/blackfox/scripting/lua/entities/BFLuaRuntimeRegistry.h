@@ -30,7 +30,7 @@ namespace BlackFox
 				? em->assign<Components::BFLuaRuntimeComponent>(entity) 
 				: em->get<Components::BFLuaRuntimeComponent>(entity);
 
-			luaScriptingComponent.set(componentType, std::make_shared<BFLuaScript>(componentScript, state));
+			luaScriptingComponent.set(componentType, std::make_shared<BFLuaScript>(Resources::LUA_COMPONENT_SCRIPT, componentScript, state));
 
 			return static_cast<sol::object>(*luaScriptingComponent.get(componentType));
 		}

@@ -1,11 +1,12 @@
 #pragma once
 #include "BFResource.h"
+#include <fstream>
 
 namespace BlackFox
 {
 	struct BFTextResource : BFResource
 	{
-		explicit BFTextResource(const ResourceType& type, const std::filesystem::path& file) : BFResource(type, file) {}
+		explicit BFTextResource(const Resources::ResourceType& type, const std::filesystem::path& file) : BFResource(type, file) {}
 		virtual ~BFTextResource() = default;
 
 		BFTextResource(const BFTextResource&) = default;
@@ -24,7 +25,17 @@ namespace BlackFox
 			return ofs.good();
 		}
 
+		virtual void content(const std::string& content)
+		{
+			m_content = content;
+		}
+
+		[[nodiscard]] virtual std::string content() const
+		{
+			return m_content;
+		}
+
 	protected:
-		[[nodiscard]] virtual std::string content() const = 0;
+		std::string m_content;
 	};
 }

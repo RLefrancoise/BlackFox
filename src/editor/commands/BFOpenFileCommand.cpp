@@ -3,7 +3,7 @@
 #include "BFScriptEditorWindow.h"
 
 namespace BlackFox::Editor
-{
+{	
 	BFOpenFileCommand::BFOpenFileCommand(BFWindowManager::Ptr windowManager)
 		: Super("Open file", false)
 		, m_windowManager(std::move(windowManager))
@@ -19,7 +19,7 @@ namespace BlackFox::Editor
 	{
 		BF_PRINT("Open file {}", file.string());
 		auto w = m_windowManager->createWindow<BFScriptEditorWindow>();
-		w->setScript(file);
+		w->setFile(file);
 	}
 
 	void BFOpenFileCommand::undo()

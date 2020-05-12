@@ -3,7 +3,7 @@
 
 namespace BlackFox
 {
-	const ResourceType& BFResource::type() const
+	const Resources::ResourceType& BFResource::type() const
 	{
 		return m_type;
 	}
@@ -23,13 +23,16 @@ namespace BlackFox
 
 	void BFResource::loadOrThrow(const std::filesystem::path& file)
 	{
-		if (!load(file))
+		std::string err;
+		if (!load(file, &err))
 		{
-			BF_EXCEPTION("Failed to load resource {}", file.string());
+			BF_EXCEPTION("Failed to load resource {}: {}", file.string(), err);
 		}
 	}
 
-	BFResource::BFResource(const ResourceType& type, std::filesystem::path file) : m_type(type), m_filePath(std::move(file))
+	BFResource::BFResource(const Resources::ResourceType& type, std::filesystem::path file) 
+	: m_type(type)
+	, m_filePath(std::move(file))
 	{
 	}
 }

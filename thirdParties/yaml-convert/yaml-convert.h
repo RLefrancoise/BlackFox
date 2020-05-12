@@ -3,6 +3,7 @@
 #include <yaml-cpp/yaml.h>
 #include <imgui.h>
 #include <filesystem>
+#include <entt/core/hashed_string.hpp>
 
 namespace YAML
 {
@@ -30,6 +31,32 @@ namespace YAML
             return true;
 		}
 	};
+
+    //entt hashed_string
+    inline Emitter& operator<<(Emitter& out, const entt::hashed_string& hs)
+    {
+        out << hs.value();
+        return out;
+    }
+	
+	template<>
+	struct convert<entt::hashed_string>
+	{
+		static Node encode(const entt::hashed_string& hs)
+		{
+            Node node;
+			node = std::to_string(hs.value());
+            return node;
+		}
+
+		static bool decode(const Node& node, entt::hashed_string& hs)
+		{
+            if (!node.IsScalar()) return false;
+            hs = entt::hashed_string(node.as<std::string>().c_str());
+            return true;
+		}
+	};
+
 	
     // ImVec2
     template <>

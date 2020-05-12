@@ -3,14 +3,18 @@
 
 #include <memory>
 #include <sol/sol.hpp>
+#include <filesystem>
+#include "BFTextResource.h"
 
 namespace BlackFox
 {
-    struct BFLuaScript
+    struct BFLuaScript : BFTextResource
     {
         typedef std::shared_ptr<BFLuaScript> Ptr;
 
-        explicit BFLuaScript(const std::string& fileName, sol::state* state);
+        explicit BFLuaScript(const Resources::ResourceType& type, const std::filesystem::path& fileName, sol::state* state);
+
+        bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override;
 
         template <typename T>
         [[nodiscard]] bool has(const std::string& name) const
@@ -36,6 +40,7 @@ namespace BlackFox
         }
 
     private:
+        sol::state* m_state;
         sol::environment m_environment;
     };
 }

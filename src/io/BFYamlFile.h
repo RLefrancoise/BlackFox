@@ -2,8 +2,6 @@
 
 #include <string>
 #include <yaml-cpp/yaml.h>
-#include <fstream>
-#include <utility>
 
 #include "BFDebug.h"
 #include "BFTextResource.h"
@@ -15,7 +13,7 @@ namespace BlackFox
 	{		
 		using Super = BFYamlFile<T>;
 
-		explicit BFYamlFile(const ResourceType& type, std::filesystem::path path) : BFTextResource(type, std::move(path)) {}
+		explicit BFYamlFile(const Resources::ResourceType& type, const std::filesystem::path& path) : BFTextResource(type, path) {}
 		virtual ~BFYamlFile() = default;
 		BFYamlFile(const BFYamlFile&) = default;
 		BFYamlFile& operator=(const BFYamlFile&) = default;
@@ -40,6 +38,11 @@ namespace BlackFox
 			}
 
 			return true;
+		}
+
+		void content(const std::string& content) override
+		{
+			BF_EXCEPTION("Don't set content for YAML file with content method. Modify the object instance directly");
 		}
 
 		[[nodiscard]] std::string content() const override

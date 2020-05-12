@@ -29,9 +29,6 @@ namespace BlackFox::Editor
 		constexpr BFWindowManager& operator=(const BFWindowManager&) = delete;
 		void update(float delta);
 
-
-
-		
 		template <typename WindowType>
 		WindowType* createWindow()
 		{
