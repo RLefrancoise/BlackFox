@@ -1,5 +1,3 @@
-print("test")
-
 math.randomseed(os.time())
 
 -- Default world

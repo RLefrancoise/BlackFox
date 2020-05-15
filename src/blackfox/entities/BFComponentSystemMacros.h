@@ -12,7 +12,7 @@ namespace BlackFox {
 
 #define BF_SYSTEM_AUTO_CREATE(system, group, systemName)        RTTR_ENABLE(BlackFox::BFComponentSystem) \
                                                                 public: \
-                                                                    explicit system(BlackFox::BFApplication* application): BlackFox::BFComponentSystem(application) {} \
+                                                                    /*explicit system(BlackFox::BFApplication* application): BlackFox::BFComponentSystem(application) { }*/ \
                                                                     BlackFox::ComponentSystemGroups get_group() const { return group; } \
                                                                     static constexpr const char* name = systemName;
 
@@ -22,7 +22,7 @@ namespace BlackFox {
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<system>(system::name) \
-                                                                    .constructor<BlackFox::BFApplication*>()(rttr::policy::ctor::as_raw_ptr) \
+                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
                                                                     .method("name", []() { return system::name; }) \
                                                                     .method("setWorld", &system::setWorld) \
@@ -35,7 +35,7 @@ namespace BlackFox {
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<system>(system::name) \
-                                                                    .constructor<BlackFox::BFApplication*>()(rttr::policy::ctor::as_raw_ptr) \
+                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
                                                                     .method("name", []() { return system::name; }) \
                                                                     .method("setWorld", &system::setWorld) \

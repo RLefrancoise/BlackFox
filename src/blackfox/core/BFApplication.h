@@ -43,13 +43,8 @@ namespace BlackFox
 		 * \date	22/11/2019
 		 *
 		 * \param	container		The DI container.
-		 * \param	commandManager	The command manager.
 		 */
-		CINJECT(BFApplication(
-			DiContainer container, 
-			std::shared_ptr<BFCommandManager> commandManager,
-			std::shared_ptr<BFConfigData> configData,
-			std::shared_ptr<BFInput> input));
+		CINJECT(BFApplication(DiContainer container));
 
 		/*!
 		 * \fn	BFApplication::~BFApplication();
@@ -74,6 +69,8 @@ namespace BlackFox
 		BFApplication(BFApplication&& app) noexcept;
 
 		BFApplication& operator=(BFApplication&& app) noexcept;
+
+		void init();
 		
 		/*!
 		 * \fn	int BFApplication::execute();
@@ -130,8 +127,10 @@ namespace BlackFox
 		[[nodiscard]] std::shared_ptr<BFConfigData> configData() const;
 
 	private:
+		DiContainer m_container;
+		
 	    class impl;
-	    std::unique_ptr<impl> pImpl;
+	    std::shared_ptr<impl> pImpl;
 	};
 }
 

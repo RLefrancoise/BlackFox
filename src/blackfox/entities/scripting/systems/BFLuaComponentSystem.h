@@ -16,10 +16,10 @@ namespace BlackFox
     class BLACKFOX_EXPORT BFLuaComponentSystem final : public BFComponentSystem
     {
     public:
-        explicit BFLuaComponentSystem(BFApplication* app, const BFLuaScript& script);
+        explicit BFLuaComponentSystem(std::shared_ptr<BFApplication> app, const BFLuaScript& script);
         ~BFLuaComponentSystem() override;
         void update(float dt) override;
-        void setWorld(BFWorld* world) override;
+        void setWorld(std::shared_ptr<BFWorld> world) override;
     private:
         /// <summary>Lua script containing the system</summary>
         BFLuaScript m_script;

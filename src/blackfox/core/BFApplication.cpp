@@ -19,12 +19,12 @@ namespace BlackFox
 	{
 	public:
 		impl(
-			BFApplication* app,
+			BFApplication::Ptr app,
 			DiContainer container,
 			BFCommandManager::Ptr commandManager,
 			BFConfigData::Ptr configData,
 			BFInput::Ptr input)
-			: m_app(app)
+			: m_app(std::move(app))
 			, m_deltaTime(0.0f)
 			, m_container(std::move(container))
 			, m_commandManager(std::move(commandManager))
@@ -177,7 +177,7 @@ namespace BlackFox
 
 		void cleanup() {}
 
-		BFApplication* m_app;
+		BFApplication::Ptr m_app;
 
 		/*! \brief	window */
 		sf::RenderWindow m_window;
@@ -209,12 +209,8 @@ namespace BlackFox
 
 
 
-	BFApplication::BFApplication(
-		DiContainer container, 
-		BFCommandManager::Ptr commandManager, 
-		BFConfigData::Ptr configData,
-		BFInput::Ptr input)
-		: pImpl {std::make_unique<impl>(this, container, commandManager, configData, input)}
+	BFApplication::BFApplication(DiContainer container)
+	: m_container(std::move(container))
 	{
 	}
 
@@ -227,6 +223,12 @@ namespace BlackFox
 	{
 		pImpl = std::move(app.pImpl);
 		return *this;
+	}
+
+	void BFApplication::init()
+	{
+		m_container->bind<BFApplication::impl>().toSelf().inSingletonScope();
+		pImpl = m_container->get<BFApplication::impl>();
 	}
 
 	BFApplication::~BFApplication() noexcept = default;

@@ -36,7 +36,7 @@ namespace BlackFox
 		constexpr BFComponentSystem(const BFComponentSystem& app) = delete;
 		constexpr BFComponentSystem& operator=(const BFComponentSystem& app) = delete;
 		
-        explicit BFComponentSystem(BFApplication* application);
+        //explicit BFComponentSystem(BFApplication* application);
 		BFComponentSystem(BFComponentSystem&& system) noexcept;
 		BFComponentSystem& operator=(BFComponentSystem&& system) noexcept;
 
@@ -84,13 +84,13 @@ namespace BlackFox
 		 *
 		 * \param	world	The world.
 		 */
-		virtual void setWorld(BFWorld* world);
+		virtual void setWorld(std::shared_ptr<BFWorld> world);
 
 	protected:
 		/*! \brief	The application */
-		BFApplication* m_application;
+		std::shared_ptr<BFApplication> m_application;
 		/*! \brief	The world owning the system */
-		BFWorld* m_world;
+		std::shared_ptr<BFWorld> m_world;
 	};
 }
 

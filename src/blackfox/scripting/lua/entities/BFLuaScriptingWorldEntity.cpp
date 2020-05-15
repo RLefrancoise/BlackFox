@@ -131,7 +131,7 @@ namespace BlackFox
             luaScript.loadOrThrow(fmt::format("data/systems/{}.lua", systemName));
 
             const auto app = m_container->get<BFApplication>();
-            const auto system = std::make_shared<BFLuaComponentSystem>(app.get(), luaScript);
+            const auto system = std::make_shared<BFLuaComponentSystem>(app, luaScript);
 
             return BFWorld::createSystemFromName(systemName, system, group, false);
         };

@@ -127,8 +127,6 @@ namespace BlackFox
 		static std::vector<BFWorld::Ptr> all();
 
 		/*!
-		 * \fn	template <typename S> S* BFWorld::createSystem(ComponentSystemGroups group)
-		 *
 		 * \brief	Creates a system in the world.
 		 *
 		 * \tparam	S			Type of the system.
@@ -138,7 +136,7 @@ namespace BlackFox
 		 * \returns	The created system.
 		 */
 		template <typename S>
-		static S* createSystem(const ComponentSystemGroups group, BFApplication* application)
+		static S* createSystem(const ComponentSystemGroups group, std::shared_ptr<BFApplication> application)
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 
@@ -170,7 +168,7 @@ namespace BlackFox
 		/// <param name="application">Application</param>
 		/// <returns>The created system</returns>
 		/// --------------------------------------------------------------------------------
-		static BFComponentSystem* createSystemFromType(const rttr::type& system, BFApplication* application);
+		static BFComponentSystem* createSystemFromType(const rttr::type& system, std::shared_ptr<BFApplication> application);
 
 
 		/// --------------------------------------------------------------------------------

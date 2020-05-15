@@ -28,6 +28,7 @@ namespace BlackFox
 
 			//Execute the app
 			const auto app = container->get<BFApplication>();
+			app->init();
 			return app->execute();
 		}
 		catch(const std::exception& err)

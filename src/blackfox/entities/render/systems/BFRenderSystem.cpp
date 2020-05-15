@@ -13,7 +13,7 @@ using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
 {
-	void renderSprite(BFApplication* application, const BFSpriteComponent& sprite, const BFTransformComponent& transform)
+	void renderSprite(BFApplication::Ptr application, const BFSpriteComponent& sprite, const BFTransformComponent& transform)
 	{
 		sf::Sprite s;
 

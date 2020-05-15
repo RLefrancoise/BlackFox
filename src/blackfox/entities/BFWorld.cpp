@@ -74,7 +74,7 @@ namespace BlackFox
 		return list;
 	}
 
-	BFComponentSystem* BFWorld::createSystemFromType(const rttr::type &system, BFApplication* application)
+	BFComponentSystem* BFWorld::createSystemFromType(const rttr::type &system, BFApplication::Ptr application)
 	{
 		//Check if the system is already created or not
 		if(hasSystemByName(system.get_name().to_string()))
@@ -151,7 +151,7 @@ namespace BlackFox
 		    //for each world
 			for(const auto& world : worlds)
 			{
-				system->setWorld(world.second.get());
+				system->setWorld(world.second);
 				system->update(deltaTime);
 			}
 		}

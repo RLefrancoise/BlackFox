@@ -15,18 +15,13 @@ namespace BlackFox::Systems
 {	
 	BFPhysicsSystem::BFPhysicsSystem(std::shared_ptr<BFApplication> app)
 	: BFComponentSystem(std::move(app))
-	{		
+	{
+		const auto gravity = m_application->configData()->gameData.gravity;
+		m_b2World = std::make_unique<b2World>(b2Vec2{ gravity.x, gravity.y });
 	}
 
 	void BFPhysicsSystem::update(float dt)
 	{
-		//Create Box2D world if not created
-		if(!m_b2World)
-		{
-			const auto gravity = m_application->configData()->gameData.gravity;
-			m_b2World = std::make_unique<b2World>(b2Vec2 { gravity.x, gravity.y });
-		}
-
 		auto em = m_world->entityManager();
 		const auto view = em->view<BFRigidBodyComponent, BFTransformComponent>();
 
