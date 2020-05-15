@@ -42,20 +42,19 @@ namespace BlackFox
         }
     };
 
-    /// --------------------------------------------------------------------------------
-    /// <summary>
-    /// Game data in config.ini file
-    /// </summary>
-    /// --------------------------------------------------------------------------------
+    /// \brief  Game data in config.ini file
     struct BLACKFOX_EXPORT ConfigGameData
     {
-        /// <summary>How much pixels is a world unit</summary>
+        /// \brief  How much pixels is a world unit
         float worldUnitPixels = 32;
+
+    	/// \brief  Gravity vector
+        BFVector2f gravity = BFVector2(0.0f, -9.81f);
 
 		explicit operator std::string() const
 		{
-			return fmt::format("--- Game Data ---\nworldUnitPixels={}\n"
-				, worldUnitPixels);
+			return fmt::format("--- Game Data ---\nworldUnitPixels={}\ngravity={}\n"
+				, worldUnitPixels, static_cast<std::string>(gravity));
 		}
 
         /// --------------------------------------------------------------------------------
@@ -127,7 +126,8 @@ namespace BlackFox
 
             //Game data
             gameData = {
-                file.getFloat("Game", "worldUnitPixels", 32) // world unit pixels
+                file.getFloat("Game", "worldUnitPixels", 32), // world unit pixels
+            	vector2fFromString(file.get("Game", "gravity", "0.0,-9.81"))
             };
 
             //Physics data

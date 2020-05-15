@@ -101,7 +101,8 @@ namespace BlackFox::Editor
 				BFEditorData::Ptr dataPtr;
 				if(!exists(editorData))
 				{
-					BFEditorData data(editorData);
+					BFEditorData data;
+					data.file(editorData);
 					if (!data.save())
 						BF_EXCEPTION("Failed to create editor data");
 

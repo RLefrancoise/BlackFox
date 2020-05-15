@@ -3,12 +3,8 @@
 namespace BlackFox::Editor
 {
 	BFResourceData::BFResourceData()
-	: Super(Resources::RESOURCE_DATA, "")
+	: Super(Resources::RESOURCE_DATA)
 	{}
-
-    BFResourceData::BFResourceData(const std::filesystem::path& file)
-	: Super(Resources::RESOURCE_DATA, file)
-    {}
 
 	BFResourceData::operator std::string() const
 	{

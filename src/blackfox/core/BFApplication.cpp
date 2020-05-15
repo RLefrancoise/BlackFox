@@ -1,7 +1,6 @@
 #include "BFApplication.h"
 
 #include <iostream>
-#include <thread>
 
 #include "BFWorld.h"
 #include "BFComponentSystemFlags.h"
@@ -40,21 +39,7 @@ namespace BlackFox
 			if (!init()) return EXIT_FAILURE;
 
 			sf::Clock clock;
-
-			//Fixed update thread
-			m_fixedUpdateThread = std::thread([&]()
-			{
-				sf::Clock fixedUpdateClock;
-
-				while (m_window.isOpen())
-				{
-					if (fixedUpdateClock.getElapsedTime().asSeconds() >= m_configData->timeData.fixedUpdateInterval)
-					{
-						fixedUpdateClock.restart();
-						fixedUpdate();
-					}
-				}
-			});
+			sf::Clock fixedUpdateClock;
 
 			//run
 			while(m_window.isOpen())
@@ -67,7 +52,7 @@ namespace BlackFox
 					m_window.setTitle(fmt::format("{} - [FPS: {}]", m_configData->appData.name, 1.f / m_deltaTime));
 
 				//events
-				sf::Event ev;
+				sf::Event ev {};
 				m_polledEvents.clear();
 				while(m_window.pollEvent(ev))
 				{
@@ -84,14 +69,19 @@ namespace BlackFox
 
 				//loop
 				loop();
+
+				//fixed time
+				if (fixedUpdateClock.getElapsedTime().asSeconds() >= m_configData->timeData.fixedUpdateInterval)
+				{
+					fixedUpdateClock.restart();
+					fixedUpdate();
+				}
+				
 				//render
 				render();
 				//end of frame
 				endOfFrame();
 			}
-
-			//Wait end of fixed update thread
-			m_fixedUpdateThread.join();
 			
 			//Cleanup
 			cleanup();
@@ -209,8 +199,6 @@ namespace BlackFox
 
 		/*! \brief	Input */
 		BFInput::Ptr m_input;
-
-		std::thread m_fixedUpdateThread;
 	};
 
 

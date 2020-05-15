@@ -13,7 +13,7 @@ namespace BlackFox
 	{		
 		using Super = BFYamlFile<T>;
 
-		explicit BFYamlFile(const Resources::ResourceType& type, const std::filesystem::path& path) : BFTextResource(type, path) {}
+		explicit BFYamlFile(const Resources::ResourceType& type) : BFTextResource(type) {}
 		virtual ~BFYamlFile() = default;
 		BFYamlFile(const BFYamlFile&) = default;
 		BFYamlFile& operator=(const BFYamlFile&) = default;
@@ -24,6 +24,8 @@ namespace BlackFox
 		{
 			try
 			{
+				if (!BFTextResource::load(file, errorMessage)) throw std::exception(errorMessage ? errorMessage->c_str() : "Failed to load YAML file");
+				
 				const auto f = YAML::LoadFile(file.string());
 				auto res = f.as<T>();
 				res.m_filePath = file;

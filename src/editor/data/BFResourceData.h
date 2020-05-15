@@ -8,7 +8,6 @@ namespace BlackFox::Editor
     struct BFResourceData final : BFYamlFile<BFResourceData>
     {
         BFResourceData();
-        explicit BFResourceData(const std::filesystem::path& file);
 
 		explicit operator std::string() const override;
     	

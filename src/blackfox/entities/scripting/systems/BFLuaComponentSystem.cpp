@@ -4,7 +4,7 @@
 
 namespace BlackFox
 {
-    BFLuaComponentSystem::BFLuaComponentSystem(BlackFox::BFApplication *app, const BlackFox::BFLuaScript &script)
+    BFLuaComponentSystem::BFLuaComponentSystem(BFApplication *app, const BFLuaScript &script)
     : BFComponentSystem(app)
     , m_script(script)
     {
@@ -24,7 +24,8 @@ namespace BlackFox
 
     void BFLuaComponentSystem::update(float dt)
     {
-        if(m_updateFnc.has_value()) m_updateFnc.value()(dt);
+        if (m_updateFnc.has_value())
+            m_updateFnc.value()(dt);
     }
 
     void BFLuaComponentSystem::setWorld(BFWorld* world)

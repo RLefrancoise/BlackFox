@@ -27,6 +27,13 @@ namespace BlackFox
 		[[nodiscard]] virtual const std::filesystem::path& file() const = 0;
 
 		/**
+		 * Set the file representing the resource.
+		 * 
+		 * \param file	The file representing the resource.
+		 */
+		virtual void file(const std::filesystem::path& file) = 0;
+		
+		/**
 		 * Save the resource on disk.
 		 * 
 		 * \return True if save is successful, false otherwise.
@@ -35,7 +42,6 @@ namespace BlackFox
 
 		/**
 		 * Save the resource on disk, and throw if an error occured.
-		 * 
 		 */
 		virtual void saveOrThrow() const = 0;
 
@@ -69,11 +75,15 @@ namespace BlackFox
 
 		[[nodiscard]] const Resources::ResourceType& type() const override;
 		[[nodiscard]] const std::filesystem::path& file() const override;
+		void file(const std::filesystem::path& file) override;
+		
 		void saveOrThrow() const override;
+
+		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override;
 		void loadOrThrow(const std::filesystem::path& file) override;
 		
 	protected:
-		explicit BFResource(const Resources::ResourceType& type, std::filesystem::path file);
+		explicit BFResource(const Resources::ResourceType& type);
 
 		Resources::ResourceType m_type;
 		std::filesystem::path m_filePath;

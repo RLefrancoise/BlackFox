@@ -30,7 +30,9 @@ namespace BlackFox
 				? em->assign<Components::BFLuaRuntimeComponent>(entity) 
 				: em->get<Components::BFLuaRuntimeComponent>(entity);
 
-			luaScriptingComponent.set(componentType, std::make_shared<BFLuaScript>(Resources::LUA_COMPONENT_SCRIPT, componentScript, state));
+			auto script = std::make_shared<BFLuaScript>(Resources::LUA_COMPONENT_SCRIPT, state);
+			script->file(componentScript);
+			luaScriptingComponent.set(componentType, script);
 
 			return static_cast<sol::object>(*luaScriptingComponent.get(componentType));
 		}
@@ -228,7 +230,7 @@ namespace BlackFox
 			funcTypeGet get;
 		};
 
-		std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components) const;
+		[[nodiscard]] std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components) const;
 
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>
 		Ret invoke(const entt::entity& entity, const ENTT_ID_TYPE typeId, Args... args)

@@ -1,7 +1,15 @@
 #ifndef BLACKFOX_VECTOR2_H
 #define BLACKFOX_VECTOR2_H
 
+#include <string>
+#include <sstream>
+#include <regex>
+#include <fmt/format.h>
 #include <SFML/System/Vector2.hpp>
+
+#include "BFDebug.h"
+#include "BFTypeDefs.h"
+#include "Box2D/Common/b2Math.h"
 
 namespace BlackFox
 {
@@ -44,7 +52,7 @@ namespace BlackFox
 		: x(v.x)
 		, y(v.y)
 		{}
-
+    	
 		/*!
 		 * \brief	Adds a vector to this vector and returns a new vector
 		 *
@@ -218,16 +226,26 @@ namespace BlackFox
 
 		constexpr operator sf::Vector2<T> () const { return sf::Vector2<T>(x, y); }
 
+		constexpr explicit operator std::string() const { return fmt::format("({},{})", x, y); }
+    	
 		/*! \brief	X value */
 		T x;
 		/*! \brief	Y value */
 		T y;
 	};
 
-    typedef BFVector2<float> BFVector2f;
+	typedef BFVector2<float> BFVector2f;
     typedef BFVector2<int> BFVector2i;
 	typedef BFVector2<unsigned int> BFVector2u;
     typedef BFVector2<double> BFVector2d;
+	
+	/**
+	 * \brief	Construct a BFVector2f from a string: xx.xx,xx.xx
+	 * \param	str	The formatted string
+	 * 
+	 * \return	The BFVector2f vector
+	 */
+	BLACKFOX_EXPORT BFVector2f vector2fFromString(const std::string& str);
 }
 
 #endif

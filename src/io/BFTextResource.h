@@ -6,7 +6,7 @@ namespace BlackFox
 {
 	struct BFTextResource : BFResource
 	{
-		explicit BFTextResource(const Resources::ResourceType& type, const std::filesystem::path& file) : BFResource(type, file) {}
+		explicit BFTextResource(const Resources::ResourceType& type) : BFResource(type) {}
 		virtual ~BFTextResource() = default;
 
 		BFTextResource(const BFTextResource&) = default;
@@ -25,6 +25,23 @@ namespace BlackFox
 			return ofs.good();
 		}
 
+		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override
+		{
+			std::ifstream ifs(file);
+			if (!ifs.is_open() || !ifs.good())
+			{
+				*errorMessage = "Failed to open file";
+				return false;
+			}
+
+			const std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+			m_content = str;
+
+			ifs.close();
+
+			return true;
+		}
+		
 		virtual void content(const std::string& content)
 		{
 			m_content = content;

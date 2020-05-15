@@ -12,7 +12,7 @@ namespace BlackFox
     {
         typedef std::shared_ptr<BFLuaScript> Ptr;
 
-        explicit BFLuaScript(const Resources::ResourceType& type, const std::filesystem::path& fileName, sol::state* state);
+        explicit BFLuaScript(const Resources::ResourceType& type, sol::state* state);
 
         bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override;
 
@@ -42,6 +42,7 @@ namespace BlackFox
     private:
         sol::state* m_state;
         sol::environment m_environment;
+        sol::protected_function_result m_result;
     };
 }
 

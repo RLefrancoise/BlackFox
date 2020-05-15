@@ -1,5 +1,7 @@
 #include "BFLuaRuntimeRegistry.h"
 
+#include <utility>
+
 namespace BlackFox
 {
 	BFLuaRuntimeRegistry::BFLuaRuntimeRegistry()
@@ -55,32 +57,32 @@ namespace BlackFox
 
 	void BFLuaRuntimeRegistry::setEntityManager(EntityManager em)
 	{
-		m_entityManager = em;
+		m_entityManager = std::move(em);
 	}
 
 	std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> BFLuaRuntimeRegistry::getView(const sol::variadic_args& components) const
 	{
-		std::vector<ComponentId> engine_components;
-		std::vector<ComponentId> runtime_components;
+		std::vector<ComponentId> engineComponents;
+		std::vector<ComponentId> runtimeComponents;
 
 		for (const auto& type : components)
 		{
 			if (static_cast<std::underlying_type_t<ComponentId>>(type) < runtimeComponentId)
 			{
-				engine_components.push_back(type);
+				engineComponents.push_back(type);
 			}
 			else
 			{
-				if (runtime_components.empty())
+				if (runtimeComponents.empty())
 				{
-					engine_components.push_back(m_entityManager->type<Components::BFLuaRuntimeComponent>());
+					engineComponents.push_back(m_entityManager->type<Components::BFLuaRuntimeComponent>());
 				}
 
-				runtime_components.push_back(type);
+				runtimeComponents.push_back(type);
 			}
 		}
 
-		return std::make_tuple(m_entityManager->runtime_view(engine_components.begin(), engine_components.end()), engine_components, runtime_components);
+		return std::make_tuple(m_entityManager->runtime_view(engineComponents.begin(), engineComponents.end()), engineComponents, runtimeComponents);
 	}
 
 	std::vector<sol::object> BFLuaRuntimeRegistry::getComponents(

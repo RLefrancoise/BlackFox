@@ -75,12 +75,7 @@ namespace BlackFox::Editor
 	{
 		typedef std::shared_ptr<BFEditorData> Ptr;
 
-		/**
-		 * You are not supposed to use the default constructor.
-		 * It is here because it is required by YAML to decode from file
-		 */
 		BFEditorData();
-		explicit BFEditorData(const std::filesystem::path& filePath);
 		~BFEditorData() = default;
 		BFEditorData(const BFEditorData& data) = default;
 		BFEditorData& operator=(const BFEditorData& data) = default;

@@ -13,12 +13,7 @@ namespace BlackFox::Editor
 	{		
 		typedef std::shared_ptr<BFProjectData> Ptr;
 
-		/**
-		 * You are not supposed to use the default constructor.
-		 * It is here because it is required by YAML to decode from file
-		 */
 		BFProjectData();
-		explicit BFProjectData(const std::filesystem::path& filePath);
 
 		explicit operator std::string() const override;
 
