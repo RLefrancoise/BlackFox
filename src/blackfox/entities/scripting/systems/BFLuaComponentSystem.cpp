@@ -13,7 +13,7 @@ namespace BlackFox
         if (script.has<sol::function>("onWorldChanged")) m_onWorldChanged = (script.get<sol::function>("onWorldChanged"));
         if (script.has<sol::function>("update")) m_updateFnc = (script.get<sol::function>("update"));
 
-        m_script.set<BFApplication*>("application", app.get());
+        m_script.set<BFApplication*>("application", m_application.get());
         if(m_onCreateFnc.has_value()) m_onCreateFnc.value()();
     }
 
