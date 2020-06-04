@@ -25,7 +25,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	24/11/2019
 	 */
-	class BLACKFOX_EXPORT BFWorld
+	class BLACKFOX_EXPORT BFWorld : public std::enable_shared_from_this<BFWorld>
 	{
 	public:
 
@@ -136,7 +136,7 @@ namespace BlackFox
 		 * \returns	The created system.
 		 */
 		template <typename S>
-		static S* createSystem(const ComponentSystemGroups group, std::shared_ptr<BFApplication> application)
+		S* createSystem(const ComponentSystemGroups group, std::shared_ptr<BFApplication> application)
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 
@@ -149,11 +149,11 @@ namespace BlackFox
 			}
 
 			//Create system
-			auto system = std::make_shared<S>(application);
+			auto system = std::make_shared<S>(application, shared_from_this());
 			//Add the system to the system list
-			registeredSystems.insert(std::make_pair(type.get_name().to_string(), system));
+			m_registeredSystems.insert(std::make_pair(type.get_name().to_string(), system));
 			//Add the system to its group
-			systemGroups[group].emplace_back(system);
+			m_systemGroups[group].emplace_back(system);
 
 			print("System {} created", type.get_name().to_string());
 
@@ -168,7 +168,7 @@ namespace BlackFox
 		/// <param name="application">Application</param>
 		/// <returns>The created system</returns>
 		/// --------------------------------------------------------------------------------
-		static BFComponentSystem* createSystemFromType(const rttr::type& system, std::shared_ptr<BFApplication> application);
+		BFComponentSystem* createSystemFromType(const rttr::type& system, std::shared_ptr<BFApplication> application);
 
 
 		/// --------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ namespace BlackFox
 		/// <param name="nameIsType">Name is a type name ?</param>
 		/// <returns>The created system</returns>
 		/// --------------------------------------------------------------------------------
-		static BFComponentSystem* createSystemFromName(
+		BFComponentSystem* createSystemFromName(
 				const std::string& systemName
 				, BFComponentSystem::Ptr system
 				, ComponentSystemGroups group
@@ -194,7 +194,7 @@ namespace BlackFox
 		/// <param name="group">Group to refresh</param>
 		/// <param name="deltaTime">Delta time</param>
 		/// --------------------------------------------------------------------------------
-		static void refreshSystems(ComponentSystemGroups group, float deltaTime);
+		void refreshSystems(ComponentSystemGroups group, float deltaTime);
 
 		/*!
 		 * \fn	template <typename S> static bool BFWorld::hasSystem()
@@ -206,10 +206,10 @@ namespace BlackFox
 		 * \returns	True if the world has the system, false if not.
 		 */
 		template <typename S>
-		static bool hasSystem()
+		bool hasSystem()
 		{
 			const auto type = rttr::type::get<S>();
-			return registeredSystems.find(type.get_name().to_string()) != registeredSystems.end();
+			return m_registeredSystems.find(type.get_name().to_string()) != m_registeredSystems.end();
 		}
 
 		/// --------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ namespace BlackFox
 		/// <param name="nameIsType">Name is a type name ?</param>
 		/// <returns>True if system exist, false if not</returns>
 		/// --------------------------------------------------------------------------------
-		static bool hasSystemByName(const std::string& name, bool nameIsType = true);
+		bool hasSystemByName(const std::string& name, bool nameIsType = true);
 
 		/*!
 		 * \fn	template <typename S> static S* BFWorld::getSystem()
@@ -232,7 +232,7 @@ namespace BlackFox
 		 * \returns	The system.
 		 */
 		template <typename S>
-		static S* getSystem()
+		S* getSystem()
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of getSystem must derive from BFComponentSystem");
 
@@ -244,7 +244,7 @@ namespace BlackFox
 				return nullptr;
 			}
 
-			return static_cast<S*>(registeredSystems[type.get_name().to_string()].get());
+			return static_cast<S*>(m_registeredSystems[type.get_name().to_string()].get());
 		}
 
 		/// --------------------------------------------------------------------------------
@@ -254,20 +254,20 @@ namespace BlackFox
 		/// <param name="name">Name of the system</param>
 		/// <returns>The system if found, nullptr if not</returns>
 		/// --------------------------------------------------------------------------------
-		static BFComponentSystem* getSystemByName(const std::string& name);
+		BFComponentSystem* getSystemByName(const std::string& name);
 
 	private:
 		/*! \brief	The level DI container */
 		DiContainer m_container;
 		/*! \brief	The entity manager */
 		EntityManager m_entityManager;
+		/*! \brief The registered systems */
+		SystemList m_registeredSystems;
+		/*! \brief Systems by group */
+		SystemGroupList m_systemGroups;
 
 		/*! \brief	The worlds */
 		static WorldList worlds;
-		/// <summary>The registered systems</summary>
-		static SystemList registeredSystems;
-		/// <summary>Systems by group</summary>
-		static SystemGroupList systemGroups;
 	};
 }
 

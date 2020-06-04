@@ -16,7 +16,7 @@ namespace BlackFox::Systems
         BF_SYSTEM_AUTO_CREATE(BFRenderSystem, ComponentSystemGroups::Render, "RenderSystem")
 
 	public:
-		CINJECT(BFRenderSystem(std::shared_ptr<BFApplication> application));
+		CINJECT(BFRenderSystem(std::shared_ptr<BFApplication> application, std::shared_ptr<BFWorld> world));
 		void update(float dt) override;
 	};
 }

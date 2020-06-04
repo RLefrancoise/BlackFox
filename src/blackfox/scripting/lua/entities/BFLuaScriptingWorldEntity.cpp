@@ -106,9 +106,29 @@ namespace BlackFox
 			return runtimeRegistry->entities(callback, dt, components, m_state);
 		};
 
-        //Static methods
+        //System
+        worldType["createSystem"] = [&](BFWorld& world, const std::string& systemName, const ComponentSystemGroups group) -> BFComponentSystem*
+        {
+            BFLuaScript luaScript(Resources::LUA_SYSTEM_SCRIPT, m_state);
+            luaScript.loadOrThrow(fmt::format("data/systems/{}.lua", systemName));
 
-        //World
+            const auto app = m_container->get<BFApplication>();
+            const auto system = std::make_shared<BFLuaComponentSystem>(app, world.shared_from_this(), luaScript);
+
+            return world.createSystemFromName(systemName, system, group, false);
+        };
+
+        worldType["hasSystem"] = [&](BFWorld& world, const std::string& systemName) -> bool
+        {
+            return world.hasSystemByName(systemName);
+        };
+
+        worldType["getSystem"] = [&](BFWorld& world, const std::string& systemName) -> BFComponentSystem*
+        {
+            return world.getSystemByName(systemName);
+        };
+
+        //Static methods
         m_namespace["createWorld"] = [&](const std::string& worldId) -> BFWorld::Ptr
         {
             return BFWorld::create(worldId, m_container);
@@ -122,28 +142,6 @@ namespace BlackFox
         m_namespace["hasWorld"] = [&](const std::string& worldId) -> bool
         {
             return BFWorld::hasWorld(worldId);
-        };
-
-        //System
-        m_namespace["createSystem"] = [&](const std::string& systemName, const ComponentSystemGroups group) -> BFComponentSystem*
-        {
-            BFLuaScript luaScript(Resources::LUA_SYSTEM_SCRIPT, m_state);
-            luaScript.loadOrThrow(fmt::format("data/systems/{}.lua", systemName));
-
-            const auto app = m_container->get<BFApplication>();
-            const auto system = std::make_shared<BFLuaComponentSystem>(app, luaScript);
-
-            return BFWorld::createSystemFromName(systemName, system, group, false);
-        };
-
-        m_namespace["hasSystem"] = [&](const std::string& systemName) -> bool
-        {
-            return BFWorld::hasSystemByName(systemName);
-        };
-
-        m_namespace["getSystem"] = [&](const std::string& systemName) -> BFComponentSystem*
-        {
-            return BFWorld::getSystemByName(systemName);
         };
     }
 }

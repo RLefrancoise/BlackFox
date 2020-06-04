@@ -48,13 +48,10 @@ namespace BlackFox
         /// \brief  How much pixels is a world unit
         float worldUnitPixels = 32;
 
-    	/// \brief  Gravity vector
-        BFVector2f gravity = BFVector2(0.0f, -9.81f);
-
 		explicit operator std::string() const
 		{
-			return fmt::format("--- Game Data ---\nworldUnitPixels={}\ngravity={}\n"
-				, worldUnitPixels, static_cast<std::string>(gravity));
+			return fmt::format("--- Game Data ---\nworldUnitPixels={}\n"
+				, worldUnitPixels);
 		}
 
         /// --------------------------------------------------------------------------------
@@ -96,10 +93,33 @@ namespace BlackFox
 
         explicit operator std::string() const
         {
-            return fmt::format("--- Physics Data ---\nfixedUpdateInterval={}"
+            return fmt::format("--- Time Data ---\nfixedUpdateInterval={}\n"
                 , fixedUpdateInterval);
         }
     };
+
+	/**
+	 * Physics data in config.ini file
+	 */
+	struct BLACKFOX_EXPORT ConfigPhysicsData
+	{
+        /// \brief  Gravity vector
+        BFVector2f gravity = BFVector2(0.0f, -9.81f);
+
+		/// \brief  Velocity iterations
+        int velocityIterations = 8;
+
+		/// \brief  Position iterations
+        int positionIterations = 3;
+
+        explicit operator std::string() const
+        {
+            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\n"
+                , static_cast<std::string>(gravity)
+				, velocityIterations
+				, positionIterations);
+        }
+	};
 
     /// --------------------------------------------------------------------------------
     /// <summary>
@@ -126,29 +146,37 @@ namespace BlackFox
 
             //Game data
             gameData = {
-                file.getFloat("Game", "worldUnitPixels", 32), // world unit pixels
-            	vector2fFromString(file.get("Game", "gravity", "0.0,-9.81"))
+                file.getFloat("Game", "worldUnitPixels", 32) // world unit pixels
             };
 
-            //Physics data
+            //Time data
             timeData = {
                 file.getFloat("Time", "fixedUpdateInterval") // fixed update interval
             };
+
+        	//Physics data
+            physicsData = {
+                vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
+				file.getInt("Physics", "velocityIterations", 8),
+				file.getInt("Physics", "positionIterations", 3) };
         }
 
-        /// <summary>Application data</summary>
+        /// \brief  Application data
         ConfigApplicationData appData;
-        /// <summary>Game data</summary>
+        /// \brief  Game data
         ConfigGameData gameData;
-        /// <summary>Time data</summary>
+        /// \brief  Time data
         ConfigTimeData timeData;
+    	/// \brief  Physics data
+        ConfigPhysicsData physicsData;
 
         explicit operator std::string() const
         {
-            return fmt::format("=== BFConfigData ===\n{}\n{}\n{}\n"
+            return fmt::format("=== BFConfigData ===\n{}\n{}\n{}\n{}\n"
                 , static_cast<std::string>(appData)
                 , static_cast<std::string>(gameData)
-                , static_cast<std::string>(timeData));
+                , static_cast<std::string>(timeData)
+				, static_cast<std::string>(physicsData));
         }
     };
 }

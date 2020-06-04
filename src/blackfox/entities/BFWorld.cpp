@@ -5,8 +5,6 @@
 namespace BlackFox
 {
 	BFWorld::WorldList BFWorld::worlds;
-    BFWorld::SystemList BFWorld::registeredSystems;
-    BFWorld::SystemGroupList BFWorld::systemGroups;
 
 	BFWorld::BFWorld(DiContainer container)
 	: m_container(std::move(container))
@@ -84,7 +82,7 @@ namespace BlackFox
 		}
 
 		//Create system from type
-		const auto s = system.create({application});
+		const auto s = system.create({application, shared_from_this()});
 		if(!s.is_valid())
 		{
 			BF_WARNING("Failed to create system {}", system.get_name().to_string());
@@ -105,11 +103,11 @@ namespace BlackFox
 		BFComponentSystem::Ptr sharedPtr(sPtr);
 
 		//Add the system to the systems map
-		systemGroups[group].emplace_back(sharedPtr);
+		m_systemGroups[group].emplace_back(sharedPtr);
 		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group);
 
 		//Remember the registration of the system
-		registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
+		m_registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
 
 		BF_PRINT("System {} created", system.get_name().to_string());
 
@@ -129,11 +127,11 @@ namespace BlackFox
         }
 
         //Add the system to its group
-        systemGroups[group].emplace_back(system);
+        m_systemGroups[group].emplace_back(system);
 		BF_PRINT("System {} added to the group {}", systemName, group);
 
 		//Add the system to the system list
-		registeredSystems.insert(std::make_pair(systemName, system));
+		m_registeredSystems.insert(std::make_pair(systemName, system));
 		BF_PRINT("System {} created", systemName);
 
         return system.get();
@@ -141,9 +139,9 @@ namespace BlackFox
 
 	void BFWorld::refreshSystems(const ComponentSystemGroups group, const float deltaTime)
 	{
-		if(systemGroups.find(group) == systemGroups.end()) return;
+		if(m_systemGroups.find(group) == m_systemGroups.end()) return;
 
-		const auto& systems = systemGroups[group];
+		const auto& systems = m_systemGroups[group];
 
 		//for each system
 		for(const auto& system : systems)
@@ -151,7 +149,7 @@ namespace BlackFox
 		    //for each world
 			for(const auto& world : worlds)
 			{
-				system->setWorld(world.second);
+				//system->setWorld(world.second);
 				system->update(deltaTime);
 			}
 		}
@@ -169,7 +167,7 @@ namespace BlackFox
 			}
 		}
 
-        return registeredSystems.find(name) != registeredSystems.end();
+        return m_registeredSystems.find(name) != m_registeredSystems.end();
     }
 
     BFComponentSystem* BFWorld::getSystemByName(const std::string& name)
@@ -180,6 +178,6 @@ namespace BlackFox
             return nullptr;
         }
 
-        return registeredSystems[name].get();
+        return m_registeredSystems[name].get();
     }
 }

@@ -9,8 +9,7 @@ RTTR_PLUGIN_REGISTRATION
 {
 	using namespace rttr;
 	registration::class_<BlackFox::BFComponentSystem>("ComponentSystem")
-	.method("update", &BlackFox::BFComponentSystem::update)
-	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);
+	.method("update", &BlackFox::BFComponentSystem::update);
 }
 
 #else
@@ -19,8 +18,7 @@ RTTR_REGISTRATION
 {
 	using namespace rttr;
 	registration::class_<BlackFox::BFComponentSystem>("ComponentSystem")
-	.method("update", &BlackFox::BFComponentSystem::update)
-	.method("setWorld",&BlackFox::BFComponentSystem::setWorld);
+	.method("update", &BlackFox::BFComponentSystem::update);
 }
 
 #endif
@@ -46,14 +44,14 @@ namespace BlackFox
 		return *this;
 	}
 
-	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application)
+	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application, BFWorld::Ptr world)
 	: m_application(std::move(application))
-	, m_world(nullptr)
+	, m_world(std::move(world))
 	{
 	}
 
-	void BFComponentSystem::setWorld(BFWorld::Ptr world)
+	/*void BFComponentSystem::setWorld(BFWorld::Ptr world)
 	{
 		m_world = std::move(world);
-	}
+	}*/
 }

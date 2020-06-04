@@ -41,8 +41,6 @@ namespace BlackFox
 		BFComponentSystem& operator=(BFComponentSystem&& system) noexcept;
 
 		/*!
-		 * \fn	BFComponentSystem::BFComponentSystem(std::shared_ptr<BFApplication> application);
-		 *
 		 * \brief	Constructor
 		 *
 		 * \author	Renaud Lefrançoise
@@ -50,7 +48,7 @@ namespace BlackFox
 		 *
 		 * \param	application	The application.
 		 */
-		CINJECT(BFComponentSystem(std::shared_ptr<BFApplication> application));
+		CINJECT(BFComponentSystem(std::shared_ptr<BFApplication> application, std::shared_ptr<BFWorld> world));
 
 		/*!
 		 * \fn	virtual BFComponentSystem::~BFComponentSystem() noexcept = default;
@@ -84,7 +82,7 @@ namespace BlackFox
 		 *
 		 * \param	world	The world.
 		 */
-		virtual void setWorld(std::shared_ptr<BFWorld> world);
+		//virtual void setWorld(std::shared_ptr<BFWorld> world);
 
 	protected:
 		/*! \brief	The application */

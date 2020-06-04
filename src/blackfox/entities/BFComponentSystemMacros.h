@@ -22,10 +22,9 @@ namespace BlackFox {
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<system>(system::name) \
-                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>>()(rttr::policy::ctor::as_raw_ptr) \
+                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>,std::shared_ptr<BlackFox::BFWorld>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
                                                                     .method("name", []() { return system::name; }) \
-                                                                    .method("setWorld", &system::setWorld) \
                                                                     .method("get_group", &system::get_group); \
                                                                 }
 
@@ -35,10 +34,9 @@ namespace BlackFox {
                                                                 { \
                                                                     using namespace rttr; \
                                                                     registration::class_<system>(system::name) \
-                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>>()(rttr::policy::ctor::as_raw_ptr) \
+                                                                    .constructor<std::shared_ptr<BlackFox::BFApplication>,std::shared_ptr<BlackFox::BFWorld>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
                                                                     .method("name", []() { return system::name; }) \
-                                                                    .method("setWorld", &system::setWorld) \
                                                                     .method("get_group", &system::get_group); \
                                                                 }
 #endif

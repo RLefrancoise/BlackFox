@@ -45,8 +45,8 @@ namespace BlackFox::Systems
 		application->window()->draw(s);
 	}
 	
-	BFRenderSystem::BFRenderSystem(BFApplication::Ptr application)
-	: BFComponentSystem(std::move(application))
+	BFRenderSystem::BFRenderSystem(BFApplication::Ptr application, BFWorld::Ptr world)
+	: BFComponentSystem(std::move(application), std::move(world))
 	{
 	}
 

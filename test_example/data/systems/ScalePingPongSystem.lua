@@ -1,4 +1,4 @@
-function onWorldChanged(world)
+function onCreate()
 	Transform = BlackFox.Components.Spatial.Transform.id(world)
 	ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
 end

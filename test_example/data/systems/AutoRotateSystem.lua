@@ -1,4 +1,4 @@
-function onWorldChanged(world)
+function onCreate()
 	Transform = BlackFox.Components.Spatial.Transform.id(world)
 	AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
 end

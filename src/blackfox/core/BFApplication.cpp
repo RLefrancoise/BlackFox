@@ -134,7 +134,7 @@ namespace BlackFox
 				auto systems = rttr::type::get<BFComponentSystem>().get_derived_classes();
 				for(const auto& s : systems)
 				{
-					BFWorld::createSystemFromType(s, m_app);
+					defaultWorld->createSystemFromType(s, m_app);
 				}
 
 				//Test lua scripting
@@ -151,7 +151,9 @@ namespace BlackFox
 
 		void loop() const
 		{
-			BFWorld::refreshSystems(ComponentSystemGroups::GameLoop, m_deltaTime);
+			auto worlds = BFWorld::all();
+			for(auto w : worlds)
+				w->refreshSystems(ComponentSystemGroups::GameLoop, m_deltaTime);
 		}
 
 		void render()
@@ -159,7 +161,9 @@ namespace BlackFox
 			//Clear window
 			m_window.clear(sf::Color::White);
 
-			BFWorld::refreshSystems(ComponentSystemGroups::Render, m_deltaTime);
+			auto worlds = BFWorld::all();
+			for (auto w : worlds)
+				w->refreshSystems(ComponentSystemGroups::Render, m_deltaTime);
 
 			//Draw window content
 			m_window.display();
@@ -167,12 +171,16 @@ namespace BlackFox
 
 		void endOfFrame() const
 		{
-			BFWorld::refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
+			auto worlds = BFWorld::all();
+			for (auto w : worlds)
+				w->refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
 		}
 
 		void fixedUpdate() const
 		{
-			BFWorld::refreshSystems(ComponentSystemGroups::FixedTime, m_configData->timeData.fixedUpdateInterval);
+			auto worlds = BFWorld::all();
+			for (auto w : worlds)
+				w->refreshSystems(ComponentSystemGroups::FixedTime, m_configData->timeData.fixedUpdateInterval);
 		}
 
 		void cleanup() {}
