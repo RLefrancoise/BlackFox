@@ -12,6 +12,7 @@
 #include "BFTypeDefs.h"
 #include "BFComponentSystem.h"
 #include "BFComponentSystemFlags.h"
+#include "BFComponentListener.h"
 
 namespace BlackFox
 {
@@ -255,6 +256,26 @@ namespace BlackFox
 		/// <returns>The system if found, nullptr if not</returns>
 		/// --------------------------------------------------------------------------------
 		BFComponentSystem* getSystemByName(const std::string& name);
+
+		template<class ComponentListener, typename... Args>
+		std::shared_ptr<ComponentListener> registerComponentListener(Args... args)
+		{
+			auto listener = std::make_shared<ComponentListener>(args...);
+			registerComponentListener<ComponentListener>(listener.get());
+			/*m_entityManager->on_construct<ComponentListener::ComponentType>().connect<&ComponentListener::onCreate>(*listener);
+			m_entityManager->on_replace<ComponentListener::ComponentType>().connect<&ComponentListener::onReplace>(*listener);
+			m_entityManager->on_destroy<ComponentListener::ComponentType>().connect<&ComponentListener::onDestroy>(*listener);*/
+
+			return listener;
+		}
+
+		template<class ComponentListener>
+		void registerComponentListener(ComponentListener* listener)
+		{
+			m_entityManager->on_construct<ComponentListener::ComponentType>().connect<&ComponentListener::onCreate>(*listener);
+			m_entityManager->on_replace<ComponentListener::ComponentType>().connect<&ComponentListener::onReplace>(*listener);
+			m_entityManager->on_destroy<ComponentListener::ComponentType>().connect<&ComponentListener::onDestroy>(*listener);
+		}
 
 	private:
 		/*! \brief	The level DI container */

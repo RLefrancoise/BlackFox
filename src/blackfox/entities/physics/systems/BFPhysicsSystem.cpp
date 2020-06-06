@@ -14,6 +14,12 @@ using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
 {	
+	typedef BFComponentListenerWithCallback<BFRigidBodyComponent> RigidBodyListener;
+	typedef BFComponentListenerWithCallback<BFBoxColliderComponent> BoxColliderListener;
+
+	std::shared_ptr<RigidBodyListener> rbListener;
+	std::shared_ptr<BoxColliderListener> boxColliderListener;
+
 	BFPhysicsSystem::BFPhysicsSystem(BFApplication::Ptr app, BFWorld::Ptr world)
 	: BFComponentSystem(std::move(app), std::move(world))
 	{
@@ -44,59 +50,26 @@ namespace BlackFox::Systems
 		afterStep(em);
 	}
 
-	/*void BFPhysicsSystem::setWorld(std::shared_ptr<BFWorld> world)
-	{
-		if (m_world.get() == world.get()) return;
-		
-		BFComponentSystem::setWorld(std::move(world));
-
-		// Rigid body
-		listenRigidBodies();
-		
-		// Colliders
-
-		// Box
-		listenBoxColliders();
-	}*/
-
 	void BFPhysicsSystem::listenRigidBodies()
 	{
-		registerComponentListener<BFRigidBodyComponent, &BFPhysicsSystem::initRigidBody, &BFPhysicsSystem::cleanRigidBody, &BFPhysicsSystem::initRigidBody>(
-			m_world.get(),
-			m_world->entityManager());
+		RigidBodyListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFRigidBodyComponent& rb) { initRigidBody(e, r, rb); };
+		RigidBodyListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFRigidBodyComponent& rb) { replaceRigidBody(e, r, rb); };
+		RigidBodyListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanRigidBody(e, r); };
 
-		/*
-		//Construct rigid body event
-		auto rbConstructEvent = m_world->entityManager()->on_construct<BFRigidBodyComponent>();
-
-		rbConstructEvent.disconnect<&BFPhysicsSystem::initRigidBody>(*this);
-		rbConstructEvent.connect<&BFPhysicsSystem::initRigidBody>(*this);
-
-		//Destroy rigid body event
-		auto rbDestroyEvent = m_world->entityManager()->on_destroy<BFRigidBodyComponent>();
-
-		rbDestroyEvent.disconnect<&BFPhysicsSystem::cleanRigidBody>(*this);
-		rbDestroyEvent.connect<&BFPhysicsSystem::cleanRigidBody>(*this);
-
-		//Replace rigid body event
-		auto rbReplaceEvent = m_world->entityManager()->on_replace<BFRigidBodyComponent>();
-
-		rbReplaceEvent.disconnect<&BFPhysicsSystem::initRigidBody>(*this);
-		rbReplaceEvent.connect<&BFPhysicsSystem::initRigidBody>(*this);*/
+		rbListener = m_world->registerComponentListener<RigidBodyListener>(createCallback, replaceCallback, destroyCallback);
 	}
 
 	void BFPhysicsSystem::listenBoxColliders()
 	{
-		registerComponentListener<BFBoxColliderComponent, &BFPhysicsSystem::initBoxCollider, &BFPhysicsSystem::cleanBoxCollider, &BFPhysicsSystem::initBoxCollider>(
-			m_world.get(),
-			m_world->entityManager());
+		BoxColliderListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFBoxColliderComponent& box) { /*initBoxCollider(e, r, box);*/ };
+		BoxColliderListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFBoxColliderComponent& box) { replaceBoxCollider(e, r, box); };
+		BoxColliderListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanBoxCollider(e, r); };
+
+		boxColliderListener = m_world->registerComponentListener<BoxColliderListener>(createCallback, replaceCallback, destroyCallback);
 	}
 
 	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
 	{
-		//Clean rigid body if needed
-		cleanRigidBody(e, em);
-
 		//Create body
 		rb.m_body = m_b2World->CreateBody(&rb.bodyDef());
 		rb.isInitialized = true;
@@ -104,9 +77,21 @@ namespace BlackFox::Systems
 		BF_PRINT("Create body for entity {}", e);
 	}
 
+	void BFPhysicsSystem::replaceRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
+	{
+		//Clean rigid body if needed
+		cleanRigidBody(e, em);
+
+		//Create body
+		initRigidBody(e, em, rb);
+	}
+
 	void BFPhysicsSystem::cleanRigidBody(const entt::entity e, entt::registry& em) const
 	{
 		auto& rb = em.get<BFRigidBodyComponent>(e);
+
+		//TODO: Clean colliders fixtures
+
 		if(rb.m_body) m_b2World->DestroyBody(rb.m_body);
 		rb.isInitialized = false;
 
@@ -115,28 +100,29 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::initBoxCollider(const entt::entity e, entt::registry& em, BFBoxColliderComponent& box) const
 	{
-		cleanBoxCollider(e, em);
-
 		auto* rb = em.try_get<BFRigidBodyComponent>(e);
-		if(rb && rb->m_body && !rb->m_fixture)
+		if(rb && rb->m_body && !box.m_fixture)
 		{
-			b2PolygonShape boxShape;
-			boxShape.SetAsBox(box.extents.x, box.extents.y, b2Vec2(box.center.x, box.center.y), 0);
-			rb->fixture.shape = &boxShape;
-			rb->m_fixture = rb->m_body->CreateFixture(&rb->fixture);
+			box.m_fixture = rb->m_body->CreateFixture(&box.fixtureDef());
 
 			BF_PRINT("Create box collider for entity {}", e);
 		}
 	}
 
+	void BFPhysicsSystem::replaceBoxCollider(const entt::entity e, entt::registry& em, BFBoxColliderComponent& box) const
+	{
+		cleanBoxCollider(e, em);
+		//Init will be done in the before step
+		//initBoxCollider(e, em, box);
+	}
+
 	void BFPhysicsSystem::cleanBoxCollider(const entt::entity e, entt::registry& em) const
 	{
-		auto* rb = em.try_get<BFRigidBodyComponent>(e);
+		auto box = em.get<BFBoxColliderComponent>(e);
 
-		if (rb && rb->m_body && rb->m_fixture)
+		if (box.m_fixture && box.m_fixture->GetBody())
 		{
-			rb->m_body->DestroyFixture(rb->m_fixture);
-			rb->m_fixture = nullptr;
+			box.m_fixture->GetBody()->DestroyFixture(box.m_fixture);
 
 			BF_PRINT("Clean box collider for entity {}", e);
 		}
@@ -161,7 +147,8 @@ namespace BlackFox::Systems
 			auto* boxCollider = em->try_get<BFBoxColliderComponent>(entity);
 			if(boxCollider)
 			{
-				if(!rb.m_fixture) initBoxCollider(entity, *em, *boxCollider);
+				if(!boxCollider->m_fixture) initBoxCollider(entity, *em, *boxCollider);
+				boxCollider->refreshFixture();
 			}
 		});
 	}
@@ -189,7 +176,7 @@ namespace BlackFox::Systems
 		rb.m_body->SetLinearVelocity(rb.linearVelocity);
 
 		//Angular velocity
-		rb.m_body->SetAngularVelocity(rb.angularVelocity);
+		rb.m_body->SetAngularVelocity(BFRadian(BFDegree(rb.angularVelocity)));
 
 		//Linear damping
 		rb.m_body->SetLinearDamping(rb.linearDamping);

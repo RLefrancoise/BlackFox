@@ -5,6 +5,7 @@ namespace BlackFox::Components
 	BFRigidBodyComponent::BFRigidBodyComponent()
 	: isInitialized(false)
 	, type(b2_staticBody)
+	, linearVelocity(b2Vec2(0,0))
 	, angularVelocity(0)
 	, linearDamping(0)
 	, angularDamping(0)
@@ -15,7 +16,6 @@ namespace BlackFox::Components
 	, active(true)
 	, gravityScale(1)
 	, m_body(nullptr)
-	, m_fixture(nullptr)
 	{}
 
 	const b2BodyDef& BFRigidBodyComponent::bodyDef()

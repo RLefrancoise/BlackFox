@@ -40,6 +40,10 @@ namespace BlackFox
 		auto box_t = registerType<BFBoxColliderComponent>();
 		box_t["extents"] = &BFBoxColliderComponent::extents;
 		box_t["center"] = &BFBoxColliderComponent::center;
+		box_t["friction"] = &BFBoxColliderComponent::friction;
+		box_t["restitution"] = &BFBoxColliderComponent::restitution;
+		box_t["density"] = &BFBoxColliderComponent::density;
+		box_t["isSensor"] = &BFBoxColliderComponent::isSensor;
 	}
 
 	std::string BFLuaScriptingPhysicsComponentEntities::namespaceName() const
