@@ -20,4 +20,9 @@ namespace BlackFox
 		m_value = angle;
 		return *this;
 	}
+
+	BFRadian::operator BFDegree() const
+	{
+		return BFDegree(*this);
+	}
 }

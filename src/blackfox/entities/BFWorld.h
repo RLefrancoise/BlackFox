@@ -156,7 +156,7 @@ namespace BlackFox
 			//Add the system to its group
 			m_systemGroups[group].emplace_back(system);
 
-			print("System {} created", type.get_name().to_string());
+			BF_PRINT("System {} created", type.get_name().to_string());
 
 			return system.get();
 		}
@@ -241,7 +241,7 @@ namespace BlackFox
 
 			if (!hasSystem<S>())
 			{
-				warning("World has no system {}. getSystem will return a null pointer", type.get_name().to_string());
+				BF_WARNING("World has no system {}. getSystem will return a null pointer", type.get_name().to_string());
 				return nullptr;
 			}
 
@@ -262,10 +262,7 @@ namespace BlackFox
 		{
 			auto listener = std::make_shared<ComponentListener>(args...);
 			registerComponentListener<ComponentListener>(listener.get());
-			/*m_entityManager->on_construct<ComponentListener::ComponentType>().connect<&ComponentListener::onCreate>(*listener);
-			m_entityManager->on_replace<ComponentListener::ComponentType>().connect<&ComponentListener::onReplace>(*listener);
-			m_entityManager->on_destroy<ComponentListener::ComponentType>().connect<&ComponentListener::onDestroy>(*listener);*/
-
+			
 			return listener;
 		}
 

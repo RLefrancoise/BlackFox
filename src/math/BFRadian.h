@@ -82,6 +82,8 @@ namespace BlackFox
 			return m_value;
 		}
 
+		operator BFDegree() const;
+
 	private:
 		/*! \brief	The number of radians. */
 		float m_value;

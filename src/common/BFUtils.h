@@ -2,6 +2,7 @@
 #define BLACKFOX_UTILS_H
 
 #include <vector>
+#include <tuple>
 
 namespace BlackFox
 {

@@ -50,6 +50,41 @@ namespace BlackFox::Systems
 		afterStep(em);
 	}
 
+	void BFPhysicsSystem::applyForce(Components::BFRigidBodyComponent &rb, const BFVector2f &force, const BFVector2f &point, bool wake)
+	{
+		assert(rb.m_body != nullptr);
+		rb.m_body->ApplyForce(b2Vec2(force.x, force.y), b2Vec2(point.x, point.y), wake);
+	}
+
+	void BFPhysicsSystem::applyForceToCenter(Components::BFRigidBodyComponent &rb, const BFVector2f &force, bool wake)
+	{
+		assert(rb.m_body != nullptr);
+		rb.m_body->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);
+	}
+
+	void BFPhysicsSystem::applyTorque(Components::BFRigidBodyComponent &rb, const BFRadian& torque, bool wake)
+	{
+		assert(rb.m_body != nullptr);
+		rb.m_body->ApplyTorque(torque, wake);
+	}
+
+	void BFPhysicsSystem::applyLinearImpulse(Components::BFRigidBodyComponent &rb, const BFVector2f &impulse, const BFVector2f &point, bool wake)
+	{
+		assert(rb.m_body != nullptr);
+		rb.m_body->ApplyLinearImpulse(b2Vec2(impulse.x, impulse.y), b2Vec2(point.x, point.y), wake);
+	}
+
+	void BFPhysicsSystem::applyLinearImpulseToCenter(Components::BFRigidBodyComponent &rb, const BFVector2f &impulse, bool wake)
+	{
+		assert(rb.m_body != nullptr);
+		rb.m_body->ApplyLinearImpulseToCenter(b2Vec2(impulse.x, impulse.y), wake);
+	}
+
+	void BFPhysicsSystem::applyAngularImpulse(Components::BFRigidBodyComponent &rb, const BFRadian& impulse, bool wake)
+	{
+		rb.m_body->ApplyAngularImpulse(impulse, wake);
+	}
+
 	void BFPhysicsSystem::listenRigidBodies()
 	{
 		RigidBodyListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFRigidBodyComponent& rb) { initRigidBody(e, r, rb); };
@@ -70,8 +105,19 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
 	{
+		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
+
 		//Create body
-		rb.m_body = m_b2World->CreateBody(&rb.bodyDef());
+		auto bodyDef = rb.bodyDef();
+
+		auto* transform = em.try_get<BFTransformComponent>(e);
+		if (transform != nullptr)
+		{
+			bodyDef.position.Set(transform->position.x * physicsScale, transform->position.y - physicsScale);
+			bodyDef.angle = BFRadian(transform->rotation);
+		}
+
+		rb.m_body = m_b2World->CreateBody(&bodyDef);
 		rb.isInitialized = true;
 
 		BF_PRINT("Create body for entity {}", e);
@@ -103,7 +149,7 @@ namespace BlackFox::Systems
 		auto* rb = em.try_get<BFRigidBodyComponent>(e);
 		if(rb && rb->m_body && !box.m_fixture)
 		{
-			box.m_fixture = rb->m_body->CreateFixture(&box.fixtureDef());
+			box.m_fixture = rb->m_body->CreateFixture(&box.fixtureDef(m_application->configData()->physicsData.physicsScale));
 
 			BF_PRINT("Create box collider for entity {}", e);
 		}
@@ -166,11 +212,13 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::synchronizeBody(BFRigidBodyComponent& rb, BFTransformComponent& transform)
 	{
+		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
+
 		//Type
 		rb.m_body->SetType(rb.type);
 		
 		//Position & rotation
-		rb.m_body->SetTransform(b2Vec2(transform.position.x, transform.position.y), BFRadian(transform.rotation));
+		rb.m_body->SetTransform(b2Vec2(transform.position.x * physicsScale, transform.position.y * physicsScale), BFRadian(transform.rotation));
 
 		//Linear velocity
 		rb.m_body->SetLinearVelocity(rb.linearVelocity);
@@ -205,9 +253,11 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::synchronizeTransform(BFRigidBodyComponent& rb, BFTransformComponent& transform)
 	{	
+		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
+
 		//Position
-		transform.position.x = rb.m_body->GetPosition().x;
-		transform.position.y = rb.m_body->GetPosition().y;
+		transform.position.x = rb.m_body->GetPosition().x / physicsScale;
+		transform.position.y = rb.m_body->GetPosition().y / physicsScale;
 
 		//Rotation
 		transform.rotation = BFRadian(rb.m_body->GetAngle());

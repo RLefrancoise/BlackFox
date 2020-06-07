@@ -71,15 +71,11 @@ namespace BlackFox::Components
 
 		/// Scale the gravity applied to this body.
 		float32 gravityScale;
-		
-		//b2BodyDef body;
-		//b2FixtureDef fixture;
 
 		const b2BodyDef& bodyDef();
 		
 	private:
 		b2BodyDef m_bodyDef;
 		b2Body* m_body;
-		//b2Fixture* m_fixture;
 	};
 }

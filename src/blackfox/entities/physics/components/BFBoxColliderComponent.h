@@ -40,7 +40,7 @@ namespace BlackFox::Components
 		/// Contact filtering data.
 		b2Filter filter;
 
-		const b2FixtureDef& fixtureDef();
+		const b2FixtureDef& fixtureDef(float physicsScale = 1);
 
 		void refreshFixture();
 	private:

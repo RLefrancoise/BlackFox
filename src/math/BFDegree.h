@@ -82,6 +82,8 @@ namespace BlackFox
 			return m_value;
 		}
 
+		operator BFRadian() const;
+
 	private:
 		/*! \brief	The number of degrees. */
 		float m_value;

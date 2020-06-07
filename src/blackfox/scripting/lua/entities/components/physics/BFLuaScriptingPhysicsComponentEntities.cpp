@@ -2,7 +2,9 @@
 
 #include "BFBoxColliderComponent.h"
 #include "BFRadian.h"
+#include "BFDegree.h"
 #include "BFRigidBodyComponent.h"
+#include "BFPhysicsSystem.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingPhysicsComponentEntities, "PhysicsComponents")
 
@@ -35,6 +37,7 @@ namespace BlackFox
 			[&](BFRigidBodyComponent& rb, const float linearDamping) { rb.linearDamping = linearDamping; });
 		rb_t["angularDamping"] = sol::property([&](BFRigidBodyComponent& rb) { return rb.angularDamping; },
 			[&](BFRigidBodyComponent& rb, const float angularDamping) { rb.angularDamping = angularDamping; });
+		rb_t["bullet"] = &BFRigidBodyComponent::bullet;
 		
 		//Box collider
 		auto box_t = registerType<BFBoxColliderComponent>();

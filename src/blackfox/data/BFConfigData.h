@@ -112,12 +112,15 @@ namespace BlackFox
 		/// \brief  Position iterations
         int positionIterations = 3;
 
+        float physicsScale = 1;
+
         explicit operator std::string() const
         {
-            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\n"
+            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\nphysicsScale={}\n"
                 , static_cast<std::string>(gravity)
 				, velocityIterations
-				, positionIterations);
+				, positionIterations
+                , physicsScale);
         }
 	};
 
@@ -158,7 +161,8 @@ namespace BlackFox
             physicsData = {
                 vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
 				file.getInt("Physics", "velocityIterations", 8),
-				file.getInt("Physics", "positionIterations", 3) };
+				file.getInt("Physics", "positionIterations", 3),
+                file.getFloat("Physics", "physicsScale") };
         }
 
         /// \brief  Application data

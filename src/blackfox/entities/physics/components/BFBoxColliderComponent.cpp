@@ -14,7 +14,7 @@ namespace BlackFox::Components
 	{
 	}
 
-	const b2FixtureDef& BFBoxColliderComponent::fixtureDef()
+	const b2FixtureDef& BFBoxColliderComponent::fixtureDef(float physicsScale)
 	{
 		m_fixtureDef.density = density;
 		m_fixtureDef.filter = filter;
@@ -22,7 +22,7 @@ namespace BlackFox::Components
 		m_fixtureDef.isSensor = isSensor;
 		m_fixtureDef.restitution = restitution;
 
-		m_shape.SetAsBox(extents.x, extents.y, b2Vec2(center.x, center.y), 0);
+		m_shape.SetAsBox(extents.x * physicsScale, extents.y * physicsScale, b2Vec2(center.x * physicsScale, center.y * physicsScale), 0);
 		m_fixtureDef.shape = &m_shape;
 
 		return m_fixtureDef;
