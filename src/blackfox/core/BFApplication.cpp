@@ -118,7 +118,11 @@ namespace BlackFox
 				//Window
 				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
 				if (m_configData->appData.fullScreen) windowFlags |= sf::Style::Fullscreen;
-				m_window.create(sf::VideoMode(m_configData->appData.windowSize.x, m_configData->appData.windowSize.y), m_configData->appData.name, windowFlags);
+
+				sf::ContextSettings windowSettings;
+				windowSettings.antialiasingLevel = m_configData->appData.antiAliasing;
+
+				m_window.create(sf::VideoMode(m_configData->appData.windowSize.x, m_configData->appData.windowSize.y), m_configData->appData.name, windowFlags, windowSettings);
 
 				//Framerate
 				m_window.setFramerateLimit(m_configData->appData.frameRate);

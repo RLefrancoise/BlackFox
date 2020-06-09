@@ -91,7 +91,7 @@ IF(EXISTS ${BLACKFOX_EDITOR_RESOURCES_PATH})
     string(REGEX REPLACE "[\\]" "/" BLACKFOX_EDITOR_RESOURCES_PATH ${BLACKFOX_EDITOR_RESOURCES_PATH})
     add_compile_definitions(BLACKFOX_EDITOR_RESOURCES_PATH="${BLACKFOX_EDITOR_RESOURCES_PATH}")
 ELSE()
-    message("Please specify where the resources folder of the editor is located")
+    message(FATAL_ERROR "Please specify where the resources folder of the editor is located")
 ENDIF()
 
 # Set working directory to root folder to be able to load resoources

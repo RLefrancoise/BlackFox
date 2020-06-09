@@ -29,10 +29,10 @@ namespace BlackFox::Systems
 
 		void applyForce(Components::BFRigidBodyComponent& rb, const BFVector2f& force, const BFVector2f& point, bool wake = true);
 		void applyForceToCenter(Components::BFRigidBodyComponent& rb, const BFVector2f& force, bool wake = true);
-		void applyTorque(Components::BFRigidBodyComponent& rb, const BFRadian& torque, bool wake = true);
+		void applyTorque(Components::BFRigidBodyComponent& rb, float torque, bool wake = true);
 		void applyLinearImpulse(Components::BFRigidBodyComponent& rb, const BFVector2f& impulse, const BFVector2f& point, bool wake = true);
 		void applyLinearImpulseToCenter(Components::BFRigidBodyComponent& rb, const BFVector2f& impulse, bool wake = true);
-		void applyAngularImpulse(Components::BFRigidBodyComponent& rb, const BFRadian& impulse, bool wake = true);
+		void applyAngularImpulse(Components::BFRigidBodyComponent& rb, float impulse, bool wake = true);
 
 	private:
 		void listenRigidBodies();

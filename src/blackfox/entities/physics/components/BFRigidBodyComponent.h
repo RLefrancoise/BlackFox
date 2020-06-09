@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BFComponent.h"
+#include "BFDegree.h"
 #include "Box2D/Dynamics/b2Body.h"
 #include "Box2D/Dynamics/b2Fixture.h"
 
@@ -75,6 +76,9 @@ namespace BlackFox::Components
 		const b2BodyDef& bodyDef();
 		
 	private:
+		void synchronizeBody(b2Vec2 position, const BFDegree& angle);
+		void synchronizeWithBody();
+
 		b2BodyDef m_bodyDef;
 		b2Body* m_body;
 	};

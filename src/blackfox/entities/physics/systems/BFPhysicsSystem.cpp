@@ -50,39 +50,46 @@ namespace BlackFox::Systems
 		afterStep(em);
 	}
 
-	void BFPhysicsSystem::applyForce(Components::BFRigidBodyComponent &rb, const BFVector2f &force, const BFVector2f &point, bool wake)
+	void BFPhysicsSystem::applyForce(BFRigidBodyComponent &rb, const BFVector2f &force, const BFVector2f &point, bool wake)
 	{
 		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyForce(b2Vec2(force.x, force.y), b2Vec2(point.x, point.y), wake);
+		rb.synchronizeWithBody();
 	}
 
-	void BFPhysicsSystem::applyForceToCenter(Components::BFRigidBodyComponent &rb, const BFVector2f &force, bool wake)
+	void BFPhysicsSystem::applyForceToCenter(BFRigidBodyComponent &rb, const BFVector2f &force, bool wake)
 	{
 		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);
+		rb.synchronizeWithBody();
 	}
 
-	void BFPhysicsSystem::applyTorque(Components::BFRigidBodyComponent &rb, const BFRadian& torque, bool wake)
+	void BFPhysicsSystem::applyTorque(BFRigidBodyComponent &rb, const float torque, bool wake)
 	{
 		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyTorque(torque, wake);
+		rb.synchronizeWithBody();
 	}
 
-	void BFPhysicsSystem::applyLinearImpulse(Components::BFRigidBodyComponent &rb, const BFVector2f &impulse, const BFVector2f &point, bool wake)
+	void BFPhysicsSystem::applyLinearImpulse(BFRigidBodyComponent &rb, const BFVector2f &impulse, const BFVector2f &point, bool wake)
 	{
 		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyLinearImpulse(b2Vec2(impulse.x, impulse.y), b2Vec2(point.x, point.y), wake);
+		rb.synchronizeWithBody();
 	}
 
-	void BFPhysicsSystem::applyLinearImpulseToCenter(Components::BFRigidBodyComponent &rb, const BFVector2f &impulse, bool wake)
+	void BFPhysicsSystem::applyLinearImpulseToCenter(BFRigidBodyComponent &rb, const BFVector2f &impulse, bool wake)
 	{
 		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyLinearImpulseToCenter(b2Vec2(impulse.x, impulse.y), wake);
+		rb.synchronizeWithBody();
 	}
 
-	void BFPhysicsSystem::applyAngularImpulse(Components::BFRigidBodyComponent &rb, const BFRadian& impulse, bool wake)
+	void BFPhysicsSystem::applyAngularImpulse(BFRigidBodyComponent &rb, const float impulse, bool wake)
 	{
+		assert(rb.m_body != nullptr);
 		rb.m_body->ApplyAngularImpulse(impulse, wake);
+		rb.synchronizeWithBody();
 	}
 
 	void BFPhysicsSystem::listenRigidBodies()
@@ -113,7 +120,7 @@ namespace BlackFox::Systems
 		auto* transform = em.try_get<BFTransformComponent>(e);
 		if (transform != nullptr)
 		{
-			bodyDef.position.Set(transform->position.x * physicsScale, transform->position.y - physicsScale);
+			bodyDef.position.Set(transform->position.x * physicsScale, transform->position.y * physicsScale);
 			bodyDef.angle = BFRadian(transform->rotation);
 		}
 
@@ -136,9 +143,12 @@ namespace BlackFox::Systems
 	{
 		auto& rb = em.get<BFRigidBodyComponent>(e);
 
-		//TODO: Clean colliders fixtures
+		//Clean colliders
+		cleanBoxCollider(e, em);
 
+		//Destroy body
 		if(rb.m_body) m_b2World->DestroyBody(rb.m_body);
+
 		rb.isInitialized = false;
 
 		BF_PRINT("Clean body for entity {}", e);
@@ -164,11 +174,12 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::cleanBoxCollider(const entt::entity e, entt::registry& em) const
 	{
-		auto box = em.get<BFBoxColliderComponent>(e);
+		auto* box = em.try_get<BFBoxColliderComponent>(e);
 
-		if (box.m_fixture && box.m_fixture->GetBody())
+		if (box->m_fixture && box->m_fixture->GetBody())
 		{
-			box.m_fixture->GetBody()->DestroyFixture(box.m_fixture);
+			box->m_fixture->GetBody()->DestroyFixture(box->m_fixture);
+			box->m_fixture = nullptr;
 
 			BF_PRINT("Clean box collider for entity {}", e);
 		}
@@ -182,7 +193,10 @@ namespace BlackFox::Systems
 		view.each([&](const entt::entity entity, BFRigidBodyComponent& rb, BFTransformComponent& transform)
 		{
 			//Init body if needed
-			if (!rb.isInitialized) initRigidBody(entity, *em, rb);
+			if (!rb.isInitialized)
+			{
+				initRigidBody(entity, *em, rb);
+			}
 			
 			//Synchronize body with transform
 			synchronizeBody(rb, transform);
@@ -201,11 +215,14 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::afterStep(const EntityManager& em)
 	{
-		//Synchronize transforms with rigid bodies
 		const auto view = em->view<BFRigidBodyComponent, BFTransformComponent>();
 		
 		view.each([&](auto entity, BFRigidBodyComponent& rb, BFTransformComponent& transform)
 		{
+			//Update rigidbody component values according to its body
+			rb.synchronizeWithBody();
+
+			//Synchronize transforms with rigid bodies
 			synchronizeTransform(rb, transform);
 		});
 	}
@@ -214,41 +231,7 @@ namespace BlackFox::Systems
 	{
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
 
-		//Type
-		rb.m_body->SetType(rb.type);
-		
-		//Position & rotation
-		rb.m_body->SetTransform(b2Vec2(transform.position.x * physicsScale, transform.position.y * physicsScale), BFRadian(transform.rotation));
-
-		//Linear velocity
-		rb.m_body->SetLinearVelocity(rb.linearVelocity);
-
-		//Angular velocity
-		rb.m_body->SetAngularVelocity(BFRadian(BFDegree(rb.angularVelocity)));
-
-		//Linear damping
-		rb.m_body->SetLinearDamping(rb.linearDamping);
-
-		//Angular damping
-		rb.m_body->SetAngularDamping(rb.angularDamping);
-
-		//Allow sleep
-		rb.m_body->SetSleepingAllowed(rb.allowSleep);
-
-		//Awake
-		rb.m_body->SetAwake(rb.awake);
-
-		//Fixed rotation
-		rb.m_body->SetFixedRotation(rb.fixedRotation);
-
-		//Bullet
-		rb.m_body->SetBullet(rb.bullet);
-
-		//Active
-		rb.m_body->SetActive(rb.active);
-
-		//Gravity scale
-		rb.m_body->SetGravityScale(rb.gravityScale);
+		rb.synchronizeBody(b2Vec2(transform.position.x * physicsScale, transform.position.y * physicsScale), BFRadian(transform.rotation));
 	}
 
 	void BFPhysicsSystem::synchronizeTransform(BFRigidBodyComponent& rb, BFTransformComponent& transform)

@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_TYPEDEFS_H
-#define BLACKFOX_TYPEDEFS_H
+#pragma once
 
 #include <cinject/cinject.h>
 #include <entt/entity/registry.hpp>
@@ -17,6 +16,8 @@ namespace BlackFox
 	typedef entt::handle<sf::Texture> TextureHandle;
 }
 
+#if WIN32
+
 #if defined(BLACKFOX_SHARED_LIB)
 	#if defined(BLACKFOX_SHARED_LIB_EXPORT)
 		#define BLACKFOX_EXPORT __declspec(dllexport)
@@ -26,5 +27,9 @@ namespace BlackFox
 #else
 	#define BLACKFOX_EXPORT
 #endif
+
+#else
+
+#define BLACKFOX_EXPORT
 
 #endif

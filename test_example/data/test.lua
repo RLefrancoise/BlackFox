@@ -1,5 +1,11 @@
 math.randomseed(os.time())
 
+-- Aliases
+Vector2f = BlackFox.Math.Vector2f
+IntRect = BlackFox.Graphics.IntRect
+Color = BlackFox.Graphics.Color
+Screen = BlackFox.Screen
+
 -- Default world
 world = BlackFox.getWorld("default")
 
@@ -30,43 +36,30 @@ function createBody(position)
 
     -- Scale
     local randomScale = 0.25 + math.random() * 0.25
-    transform.scale = BlackFox.Math.Vector2f:new(randomScale, randomScale)
+    transform.scale = Vector2f:new(randomScale, randomScale)
 
     -- Rigid body
     rigidBody.type = BlackFox.Physics.BodyType.Dynamic
-    rigidBody.angularDamping = math.random() * 0.1
+    rigidBody.angularDamping = 0.1
     rigidBody.bullet = true
 
     -- Box Collider
-    boxCollider.extents = BlackFox.Math.Vector2f:new(randomScale / 2.0, randomScale / 2.0)
-    boxCollider.center = BlackFox.Math.Vector2f:new(0, 0)
+    boxCollider.extents = Vector2f:new(randomScale / 2.0, randomScale / 2.0)
+    boxCollider.center = Vector2f:new(0, 0)
     boxCollider.density = 1
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.5
-
-    local linearImpulse = BlackFox.Math.Vector2f:new(math.random(-1,1),math.random(-3,3))
-    BlackFox.Physics.applyLinearImpulseToCenter(
-        world, 
-        rigidBody, 
-        linearImpulse, 
-        true)
-
-    BlackFox.Physics.applyAngularImpulse(
-        world, 
-        rigidBody, 
-        math.random(-45,45), 
-        true)
+    boxCollider.restitution = 0.2
 
     -- Sprite
     -- Test image
     sprite.image = BlackFox.Resources.texture("test.png")
-    sprite.image.smooth = false
+    sprite.image.smooth = true
     -- Full rect
-    sprite.rect = BlackFox.Graphics.IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
+    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at center
-    sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
+    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
-    sprite.color = BlackFox.Graphics.Color.random(false)
+    sprite.color = Color.Blue;
 
     -- Depth
     depth.depth = 0
@@ -94,22 +87,22 @@ function createGround(position, scale)
     rigidBody.type = BlackFox.Physics.BodyType.Static
 
     -- Box Collider
-    boxCollider.extents = BlackFox.Math.Vector2f:new(transform.scale.x / 2.0, transform.scale.y / 2.0)
-    boxCollider.center = BlackFox.Math.Vector2f:new(0, -transform.scale.y / 2.0)
+    boxCollider.extents = Vector2f:new(transform.scale.x / 2.0, transform.scale.y / 2.0)
+    boxCollider.center = Vector2f:new(0, -transform.scale.y / 2.0)
     boxCollider.density = 0
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.5
+    boxCollider.restitution = 0.2
     
     -- Sprite
     -- Test image
     sprite.image = BlackFox.Resources.texture("test.png")
     sprite.image.smooth = false
     -- Full rect
-    sprite.rect = BlackFox.Graphics.IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
+    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at bottom center
-    sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height())
+    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
     -- Black color
-    sprite.color = BlackFox.Graphics.Color.Black
+    sprite.color = Color.Black
 
     -- Depth
     depth.depth = 0
@@ -139,22 +132,22 @@ function createWall(position)
     rigidBody.type = BlackFox.Physics.BodyType.Static
 
     -- Box Collider
-    boxCollider.extents = BlackFox.Math.Vector2f:new(transform.scale.x / 2.0, transform.scale.y / 2.0)
-    boxCollider.center = BlackFox.Math.Vector2f:new(0, -transform.scale.y / 2.0)
+    boxCollider.extents = Vector2f:new(transform.scale.x / 2.0, transform.scale.y / 2.0)
+    boxCollider.center = Vector2f:new(0, -transform.scale.y / 2.0)
     boxCollider.density = 0
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.5
+    boxCollider.restitution = 0.2
     
     -- Sprite
     -- Test image
     sprite.image = BlackFox.Resources.texture("test.png")
     sprite.image.smooth = false
     -- Full rect
-    sprite.rect = BlackFox.Graphics.IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
+    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at bottom center
-    sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height())
+    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
     -- Black color
-    sprite.color = BlackFox.Graphics.Color.Black
+    sprite.color = Color.Black
 
     -- Depth
     depth.depth = 0
@@ -176,15 +169,15 @@ function createEntity()
         Depth)
 
     -- Position
-    transform.position = BlackFox.Screen.pixelsToWorld(
-        math.random() * BlackFox.Screen.width(), 
-        math.random() * BlackFox.Screen.height())
+    transform.position = Screen.pixelsToWorld(
+        math.random() * Screen.width(), 
+        math.random() * Screen.height())
 
     -- Rotation
     transform.rotation.degrees = math.random() * 360.0
 
     -- Scale
-    transform.scale = BlackFox.Math.Vector2f:new(1,1)
+    transform.scale = Vector2f:new(1,1)
 
     -- Auto Rotate
     autoRotate.speed = math.random() * 360.0
@@ -199,35 +192,35 @@ function createEntity()
     sprite.image = BlackFox.Resources.texture("test.png")
     sprite.image.smooth = true
     -- Full rect
-    sprite.rect = BlackFox.Graphics.IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
+    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at center
-    sprite.pivot = BlackFox.Math.Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
+    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
-    sprite.color = BlackFox.Graphics.Color.random(true)
+    sprite.color = Color.random(true)
 
     -- Depth (between 0 and 5)
     depth.depth = math.floor(math.random() * 5)
 end
 
 -- Create ground
-groundPosition = BlackFox.Screen.pixelsToWorld(BlackFox.Screen.width() / 2, BlackFox.Screen.height() - 20)
-groundScale = BlackFox.Math.Vector2f:new(8, 2)
+groundPosition = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() - 100)
+groundScale = Vector2f:new(8, 2)
 ground = createGround(groundPosition, groundScale)
 
 -- Create walls
-leftWallPosition = BlackFox.Math.Vector2f:new(groundPosition.x - groundScale.x / 2.0 - 1, groundPosition.y)
-rightWallPosition = BlackFox.Math.Vector2f:new(groundPosition.x + groundScale.x / 2.0 + 1, groundPosition.y)
+leftWallPosition = Vector2f:new(groundPosition.x - groundScale.x / 2.0 - 1, groundPosition.y)
+rightWallPosition = Vector2f:new(groundPosition.x + groundScale.x / 2.0 + 1, groundPosition.y)
 
 createWall(leftWallPosition)
 createWall(rightWallPosition)
 
 -- Create roof
-roofPosition = BlackFox.Math.Vector2f:new(groundPosition.x, groundPosition.y - 6)
+roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
 roofScale = groundScale
 roof = createGround(roofPosition, groundScale)
 
-for i=1,30 do
-    createBody(BlackFox.Math.Vector2f:new(
+for i=1,10 do
+    createBody(Vector2f:new(
         math.random(math.floor(leftWallPosition.x + 1), math.floor(rightWallPosition.x - 1)),
         math.random(math.floor(roofPosition.y + 1), math.floor(groundPosition.y - 1))))
 end
@@ -240,5 +233,6 @@ end
 --world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 --world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
+world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
 
 return true

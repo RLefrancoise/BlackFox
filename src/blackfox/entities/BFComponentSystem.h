@@ -2,7 +2,6 @@
 #define BLACKFOX_COMPONENTSYSTEM_H
 
 #include <memory>
-#include <cinject/cinject.h>
 #include <rttr/rttr_enable.h>
 
 #include "BFTypeDefs.h"
@@ -48,7 +47,7 @@ namespace BlackFox
 		 *
 		 * \param	application	The application.
 		 */
-		CINJECT(BFComponentSystem(std::shared_ptr<BFApplication> application, std::shared_ptr<BFWorld> world));
+		BFComponentSystem(std::shared_ptr<BFApplication> application, std::shared_ptr<BFWorld> world);
 
 		/*!
 		 * \fn	virtual BFComponentSystem::~BFComponentSystem() noexcept = default;

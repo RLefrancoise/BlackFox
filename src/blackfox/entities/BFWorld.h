@@ -269,9 +269,9 @@ namespace BlackFox
 		template<class ComponentListener>
 		void registerComponentListener(ComponentListener* listener)
 		{
-			m_entityManager->on_construct<ComponentListener::ComponentType>().connect<&ComponentListener::onCreate>(*listener);
-			m_entityManager->on_replace<ComponentListener::ComponentType>().connect<&ComponentListener::onReplace>(*listener);
-			m_entityManager->on_destroy<ComponentListener::ComponentType>().connect<&ComponentListener::onDestroy>(*listener);
+			m_entityManager->on_construct<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onCreate>(*listener);
+			m_entityManager->on_replace<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onReplace>(*listener);
+			m_entityManager->on_destroy<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onDestroy>(*listener);
 		}
 
 	private:

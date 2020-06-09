@@ -29,16 +29,19 @@ namespace BlackFox
         BFVector2u windowSize = BFVector2u(800, 600);
         /// <summary>Show frame rate in title bar ?</summary>
         bool showFrameRate = false;
+        /*! \brief Anti aliasin level */
+        unsigned int antiAliasing = 0;
 
         explicit operator std::string() const
         {
-			return fmt::format("--- Application Data ---\nname={}\nframeRate={}\nfullScreen={}\nwindowSize=({},{})\nshowFrameRate={}\n"
+			return fmt::format("--- Application Data ---\nname={}\nframeRate={}\nfullScreen={}\nwindowSize=({},{})\nshowFrameRate={}\nantiAliasing={}\n"
 				, name
 				, frameRate
 				, fullScreen
 				, windowSize.x
 				, windowSize.y
-				, showFrameRate);
+				, showFrameRate
+                , antiAliasing);
         }
     };
 
@@ -114,13 +117,16 @@ namespace BlackFox
 
         float physicsScale = 1;
 
+        bool debugPhysics = false;
+
         explicit operator std::string() const
         {
-            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\nphysicsScale={}\n"
+            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\nphysicsScale={}\ndebugPhysics={}\n"
                 , static_cast<std::string>(gravity)
 				, velocityIterations
 				, positionIterations
-                , physicsScale);
+                , physicsScale
+                , debugPhysics);
         }
 	};
 
@@ -144,7 +150,8 @@ namespace BlackFox
                 BFVector2u( //window size
                     file.getInt("Application", "width", 800),
                     file.getInt("Application", "height", 600)),
-                file.getBool("Application", "showFrameRate", false) //show frame rate
+                file.getBool("Application", "showFrameRate", false), //show frame rate
+                file.getIntTo<unsigned int>("Application", "antiAliasing", 0) // Anti aliasing
             };
 
             //Game data
@@ -162,9 +169,10 @@ namespace BlackFox
                 vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
 				file.getInt("Physics", "velocityIterations", 8),
 				file.getInt("Physics", "positionIterations", 3),
-                file.getFloat("Physics", "physicsScale") };
+                file.getFloat("Physics", "physicsScale", 1),
+                file.getBool("Physics", "debugPhysics", false) };
         }
-
+        
         /// \brief  Application data
         ConfigApplicationData appData;
         /// \brief  Game data

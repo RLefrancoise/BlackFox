@@ -31,8 +31,8 @@ namespace BlackFox
 
 		explicit IBFCommand(std::string name, const bool isUndoable = true) : m_name(std::move(name)), m_undoable(isUndoable) {}
 		virtual ~IBFCommand(void) noexcept = default;
-		constexpr IBFCommand(IBFCommand&&) noexcept = default;
-		constexpr IBFCommand& operator=(IBFCommand&&) noexcept = default;
+		IBFCommand(IBFCommand&&) noexcept = default;
+		IBFCommand& operator=(IBFCommand&&) noexcept = default;
 
 		/*!
 		 * \fn	virtual BFCommand* BFCommand::clone(void) const = 0;

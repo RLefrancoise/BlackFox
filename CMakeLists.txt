@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-option(BLACKFOX_SHARED_LIB ON)
+option(BLACKFOX_SHARED_LIB "Build BlackFox Shared lib? For now, only shared libs are supported, so it should be on" ON)
 
 # SFML
 find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED)

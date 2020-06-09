@@ -3,6 +3,8 @@
 #include <entt/core/hashed_string.hpp>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <algorithm>
 
 namespace BlackFox::Resources
 {

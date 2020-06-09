@@ -22,7 +22,11 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
 add_library(bfio STATIC ${SOURCES})
 
-set(LIBRARIES bfcommon libluadll yaml-cpp)
+IF(WIN32)
+	set(LIBRARIES bfcommon libluadll yaml-cpp)
+ELSE()
+	set(LIBRARIES bfcommon liblua yaml-cpp)
+ENDIF()
 
 target_include_directories(
         bfio

@@ -17,7 +17,7 @@ namespace BlackFox
     {
         try
         {
-            if (!BFTextResource::load(file, errorMessage)) throw std::exception(errorMessage->c_str());
+            if (!BFTextResource::load(file, errorMessage)) BF_EXCEPTION(*errorMessage);
         	
             m_result = m_state->safe_script_file(file.string(), m_environment);
             if(!m_result.valid())
