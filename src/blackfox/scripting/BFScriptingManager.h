@@ -1,14 +1,12 @@
-#ifndef BLACKFOX_SCRIPTING_MANAGER_H
-#define BLACKFOX_SCRIPTING_MANAGER_H
+#pragma once
 
-#define SOL_ALL_SAFETIES_ON 1
-
-#include <sol/sol.hpp>
+#include <sol/state.hpp>
+#include <sol/protected_function_result.hpp>
 #include <memory>
-
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -65,5 +63,3 @@ namespace BlackFox
 		std::vector<std::shared_ptr<IBFScriptingEntity>> m_entities;
 	};
 }
-
-#endif

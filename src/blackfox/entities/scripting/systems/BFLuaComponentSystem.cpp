@@ -4,17 +4,16 @@
 
 namespace BlackFox
 {
-    BFLuaComponentSystem::BFLuaComponentSystem(BFApplication::Ptr app, std::shared_ptr<BFWorld> world, const BFLuaScript &script)
+    BFLuaComponentSystem::BFLuaComponentSystem(BFApplication::Ptr app, BFWorld::Ptr world, const BFLuaScript &script)
     : BFComponentSystem(std::move(app), std::move(world))
     , m_script(script)
     {
         if (script.has<sol::function>("onCreate")) m_onCreateFnc = (script.get<sol::function>("onCreate"));
         if (script.has<sol::function>("onDestroy")) m_onDestroyFnc = (script.get<sol::function>("onDestroy"));
-        //if (script.has<sol::function>("onWorldChanged")) m_onWorldChanged = (script.get<sol::function>("onWorldChanged"));
         if (script.has<sol::function>("update")) m_updateFnc = (script.get<sol::function>("update"));
 
-        m_script.set<BFApplication*>("application", m_application.get());
-        m_script.set<BFWorld::Ptr>("world", world);
+        m_script.set<BFApplication::Ptr>("application", m_application);
+        m_script.set<BFWorld::Ptr>("world", m_world);
 
         if(m_onCreateFnc.has_value()) m_onCreateFnc.value()();
     }
@@ -29,15 +28,4 @@ namespace BlackFox
         if (m_updateFnc.has_value())
             m_updateFnc.value()(dt);
     }
-
-    /*void BFLuaComponentSystem::setWorld(BFWorld::Ptr world)
-    {
-        //If world is same as before, don't assign again (useless call to onWorldChanged)
-        if (m_world.get() == world.get()) return;
-
-        BFComponentSystem::setWorld(world);
-
-        m_script.set<BFWorld::Ptr>("world", world);
-        if(m_onWorldChanged.has_value()) m_onWorldChanged.value()(world);
-    }*/
 }

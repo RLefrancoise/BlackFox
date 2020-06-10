@@ -1,9 +1,8 @@
-#ifndef BLACKFOX_ICONTEXT_H
-#define BLACKFOX_ICONTEXT_H
+#pragma once
 
 #include "IBFInstaller.h"
 #include "BFTypeDefs.h"
-#include "common/BFDebug.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -95,5 +94,3 @@ namespace BlackFox
 		return context;
 	}
 }
-
-#endif

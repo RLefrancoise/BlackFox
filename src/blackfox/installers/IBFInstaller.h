@@ -1,8 +1,7 @@
-#ifndef BLACKFOX_IINSTALLER_H
-#define BLACKFOX_IINSTALLER_H
+#pragma once
 
 #include <memory>
-#include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -46,5 +45,3 @@ namespace BlackFox
 	 */
 	typedef std::shared_ptr<IBFInstaller> DiInstaller;
 }
-
-#endif

@@ -2,7 +2,7 @@
  * \file   BFWindowCommand.h
  * \brief  Base class for Blackfox commands executing for windows
  * 
- * \author Renaud Lefrançoise
+ * \author Renaud LefranÃ§oise
  * \date   April 2020
 ***********************************************************************/
 #pragma once
@@ -20,7 +20,7 @@ namespace BlackFox::Editor
 		/*! \brief Shortcut for subclasses to reference parent type */
 		using Super = BFWindowCommand<C, W>;
 		
-		CINJECT(BFWindowCommand(const std::string& name, BFCommandManager::Ptr commandManager))
+		explicit BFWindowCommand(const std::string& name, BFCommandManager::Ptr commandManager)
 		: BFCommandBase<C>(name)
 		, m_window { nullptr }
 		, m_commandManager { std::move(commandManager) }
@@ -34,7 +34,7 @@ namespace BlackFox::Editor
 			if(m_window != window)
 			{
 				m_window = window;
-				m_window->on<W::BFWindowClosedEvent>([this](const typename W::BFWindowClosedEvent& ev, W& w)
+				m_window->template on<typename W::BFWindowClosedEvent>([this](const typename W::BFWindowClosedEvent& ev, W& w)
 				{
 					BF_PRINT("Closed window event for window {}", w.title());
 					m_commandManager->removeCommand(this);

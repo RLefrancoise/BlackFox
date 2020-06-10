@@ -2,9 +2,17 @@
 
 #include <memory>
 #include <entt/entity/registry.hpp>
-#include <sol/sol.hpp>
+#include <sol/state.hpp>
+#include <sol/object.hpp>
+#include <sol/state_view.hpp>
+#include <sol/in_place.hpp>
+#include <sol/function.hpp>
+#include <sol/variadic_args.hpp>
+#include <sol/as_args.hpp>
+
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 #include "BFLuaRuntimeComponent.h"
 #include "BFLuaScript.h"
 
@@ -154,21 +162,21 @@ namespace BlackFox
 		}
 
 		sol::object setComponent(
-			entt::entity entity, 
-			const ENTT_ID_TYPE typeId, 
+			entt::entity entity,
+			ENTT_ID_TYPE typeId,
 			sol::state* state);
 
 		void unsetComponent(
-			entt::entity entity, 
-			const ENTT_ID_TYPE typeId);
+			entt::entity entity,
+			ENTT_ID_TYPE typeId);
 
 		bool hasComponent(
-			entt::entity entity, 
-			const ENTT_ID_TYPE typeId);
+			entt::entity entity,
+			ENTT_ID_TYPE typeId);
 
 		sol::object getComponent(
-			entt::entity entity, 
-			const ENTT_ID_TYPE typeId, 
+			entt::entity entity,
+			ENTT_ID_TYPE typeId,
 			sol::state* state);
 
 		std::vector<sol::object> getComponents(
@@ -194,7 +202,8 @@ namespace BlackFox
 				else
 				{
 					const auto& others = m_entityManager->get<Components::BFLuaRuntimeComponent>(entity).components();
-					const auto match = std::all_of(runtime_components.cbegin(), runtime_components.cend(), [&others](const auto type) {
+					const auto match = std::all_of(runtime_components.cbegin(), runtime_components.cend(), [&others](const auto type)
+					{
 						return others.find(to_integer(type)) != others.end();
 					});
 

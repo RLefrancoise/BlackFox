@@ -25,7 +25,7 @@ namespace BlackFox::Editor
 			if (!exists(prj.path)) continue;
 			
 			BFProjectData projectData;
-			if (!projectData.load(prj.path)) continue;
+			if (!projectData.load(prj.path, nullptr)) continue;
 			
 			m_projects.insert(std::make_pair(prj, projectData));
 		}
@@ -66,7 +66,7 @@ namespace BlackFox::Editor
 			BF_PRINT("Selected project {}", m_fileBrowser.selected_path);
 			BFProjectData data;
 
-			if (!data.load(m_fileBrowser.selected_path))
+			if (!data.load(m_fileBrowser.selected_path, nullptr))
 			{
 				BF_ERROR("Failed to load project file at {}", m_fileBrowser.selected_path);
 				m_windowManager->createMessagePopup("Error", fmt::format("Failed to load project {}", m_fileBrowser.selected_path));

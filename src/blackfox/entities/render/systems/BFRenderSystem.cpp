@@ -8,6 +8,7 @@
 #include "entities/render/components/BFSpriteComponent.h"
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
+#include "BFCircleColliderComponent.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSystem)
 
@@ -15,9 +16,38 @@ using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
 {
-	void renderCollider(BFApplication::Ptr application, BFWorld::Ptr world, entt::entity e, const BFRigidBodyComponent& rb, const BFTransformComponent& transform)
+	void drawColliderShape(BFApplication* application, sf::Shape& shape, const BFTransformComponent& transform)
+	{
+		const auto pixelPosition = application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y);
+		shape.setPosition(pixelPosition);
+
+		shape.setRotation(transform.rotation);
+
+		shape.setFillColor(sf::Color::Transparent);
+		shape.setOutlineColor(sf::Color(255,0,0,128));
+		shape.setOutlineThickness(-2.f);
+
+		application->window()->draw(shape);
+
+		//Draw center
+		sf::CircleShape center(2.f);
+		center.setFillColor(sf::Color(0, 0, 255, 128));
+		center.setOrigin(sf::Vector2f(2.f, 2.f));
+		center.setPosition(sf::Vector2f(pixelPosition.x, pixelPosition.y));
+
+		application->window()->draw(center);
+	}
+
+	void renderCollider(
+		BFApplication::Ptr application,
+		BFWorld::Ptr world,
+		entt::entity e,
+		const BFRigidBodyComponent& rb,
+		const BFTransformComponent& transform)
 	{
 		auto em = world->entityManager();
+
+		sf::Shape* shapePtr = nullptr;
 
 		//Is box collider
 		auto* box = em->try_get<BFBoxColliderComponent>(e);
@@ -31,26 +61,28 @@ namespace BlackFox::Systems
 			const auto origin = sf::Vector2f(pixelsSize.x / 2.f + pixelsCenter.x, pixelsSize.y / 2.f - pixelsCenter.y);
 			shape.setOrigin(origin);
 
-			const auto pixelPosition = application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y);
-			shape.setPosition(pixelPosition);
+			drawColliderShape(application.get(), shape, transform);
+		}
 
-			shape.setRotation(transform.rotation);
+		//Is circle collider ?
+		auto* circle = em->try_get<BFCircleColliderComponent>(e);
+		if(circle)
+		{
+			//Draw collider circle
+			const float pixelsRadius = application->configData()->gameData.worldToPixels(circle->radius);
+			sf::CircleShape shape(pixelsRadius);
 
-			shape.setFillColor(sf::Color(255,0,0,128));
+			const auto origin = sf::Vector2f(pixelsRadius, pixelsRadius);
+			shape.setOrigin(origin);
 
-			application->window()->draw(shape);
-
-			//Draw center
-			sf::CircleShape center(2.f);
-			center.setFillColor(sf::Color(0, 0, 255, 128));
-			center.setOrigin(sf::Vector2f(2.f, 2.f));
-			center.setPosition(sf::Vector2f(pixelPosition.x, pixelPosition.y));
-
-			application->window()->draw(center);
+			drawColliderShape(application.get(), shape, transform);
 		}
 	}
 
-	void renderSprite(BFApplication::Ptr application, const BFSpriteComponent& sprite, const BFTransformComponent& transform)
+	void renderSprite(
+		BFApplication::Ptr application,
+		const BFSpriteComponent& sprite,
+		const BFTransformComponent& transform)
 	{
 		sf::Sprite s;
 

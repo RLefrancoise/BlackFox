@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_COMPONENTSYSTEMFLAGS_H
-#define BLACKFOX_COMPONENTSYSTEMFLAGS_H
+#pragma once
 
 namespace BlackFox
 {
@@ -11,5 +10,3 @@ namespace BlackFox
 		FixedTime		= 1 << 3
 	};
 }
-
-#endif

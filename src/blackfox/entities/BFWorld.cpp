@@ -149,7 +149,6 @@ namespace BlackFox
 		    //for each world
 			for(const auto& world : worlds)
 			{
-				//system->setWorld(world.second);
 				system->update(deltaTime);
 			}
 		}

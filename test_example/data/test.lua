@@ -48,7 +48,7 @@ function createBody(position)
     boxCollider.center = Vector2f:new(0, 0)
     boxCollider.density = 1
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.2
+    boxCollider.restitution = 0.1
 
     -- Sprite
     -- Test image
@@ -91,7 +91,7 @@ function createGround(position, scale)
     boxCollider.center = Vector2f:new(0, -transform.scale.y / 2.0)
     boxCollider.density = 0
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.2
+    boxCollider.restitution = 0.1
     
     -- Sprite
     -- Test image
@@ -136,7 +136,7 @@ function createWall(position)
     boxCollider.center = Vector2f:new(0, -transform.scale.y / 2.0)
     boxCollider.density = 0
     boxCollider.friction = 0.3
-    boxCollider.restitution = 0.2
+    boxCollider.restitution = 0.1
     
     -- Sprite
     -- Test image
@@ -219,10 +219,10 @@ roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
 roofScale = groundScale
 roof = createGround(roofPosition, groundScale)
 
-for i=1,10 do
+for i=1,100 do
     createBody(Vector2f:new(
-        math.random(math.floor(leftWallPosition.x + 1), math.floor(rightWallPosition.x - 1)),
-        math.random(math.floor(roofPosition.y + 1), math.floor(groundPosition.y - 1))))
+        math.random(math.floor(leftWallPosition.x + 2), math.floor(rightWallPosition.x - 2)),
+        math.random(math.floor(roofPosition.y + 2), math.floor(groundPosition.y - 2))))
 end
 
 ---for i= 1,100 do

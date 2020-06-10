@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_LUACOMPONENTSYSTEM_H
-#define BLACKFOX_LUACOMPONENTSYSTEM_H
+#pragma once
 
 #include <sol/sol.hpp>
 
@@ -19,7 +18,7 @@ namespace BlackFox
         explicit BFLuaComponentSystem(std::shared_ptr<BFApplication> app, std::shared_ptr<BFWorld> world, const BFLuaScript& script);
         ~BFLuaComponentSystem() override;
         void update(float dt) override;
-        //void setWorld(std::shared_ptr<BFWorld> world) override;
+
     private:
         /// <summary>Lua script containing the system</summary>
         BFLuaScript m_script;
@@ -33,5 +32,3 @@ namespace BlackFox
         sol::optional<sol::function> m_updateFnc;
     };
 }
-
-#endif //BLACKFOX_LUACOMPONENTSYSTEM_H

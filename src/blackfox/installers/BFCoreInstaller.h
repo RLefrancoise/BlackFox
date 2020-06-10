@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_COREINSTALLER_H
-#define BLACKFOX_COREINSTALLER_H
+#pragma once
 
 #include "BFBaseInstaller.h"
 
@@ -32,5 +31,3 @@ namespace BlackFox
 		void installBindings() override;
 	};
 }
-
-#endif

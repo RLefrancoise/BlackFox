@@ -4,16 +4,16 @@
 
 namespace BlackFox::Components
 {
-	/// --------------------------------------------------------------------------------
-	/// <summary>
-	/// Depth component
-	/// </summary>
-	/// --------------------------------------------------------------------------------
+	/*!
+	 * Depth component
+	 */
 	struct BLACKFOX_EXPORT BFDepthComponent final : IBFComponent
 	{
 		BF_COMPONENT("Depth")
 
-		/// <summary>Depth value</summary>
+		/*!
+		 * Depth value
+		 */
 		int depth;
 	};
 }

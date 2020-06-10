@@ -1,10 +1,10 @@
-#ifndef BLACKFOX_QUITAPPLICATIONCOMMAND_H
-#define BLACKFOX_QUITAPPLICATIONCOMMAND_H
+#pragma once
 
-#include <cinject/cinject.h>
 #include <memory>
-#include "common/IBFCommand.h"
+
+#include "IBFCommand.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -19,10 +19,8 @@ namespace BlackFox
 		CINJECT(BFQuitApplicationCommand(std::shared_ptr<BFApplication> application));
 
 		void execute();
-		[[nodiscard]] BFQuitApplicationCommand* clone(void) const override;
+		[[nodiscard]] BFQuitApplicationCommand* clone() const override;
 		void undo() override {}
 		void redo() override {}
 	};
 }
-
-#endif

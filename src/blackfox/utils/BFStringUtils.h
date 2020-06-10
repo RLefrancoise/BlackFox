@@ -5,7 +5,7 @@
 #include <vector>
 #include <numeric>
 
-namespace BlackFox::Editor::Utils
+namespace BlackFox::Utils
 {
 	/*!
 	 *	Default stringify function for join function. It uses std::to_string.

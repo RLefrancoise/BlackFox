@@ -2,7 +2,6 @@
 
 #include "BFCommandManager.h"
 #include "BFApplication.h"
-#include "BFScriptingManager.h"
 #include "BFInput.h"
 #include "BFConfigData.h"
 
@@ -21,8 +20,7 @@ namespace BlackFox
 		m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
 		//Application
 		m_container->bind<BFApplication>().toSelf().inSingletonScope();
-		//Scripting manager
-		m_container->bind<BFScriptingManager>().toSelf().inSingletonScope();
+
 		//Input
 		m_container->bind<BFInput>().toSelf().inSingletonScope();
 

@@ -1,5 +1,6 @@
 #include "BFLuaScriptingInputEntity.h"
 #include "BFInput.h"
+#include <sol/overload.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingInputEntity, "InputEntities")
 

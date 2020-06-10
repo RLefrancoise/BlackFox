@@ -1,4 +1,5 @@
 #include "BFVector2.h"
+#include "BFDebug.h"
 
 namespace BlackFox
 {

@@ -1,9 +1,10 @@
-#ifndef BLACKFOX_ISCRIPTINGENTITY_H
-#define BLACKFOX_ISCRIPTINGENTITY_H
+#pragma once
 
 #include <memory>
 #include <rttr/rttr_enable.h>
+
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -13,11 +14,7 @@ namespace BlackFox
     public:
         typedef std::shared_ptr<IBFScriptingEntity> Ptr;
 
-        explicit IBFScriptingEntity(DiContainer container)
-        : m_container(std::move(container))
-        {
-        }
-
+        explicit IBFScriptingEntity(DiContainer container);
         virtual ~IBFScriptingEntity() = default;
 
         virtual void registerEntity() = 0;
@@ -25,5 +22,3 @@ namespace BlackFox
         DiContainer m_container;
     };
 }
-
-#endif //BLACKFOX_ISCRIPTINGENTITY_H

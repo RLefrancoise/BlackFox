@@ -1,5 +1,5 @@
 #include "BFSceneInstaller.h"
-#include "BFWorld.h"
+#include "BFScene.h"
 
 namespace BlackFox
 {

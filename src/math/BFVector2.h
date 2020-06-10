@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_VECTOR2_H
-#define BLACKFOX_VECTOR2_H
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -7,8 +6,6 @@
 #include <fmt/format.h>
 #include <SFML/System/Vector2.hpp>
 
-#include "BFDebug.h"
-#include "BFTypeDefs.h"
 #include "Box2D/Common/b2Math.h"
 
 namespace BlackFox
@@ -245,7 +242,5 @@ namespace BlackFox
 	 * 
 	 * \return	The BFVector2f vector
 	 */
-	BLACKFOX_EXPORT BFVector2f vector2fFromString(const std::string& str);
+	BFVector2f vector2fFromString(const std::string& str);
 }
-
-#endif

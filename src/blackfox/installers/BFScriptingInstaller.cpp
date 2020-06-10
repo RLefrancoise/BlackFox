@@ -1,5 +1,6 @@
 #include "BFScriptingInstaller.h"
 #include "BFLuaRuntimeRegistry.h"
+#include "BFScriptingManager.h"
 
 namespace BlackFox
 {
@@ -9,6 +10,9 @@ namespace BlackFox
 
 	void BFScriptingInstaller::installBindings()
 	{
+		//Scripting manager
+		m_container->bind<BFScriptingManager>().toSelf().inSingletonScope();
+
 		m_container->bind<BFLuaRuntimeRegistry>().toSelf().inSingletonScope();
 	}
 }

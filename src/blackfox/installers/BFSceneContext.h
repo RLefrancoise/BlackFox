@@ -1,11 +1,12 @@
-#ifndef BLACKFOX_LEVELCONTEXT_H
-#define BLACKFOX_LEVELCONTEXT_H
+#pragma once
 
 #include "BFBaseContext.h"
-#include "BFScene.h"
+
 
 namespace BlackFox
 {
+	class BFScene;
+
 	/*!
 	 * \class	BFSceneContext
 	 *
@@ -28,13 +29,11 @@ namespace BlackFox
 		 * \param	container	The container.
 		 * \param	level		The level.
 		 */
-		explicit BFSceneContext(DiContainer container, BFScene::Ptr level);
+		explicit BFSceneContext(DiContainer container, std::shared_ptr<BFScene> level);
 
 		void init() override;
 
 	private:
-		BFScene::Ptr m_level;
+		std::shared_ptr<BFScene> m_level;
 	};
 }
-
-#endif

@@ -1,7 +1,13 @@
 #include "BFLuaScriptingWorldEntity.h"
+
+#include <sol/variadic_args.hpp>
+#include <sol/variadic_results.hpp>
+#include <sol/object.hpp>
+#include <sol/usertype.hpp>
+
 #include "BFWorld.h"
 #include "BFApplication.h"
-#include "entities/scripting/systems/BFLuaComponentSystem.h"
+#include "BFLuaComponentSystem.h"
 #include "BFLuaRuntimeRegistry.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")

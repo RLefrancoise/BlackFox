@@ -1,5 +1,6 @@
-#ifndef BLACKFOX_RENDER_SPRITE_SYSTEM_H
-#define BLACKFOX_RENDER_SPRITE_SYSTEM_H
+#pragma once
+
+#include <cinject/cinject.h>
 
 #include "BFComponentSystemMacros.h"
 #include "BFComponentSystem.h"
@@ -20,5 +21,3 @@ namespace BlackFox::Systems
 		void update(float dt) override;
 	};
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_WORLD_H
-#define BLACKFOX_WORLD_H
+#pragma once
 
 #include <memory>
 #include <typeinfo>
@@ -288,5 +287,3 @@ namespace BlackFox
 		static WorldList worlds;
 	};
 }
-
-#endif

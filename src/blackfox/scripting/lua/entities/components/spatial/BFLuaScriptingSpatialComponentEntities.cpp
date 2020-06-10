@@ -1,9 +1,6 @@
 #include "BFLuaScriptingSpatialComponentEntities.h"
 
 #include "BFTransformComponent.h"
-#include "BFPositionComponent.h"
-#include "BFRotationComponent.h"
-#include "BFScaleComponent.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingSpatialComponentEntities, "SpatialComponents")
 
@@ -18,26 +15,6 @@ namespace BlackFox
         transformType["position"] = &BFTransformComponent::position;
         transformType["rotation"] = &BFTransformComponent::rotation;
         transformType["scale"] = &BFTransformComponent::scale;
-
-        //Position
-        auto position_t = registerType<BFPositionComponent>();
-        position_t["x"] = &BFPositionComponent::x;
-        position_t["y"] = &BFPositionComponent::y;
-
-        //Rotation
-        auto rotation_t = registerType<BFRotationComponent>();
-        rotation_t["angle"] = sol::property(
-            [](BFRotationComponent& r) -> float { return r.angle.value(); }, 
-            [](BFRotationComponent& r, float a) { r.angle = a; });
-        rotation_t["degrees"] = &BFRotationComponent::angle;
-        rotation_t["radians"] = sol::property(
-            [](BFRotationComponent& r) -> BFRadian { return BFRadian(r.angle); }, 
-            [](BFRotationComponent& r, const BFRadian& rad) { r.angle = rad; });
-
-        //Scale
-        auto scale_t = registerType<BFScaleComponent>();
-        scale_t["x"] = &BFScaleComponent::scaleX;
-        scale_t["y"] = &BFScaleComponent::scaleY;
     }
 
     std::string BFLuaScriptingSpatialComponentEntities::namespaceName() const

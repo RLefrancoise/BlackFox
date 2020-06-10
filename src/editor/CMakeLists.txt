@@ -86,13 +86,14 @@ target_link_libraries(
 
 target_compile_features(editor PRIVATE cxx_std_17)
 
-set(BLACKFOX_EDITOR_RESOURCES_PATH "" CACHE FILEPATH "Editor resources folder path")
-IF(EXISTS ${BLACKFOX_EDITOR_RESOURCES_PATH})
-    string(REGEX REPLACE "[\\]" "/" BLACKFOX_EDITOR_RESOURCES_PATH ${BLACKFOX_EDITOR_RESOURCES_PATH})
-    add_compile_definitions(BLACKFOX_EDITOR_RESOURCES_PATH="${BLACKFOX_EDITOR_RESOURCES_PATH}")
-ELSE()
-    message(FATAL_ERROR "Please specify where the resources folder of the editor is located")
-ENDIF()
+add_compile_definitions(BLACKFOX_EDITOR_RESOURCES_PATH="${CMAKE_SOURCE_DIR}/resources")
+#set(BLACKFOX_EDITOR_RESOURCES_PATH "" CACHE FILEPATH "Editor resources folder path")
+#IF(EXISTS ${BLACKFOX_EDITOR_RESOURCES_PATH})
+#    string(REGEX REPLACE "[\\]" "/" BLACKFOX_EDITOR_RESOURCES_PATH ${BLACKFOX_EDITOR_RESOURCES_PATH})
+#    add_compile_definitions(BLACKFOX_EDITOR_RESOURCES_PATH="${BLACKFOX_EDITOR_RESOURCES_PATH}")
+#ELSE()
+#    message(FATAL_ERROR "Please specify where the resources folder of the editor is located")
+#ENDIF()
 
 # Set working directory to root folder to be able to load resoources
 #IF(MSVC)

@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_LUASCRIPTINGAPPLICATIONENTITY_H
-#define BLACKFOX_LUASCRIPTINGAPPLICATIONENTITY_H
+#pragma once
 
 #include "IBFLuaScriptingEntity.h"
 
@@ -12,5 +11,3 @@ namespace BlackFox
         void registerEntity() override;
     };
 }
-
-#endif //BLACKFOX_LUASCRIPTINGAPPLICATIONENTITY_H

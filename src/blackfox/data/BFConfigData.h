@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_CONFIGDATA_H
-#define BLACKFOX_CONFIGDATA_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -7,8 +6,10 @@
 #include <SFML/Config.hpp>
 
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 #include "BFIniFile.h"
 #include "BFVector2.h"
+#include "BFStringUtils.h"
 
 namespace BlackFox
 {
@@ -29,8 +30,8 @@ namespace BlackFox
         BFVector2u windowSize = BFVector2u(800, 600);
         /// <summary>Show frame rate in title bar ?</summary>
         bool showFrameRate = false;
-        /*! \brief Anti aliasin level */
-        unsigned int antiAliasing = 0;
+        /*! \brief Anti aliasing level */
+        sf::Uint32 antiAliasing = 0;
 
         explicit operator std::string() const
         {
@@ -56,6 +57,16 @@ namespace BlackFox
 			return fmt::format("--- Game Data ---\nworldUnitPixels={}\n"
 				, worldUnitPixels);
 		}
+
+		[[nodiscard]] constexpr float worldToPixels(const float value) const
+        {
+		    return value * worldUnitPixels;
+        }
+
+        [[nodiscard]] constexpr float pixelsToWorld(const float value) const
+        {
+		    return value / worldUnitPixels;
+        }
 
         /// --------------------------------------------------------------------------------
         /// <summary>
@@ -110,10 +121,10 @@ namespace BlackFox
         BFVector2f gravity = BFVector2(0.0f, -9.81f);
 
 		/// \brief  Velocity iterations
-        int velocityIterations = 8;
+        sf::Uint32 velocityIterations = 8;
 
 		/// \brief  Position iterations
-        int positionIterations = 3;
+        sf::Uint32 positionIterations = 3;
 
         float physicsScale = 1;
 
@@ -129,6 +140,25 @@ namespace BlackFox
                 , debugPhysics);
         }
 	};
+
+    struct BLACKFOX_EXPORT ConfigDebugData
+    {
+        bool debugPhysics = false;
+        float physicsCollidersOutlineThickness = 2.f;
+        sf::Color physicsCollidersOutlineColor = sf::Color::Red;
+
+        explicit operator std::string() const
+        {
+            return fmt::format("--- Debug Data ---\ndebugPhysics={}\nphysicsCollidersOutlineThickness={}\nphysicsCollidersOutlineColor={}\n"
+                    , debugPhysics
+                    , physicsCollidersOutlineThickness
+                    , Utils::join(std::vector<sf::Uint8>{
+                        physicsCollidersOutlineColor.r,
+                        physicsCollidersOutlineColor.g,
+                        physicsCollidersOutlineColor.b,
+                        physicsCollidersOutlineColor.a}));
+        }
+    };
 
     /// --------------------------------------------------------------------------------
     /// <summary>
@@ -148,10 +178,10 @@ namespace BlackFox
                 file.getIntTo<sf::Uint32>("Application", "frameRate", 60), //frame rate
                 file.getBool("Application", "fullScreen", false), //full screen
                 BFVector2u( //window size
-                    file.getInt("Application", "width", 800),
-                    file.getInt("Application", "height", 600)),
+                    file.getIntTo<unsigned int>("Application", "width", 800),
+                    file.getIntTo<unsigned int>("Application", "height", 600)),
                 file.getBool("Application", "showFrameRate", false), //show frame rate
-                file.getIntTo<unsigned int>("Application", "antiAliasing", 0) // Anti aliasing
+                file.getIntTo<sf::Uint32>("Application", "antiAliasing", 0) // Anti aliasing
             };
 
             //Game data
@@ -161,14 +191,14 @@ namespace BlackFox
 
             //Time data
             timeData = {
-                file.getFloat("Time", "fixedUpdateInterval") // fixed update interval
+                file.getFloat("Time", "fixedUpdateInterval", 0.016f) // fixed update interval
             };
 
         	//Physics data
             physicsData = {
                 vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
-				file.getInt("Physics", "velocityIterations", 8),
-				file.getInt("Physics", "positionIterations", 3),
+				file.getIntTo<sf::Uint32>("Physics", "velocityIterations", 8),
+				file.getIntTo<sf::Uint32>("Physics", "positionIterations", 3),
                 file.getFloat("Physics", "physicsScale", 1),
                 file.getBool("Physics", "debugPhysics", false) };
         }
@@ -192,5 +222,3 @@ namespace BlackFox
         }
     };
 }
-
-#endif //BLACKFOX_CONFIGDATA_H

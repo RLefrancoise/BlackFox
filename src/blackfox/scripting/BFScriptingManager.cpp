@@ -4,7 +4,6 @@
 #include <rttr/type.h>
 #include <filesystem>
 
-#include "BFDebug.h"
 #include "BFLuaRuntimeRegistry.h"
 #include "BFWorld.h"
 

@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_COMPONENTSYSTEMMACROS_H
-#define BLACKFOX_COMPONENTSYSTEMMACROS_H
+#pragma once
 
 #include <rttr/rttr_enable.h>
 #include <rttr/registration.h>
@@ -12,7 +11,6 @@ namespace BlackFox {
 
 #define BF_SYSTEM_AUTO_CREATE(system, group, systemName)        RTTR_ENABLE(BlackFox::BFComponentSystem) \
                                                                 public: \
-                                                                    /*explicit system(BlackFox::BFApplication* application): BlackFox::BFComponentSystem(application) { }*/ \
                                                                     BlackFox::ComponentSystemGroups get_group() const { return group; } \
                                                                     static constexpr const char* name = systemName;
 
@@ -40,5 +38,3 @@ namespace BlackFox {
                                                                     .method("get_group", &system::get_group); \
                                                                 }
 #endif
-
-#endif //BLACKFOX_COMPONENTSYSTEMMACROS_H

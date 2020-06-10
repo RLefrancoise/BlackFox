@@ -2,7 +2,7 @@
  * \file   BFSelectSceneCommand.h
  * \brief  Command to select a scene in the scene list window
  * 
- * \author Renaud Lefrançoise
+ * \author Renaud LefranÃ§oise
  * \date   April 2020
 ***********************************************************************/
 #pragma once

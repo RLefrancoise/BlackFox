@@ -1,5 +1,5 @@
 linearImpulseMagnitude = 2
-angularImpulseMagnitude = 15
+angularImpulseMagnitude = 30
 
 function onCreate()
     RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
@@ -12,11 +12,13 @@ function update(dt)
 end
 
 function applyImpulse(entity, dt, rigidBody)
-    local linearImpulse = BlackFox.Math.Vector2f:new(-linearImpulseMagnitude + math.random() * linearImpulseMagnitude * 2, -linearImpulseMagnitude + math.random() * linearImpulseMagnitude * 2)
+    local linearImpulse = BlackFox.Math.Vector2f:new(
+            (-linearImpulseMagnitude + math.random() * linearImpulseMagnitude * 2),
+            (-linearImpulseMagnitude + math.random() * linearImpulseMagnitude * 2))
     BlackFox.Physics.applyLinearImpulseToCenter(world, rigidBody, linearImpulse, true)
 
-    local angularImpulse = -angularImpulseMagnitude + math.random() * angularImpulseMagnitude * 2
+    local angularImpulse = (-angularImpulseMagnitude + math.random() * angularImpulseMagnitude * 2)
     BlackFox.Physics.applyAngularImpulse(world, rigidBody, angularImpulse, true)
 
-    print("Apply linear impulse: (", linearImpulse.x, ", ", linearImpulse.y, "), angular impulse: ", angularImpulse)
+    --print("Apply linear impulse: (", linearImpulse.x, ", ", linearImpulse.y, "), angular impulse: ", angularImpulse)
 end

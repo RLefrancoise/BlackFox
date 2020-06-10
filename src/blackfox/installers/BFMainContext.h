@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_MAINCONTEXT_H
-#define BLACKFOX_MAINCONTEXT_H
+#pragma once
 
 #include "BFBaseContext.h"
 
@@ -32,5 +31,3 @@ namespace BlackFox
 		void init() override;
 	};
 }
-
-#endif

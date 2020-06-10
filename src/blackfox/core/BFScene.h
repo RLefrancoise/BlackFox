@@ -1,8 +1,9 @@
-#ifndef BLACKFOX_SCENE_H
-#define BLACKFOX_SCENE_H
+#pragma once
 
 #include <memory>
+
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -56,5 +57,3 @@ namespace BlackFox
 		DiContainer m_container;
 	};
 }
-
-#endif

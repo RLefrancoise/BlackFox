@@ -1,11 +1,11 @@
-#ifndef BLACKFOX_INPUT_H
-#define BLACKFOX_INPUT_H
+#pragma once
 
 #include <SFML/Window/Event.hpp>
 #include <vector>
 #include <memory>
 
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -42,5 +42,3 @@ namespace BlackFox
         bool m_downKeys[sf::Keyboard::Key::KeyCount];
     };
 }
-
-#endif //BLACKFOX_INPUT_H

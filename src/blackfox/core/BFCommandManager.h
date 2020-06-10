@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_COMMANDMANAGER_H
-#define BLACKFOX_COMMANDMANAGER_H
+#pragma once
 
 #include <cinject/cinject.h>
 #include <typeinfo>
@@ -7,9 +6,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "common/IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
-#include "common/BFDebug.h"
+#include "IBFCommand.h" //to use typeid, bfcommand must not be an incomplete type, then no forward declare possible
+#include "BFDebug.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -302,5 +302,3 @@ namespace BlackFox
 		std::vector<IBFCommand::Ptr> m_commandRedoStack;
 	};
 }
-
-#endif

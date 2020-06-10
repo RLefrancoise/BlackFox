@@ -1,8 +1,8 @@
-#ifndef BLACKFOX_BASECONTEXT_H
-#define BLACKFOX_BASECONTEXT_H
+#pragma once
 
 #include "IBFContext.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -41,5 +41,3 @@ namespace BlackFox
 		std::vector<DiInstaller> m_installers;
 	};
 }
-
-#endif

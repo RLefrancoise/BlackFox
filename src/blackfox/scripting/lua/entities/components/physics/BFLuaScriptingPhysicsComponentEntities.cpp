@@ -1,5 +1,7 @@
 #include "BFLuaScriptingPhysicsComponentEntities.h"
 
+#include <sol/property.hpp>
+
 #include "BFBoxColliderComponent.h"
 #include "BFRadian.h"
 #include "BFDegree.h"

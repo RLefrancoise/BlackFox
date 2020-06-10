@@ -25,22 +25,16 @@ RTTR_REGISTRATION
 
 namespace BlackFox
 {
-	/*BFComponentSystem::BFComponentSystem(BFApplication *application)
-	: m_application(application)
-	, m_world(nullptr)
-	{
-	}*/
-
 	BFComponentSystem::BFComponentSystem(BFComponentSystem&& system) noexcept
-	: m_application(system.m_application)
-	, m_world(system.m_world)
+	: m_application(std::move(system.m_application))
+	, m_world(std::move(system.m_world))
 	{
 	}
 
 	BFComponentSystem& BFComponentSystem::operator=(BFComponentSystem&& system) noexcept
 	{
-		m_application = system.m_application;
-		m_world = system.m_world;
+		m_application = std::move(system.m_application);
+		m_world = std::move(system.m_world);
 		return *this;
 	}
 
@@ -49,9 +43,4 @@ namespace BlackFox
 	, m_world(std::move(world))
 	{
 	}
-
-	/*void BFComponentSystem::setWorld(BFWorld::Ptr world)
-	{
-		m_world = std::move(world);
-	}*/
 }

@@ -1,10 +1,14 @@
-#ifndef BLACKFOX_LUASCRIPT_H
-#define BLACKFOX_LUASCRIPT_H
+#pragma once
 
 #include <memory>
-#include <sol/sol.hpp>
+#include <sol/environment.hpp>
+#include <sol/protected_function_result.hpp>
 #include <filesystem>
 #include "BFTextResource.h"
+
+namespace sol {
+    class state;
+}
 
 namespace BlackFox
 {
@@ -14,7 +18,7 @@ namespace BlackFox
 
         explicit BFLuaScript(const Resources::ResourceType& type, sol::state* state);
 
-        bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override;
+        bool load(const std::filesystem::path& file, std::string* errorMessage) override;
 
         template <typename T>
         [[nodiscard]] bool has(const std::string& name) const
@@ -45,5 +49,3 @@ namespace BlackFox
         sol::protected_function_result m_result;
     };
 }
-
-#endif //BLACKFOX_LUASCRIPT_H

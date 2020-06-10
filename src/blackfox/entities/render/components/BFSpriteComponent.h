@@ -1,6 +1,6 @@
-#ifndef BLACKFOX_SPRITE_COMPONENT_H
-#define BLACKFOX_SPRITE_COMPONENT_H
+#pragma once
 
+#include <utility>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
 
@@ -9,24 +9,47 @@
 
 namespace BlackFox::Components
 {
+	/*!
+	 * Sprite component.
+	 */
 	struct BLACKFOX_EXPORT BFSpriteComponent final : IBFComponent
 	{
 		BF_COMPONENT("Sprite")
 
 		BFSpriteComponent() = default;
 
-		BFSpriteComponent(const TextureHandle& image, const sf::IntRect& rect, const BFVector2f& pivot, const sf::Color& c)
-		: image(image)
+		/*!
+		 * Create a new sprite component.
+		 * @param image 	Image of the sprite
+		 * @param rect 		Image rect to display
+		 * @param pivot 	Pivot of the sprite, starting frm top-left
+		 * @param c 		Sprite color. Image will be modulated by the color
+		 */
+		BFSpriteComponent(TextureHandle image, const sf::IntRect& rect, const BFVector2f& pivot, const sf::Color& c)
+		: image(std::move(image))
 		, rect(rect)
 		, pivot(pivot)
 		, color(c)
 		{}
 
+		/*!
+		 * Image of the sprite.
+		 */
 		TextureHandle image;
+
+		/*!
+		 * Image rect to display.
+		 */
 		sf::IntRect rect;
+
+		/*!
+		 * Pivot of the sprite, starting from top-left.
+		 */
 		BFVector2f pivot;
+
+		/*!
+		 * Sprite color. Image will be modulated by the color.
+		 */
 		sf::Color color = sf::Color::White;
 	};
 }
-
-#endif

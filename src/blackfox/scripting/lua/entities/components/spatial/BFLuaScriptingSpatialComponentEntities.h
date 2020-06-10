@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_LUA_SCRIPTING_SPATIAL_COMPONENT_ENTITIES_H
-#define BLACKFOX_LUA_SCRIPTING_SPATIAL_COMPONENT_ENTITIES_H
+#pragma once
 
 #include "BFLuaScriptingComponentEntity.h"
 
@@ -15,5 +14,3 @@ namespace BlackFox
         std::string namespaceName() const override;
     };
 }
-
-#endif //BLACKFOX_LUA_SCRIPTING_SPATIAL_COMPONENT_ENTITIES_H

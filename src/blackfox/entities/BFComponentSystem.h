@@ -1,10 +1,9 @@
-#ifndef BLACKFOX_COMPONENTSYSTEM_H
-#define BLACKFOX_COMPONENTSYSTEM_H
+#pragma once
 
 #include <memory>
 #include <rttr/rttr_enable.h>
 
-#include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -35,7 +34,6 @@ namespace BlackFox
 		constexpr BFComponentSystem(const BFComponentSystem& app) = delete;
 		constexpr BFComponentSystem& operator=(const BFComponentSystem& app) = delete;
 		
-        //explicit BFComponentSystem(BFApplication* application);
 		BFComponentSystem(BFComponentSystem&& system) noexcept;
 		BFComponentSystem& operator=(BFComponentSystem&& system) noexcept;
 
@@ -71,18 +69,6 @@ namespace BlackFox
 		 */
 		virtual void update(float dt) = 0;
 
-		/*!
-		 * \fn	void BFComponentSystem::setWorld(BFWorld* world);
-		 *
-		 * \brief	Sets the world owning the system.
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	world	The world.
-		 */
-		//virtual void setWorld(std::shared_ptr<BFWorld> world);
-
 	protected:
 		/*! \brief	The application */
 		std::shared_ptr<BFApplication> m_application;
@@ -90,5 +76,3 @@ namespace BlackFox
 		std::shared_ptr<BFWorld> m_world;
 	};
 }
-
-#endif

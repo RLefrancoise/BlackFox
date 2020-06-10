@@ -1,17 +1,19 @@
-#ifndef BLACKFOX_LUASCRIPTINGCOMPONENTENTITY_H
-#define BLACKFOX_LUASCRIPTINGCOMPONENTENTITY_H
+#pragma once
 
 #include "IBFLuaScriptingEntity.h"
 #include "BFWorld.h"
 #include "BFComponent.h"
 #include "BFLuaRuntimeRegistry.h"
+#include <sol/state.hpp>
+#include <sol/usertype.hpp>
+#include <sol/inheritance.hpp>
 
 namespace BlackFox
 {
     class BLACKFOX_EXPORT BFLuaScriptingComponentEntity : public IBFLuaScriptingEntity
     {
     public:
-        explicit BFLuaScriptingComponentEntity(const BlackFox::DiContainer& container, sol::state* state) : IBFLuaScriptingEntity(container, state) {}
+        explicit BFLuaScriptingComponentEntity(const DiContainer& container, sol::state* state) : IBFLuaScriptingEntity(container, state) {}
 
     protected:
         template <typename C>
@@ -40,5 +42,3 @@ namespace BlackFox
                                                                         public: \
                                                                             explicit entityClass(const BlackFox::DiContainer& container, sol::state* state) \
                                                                             : BlackFox::BFLuaScriptingComponentEntity(container, state)
-
-#endif //BLACKFOX_LUASCRIPTINGCOMPONENTENTITY_H

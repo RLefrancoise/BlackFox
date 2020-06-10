@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(SRC)
 
-IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
     add_compile_definitions(BF_DEBUG)
 ENDIF()
 
@@ -37,7 +37,11 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/lua-5.3.5/src)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdParties/luajit-2.0/src)
 
 # Sol2
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/single/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/include)
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+	add_compile_definitions(SOL_ALL_SAFETIES_ON)
+ENDIF()
+#include_directories(${CMAKE_SOURCE_DIR}/thirdParties/sol2/single/include)
 
 # Box2D
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/Box2D)

@@ -2,6 +2,8 @@
 #include "BFDegree.h"
 #include "BFRadian.h"
 #include "BFVector2.h"
+#include <sol/property.hpp>
+#include <sol/raii.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingMathEntities, "MathEntities")
 

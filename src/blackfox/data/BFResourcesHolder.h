@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BFTypeDefs.h"
+#include "BFExport.h"
+
 #include <memory>
 #include <filesystem>
 #include <SFML/Graphics/Rect.hpp>

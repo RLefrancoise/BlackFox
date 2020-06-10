@@ -1,4 +1,5 @@
 #pragma once
+
 #include <filesystem>
 
 #include "BFResourceTypes.h"
@@ -52,7 +53,7 @@ namespace BlackFox
 		 * \param	errorMessage	Error message if load failed
 		 * \return	True if load is successful, false otherwise. 
 		 */
-		[[nodiscard]] virtual bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) = 0;
+		[[nodiscard]] virtual bool load(const std::filesystem::path& file, std::string* errorMessage) = 0;
 
 		/**
 		 * Load the resource from a file, and throw if an error occured.
@@ -67,7 +68,7 @@ namespace BlackFox
 	 */
 	struct BFResource : IBFResource
 	{
-		virtual ~BFResource() = default;
+		~BFResource() override = default;
 		BFResource(const BFResource&) = default;
 		BFResource& operator=(const BFResource&) = default;
 		BFResource(BFResource&&) = default;
@@ -79,7 +80,7 @@ namespace BlackFox
 		
 		void saveOrThrow() const override;
 
-		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage = nullptr) override;
+		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage) override;
 		void loadOrThrow(const std::filesystem::path& file) override;
 		
 	protected:

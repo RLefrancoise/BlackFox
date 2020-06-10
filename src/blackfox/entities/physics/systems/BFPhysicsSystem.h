@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <typeindex>
 
+#include "BFTypeDefs.h"
 #include "BFVector2.h"
 #include "BFRadian.h"
 #include "BFComponentSystemMacros.h"

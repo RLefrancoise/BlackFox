@@ -4,7 +4,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>
 
 namespace BlackFox::Resources
 {
@@ -31,15 +30,8 @@ namespace BlackFox::Resources
 
 	struct ResourceCategoryCompare
 	{
-		bool operator()(const ResourceCategory& lhs, const ResourceCategory& rhs) const
-		{
-			return lhs.value() < rhs.value();
-		}
-
-		std::size_t operator()(const ResourceCategory& c) const
-		{
-			return std::hash<std::string>{}(std::to_string(c.value()));
-		}
+		bool operator()(const ResourceCategory& lhs, const ResourceCategory& rhs) const;
+		std::size_t operator()(const ResourceCategory& c) const;
 	};
 	
 	const static std::unordered_map<ResourceCategory, std::vector<ResourceType>, ResourceCategoryCompare> TYPES_CATEGORIES = 
@@ -48,14 +40,5 @@ namespace BlackFox::Resources
 		{ SCRIPT_CATEGORY, {LUA_COMPONENT_SCRIPT, LUA_SYSTEM_SCRIPT} }
 	};
 
-	static ResourceCategory getResourceTypeCategory(const ResourceType& type)
-	{
-		for(const auto& entry : TYPES_CATEGORIES)
-		{
-			if (std::find(entry.second.begin(), entry.second.end(), type) != entry.second.end())
-				return entry.first;
-		}
-
-		return UNKNOWN_CATEGORY;
-	}
+	static ResourceCategory getResourceTypeCategory(const ResourceType& type);
 }

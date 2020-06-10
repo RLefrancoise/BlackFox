@@ -1,7 +1,6 @@
-#ifndef BLACKFOX_COMPONENT_H
-#define BLACKFOX_COMPONENT_H
+#pragma once
 
-#include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -41,5 +40,3 @@ namespace BlackFox
 }
 
 #define BF_COMPONENT(componentName)				static constexpr const char *name = componentName;
-
-#endif

@@ -1,6 +1,8 @@
 #include "BFBootstrap.h"
 #include "BFApplication.h"
 #include "BFMainContext.h"
+#include "BFDebug.h"
+#include "BFScriptingManager.h"
 
 #include <rttr/library.h>
 
@@ -28,7 +30,15 @@ namespace BlackFox
 
 			//Execute the app
 			const auto app = container->get<BFApplication>();
-			app->init();
+			if(!app->init())
+			{
+				BF_EXCEPTION("Failed to init application");
+			}
+
+			//Launch test script
+			const auto scriptManager = container->get<BFScriptingManager>();
+			BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
+
 			return app->execute();
 		}
 		catch(const std::exception& err)

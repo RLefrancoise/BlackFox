@@ -1,14 +1,14 @@
 #include "BFApplication.h"
 
 #include <iostream>
+#include <utility>
 
+#include "IBFApplicationService.h"
 #include "BFWorld.h"
 #include "BFComponentSystemFlags.h"
 #include "BFCommandManager.h"
 #include "BFConfigData.h"
 #include "BFInput.h"
-#include "BFScriptingManager.h"
-#include "BFComponentSystem.h"
 #include "BFQuitApplicationCommand.h"
 
 using namespace cinject;
@@ -20,11 +20,13 @@ namespace BlackFox
 	public:
 		impl(
 			BFApplication::Ptr app,
+			std::vector<IBFApplicationService::Ptr> services,
 			DiContainer container,
 			BFCommandManager::Ptr commandManager,
 			BFConfigData::Ptr configData,
 			BFInput::Ptr input)
 			: m_app(std::move(app))
+			, m_services(std::move(services))
 			, m_deltaTime(0.0f)
 			, m_container(std::move(container))
 			, m_commandManager(std::move(commandManager))
@@ -36,7 +38,7 @@ namespace BlackFox
 		int execute()
 		{
 			//init
-			if (!init()) return EXIT_FAILURE;
+			//if (!init()) return EXIT_FAILURE;
 
 			sf::Clock clock;
 			sf::Clock fixedUpdateClock;
@@ -109,8 +111,6 @@ namespace BlackFox
 			return m_configData;
 		}
 
-	private:
-
 		bool init()
 		{
 			try
@@ -127,22 +127,12 @@ namespace BlackFox
 				//Framerate
 				m_window.setFramerateLimit(m_configData->appData.frameRate);
 
-				//Register scripting entities
-				const auto& scriptManager = m_container->get<BFScriptingManager>();
-				scriptManager->registerEntities();
-
-				//Create default world
-				auto defaultWorld = BFWorld::create("default", m_container);
-
-				//Auto create systems
-				auto systems = rttr::type::get<BFComponentSystem>().get_derived_classes();
-				for(const auto& s : systems)
+				//Run services
+				BF_PRINT("Found {} services", m_services.size());
+				for(const auto& service : m_services)
 				{
-					defaultWorld->createSystemFromType(s, m_app);
+					service->run();
 				}
-
-				//Test lua scripting
-				BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
 			}
 			catch (std::exception& err)
 			{
@@ -153,10 +143,11 @@ namespace BlackFox
 			return true;
 		}
 
+	private:
 		void loop() const
 		{
 			auto worlds = BFWorld::all();
-			for(auto w : worlds)
+			for(const auto& w : worlds)
 				w->refreshSystems(ComponentSystemGroups::GameLoop, m_deltaTime);
 		}
 
@@ -166,7 +157,7 @@ namespace BlackFox
 			m_window.clear(sf::Color::White);
 
 			auto worlds = BFWorld::all();
-			for (auto w : worlds)
+			for (const auto& w : worlds)
 				w->refreshSystems(ComponentSystemGroups::Render, m_deltaTime);
 
 			//Draw window content
@@ -176,20 +167,24 @@ namespace BlackFox
 		void endOfFrame() const
 		{
 			auto worlds = BFWorld::all();
-			for (auto w : worlds)
+			for (const auto& w : worlds)
 				w->refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
 		}
 
 		void fixedUpdate() const
 		{
 			auto worlds = BFWorld::all();
-			for (auto w : worlds)
+			for (const auto& w : worlds)
 				w->refreshSystems(ComponentSystemGroups::FixedTime, m_configData->timeData.fixedUpdateInterval);
 		}
 
 		void cleanup() {}
 
+		/*! \brief	Application */
 		BFApplication::Ptr m_app;
+
+		/*! \brief	Application services */
+		std::vector<IBFApplicationService::Ptr> m_services;
 
 		/*! \brief	window */
 		sf::RenderWindow m_window;
@@ -237,10 +232,11 @@ namespace BlackFox
 		return *this;
 	}
 
-	void BFApplication::init()
+	int BFApplication::init()
 	{
 		m_container->bind<BFApplication::impl>().toSelf().inSingletonScope();
 		pImpl = m_container->get<BFApplication::impl>();
+		return pImpl->init();
 	}
 
 	BFApplication::~BFApplication() noexcept = default;

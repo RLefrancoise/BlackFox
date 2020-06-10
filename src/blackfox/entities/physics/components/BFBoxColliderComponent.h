@@ -1,17 +1,15 @@
 #pragma once
 
-#include "BFComponent.h"
-#include "BFPhysicsSystem.h"
+#include "BFColliderComponent.h"
 #include "BFVector2.h"
 #include "Box2D/Collision/Shapes/b2PolygonShape.h"
-#include "Box2D/Dynamics/b2Fixture.h"
 
 namespace BlackFox::Components
 {
-	/**
+	/*!
 	 * Box collider component.
 	 */
-	struct BFBoxColliderComponent final: IBFComponent
+	struct BFBoxColliderComponent final: BFColliderComponent
 	{
 		friend class Systems::BFPhysicsSystem;
 		
@@ -19,33 +17,35 @@ namespace BlackFox::Components
 
 		BFBoxColliderComponent();
 
+		/*!
+		 * Create a new box collider component.
+		 * @param extents 		Box extents.
+		 * @param center 		Box center.
+		 * @param friction 		Friction.
+		 * @param restitution 	Restitution (bounciness).
+		 * @param density 		Density.
+		 * @param isSensor 		Is the collider a sensor ?
+		 * @param filter 		Collision filter.
+		 */
+		explicit BFBoxColliderComponent(
+			const BFVector2f& extents,
+			const BFVector2f& center,
+			float32 friction,
+			float32 restitution,
+			float32 density,
+			bool isSensor = false,
+			b2Filter filter = b2Filter());
+
 		/// \brief	Extents of the box. (Extents is half the size)
 		BFVector2f extents;
 
 		/// \brief	Center of the box
 		BFVector2f center;
 
-		/// The friction coefficient, usually in the range [0,1].
-		float32 friction;
+	protected:
+	    b2PolygonShape* shape(float physicsScale) override;
 
-		/// The restitution (elasticity) usually in the range [0,1].
-		float32 restitution;
-
-		/// The density, usually in kg/m^2.
-		float32 density;
-
-		/// A sensor shape collects contact information but never generates a collision response.
-		bool isSensor;
-
-		/// Contact filtering data.
-		b2Filter filter;
-
-		const b2FixtureDef& fixtureDef(float physicsScale = 1);
-
-		void refreshFixture();
 	private:
-		b2FixtureDef m_fixtureDef;
 		b2PolygonShape m_shape;
-		b2Fixture* m_fixture;
 	};
 }

@@ -1,8 +1,8 @@
-#ifndef BLACKFOX_BASEINSTALLER_H
-#define BLACKFOX_BASEINSTALLER_H
+#pragma once
 
 #include "IBFInstaller.h"
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -35,5 +35,3 @@ namespace BlackFox
 		DiContainer m_container;
 	};
 }
-
-#endif

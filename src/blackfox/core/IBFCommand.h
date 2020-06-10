@@ -1,9 +1,10 @@
 #pragma once
 
 #include <utility>
+#include <memory>
+#include <string>
 
-
-#include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -30,7 +31,7 @@ namespace BlackFox
 		IBFCommand& operator=(const IBFCommand&) = delete;
 
 		explicit IBFCommand(std::string name, const bool isUndoable = true) : m_name(std::move(name)), m_undoable(isUndoable) {}
-		virtual ~IBFCommand(void) noexcept = default;
+		virtual ~IBFCommand() noexcept = default;
 		IBFCommand(IBFCommand&&) noexcept = default;
 		IBFCommand& operator=(IBFCommand&&) noexcept = default;
 
@@ -44,7 +45,7 @@ namespace BlackFox
 		 *
 		 * \returns	A copy of this object.
 		 */
-		[[nodiscard]] virtual IBFCommand* clone(void) const = 0;
+		[[nodiscard]] virtual IBFCommand* clone() const = 0;
 
 		virtual void undo() = 0;
 		virtual void redo() = 0;

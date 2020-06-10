@@ -1,11 +1,11 @@
-#ifndef BLACKFOX_SCENEINSTALLER_H
-#define BLACKFOX_SCENEINSTALLER_H
+#pragma once
 
 #include "BFBaseInstaller.h"
-#include "BFScene.h"
 
 namespace BlackFox
 {
+	class BFScene;
+
 	/*!
 	 * \class	BFSceneInstaller
 	 *
@@ -29,14 +29,12 @@ namespace BlackFox
 		 * \param	container	The container.
 		 * \param	level		The level
 		 */
-		explicit BFSceneInstaller(DiContainer container, BFScene::Ptr level);
+		explicit BFSceneInstaller(DiContainer container, std::shared_ptr<BFScene> level);
 
 		void installBindings() override;
 
 	private:
 		/*! \brief	The scene */
-		BFScene::Ptr m_scene;
+		std::shared_ptr<BFScene> m_scene;
 	};
 }
-
-#endif

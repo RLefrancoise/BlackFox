@@ -4,6 +4,9 @@
 #include <SFML/System.hpp>
 #include <chrono>
 #include <random>
+#include <sol/property.hpp>
+#include <sol/raii.hpp>
+#include <sol/overload.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingSFMLEntities, "SFMLEntities")
 

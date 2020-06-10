@@ -91,10 +91,10 @@ namespace BlackFox::Editor
 		BFWindow& operator=(const BFWindow&) = delete;
 
 		//Move
-		BFWindow(BFWindow&&) = default;
-		BFWindow& operator=(BFWindow&&) = default;
-		
-		virtual ~BFWindow() noexcept = default;
+		BFWindow(BFWindow&&) noexcept = default;
+		BFWindow& operator=(BFWindow&&) noexcept = default;
+
+		~BFWindow() noexcept override = default;
 		bool draw(const float delta) override
 		{
 			if (m_opened)
@@ -168,13 +168,13 @@ namespace BlackFox::Editor
 		template<typename EventType>
 		typename entt::emitter<WindowType>::template connection<EventType> connect(const std::function<void(const EventType&, BFWindow<WindowType>&)>& fnc)
 		{
-			return on<EventType>(fnc);
+			return this->template on<EventType>(fnc);
 		}
 
 		template<typename EventType>
 		typename entt::emitter<WindowType>::template connection<EventType> connectOnce(const std::function<void(const EventType&, BFWindow<WindowType>&)>& fnc)
 		{
-			return once<EventType>(fnc);
+			return this->template once<EventType>(fnc);
 		}
 
 		template<typename EventType>

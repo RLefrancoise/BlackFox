@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_LUA_SCRIPTING_MATH_ENTITIES_H
-#define BLACKFOX_LUA_SCRIPTING_MATH_ENTITIES_H
+#pragma once
 
 #include "IBFLuaScriptingEntity.h"
 
@@ -12,5 +11,3 @@ namespace BlackFox
         void registerEntity() override;
     };
 }
-
-#endif //BLACKFOX_LUA_SCRIPTING_MATH_ENTITIES_H

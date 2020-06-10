@@ -1,4 +1,5 @@
 #include "BFDataInstaller.h"
+#include "BFConfigData.h"
 #include "BFDebug.h"
 #include "BFResourcesHolder.h"
 

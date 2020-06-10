@@ -20,6 +20,10 @@ file(
     "installers/*.cpp"
     "scripting/*.h"
     "scripting/*.cpp"
+    "services/*.h"
+    "services/*.cpp"
+    "utils/*.h"
+    "utils/*.cpp"
 )
 
 #list(APPEND SOURCES main.cpp)

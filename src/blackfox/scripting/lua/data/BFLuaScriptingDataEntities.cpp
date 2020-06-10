@@ -1,5 +1,7 @@
 #include "BFLuaScriptingDataEntities.h"
 #include "BFResourcesHolder.h"
+#include <sol/property.hpp>
+#include <sol/overload.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingDataEntities, "DataEntities")
 

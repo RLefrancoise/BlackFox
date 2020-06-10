@@ -11,14 +11,14 @@ namespace BlackFox
 
 	BFCommandManager::BFCommandManager(BFCommandManager&& manager) noexcept
 	: m_commands(std::move(manager.m_commands))
-	, m_container(manager.m_container)
+	, m_container(std::move(manager.m_container))
 	{
 	}
 
 	BFCommandManager& BFCommandManager::operator=(BFCommandManager&& manager) noexcept
 	{
 		m_commands = std::move(manager.m_commands);
-		m_container = manager.m_container;
+		m_container = std::move(manager.m_container);
 		return *this;
 	}
 

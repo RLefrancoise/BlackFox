@@ -1,11 +1,11 @@
-#ifndef BLACKFOX_APPLICATION_H
-#define BLACKFOX_APPLICATION_H
+#pragma once
 
 #include <cinject/cinject.h>
 #include <memory>
 #include <SFML/Graphics.hpp>
 
 #include "BFTypeDefs.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -70,7 +70,7 @@ namespace BlackFox
 
 		BFApplication& operator=(BFApplication&& app) noexcept;
 
-		void init();
+		int init();
 		
 		/*!
 		 * \fn	int BFApplication::execute();
@@ -133,5 +133,3 @@ namespace BlackFox
 	    std::shared_ptr<impl> pImpl;
 	};
 }
-
-#endif

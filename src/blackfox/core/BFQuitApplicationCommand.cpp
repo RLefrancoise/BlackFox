@@ -10,13 +10,13 @@ namespace BlackFox
 	{
 	}
 
-	void BFQuitApplicationCommand::execute(void)
+	void BFQuitApplicationCommand::execute()
 	{
 		BF_PRINT("Quit application");
 		m_application->quit();
 	}
 
-	BFQuitApplicationCommand* BFQuitApplicationCommand::clone(void) const
+	BFQuitApplicationCommand* BFQuitApplicationCommand::clone() const
 	{
 		return new BFQuitApplicationCommand(m_application);
 	}

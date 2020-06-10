@@ -1,9 +1,7 @@
-#ifndef BLACKFOX_ILUASCRIPTINGENTITY_H
-#define BLACKFOX_ILUASCRIPTINGENTITY_H
+#pragma once
 
-#define SOL_ALL_SAFETIES_ON 1
-
-#include <sol/sol.hpp>
+#include <sol/state.hpp>
+#include <sol/table.hpp>
 #include <rttr/registration.h>
 
 #include "IBFScriptingEntity.h"
@@ -14,15 +12,8 @@ namespace BlackFox
     {
         RTTR_ENABLE(IBFScriptingEntity)
     public:
-        explicit IBFLuaScriptingEntity(DiContainer container, sol::state* state)
-        : IBFScriptingEntity(std::move(container))
-        , m_state(state)
-        {
-            //BlackFox namespace
-            m_namespace = (*m_state)["BlackFox"].get_or_create<sol::table>();
-        }
-
-        virtual ~IBFLuaScriptingEntity() noexcept = default;
+        explicit IBFLuaScriptingEntity(DiContainer container, sol::state* state);
+        ~IBFLuaScriptingEntity() noexcept override = default;
 
     protected:
         sol::state* m_state;
@@ -54,5 +45,3 @@ namespace BlackFox
                                                                 }
 
 #endif
-
-#endif //BLACKFOX_ILUASCRIPTINGENTITY_H

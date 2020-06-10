@@ -1,5 +1,6 @@
 #include "BFLuaScript.h"
 #include "BFDebug.h"
+#include <sol/state.hpp>
 
 #define SOL_ALL_SAFETIES_ON 1
 

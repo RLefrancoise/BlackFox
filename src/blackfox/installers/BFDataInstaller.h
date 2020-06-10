@@ -1,11 +1,11 @@
-#ifndef BLACKFOX_DATAINSTALLER_H
-#define BLACKFOX_DATAINSTALLER_H
+#pragma once
 
 #include "BFBaseInstaller.h"
-#include "BFConfigData.h"
 
 namespace BlackFox
 {
+    class BFConfigData;
+
     class BLACKFOX_EXPORT BFDataInstaller final : public BFBaseInstaller
     {
     public:
@@ -13,8 +13,6 @@ namespace BlackFox
         void installBindings() override;
 
     private:
-        BFConfigData::Ptr m_configData;
+        std::shared_ptr<BFConfigData> m_configData;
     };
 }
-
-#endif //BLACKFOX_DATAINSTALLER_H

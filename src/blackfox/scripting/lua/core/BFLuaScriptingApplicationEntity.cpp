@@ -2,6 +2,8 @@
 #include "BFApplication.h"
 #include "BFCommandManager.h"
 #include "BFConfigData.h"
+#include <sol/property.hpp>
+#include <sol/overload.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingApplicationEntity, "Application")
 
@@ -29,16 +31,28 @@ namespace BlackFox
 			return app->window()->getSize().y;
 		});
 
-        screenNs["worldToPixels"] = [&](float x, float y) -> BFVector2f
+        screenNs["worldToPixels"] = sol::overload(
+        [&](float x, float y) -> BFVector2f
         {
             const auto& app = m_container->get<BFApplication>();
             return app->configData()->gameData.worldToPixels(x, y);
-        };
+        },
+        [&](const float value) -> float
+        {
+            const auto& app = m_container->get<BFApplication>();
+            return app->configData()->gameData.worldToPixels(value);
+        });
 
-		screenNs["pixelsToWorld"] = [&](float x, float y) -> BFVector2f
+		screenNs["pixelsToWorld"] = sol::overload(
+		[&](float x, float y) -> BFVector2f
 		{
 			const auto& app = m_container->get<BFApplication>();
 			return app->configData()->gameData.pixelsToWorld(x, y);
-		};
+		},
+		[&](const float value) -> float
+		{
+            const auto& app = m_container->get<BFApplication>();
+            return app->configData()->gameData.pixelsToWorld(value);
+		});
     }
 }
