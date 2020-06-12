@@ -3,6 +3,7 @@
 #include <sol/property.hpp>
 
 #include "BFBoxColliderComponent.h"
+#include "BFCircleColliderComponent.h"
 #include "BFRadian.h"
 #include "BFDegree.h"
 #include "BFRigidBodyComponent.h"
@@ -28,17 +29,10 @@ namespace BlackFox
 		rb_t["type"] = sol::property(
 			[&](BFRigidBodyComponent& rb) { return rb.type; },
 			[&](BFRigidBodyComponent& rb, const b2BodyType& type) { rb.type = type; });
-		rb_t["linearVelocity"] = sol::property(
-			[&](BFRigidBodyComponent& rb) { return BFVector2f(rb.linearVelocity.x, rb.linearVelocity.y); },
-			[&](BFRigidBodyComponent& rb, const BFVector2f& vel) { rb.linearVelocity.Set(vel.x, vel.y); });
-		rb_t["angularVelocity"] = sol::property(
-			[&](BFRigidBodyComponent& rb) { return rb.angularVelocity; },
-			[&](BFRigidBodyComponent& rb, const float vel) { rb.angularVelocity = vel; });
-		rb_t["linearDamping"] = sol::property(
-			[&](BFRigidBodyComponent& rb) { return rb.linearDamping; },
-			[&](BFRigidBodyComponent& rb, const float linearDamping) { rb.linearDamping = linearDamping; });
-		rb_t["angularDamping"] = sol::property([&](BFRigidBodyComponent& rb) { return rb.angularDamping; },
-			[&](BFRigidBodyComponent& rb, const float angularDamping) { rb.angularDamping = angularDamping; });
+		rb_t["linearVelocity"] = &BFRigidBodyComponent::linearVelocity;
+		rb_t["angularVelocity"] = &BFRigidBodyComponent::angularVelocity;
+		rb_t["linearDamping"] = &BFRigidBodyComponent::linearDamping;
+		rb_t["angularDamping"] = &BFRigidBodyComponent::angularDamping;
 		rb_t["bullet"] = &BFRigidBodyComponent::bullet;
 		
 		//Box collider
@@ -49,6 +43,14 @@ namespace BlackFox
 		box_t["restitution"] = &BFBoxColliderComponent::restitution;
 		box_t["density"] = &BFBoxColliderComponent::density;
 		box_t["isSensor"] = &BFBoxColliderComponent::isSensor;
+		
+		//Circle collider
+		auto circle_t = registerType<BFCircleColliderComponent>();
+		circle_t["radius"] = &BFCircleColliderComponent::radius;
+		circle_t["friction"] = &BFCircleColliderComponent::friction;
+		circle_t["restitution"] = &BFCircleColliderComponent::restitution;
+		circle_t["density"] = &BFCircleColliderComponent::density;
+		circle_t["isSensor"] = &BFCircleColliderComponent::isSensor;
 	}
 
 	std::string BFLuaScriptingPhysicsComponentEntities::namespaceName() const

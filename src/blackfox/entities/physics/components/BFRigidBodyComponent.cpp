@@ -7,7 +7,7 @@ namespace BlackFox::Components
 	BFRigidBodyComponent::BFRigidBodyComponent()
 	: isInitialized(false)
 	, type(b2_staticBody)
-	, linearVelocity(b2Vec2(0,0))
+	, linearVelocity(BFVector2f(0,0))
 	, angularVelocity(0)
 	, linearDamping(0)
 	, angularDamping(0)
@@ -20,21 +20,19 @@ namespace BlackFox::Components
 	, m_body(nullptr)
 	{}
 
-	const b2BodyDef& BFRigidBodyComponent::bodyDef()
+	void BFRigidBodyComponent::bodyDef(b2BodyDef* def) const
 	{
-		m_bodyDef.type = type;
-		m_bodyDef.linearVelocity = linearVelocity;
-		m_bodyDef.angularVelocity = angularVelocity;
-		m_bodyDef.linearDamping = linearDamping;
-		m_bodyDef.angularDamping = angularDamping;
-		m_bodyDef.allowSleep = allowSleep;
-		m_bodyDef.awake = awake;
-		m_bodyDef.fixedRotation = fixedRotation;
-		m_bodyDef.bullet = bullet;
-		m_bodyDef.active = active;
-		m_bodyDef.gravityScale = gravityScale;
-
-		return m_bodyDef;
+		def->type = type;
+        def->linearVelocity = b2Vec2(linearVelocity.x, linearVelocity.y);
+        def->angularVelocity = angularVelocity;
+        def->linearDamping = linearDamping;
+        def->angularDamping = angularDamping;
+        def->allowSleep = allowSleep;
+        def->awake = awake;
+        def->fixedRotation = fixedRotation;
+        def->bullet = bullet;
+        def->active = active;
+        def->gravityScale = gravityScale;
 	}
 
 	void BFRigidBodyComponent::synchronizeBody(b2Vec2 position, const BFDegree& angle)
@@ -46,7 +44,7 @@ namespace BlackFox::Components
 		m_body->SetTransform(position, BFRadian(angle));
 
 		//Linear velocity
-		m_body->SetLinearVelocity(linearVelocity);
+		m_body->SetLinearVelocity(b2Vec2(linearVelocity.x, linearVelocity.y));
 
 		//Angular velocity
 		m_body->SetAngularVelocity(BFRadian(BFDegree(angularVelocity)));
@@ -79,7 +77,11 @@ namespace BlackFox::Components
 	void BFRigidBodyComponent::synchronizeWithBody()
 	{
 		type = m_body->GetType();
-		linearVelocity = m_body->GetLinearVelocity();
+
+		const auto lv = m_body->GetLinearVelocity();
+		linearVelocity.x = lv.x;
+		linearVelocity.y = lv.y;
+
 		angularVelocity = BFDegree(m_body->GetAngularVelocity());
 		linearDamping = m_body->GetLinearDamping();
 		angularDamping = m_body->GetAngularDamping();

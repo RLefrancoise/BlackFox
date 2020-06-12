@@ -2,6 +2,7 @@
 
 #include "BFComponent.h"
 #include "BFDegree.h"
+#include "BFVector2.h"
 #include "Box2D/Dynamics/b2Body.h"
 #include "Box2D/Dynamics/b2Fixture.h"
 
@@ -34,7 +35,7 @@ namespace BlackFox::Components
 		b2BodyType type;
 
 		/// The linear velocity of the body's origin in world co-ordinates.
-		b2Vec2 linearVelocity;
+		BFVector2f linearVelocity;
 
 		/// The angular velocity of the body.
 		float32 angularVelocity;
@@ -74,12 +75,11 @@ namespace BlackFox::Components
 		float32 gravityScale;
 
 	private:
-        const b2BodyDef& bodyDef();
+        void bodyDef(b2BodyDef* def) const;
 
 		void synchronizeBody(b2Vec2 position, const BFDegree& angle);
 		void synchronizeWithBody();
 
-		b2BodyDef m_bodyDef;
 		b2Body* m_body;
 	};
 }

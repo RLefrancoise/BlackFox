@@ -18,7 +18,7 @@ namespace BlackFox
 	 * \date	11/11/2019
 	 */
     template <typename T>
-	struct BFVector2
+	struct BLACKFOX_EXPORT BFVector2
 	{
 		/*!
 		 * \brief	Constructor

@@ -12,7 +12,11 @@ file(
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
-add_library(bfmath STATIC ${SOURCES})
+IF(BLACKFOX_SHARED_LIB)
+    add_library(bfmath SHARED ${SOURCES})
+ELSE()
+    add_library(bfmath STATIC ${SOURCES})
+ENDIF()
 
 set(LIBRARIES sfml-system fmt::fmt-header-only)
 

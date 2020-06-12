@@ -1,6 +1,8 @@
 #ifndef BLACKFOX_DEGREE_H
 #define BLACKFOX_DEGREE_H
 
+#include "BFExport.h"
+
 namespace BlackFox
 {
 	class BFRadian;
@@ -13,7 +15,7 @@ namespace BlackFox
 	 * \author	Renaud Lefrançoise
 	 * \date	11/11/2019
 	 */
-	class BFDegree
+	class BLACKFOX_EXPORT BFDegree
 	{
 	public:
 

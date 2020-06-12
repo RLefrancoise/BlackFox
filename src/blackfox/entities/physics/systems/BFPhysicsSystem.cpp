@@ -115,7 +115,8 @@ namespace BlackFox::Systems
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
 
 		//Create body
-		auto bodyDef = rb.bodyDef();
+		b2BodyDef bodyDef;
+		rb.bodyDef(&bodyDef);
 
 		auto* transform = em.try_get<BFTransformComponent>(e);
 		if (transform != nullptr)
