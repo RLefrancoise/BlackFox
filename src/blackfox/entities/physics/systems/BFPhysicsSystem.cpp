@@ -1,12 +1,9 @@
 #include "BFPhysicsSystem.h"
 
-#include "BFRigidBodyComponent.h"
 #include "BFTransformComponent.h"
 #include "BFBoxColliderComponent.h"
 #include "BFCircleColliderComponent.h"
 #include "BFWorld.h"
-#include "BFApplication.h"
-#include "BFConfigData.h"
 #include "BFRadian.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFPhysicsSystem)
@@ -35,9 +32,9 @@ namespace BlackFox::Systems
 		// Colliders
 
 		// Box
-		listenBoxColliders();
+		boxColliderListener = listenColliders<BFBoxColliderComponent>();
 		//Circle
-		listenerCircleColliders();
+		circleColliderListener = listenColliders<BFCircleColliderComponent>();
 	}
 
 	void BFPhysicsSystem::update(float dt)
@@ -106,24 +103,6 @@ namespace BlackFox::Systems
 		rbListener = m_world->registerComponentListener<RigidBodyListener>(createCallback, replaceCallback, destroyCallback);
 	}
 
-	void BFPhysicsSystem::listenBoxColliders()
-	{
-		BoxColliderListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFBoxColliderComponent& box) { /*initBoxCollider(e, r, box);*/ };
-		BoxColliderListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFBoxColliderComponent& box) { replaceBoxCollider(e, r, box); };
-		BoxColliderListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanBoxCollider(e, r); };
-
-		boxColliderListener = m_world->registerComponentListener<BoxColliderListener>(createCallback, replaceCallback, destroyCallback);
-	}
-
-	void BFPhysicsSystem::listenerCircleColliders()
-	{
-		CircleColliderListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFCircleColliderComponent& circle) { /*initCircleCollider(e, r, circle);*/ };
-		CircleColliderListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFCircleColliderComponent& circle) { replaceCircleCollider(e, r, circle); };
-		CircleColliderListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanCircleCollider(e, r); };
-
-		circleColliderListener = m_world->registerComponentListener<CircleColliderListener>(createCallback, replaceCallback, destroyCallback);
-	}
-
 	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
 	{
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
@@ -140,7 +119,7 @@ namespace BlackFox::Systems
 		}
 
 		rb.m_body = m_b2World->CreateBody(&bodyDef);
-		rb.isInitialized = true;
+		rb.m_isInitialized = true;
 
 		BF_PRINT("Create body for entity {}", e);
 	}
@@ -159,76 +138,15 @@ namespace BlackFox::Systems
 		auto& rb = em.get<BFRigidBodyComponent>(e);
 
 		//Clean colliders
-		cleanBoxCollider(e, em);
+		cleanCollider<BFBoxColliderComponent>(e, em);
+		cleanCollider<BFCircleColliderComponent>(e, em);
 
 		//Destroy body
 		if(rb.m_body) m_b2World->DestroyBody(rb.m_body);
 
-		rb.isInitialized = false;
+		rb.m_isInitialized = false;
 
 		BF_PRINT("Clean body for entity {}", e);
-	}
-
-	void BFPhysicsSystem::initBoxCollider(const entt::entity e, entt::registry& em, BFBoxColliderComponent& box) const
-	{
-		auto* rb = em.try_get<BFRigidBodyComponent>(e);
-		if(rb && rb->m_body && !box.m_fixture)
-		{
-			box.m_fixture = rb->m_body->CreateFixture(&box.fixtureDef(m_application->configData()->physicsData.physicsScale));
-
-			BF_PRINT("Create box collider for entity {}", e);
-		}
-	}
-
-	void BFPhysicsSystem::replaceBoxCollider(const entt::entity e, entt::registry& em, BFBoxColliderComponent& box) const
-	{
-		cleanBoxCollider(e, em);
-		//Init will be done in the before step
-		//initBoxCollider(e, em, box);
-	}
-
-	void BFPhysicsSystem::cleanBoxCollider(const entt::entity e, entt::registry& em) const
-	{
-		auto* box = em.try_get<BFBoxColliderComponent>(e);
-
-		if (box->m_fixture && box->m_fixture->GetBody())
-		{
-			box->m_fixture->GetBody()->DestroyFixture(box->m_fixture);
-			box->m_fixture = nullptr;
-
-			BF_PRINT("Clean box collider for entity {}", e);
-		}
-	}
-
-	void BFPhysicsSystem::initCircleCollider(const entt::entity e, entt::registry& em, BFCircleColliderComponent& circle) const
-	{
-		auto* rb = em.try_get<BFRigidBodyComponent>(e);
-		if(rb && rb->m_body && !circle.m_fixture)
-		{
-			circle.m_fixture = rb->m_body->CreateFixture(&circle.fixtureDef(m_application->configData()->physicsData.physicsScale));
-
-			BF_PRINT("Create circle collider for entity {}", e);
-		}
-	}
-
-	void BFPhysicsSystem::replaceCircleCollider(const entt::entity e, entt::registry& em, BFCircleColliderComponent& circle) const
-	{
-		cleanCircleCollider(e, em);
-		//Init will be done in the before step
-		//initCircleCollider(e, em, box);
-	}
-
-	void BFPhysicsSystem::cleanCircleCollider(const entt::entity e, entt::registry& em) const
-	{
-		auto* circle = em.try_get<BFCircleColliderComponent>(e);
-
-		if (circle->m_fixture && circle->m_fixture->GetBody())
-		{
-			circle->m_fixture->GetBody()->DestroyFixture(circle->m_fixture);
-			circle->m_fixture = nullptr;
-
-			BF_PRINT("Clean circle collider for entity {}", e);
-		}
 	}
 
 	void BFPhysicsSystem::beforeStep(const EntityManager& em)
@@ -239,7 +157,7 @@ namespace BlackFox::Systems
 		view.each([&](const entt::entity entity, BFRigidBodyComponent& rb, BFTransformComponent& transform)
 		{
 			//Init body if needed
-			if (!rb.isInitialized)
+			if (!rb.m_isInitialized)
 			{
 				initRigidBody(entity, *em, rb);
 			}
@@ -253,7 +171,7 @@ namespace BlackFox::Systems
 			auto* boxCollider = em->try_get<BFBoxColliderComponent>(entity);
 			if(boxCollider)
 			{
-				if(!boxCollider->m_fixture) initBoxCollider(entity, *em, *boxCollider);
+				if(!boxCollider->m_fixture) initCollider<BFBoxColliderComponent>(entity, *em, *boxCollider);
 				boxCollider->refreshFixture();
 			}
 
@@ -261,7 +179,7 @@ namespace BlackFox::Systems
 			auto* circleCollider = em->try_get<BFCircleColliderComponent>(entity);
 			if(circleCollider)
 			{
-				if(!circleCollider->m_fixture) initCircleCollider(entity, *em, *circleCollider);
+				if(!circleCollider->m_fixture) initCollider<BFCircleColliderComponent>(entity, *em, *circleCollider);
 				circleCollider->refreshFixture();
 			}
 		});
@@ -273,7 +191,7 @@ namespace BlackFox::Systems
 		
 		view.each([&](auto entity, BFRigidBodyComponent& rb, BFTransformComponent& transform)
 		{
-			//Update rigidbody component values according to its body
+			//Update rigid body component values according to its body
 			rb.synchronizeWithBody();
 
 			//Synchronize transforms with rigid bodies

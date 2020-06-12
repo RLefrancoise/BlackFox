@@ -19,7 +19,6 @@ namespace BlackFox
 	{	
 		//Rigid body
 		auto rb_t = registerType<BFRigidBodyComponent>();
-		rb_t["isInitialized"] = sol::readonly(&BFRigidBodyComponent::isInitialized);
 
 		auto bodyType_t = m_namespace["Physics"].get_or_create<sol::table>().new_usertype<b2BodyType>("BodyType");
 		bodyType_t["Static"] = sol::var(b2_staticBody);

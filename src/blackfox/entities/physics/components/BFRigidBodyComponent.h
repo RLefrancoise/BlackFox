@@ -28,8 +28,6 @@ namespace BlackFox::Components
 		BFRigidBodyComponent(BFRigidBodyComponent&& rb) noexcept = default;
 		BFRigidBodyComponent& operator=(BFRigidBodyComponent&& rb) noexcept = default;
 
-		bool isInitialized;
-
 		/// The body type: static, kinematic, or dynamic.
 		/// Note: if a dynamic body would have zero mass, the mass is set to one.
 		b2BodyType type;
@@ -80,6 +78,7 @@ namespace BlackFox::Components
 		void synchronizeBody(b2Vec2 position, const BFDegree& angle);
 		void synchronizeWithBody();
 
+        bool m_isInitialized;
 		b2Body* m_body;
 	};
 }

@@ -5,7 +5,7 @@
 namespace BlackFox::Components
 {
 	BFRigidBodyComponent::BFRigidBodyComponent()
-	: isInitialized(false)
+	: m_isInitialized(false)
 	, type(b2_staticBody)
 	, linearVelocity(BFVector2f(0,0))
 	, angularVelocity(0)
