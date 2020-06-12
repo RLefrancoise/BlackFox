@@ -36,6 +36,8 @@ namespace BlackFox::Systems
 
 		// Box
 		listenBoxColliders();
+		//Circle
+		listenerCircleColliders();
 	}
 
 	void BFPhysicsSystem::update(float dt)
