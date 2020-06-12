@@ -1,12 +1,11 @@
 #pragma once
 
 #include <string>
-#include <sstream>
-#include <regex>
 #include <fmt/format.h>
 #include <SFML/System/Vector2.hpp>
 
 #include "Box2D/Common/b2Math.h"
+#include "BFExport.h"
 
 namespace BlackFox
 {
@@ -223,7 +222,7 @@ namespace BlackFox
 
 		constexpr operator sf::Vector2<T> () const { return sf::Vector2<T>(x, y); }
 
-		constexpr explicit operator std::string() const { return fmt::format("({},{})", x, y); }
+		explicit operator std::string() const { return fmt::format("({},{})", x, y); }
     	
 		/*! \brief	X value */
 		T x;
@@ -242,5 +241,5 @@ namespace BlackFox
 	 * 
 	 * \return	The BFVector2f vector
 	 */
-	BFVector2f vector2fFromString(const std::string& str);
+	BLACKFOX_EXPORT BFVector2f vector2fFromString(const std::string& str);
 }

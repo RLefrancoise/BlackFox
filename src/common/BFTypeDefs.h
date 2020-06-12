@@ -4,6 +4,7 @@
 #include <entt/entity/registry.hpp>
 #include <entt/resource/cache.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/String.hpp>
 
 namespace BlackFox
 {
@@ -14,4 +15,7 @@ namespace BlackFox
 	typedef entt::cache<sf::Texture> TextureCache;
 	typedef TextureCache::id_type TextureId;
 	typedef entt::handle<sf::Texture> TextureHandle;
+
+	typedef sf::Color	BFColor;
+	typedef sf::String	BFString;
 }

@@ -24,15 +24,16 @@ namespace BlackFox::Systems
 		shape.setRotation(transform.rotation);
 
 		shape.setFillColor(sf::Color::Transparent);
-		shape.setOutlineColor(sf::Color(255,0,0,128));
-		shape.setOutlineThickness(-2.f);
+		shape.setOutlineColor(application->configData()->debugData.physicsCollidersOutlineColor);
+		shape.setOutlineThickness(-application->configData()->debugData.physicsCollidersOutlineThickness);
 
 		application->window()->draw(shape);
 
 		//Draw center
-		sf::CircleShape center(2.f);
-		center.setFillColor(sf::Color(0, 0, 255, 128));
-		center.setOrigin(sf::Vector2f(2.f, 2.f));
+		const float centerRadius = application->configData()->debugData.physicsCollidersCenterRadius;
+		sf::CircleShape center(centerRadius);
+		center.setFillColor(application->configData()->debugData.physicsCollidersCenterColor);
+		center.setOrigin(sf::Vector2f(centerRadius, centerRadius));
 		center.setPosition(sf::Vector2f(pixelPosition.x, pixelPosition.y));
 
 		application->window()->draw(center);
@@ -140,7 +141,7 @@ namespace BlackFox::Systems
 		});
 
 		//Debug colliders
-		if (m_application->configData()->physicsData.debugPhysics)
+		if (m_application->configData()->debugData.debugPhysics)
 		{
 			auto debugCollidersView = em->view<const BFRigidBodyComponent, const BFTransformComponent>();
 			debugCollidersView.each([&](entt::entity e, const BFRigidBodyComponent& rb, const BFTransformComponent& transform)

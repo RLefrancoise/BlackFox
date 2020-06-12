@@ -5,6 +5,9 @@
 #include <vector>
 #include <numeric>
 
+#include "BFTypeDefs.h"
+#include "BFExport.h"
+
 namespace BlackFox::Utils
 {
 	/*!
@@ -33,4 +36,7 @@ namespace BlackFox::Utils
 
 		return str;
 	}
+
+	BLACKFOX_EXPORT BFColor colorFromString(const std::string& str);
+	BLACKFOX_EXPORT std::string colorToString(const BFColor& color);
 }

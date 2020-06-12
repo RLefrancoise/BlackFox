@@ -19,7 +19,7 @@ namespace BlackFox::Components
 		BF_COMPONENT("RigidBody")
 
 		BFRigidBodyComponent();
-		virtual ~BFRigidBodyComponent() = default;
+        ~BFRigidBodyComponent() override = default;
 
 		BFRigidBodyComponent(const BFRigidBodyComponent& rb) = delete;
 		BFRigidBodyComponent& operator=(const BFRigidBodyComponent&) = delete;
@@ -73,9 +73,9 @@ namespace BlackFox::Components
 		/// Scale the gravity applied to this body.
 		float32 gravityScale;
 
-		const b2BodyDef& bodyDef();
-		
 	private:
+        const b2BodyDef& bodyDef();
+
 		void synchronizeBody(b2Vec2 position, const BFDegree& angle);
 		void synchronizeWithBody();
 

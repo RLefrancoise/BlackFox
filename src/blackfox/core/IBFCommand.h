@@ -2,7 +2,7 @@
 
 #include <utility>
 #include <memory>
-#include <string>
+#include <SFML/System/String.hpp>
 
 #include "BFExport.h"
 
@@ -30,10 +30,22 @@ namespace BlackFox
 		IBFCommand(const IBFCommand&) = delete;
 		IBFCommand& operator=(const IBFCommand&) = delete;
 
-		explicit IBFCommand(std::string name, const bool isUndoable = true) : m_name(std::move(name)), m_undoable(isUndoable) {}
+		explicit IBFCommand(const sf::String& name, const bool isUndoable = true)
+		: m_name(name), m_undoable(isUndoable)
+		{}
+
 		virtual ~IBFCommand() noexcept = default;
-		IBFCommand(IBFCommand&&) noexcept = default;
-		IBFCommand& operator=(IBFCommand&&) noexcept = default;
+		IBFCommand(IBFCommand&& cmd) noexcept
+		: m_name(cmd.m_name)
+		, m_undoable(cmd.m_undoable)
+		{}
+
+		IBFCommand& operator=(IBFCommand&& cmd) noexcept
+		{
+			m_name = cmd.m_name;
+			m_undoable = cmd.m_undoable;
+			return *this;
+		}
 
 		/*!
 		 * \fn	virtual BFCommand* BFCommand::clone(void) const = 0;
@@ -50,11 +62,11 @@ namespace BlackFox
 		virtual void undo() = 0;
 		virtual void redo() = 0;
 
-		[[nodiscard]] const std::string& name() const { return m_name; }
+		[[nodiscard]] std::string name() const { return m_name; }
 		[[nodiscard]] bool isUndoable() const { return m_undoable; }
 		
 	private:
-		std::string m_name;
+		sf::String m_name; //Should not use std::string here (C4251 on MSVC) cuz of DLL export
 		bool m_undoable;
 	};
 
@@ -64,7 +76,7 @@ namespace BlackFox
 	public:
 		using Super = BFCommandBase<T>;
 		
-		explicit BFCommandBase(const std::string& name, const bool isUndoable = true): IBFCommand(name, isUndoable) {}
+		explicit BFCommandBase(const sf::String& name, const bool isUndoable = true): IBFCommand(name, isUndoable) {}
 		
 		template <typename ...Args>
 		void execute(Args&& ...args)

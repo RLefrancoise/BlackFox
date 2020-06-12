@@ -128,35 +128,44 @@ namespace BlackFox
 
         float physicsScale = 1;
 
-        bool debugPhysics = false;
-
         explicit operator std::string() const
         {
-            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\nphysicsScale={}\ndebugPhysics={}\n"
+            return fmt::format("--- Physics Data ---\ngravity={}\nvelocityIterations={}\npositionIterations={}\nphysicsScale={}\n"
                 , static_cast<std::string>(gravity)
 				, velocityIterations
 				, positionIterations
-                , physicsScale
-                , debugPhysics);
+                , physicsScale);
         }
 	};
 
+	/*!
+	 * Debug data in config.ini file
+	 */
     struct BLACKFOX_EXPORT ConfigDebugData
     {
+        /// Debug physics ?
         bool debugPhysics = false;
+
+        /// Thickness of physics colliders outline
         float physicsCollidersOutlineThickness = 2.f;
-        sf::Color physicsCollidersOutlineColor = sf::Color::Red;
+
+        /// Color of physics colliders outline
+        BFColor physicsCollidersOutlineColor = BFColor::Red;
+
+        /// Radius of physics colliders center
+        float physicsCollidersCenterRadius = 2.f;
+
+        /// Color of physics colliders center
+        BFColor physicsCollidersCenterColor = BFColor::Blue;
 
         explicit operator std::string() const
         {
-            return fmt::format("--- Debug Data ---\ndebugPhysics={}\nphysicsCollidersOutlineThickness={}\nphysicsCollidersOutlineColor={}\n"
+            return fmt::format("--- Debug Data ---\ndebugPhysics={}\nphysicsCollidersOutlineThickness={}\nphysicsCollidersOutlineColor={}\nphysicsColliderCenterRadius={}\nphysicsColliderCenterColor={}\n"
                     , debugPhysics
                     , physicsCollidersOutlineThickness
-                    , Utils::join(std::vector<sf::Uint8>{
-                        physicsCollidersOutlineColor.r,
-                        physicsCollidersOutlineColor.g,
-                        physicsCollidersOutlineColor.b,
-                        physicsCollidersOutlineColor.a}));
+                    , Utils::colorToString(physicsCollidersOutlineColor)
+                    , physicsCollidersCenterRadius
+                    , Utils::colorToString(physicsCollidersCenterColor));
         }
     };
 
@@ -199,26 +208,38 @@ namespace BlackFox
                 vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
 				file.getIntTo<sf::Uint32>("Physics", "velocityIterations", 8),
 				file.getIntTo<sf::Uint32>("Physics", "positionIterations", 3),
-                file.getFloat("Physics", "physicsScale", 1),
-                file.getBool("Physics", "debugPhysics", false) };
+                file.getFloat("Physics", "physicsScale", 1)
+            };
+
+            //Debug data
+            debugData = {
+                file.getBool("Debug", "debugPhysics", false),
+                file.getFloat("Debug", "physicsCollidersOutlineThickness", 0.2f),
+                Utils::colorFromString(file.get("Debug", "physicsCollidersOutlineColor", "255,0,0,255")),
+                file.getFloat("Debug", "physicsCollidersCenterRadius", 2.f),
+                Utils::colorFromString(file.get("Debug", "physicsCollidersCenterColor", "0,0,255,255"))
+            };
         }
         
-        /// \brief  Application data
+        /// Application data
         ConfigApplicationData appData;
-        /// \brief  Game data
+        /// Game data
         ConfigGameData gameData;
-        /// \brief  Time data
+        /// Time data
         ConfigTimeData timeData;
-    	/// \brief  Physics data
+    	/// Physics data
         ConfigPhysicsData physicsData;
+        /// Debug data
+        ConfigDebugData debugData;
 
         explicit operator std::string() const
         {
-            return fmt::format("=== BFConfigData ===\n{}\n{}\n{}\n{}\n"
+            return fmt::format("=== BFConfigData ===\n{}\n{}\n{}\n{}\n{}\n"
                 , static_cast<std::string>(appData)
                 , static_cast<std::string>(gameData)
                 , static_cast<std::string>(timeData)
-				, static_cast<std::string>(physicsData));
+				, static_cast<std::string>(physicsData)
+				, static_cast<std::string>(debugData));
         }
     };
 }

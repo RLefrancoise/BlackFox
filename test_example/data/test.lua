@@ -219,7 +219,7 @@ roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
 roofScale = groundScale
 roof = createGround(roofPosition, groundScale)
 
-for i=1,100 do
+for i=1,50 do
     createBody(Vector2f:new(
         math.random(math.floor(leftWallPosition.x + 2), math.floor(rightWallPosition.x - 2)),
         math.random(math.floor(roofPosition.y + 2), math.floor(groundPosition.y - 2))))

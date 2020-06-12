@@ -7,7 +7,7 @@
 namespace BlackFox
 {
 	template<typename FormatType, typename ...Args>
-	static constexpr std::string format(const char* file, const int line, const char* function, FormatType str, Args... args)
+	static std::string format(const char* file, const int line, const char* function, FormatType str, Args... args)
 	{
 		return fmt::format("{}:{} - {} - {}", file, line, function, fmt::format(static_cast<std::string>(str), args...));
 	}
