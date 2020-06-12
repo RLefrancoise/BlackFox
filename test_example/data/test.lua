@@ -1,5 +1,9 @@
 math.randomseed(os.time())
 
+minBodySize = 0.25
+maxBodySize = 0.5
+bodyCount = 50
+
 -- Aliases
 Vector2f = BlackFox.Math.Vector2f
 IntRect = BlackFox.Graphics.IntRect
@@ -11,13 +15,18 @@ world = BlackFox.getWorld("default")
 
 -- Component IDs
 Transform = BlackFox.Components.Spatial.Transform.id(world)
+
 Renderable = BlackFox.Components.Render.Renderable.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
+CircleShape = BlackFox.Components.Render.CircleShape.id(world)
 Depth = BlackFox.Components.Render.Depth.id(world)
+
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
 ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
+
 RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
 BoxCollider = BlackFox.Components.Physics.BoxCollider.id(world)
+CircleCollider = BlackFox.Components.Physics.CircleCollider.id(world)
 
 function createBody(position)
     local e, 
@@ -35,7 +44,7 @@ function createBody(position)
     transform.rotation.degrees = math.random() * 360
 
     -- Scale
-    local randomScale = 0.25 + math.random() * 0.25
+    local randomScale = minBodySize + math.random() * (maxBodySize - minBodySize)
     transform.scale = Vector2f:new(randomScale, randomScale)
 
     -- Rigid body
@@ -60,6 +69,49 @@ function createBody(position)
     sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
     sprite.color = Color.Blue;
+
+    -- Depth
+    depth.depth = 0
+end
+
+function createCircleBody(position)
+    local e,
+    transform,
+    rigidBody,
+    circleCollider,
+    renderable,
+    circleShape,
+    depth = world:createEntity(Transform, RigidBody, CircleCollider, Renderable, CircleShape, Depth)
+
+    -- Position
+    transform.position = position
+
+    -- Rotation
+    transform.rotation.degrees = math.random() * 360
+
+    -- Scale
+    transform.scale = Vector2f:new(1, 1)
+
+    -- Rigid body
+    rigidBody.type = BlackFox.Physics.BodyType.Dynamic
+    rigidBody.angularDamping = 0.1
+    rigidBody.bullet = true
+
+    -- Box Collider
+    circleCollider.radius = (minBodySize + math.random() * (maxBodySize - minBodySize)) / 2
+    --circleCollider.center = Vector2f:new(0, 0)
+    circleCollider.density = 1
+    circleCollider.friction = 0.3
+    circleCollider.restitution = 0.1
+
+    -- Circle Shape
+
+    -- Circle radius
+    circleShape.radius = circleCollider.radius
+    -- Pivot at center
+    circleShape.origin = Vector2f:new(circleShape.radius, circleShape.radius)
+    -- Random color
+    circleShape.color = Color.Blue;
 
     -- Depth
     depth.depth = 0
@@ -219,10 +271,16 @@ roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
 roofScale = groundScale
 roof = createGround(roofPosition, groundScale)
 
-for i=1,50 do
-    createBody(Vector2f:new(
-        math.random(math.floor(leftWallPosition.x + 2), math.floor(rightWallPosition.x - 2)),
-        math.random(math.floor(roofPosition.y + 2), math.floor(groundPosition.y - 2))))
+-- Create bodies
+createFunctions = { createBody, createCircleBody }
+
+for i=1,bodyCount do
+    local createFnc = createFunctions[math.random(1, #createFunctions)]
+    if createFnc ~= nil then
+        createFnc(Vector2f:new(
+            math.random(math.floor(leftWallPosition.x + 2), math.floor(rightWallPosition.x - 2)),
+            math.random(math.floor(roofPosition.y + 2), math.floor(groundPosition.y - 2))))
+    end
 end
 
 ---for i= 1,100 do

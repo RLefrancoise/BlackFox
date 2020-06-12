@@ -3,6 +3,7 @@
 #include "BFDepthComponent.h"
 #include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
+#include "BFCircleShapeComponent.h"
 
 using namespace BlackFox::Components;
 
@@ -25,6 +26,12 @@ namespace BlackFox
 		sprite_t["rect"] = &BFSpriteComponent::rect;
 		sprite_t["pivot"] = &BFSpriteComponent::pivot;
 		sprite_t["color"] = &BFSpriteComponent::color;
+
+		//Circle shape
+		auto circle_t = registerType<BFCircleShapeComponent>();
+		circle_t["color"] = &BFCircleShapeComponent::color;
+		circle_t["origin"] = &BFCircleShapeComponent::origin;
+		circle_t["radius"] = &BFCircleShapeComponent::radius;
 	}
 
 	std::string BFLuaScriptingRenderComponentEntities::namespaceName() const

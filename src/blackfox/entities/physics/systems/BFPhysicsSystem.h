@@ -16,6 +16,7 @@ namespace BlackFox {
 		struct BFTransformComponent;
 		struct BFRigidBodyComponent;
 		struct BFBoxColliderComponent;
+		struct BFCircleColliderComponent;
 	}
 }
 
@@ -38,6 +39,7 @@ namespace BlackFox::Systems
 	private:
 		void listenRigidBodies();
 		void listenBoxColliders();
+		void listenerCircleColliders();
 		
 		void initRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb) const;
 		void replaceRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb) const;
@@ -46,6 +48,10 @@ namespace BlackFox::Systems
 		void initBoxCollider(entt::entity e, entt::registry& em, Components::BFBoxColliderComponent& box) const;
 		void replaceBoxCollider(entt::entity e, entt::registry& em, Components::BFBoxColliderComponent& box) const;
 		void cleanBoxCollider(entt::entity e, entt::registry& em) const;
+
+		void initCircleCollider(entt::entity e, entt::registry& em, Components::BFCircleColliderComponent& box) const;
+		void replaceCircleCollider(entt::entity e, entt::registry& em, Components::BFCircleColliderComponent& box) const;
+		void cleanCircleCollider(entt::entity e, entt::registry& em) const;
 
 		void beforeStep(const EntityManager& em);
 		void afterStep(const EntityManager& em);

@@ -1,14 +1,21 @@
 #include "BFRenderSystem.h"
+
 #include "BFApplication.h"
 #include "BFWorld.h"
 #include "BFConfigData.h"
+
+#include "BFTransformComponent.h"
+
 #include "BFDepthComponent.h"
 #include "BFRenderableComponent.h"
-#include "entities/spatial/components/BFTransformComponent.h"
-#include "entities/render/components/BFSpriteComponent.h"
+#include "BFSpriteComponent.h"
+#include "BFCircleShapeComponent.h"
+
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
 #include "BFCircleColliderComponent.h"
+
+#include <SFML/Graphics.hpp>
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFRenderSystem)
 
@@ -16,18 +23,61 @@ using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
 {
+    /*!
+     * Place transformable on screen according to its Transform Component
+     *
+     * @param application   Application pointer
+     * @param transformable Transformable to place
+     * @param transform     Transform Component
+     *
+     * @return              Position on screen in pixels
+     */
+    BFVector2f placeTransformable(BFApplication* application, sf::Transformable& transformable, const BFTransformComponent& transform)
+    {
+        const auto pixelPosition = application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y);
+        transformable.setPosition(pixelPosition);
+        transformable.setRotation(transform.rotation);
+
+        return pixelPosition;
+    }
+
+    /*!
+     * Render drawable on screen
+     *
+     * @param application   Application pointer
+     * @param drawable      Drawable to render
+     */
+    void renderDrawable(BFApplication* application, sf::Drawable& drawable)
+    {
+        application->window()->draw(drawable);
+    }
+
+    /*!
+     * Place and render element on screen
+     *
+     * @tparam T            Element type
+     * @param application   Application pointer
+     * @param element       Element to place and render
+     * @param transform     Transform Component
+     *
+     * @return              Position on screen in pixels
+     */
+    template<class T>
+    BFVector2f placeAndRender(BFApplication* application, T& element, const BFTransformComponent& transform)
+    {
+        const auto pixelsPosition = placeTransformable(application, element, transform);
+        renderDrawable(application, element);
+
+        return pixelsPosition;
+    }
+
 	void drawColliderShape(BFApplication* application, sf::Shape& shape, const BFTransformComponent& transform)
 	{
-		const auto pixelPosition = application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y);
-		shape.setPosition(pixelPosition);
-
-		shape.setRotation(transform.rotation);
-
 		shape.setFillColor(sf::Color::Transparent);
 		shape.setOutlineColor(application->configData()->debugData.physicsCollidersOutlineColor);
 		shape.setOutlineThickness(-application->configData()->debugData.physicsCollidersOutlineThickness);
 
-		application->window()->draw(shape);
+        const auto pixelPosition = placeAndRender(application, shape, transform);
 
 		//Draw center
 		const float centerRadius = application->configData()->debugData.physicsCollidersCenterRadius;
@@ -36,19 +86,17 @@ namespace BlackFox::Systems
 		center.setOrigin(sf::Vector2f(centerRadius, centerRadius));
 		center.setPosition(sf::Vector2f(pixelPosition.x, pixelPosition.y));
 
-		application->window()->draw(center);
+		renderDrawable(application, center);
 	}
 
 	void renderCollider(
-		BFApplication::Ptr application,
+		BFApplication* application,
 		BFWorld::Ptr world,
 		entt::entity e,
 		const BFRigidBodyComponent& rb,
 		const BFTransformComponent& transform)
 	{
 		auto em = world->entityManager();
-
-		sf::Shape* shapePtr = nullptr;
 
 		//Is box collider
 		auto* box = em->try_get<BFBoxColliderComponent>(e);
@@ -62,7 +110,7 @@ namespace BlackFox::Systems
 			const auto origin = sf::Vector2f(pixelsSize.x / 2.f + pixelsCenter.x, pixelsSize.y / 2.f - pixelsCenter.y);
 			shape.setOrigin(origin);
 
-			drawColliderShape(application.get(), shape, transform);
+			drawColliderShape(application, shape, transform);
 		}
 
 		//Is circle collider ?
@@ -76,12 +124,46 @@ namespace BlackFox::Systems
 			const auto origin = sf::Vector2f(pixelsRadius, pixelsRadius);
 			shape.setOrigin(origin);
 
-			drawColliderShape(application.get(), shape, transform);
+			drawColliderShape(application, shape, transform);
 		}
 	}
 
+	/*!
+	 * Render circle shape
+	 *
+	 * @param application   Application pointer
+	 * @param circle        Circle Shape Component
+	 * @param transform     Transform Component
+	 */
+	void renderCircleShape(
+        BFApplication* application,
+	    const BFCircleShapeComponent& circle,
+	    const BFTransformComponent& transform)
+    {
+	    //Radius
+        const float pixelsRadius = application->configData()->gameData.worldToPixels(circle.radius);
+        sf::CircleShape shape(pixelsRadius);
+
+	    //Origin
+	    const auto pixelsOrigin = application->configData()->gameData.worldToPixels(circle.origin.x, circle.origin.y);
+	    shape.setOrigin(pixelsOrigin);
+
+	    //Color
+	    shape.setFillColor(circle.color);
+
+	    //Render circle
+	    placeAndRender(application, shape, transform);
+    }
+
+    /*!
+     * Render Sprite Component
+     *
+     * @param application   Application pointer
+     * @param sprite        Sprite Component
+     * @param transform     Transform Component
+     */
 	void renderSprite(
-		BFApplication::Ptr application,
+		BFApplication* application,
 		const BFSpriteComponent& sprite,
 		const BFTransformComponent& transform)
 	{
@@ -103,16 +185,16 @@ namespace BlackFox::Systems
 		s.setTextureRect(sprite.rect);
 
 		//Set sprite position
-		s.setPosition(application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y));
+		//s.setPosition(application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y));
 
 		//Scale sprite
 		const auto pixelsScale = application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
 		s.setScale(pixelsScale.x / sprite.image->getSize().x, pixelsScale.y / sprite.image->getSize().y);
 
 		//Rotate sprite
-		s.setRotation(transform.rotation.value());
+		//s.setRotation(transform.rotation.value());
 
-		application->window()->draw(s);
+		placeAndRender(application, s, transform);
 	}
 	
 	BFRenderSystem::BFRenderSystem(BFApplication::Ptr application, BFWorld::Ptr world)
@@ -123,7 +205,7 @@ namespace BlackFox::Systems
 	void BFRenderSystem::update(float dt)
 	{
 		auto em = m_world->entityManager();
-		auto group = em->group<BFRenderableComponent>(entt::get<BFDepthComponent, BFTransformComponent>);
+		auto group = em->group<BFRenderableComponent>(entt::get<BFDepthComponent, const BFTransformComponent>);
 
 		//Sort renderable by depth
 		group.sort<BFDepthComponent>([](const BFDepthComponent& lhs, const BFDepthComponent& rhs)
@@ -131,13 +213,20 @@ namespace BlackFox::Systems
 			return lhs.depth > rhs.depth;
 		});
 
-		group.each([&](auto entity, auto& renderable, auto& depth, auto& transform)
+		//Render
+		group.each([&](entt::entity entity, const BFRenderableComponent& renderable, const BFDepthComponent& depth, const BFTransformComponent& transform)
 		{
 			//Entity is a sprite
 			if(BFSpriteComponent* sprite = em->try_get<BFSpriteComponent>(entity))
 			{
-				renderSprite(m_application, *sprite, transform);
+				renderSprite(m_application.get(), *sprite, transform);
 			}
+
+			//Entity is a circle shape
+			if(BFCircleShapeComponent* circle = em->try_get<BFCircleShapeComponent>(entity))
+            {
+			    renderCircleShape(m_application.get(), *circle, transform);
+            }
 		});
 
 		//Debug colliders
@@ -146,7 +235,7 @@ namespace BlackFox::Systems
 			auto debugCollidersView = em->view<const BFRigidBodyComponent, const BFTransformComponent>();
 			debugCollidersView.each([&](entt::entity e, const BFRigidBodyComponent& rb, const BFTransformComponent& transform)
 			{
-				renderCollider(m_application, m_world, e, rb, transform);
+				renderCollider(m_application.get(), m_world, e, rb, transform);
 			});
 		}
 	}

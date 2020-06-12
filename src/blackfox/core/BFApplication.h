@@ -2,7 +2,7 @@
 
 #include <cinject/cinject.h>
 #include <memory>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 #include "BFTypeDefs.h"
 #include "BFExport.h"
@@ -70,6 +70,11 @@ namespace BlackFox
 
 		BFApplication& operator=(BFApplication&& app) noexcept;
 
+		/*!
+		 * \brief	Init the application
+		 *
+		 * \returns	Init return code
+		 */
 		int init();
 		
 		/*!
@@ -114,7 +119,7 @@ namespace BlackFox
 		 *
 		 * \returns	The application window.
 		 */
-		[[nodiscard]] sf::RenderWindow* window() const;
+		[[nodiscard]] sf::RenderTarget* window() const;
 
         /*!
          * \brief	Gets config data

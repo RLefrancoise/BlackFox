@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <utility>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include "IBFApplicationService.h"
 #include "BFWorld.h"
@@ -256,7 +257,7 @@ namespace BlackFox
 		return pImpl->commandManager();
 	}
 
-	sf::RenderWindow* BFApplication::window() const
+	sf::RenderTarget* BFApplication::window() const
 	{
 		return pImpl->window();
 	}

@@ -3,6 +3,7 @@
 #include "BFRigidBodyComponent.h"
 #include "BFTransformComponent.h"
 #include "BFBoxColliderComponent.h"
+#include "BFCircleColliderComponent.h"
 #include "BFWorld.h"
 #include "BFApplication.h"
 #include "BFConfigData.h"
@@ -16,9 +17,11 @@ namespace BlackFox::Systems
 {	
 	typedef BFComponentListenerWithCallback<BFRigidBodyComponent> RigidBodyListener;
 	typedef BFComponentListenerWithCallback<BFBoxColliderComponent> BoxColliderListener;
+	typedef BFComponentListenerWithCallback<BFCircleColliderComponent> CircleColliderListener;
 
 	std::shared_ptr<RigidBodyListener> rbListener;
 	std::shared_ptr<BoxColliderListener> boxColliderListener;
+	std::shared_ptr<CircleColliderListener> circleColliderListener;
 
 	BFPhysicsSystem::BFPhysicsSystem(BFApplication::Ptr app, BFWorld::Ptr world)
 	: BFComponentSystem(std::move(app), std::move(world))
@@ -110,6 +113,15 @@ namespace BlackFox::Systems
 		boxColliderListener = m_world->registerComponentListener<BoxColliderListener>(createCallback, replaceCallback, destroyCallback);
 	}
 
+	void BFPhysicsSystem::listenerCircleColliders()
+	{
+		CircleColliderListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFCircleColliderComponent& circle) { /*initCircleCollider(e, r, circle);*/ };
+		CircleColliderListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFCircleColliderComponent& circle) { replaceCircleCollider(e, r, circle); };
+		CircleColliderListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanCircleCollider(e, r); };
+
+		circleColliderListener = m_world->registerComponentListener<CircleColliderListener>(createCallback, replaceCallback, destroyCallback);
+	}
+
 	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
 	{
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
@@ -186,6 +198,37 @@ namespace BlackFox::Systems
 		}
 	}
 
+	void BFPhysicsSystem::initCircleCollider(const entt::entity e, entt::registry& em, BFCircleColliderComponent& circle) const
+	{
+		auto* rb = em.try_get<BFRigidBodyComponent>(e);
+		if(rb && rb->m_body && !circle.m_fixture)
+		{
+			circle.m_fixture = rb->m_body->CreateFixture(&circle.fixtureDef(m_application->configData()->physicsData.physicsScale));
+
+			BF_PRINT("Create circle collider for entity {}", e);
+		}
+	}
+
+	void BFPhysicsSystem::replaceCircleCollider(const entt::entity e, entt::registry& em, BFCircleColliderComponent& circle) const
+	{
+		cleanCircleCollider(e, em);
+		//Init will be done in the before step
+		//initCircleCollider(e, em, box);
+	}
+
+	void BFPhysicsSystem::cleanCircleCollider(const entt::entity e, entt::registry& em) const
+	{
+		auto* circle = em.try_get<BFCircleColliderComponent>(e);
+
+		if (circle->m_fixture && circle->m_fixture->GetBody())
+		{
+			circle->m_fixture->GetBody()->DestroyFixture(circle->m_fixture);
+			circle->m_fixture = nullptr;
+
+			BF_PRINT("Clean circle collider for entity {}", e);
+		}
+	}
+
 	void BFPhysicsSystem::beforeStep(const EntityManager& em)
 	{
 		//Synchronize rigid bodies with transforms
@@ -210,6 +253,14 @@ namespace BlackFox::Systems
 			{
 				if(!boxCollider->m_fixture) initBoxCollider(entity, *em, *boxCollider);
 				boxCollider->refreshFixture();
+			}
+
+			//Circle collider
+			auto* circleCollider = em->try_get<BFCircleColliderComponent>(entity);
+			if(circleCollider)
+			{
+				if(!circleCollider->m_fixture) initCircleCollider(entity, *em, *circleCollider);
+				circleCollider->refreshFixture();
 			}
 		});
 	}

@@ -10,7 +10,7 @@ namespace BlackFox::Systems
 
 namespace BlackFox::Components
 {
-    struct BFCircleColliderComponent : BFColliderComponent
+    struct BFCircleColliderComponent final: BFColliderComponent
     {
         friend class Systems::BFPhysicsSystem;
 
