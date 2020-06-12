@@ -7,6 +7,7 @@
 #include "BFDebug.h"
 #include "BFApplication.h"
 #include "BFConfigData.h"
+#include "BFWorld.h"
 #include "BFVector2.h"
 #include "BFRadian.h"
 #include "BFComponentSystemMacros.h"
@@ -82,9 +83,9 @@ namespace BlackFox::Systems
 		template<class C>
 		auto listenColliders()
 		{
-			BFComponentListenerWithCallback<C>::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, C& c) { /*initCollider<C>(e, r, c);*/ };
-			BFComponentListenerWithCallback<C>::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, C& c) { replaceCollider<C>(e, r, c); };
-			BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanCollider<C>(e, r); };
+			typename BFComponentListenerWithCallback<C>::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, C& c) { /*initCollider<C>(e, r, c);*/ };
+			typename BFComponentListenerWithCallback<C>::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, C& c) { replaceCollider<C>(e, r, c); };
+			typename BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanCollider<C>(e, r); };
 
 			return m_world->registerComponentListener<BFComponentListenerWithCallback<C>>(createCallback, replaceCallback, destroyCallback);
 		}

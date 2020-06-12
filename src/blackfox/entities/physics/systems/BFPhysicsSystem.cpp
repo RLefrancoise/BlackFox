@@ -3,7 +3,6 @@
 #include "BFTransformComponent.h"
 #include "BFBoxColliderComponent.h"
 #include "BFCircleColliderComponent.h"
-#include "BFWorld.h"
 #include "BFRadian.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFPhysicsSystem)
