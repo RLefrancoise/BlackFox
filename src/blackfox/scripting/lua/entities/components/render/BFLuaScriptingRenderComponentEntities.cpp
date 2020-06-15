@@ -4,6 +4,7 @@
 #include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
+#include "BFBoxShapeComponent.h"
 
 using namespace BlackFox::Components;
 
@@ -40,6 +41,10 @@ namespace BlackFox
 		//Circle shape
 		auto circle_t = registerType<BFCircleShapeComponent, BFShapeComponent>();
 		circle_t["radius"] = &BFCircleShapeComponent::radius;
+
+		//Box shape
+		auto box_t = registerType<BFBoxShapeComponent, BFShapeComponent>();
+		box_t["extents"] = &BFBoxShapeComponent::extents;
 	}
 
 	std::string BFLuaScriptingRenderComponentEntities::namespaceName() const

@@ -10,6 +10,7 @@
 #include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
+#include "BFBoxShapeComponent.h"
 
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
@@ -91,7 +92,7 @@ namespace BlackFox::Systems
 
 	void renderCollider(
 		BFApplication* application,
-		BFWorld::Ptr world,
+		const BFWorld::Ptr& world,
 		entt::entity e,
 		const BFRigidBodyComponent& rb,
 		const BFTransformComponent& transform)
@@ -154,6 +155,33 @@ namespace BlackFox::Systems
 	    //Render circle
 	    placeAndRender(application, shape, transform);
     }
+
+    /*!
+     * Render box shape
+     *
+     * @param application 	Application pointer
+     * @param box 			Box Shape Component
+     * @param transform 	Transform Component
+     */
+    void renderBoxShape(
+		BFApplication* application,
+		const BFBoxShapeComponent& box,
+		const BFTransformComponent& transform)
+	{
+		//Extents
+		const BFVector2f pixelsSize = application->configData()->gameData.worldToPixels(box.extents.x * 2, box.extents.y * 2);
+		sf::RectangleShape shape(pixelsSize);
+
+		//Origin
+		const auto pixelsOrigin = application->configData()->gameData.worldToPixels(box.origin.x, box.origin.y);
+		shape.setOrigin(pixelsOrigin);
+
+		//Color
+		shape.setFillColor(box.color);
+
+		//Render box
+		placeAndRender(application, shape, transform);
+	}
 
     /*!
      * Render Sprite Component
@@ -227,6 +255,12 @@ namespace BlackFox::Systems
             {
 			    renderCircleShape(m_application.get(), *circle, transform);
             }
+
+			//Entity is a box shape
+			if(BFBoxShapeComponent* box = em->try_get<BFBoxShapeComponent>(entity))
+			{
+				renderBoxShape(m_application.get(), *box, transform);
+			}
 		});
 
 		//Debug colliders

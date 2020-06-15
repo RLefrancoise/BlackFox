@@ -19,6 +19,7 @@ Transform = BlackFox.Components.Spatial.Transform.id(world)
 Renderable = BlackFox.Components.Render.Renderable.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
 CircleShape = BlackFox.Components.Render.CircleShape.id(world)
+BoxShape = BlackFox.Components.Render.BoxShape.id(world)
 Depth = BlackFox.Components.Render.Depth.id(world)
 
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
@@ -33,9 +34,9 @@ function createBody(position)
     transform, 
     rigidBody, 
     boxCollider, 
-    renderable, 
-    sprite, 
-    depth = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, Sprite, Depth)
+    renderable,
+    boxShape,
+    depth = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, BoxShape, Depth)
 
     -- Position
     transform.position = position
@@ -44,8 +45,7 @@ function createBody(position)
     transform.rotation.degrees = math.random() * 360
 
     -- Scale
-    local randomScale = minBodySize + math.random() * (maxBodySize - minBodySize)
-    transform.scale = Vector2f:new(randomScale, randomScale)
+    transform.scale = Vector2f:new(1, 1)
 
     -- Rigid body
     rigidBody.type = BlackFox.Physics.BodyType.Dynamic
@@ -53,22 +53,21 @@ function createBody(position)
     rigidBody.bullet = true
 
     -- Box Collider
-    boxCollider.extents = Vector2f:new(randomScale / 2.0, randomScale / 2.0)
+    local randomSize = minBodySize + math.random() * (maxBodySize - minBodySize)
+    boxCollider.extents = Vector2f:new(randomSize / 2.0, randomSize / 2.0)
     boxCollider.center = Vector2f:new(0, 0)
     boxCollider.density = 1
     boxCollider.friction = 0.3
     boxCollider.restitution = 0.1
 
-    -- Sprite
-    -- Test image
-    sprite.image = BlackFox.Resources.texture("test.png")
-    sprite.image.smooth = true
-    -- Full rect
-    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
-    -- Pivot at center
-    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
-    -- Random color
-    sprite.color = Color.Blue;
+    -- Box Shape
+
+    -- Extents
+    boxShape.extents = boxCollider.extents;
+    -- Origin
+    boxShape.origin = boxCollider.extents;
+    -- Color
+    boxShape.color = Color.Blue;
 
     -- Depth
     depth.depth = 0
