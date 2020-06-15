@@ -13,6 +13,8 @@ namespace BlackFox
 {
 	void BFLuaScriptingRenderComponentEntities::registerEntity()
 	{
+		auto componentsNamespace = componentNamespace();
+
 		//Renderable
 		registerType<BFRenderableComponent>();
 		
@@ -27,10 +29,16 @@ namespace BlackFox
 		sprite_t["pivot"] = &BFSpriteComponent::pivot;
 		sprite_t["color"] = &BFSpriteComponent::color;
 
+		//Shape
+		auto shape_t = componentsNamespace.new_usertype<BFShapeComponent>(
+				"Shape",
+				sol::base_classes,
+				sol::bases<IBFComponent>());
+		shape_t["color"] = &BFShapeComponent::color;
+		shape_t["origin"] = &BFShapeComponent::origin;
+
 		//Circle shape
-		auto circle_t = registerType<BFCircleShapeComponent>();
-		circle_t["color"] = &BFCircleShapeComponent::color;
-		circle_t["origin"] = &BFCircleShapeComponent::origin;
+		auto circle_t = registerType<BFCircleShapeComponent, BFShapeComponent>();
 		circle_t["radius"] = &BFCircleShapeComponent::radius;
 	}
 

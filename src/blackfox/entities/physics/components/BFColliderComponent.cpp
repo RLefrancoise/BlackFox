@@ -3,12 +3,7 @@
 namespace BlackFox::Components
 {
     BFColliderComponent::BFColliderComponent()
-    : friction(0)
-    , restitution(0)
-    , density(0)
-    , isSensor(false)
-    , filter(b2Filter())
-    , m_fixture(nullptr)
+    : BFColliderComponent(0, 0, 0, false, BFContactFilter())
     {}
 
     BFColliderComponent::BFColliderComponent(
@@ -16,7 +11,7 @@ namespace BlackFox::Components
         float32 restitution,
         float32 density,
         bool isSensor,
-        b2Filter filter)
+        const BFContactFilter& filter)
         : friction(friction)
         , restitution(restitution)
         , density(density)
@@ -25,17 +20,15 @@ namespace BlackFox::Components
         , m_fixture(nullptr)
     {}
 
-    const b2FixtureDef& BFColliderComponent::fixtureDef(float physicsScale)
+    void BFColliderComponent::fixtureDef(float physicsScale, b2FixtureDef* def)
     {
-        m_fixtureDef.density = density;
-        m_fixtureDef.filter = filter;
-        m_fixtureDef.friction = friction;
-        m_fixtureDef.isSensor = isSensor;
-        m_fixtureDef.restitution = restitution;
+        def->density = density;
+        def->filter = filter;
+        def->friction = friction;
+        def->isSensor = isSensor;
+        def->restitution = restitution;
 
-        m_fixtureDef.shape = shape(physicsScale);
-
-        return m_fixtureDef;
+        def->shape = shape(physicsScale);
     }
 
     void BFColliderComponent::refreshFixture()

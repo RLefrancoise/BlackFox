@@ -16,7 +16,7 @@ namespace BlackFox::Components
 		float32 restitution,
 		float32 density,
 		bool isSensor,
-		b2Filter filter)
+		const BFContactFilter& filter)
 		: BFColliderComponent(friction, restitution, density, isSensor, filter)
 		, extents(extents)
 		, center(center)

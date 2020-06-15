@@ -34,7 +34,7 @@ namespace BlackFox::Components
 			float32 restitution,
 			float32 density,
 			bool isSensor = false,
-			b2Filter filter = b2Filter());
+			const BFContactFilter& filter = BFContactFilter());
 
 		/// \brief	Extents of the box. (Extents is half the size)
 		BFVector2f extents;

@@ -52,7 +52,9 @@ namespace BlackFox::Systems
 			auto* rb = em.try_get<Components::BFRigidBodyComponent>(e);
 			if(rb && rb->m_body && !c.m_fixture)
 			{
-				c.m_fixture = rb->m_body->CreateFixture(&c.fixtureDef(m_application->configData()->physicsData.physicsScale));
+				b2FixtureDef fixture;
+				c.fixtureDef(m_application->configData()->physicsData.physicsScale, &fixture);
+				c.m_fixture = rb->m_body->CreateFixture(&fixture);
 
 				BF_PRINT("Create collider {} for entity {}", C::name, e);
 			}

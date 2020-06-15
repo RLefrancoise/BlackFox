@@ -1,6 +1,6 @@
 #pragma once
 
-#if WIN32
+#if defined(WIN32)
 
 #if defined(BLACKFOX_SHARED_LIB)
     #if defined(BLACKFOX_SHARED_LIB_EXPORT)

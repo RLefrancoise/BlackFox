@@ -3,8 +3,7 @@
 namespace BlackFox::Components
 {
     BFCircleColliderComponent::BFCircleColliderComponent()
-    : BFColliderComponent()
-    , radius(0)
+    : BFCircleColliderComponent(0)
     {}
 
     BFCircleColliderComponent::BFCircleColliderComponent(float radius)
@@ -18,7 +17,7 @@ namespace BlackFox::Components
         float32 restitution,
         float32 density,
         bool isSensor,
-        b2Filter filter)
+        const BFContactFilter& filter)
     : BFColliderComponent(friction, restitution, density, isSensor, filter)
     , radius(radius)
     {}
@@ -27,10 +26,5 @@ namespace BlackFox::Components
     {
         m_shape.m_radius = radius;
         return &m_shape;
-    }
-
-    void BFCircleColliderComponent::refreshFixture()
-    {
-
     }
 }

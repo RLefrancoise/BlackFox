@@ -16,14 +16,14 @@ namespace BlackFox
         explicit BFLuaScriptingComponentEntity(const DiContainer& container, sol::state* state) : IBFLuaScriptingEntity(container, state) {}
 
     protected:
-        template <typename C>
+        template <class C, class ...Parents>
         sol::usertype<C> registerType()
         {
-            auto componentsNamespace = m_namespace["Components"].get_or_create<sol::table>()[namespaceName()].get_or_create<sol::table>();
+            auto componentsNamespace = componentNamespace();
             auto component_t = componentsNamespace.new_usertype<C>(
                 C::name,
                 sol::base_classes,
-                sol::bases<IBFComponent>());
+                sol::bases<IBFComponent, Parents...>());
             component_t["id"] = [](const BFWorld& world) -> ComponentId { return world.entityManager()->type<C>(); };
             component_t["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return &(world.entityManager()->get<C>(entity)); };
 
@@ -35,6 +35,10 @@ namespace BlackFox
         }
 
         [[nodiscard]] virtual std::string namespaceName() const = 0;
+        [[nodiscard]] sol::table componentNamespace()
+        {
+            return m_namespace["Components"].get_or_create<sol::table>()[namespaceName()].get_or_create<sol::table>();;
+        }
     };
 }
 

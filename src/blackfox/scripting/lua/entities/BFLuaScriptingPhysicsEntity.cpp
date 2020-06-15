@@ -3,6 +3,8 @@
 #include "BFDegree.h"
 #include "BFRigidBodyComponent.h"
 #include "BFPhysicsSystem.h"
+#include "BFContactFilter.h"
+
 #include <sol/overload.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingPhysicsEntity, "PhysicsEntity")
@@ -53,5 +55,11 @@ namespace BlackFox
                 if (!physicsSystem) BF_WARNING("Failed to apply force: PhysicsSystem not found");
                 else physicsSystem->applyAngularImpulse(rb, BFDegree(impulse), wake);
             });
+
+        //Contact filter
+        auto contact_filter_t = physics_ns.new_usertype<BFContactFilter>("ContactFilter");
+        contact_filter_t["category"] = &BFContactFilter::categoryBits;
+        contact_filter_t["mask"] = &BFContactFilter::maskBits;
+        contact_filter_t["group"] = &BFContactFilter::groupIndex;
     }
 } // namespace BlackFox

@@ -7,6 +7,9 @@
 
 namespace BlackFox::Components
 {
+    /*!
+     * Shape component
+     */
     struct BLACKFOX_EXPORT BFShapeComponent: IBFComponent
     {
         /// Shape color
@@ -18,5 +21,6 @@ namespace BlackFox::Components
     protected:
         BFShapeComponent();
         explicit BFShapeComponent(const BFColor& color, const BFVector2f& origin = BFVector2f());
+        ~BFShapeComponent() override = default;
     };
 }

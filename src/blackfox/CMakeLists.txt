@@ -18,6 +18,8 @@ file(
     "entities/*.cpp"
     "installers/*.h"
     "installers/*.cpp"
+    "physics/*.h"
+    "physics/*.cpp"
     "scripting/*.h"
     "scripting/*.cpp"
     "services/*.h"

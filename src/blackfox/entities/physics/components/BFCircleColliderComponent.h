@@ -24,13 +24,12 @@ namespace BlackFox::Components
             float32 restitution,
             float32 density,
             bool isSensor = false,
-            b2Filter filter = b2Filter());
+            const BFContactFilter& filter = BFContactFilter());
 
         float radius;
 
     protected:
         b2CircleShape* shape(float physicsScale) override;
-        void refreshFixture() override;
 
     private:
         b2CircleShape m_shape;

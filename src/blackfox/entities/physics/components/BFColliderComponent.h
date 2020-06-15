@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Box2D/Dynamics/b2Fixture.h>
+
 #include "BFComponent.h"
-#include "Box2D/Dynamics/b2Fixture.h"
+#include "BFContactFilter.h"
 
 namespace BlackFox::Systems
 {
@@ -10,7 +12,7 @@ namespace BlackFox::Systems
 
 namespace BlackFox::Components
 {
-    struct BFColliderComponent : IBFComponent
+    struct BLACKFOX_EXPORT BFColliderComponent : IBFComponent
     {
         friend class Systems::BFPhysicsSystem;
 
@@ -27,7 +29,7 @@ namespace BlackFox::Components
         bool isSensor;
 
         /// Contact filtering data.
-        b2Filter filter;
+        BFContactFilter filter;
 
     protected:
         BFColliderComponent();
@@ -36,14 +38,13 @@ namespace BlackFox::Components
             float32 restitution,
             float32 density,
             bool isSensor = false,
-            b2Filter filter = b2Filter());
+            const BFContactFilter& filter = BFContactFilter());
         ~BFColliderComponent() override = default;
 
-        const b2FixtureDef& fixtureDef(float physicsScale);
+        void fixtureDef(float physicsScale, b2FixtureDef* def);
         virtual b2Shape* shape(float physicsScale) = 0;
         virtual void refreshFixture();
 
-        b2FixtureDef m_fixtureDef;
         b2Fixture* m_fixture;
     };
 }

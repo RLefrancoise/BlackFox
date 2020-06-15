@@ -39,4 +39,4 @@ namespace BlackFox
 	};*/
 }
 
-#define BF_COMPONENT(componentName)				static constexpr const char *name = componentName;
+#define BF_COMPONENT(componentName)				static constexpr const char* name = componentName;
