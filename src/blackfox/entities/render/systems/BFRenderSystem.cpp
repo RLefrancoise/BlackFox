@@ -130,6 +130,33 @@ namespace BlackFox::Systems
 	}
 
 	/*!
+	 * Render shape
+	 *
+	 * @tparam C			Type of Shape Component
+	 * @param application 	Application Pointer
+	 * @param shape 		SFML Shape
+	 * @param c 			Shape Component
+	 * @param transform 	Transform Component
+	 */
+	template<class C>
+	void renderShape(
+		BFApplication* application,
+		sf::Shape& shape,
+		const C& c,
+		const BFTransformComponent& transform)
+	{
+		//Origin
+		const auto pixelsOrigin = application->configData()->gameData.worldToPixels(c.origin.x, c.origin.y);
+		shape.setOrigin(pixelsOrigin);
+
+		//Color
+		shape.setFillColor(c.color);
+
+		//Render circle
+		placeAndRender(application, shape, transform);
+	}
+
+	/*!
 	 * Render circle shape
 	 *
 	 * @param application   Application pointer
@@ -145,15 +172,7 @@ namespace BlackFox::Systems
         const float pixelsRadius = application->configData()->gameData.worldToPixels(circle.radius);
         sf::CircleShape shape(pixelsRadius);
 
-	    //Origin
-	    const auto pixelsOrigin = application->configData()->gameData.worldToPixels(circle.origin.x, circle.origin.y);
-	    shape.setOrigin(pixelsOrigin);
-
-	    //Color
-	    shape.setFillColor(circle.color);
-
-	    //Render circle
-	    placeAndRender(application, shape, transform);
+        renderShape<BFCircleShapeComponent>(application, shape, circle, transform);
     }
 
     /*!
@@ -172,15 +191,7 @@ namespace BlackFox::Systems
 		const BFVector2f pixelsSize = application->configData()->gameData.worldToPixels(box.extents.x * 2, box.extents.y * 2);
 		sf::RectangleShape shape(pixelsSize);
 
-		//Origin
-		const auto pixelsOrigin = application->configData()->gameData.worldToPixels(box.origin.x, box.origin.y);
-		shape.setOrigin(pixelsOrigin);
-
-		//Color
-		shape.setFillColor(box.color);
-
-		//Render box
-		placeAndRender(application, shape, transform);
+		renderShape<BFBoxShapeComponent>(application, shape, box, transform);
 	}
 
     /*!
