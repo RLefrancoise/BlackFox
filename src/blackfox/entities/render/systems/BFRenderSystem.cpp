@@ -104,7 +104,7 @@ namespace BlackFox::Systems
 		if (box)
 		{
 			//Draw collider rectangle
-			const auto pixelsSize = application->configData()->gameData.worldToPixels(box->extents.x * 2, box->extents.y * 2);
+			const auto pixelsSize = application->configData()->gameData.worldToPixels(box->extents.x * 2.f, box->extents.y * 2.f);
 			sf::RectangleShape shape(pixelsSize);
 
 			const auto pixelsCenter = application->configData()->gameData.worldToPixels(box->center.x, box->center.y);
@@ -188,7 +188,7 @@ namespace BlackFox::Systems
 		const BFTransformComponent& transform)
 	{
 		//Extents
-		const BFVector2f pixelsSize = application->configData()->gameData.worldToPixels(box.extents.x * 2, box.extents.y * 2);
+		const BFVector2f pixelsSize = application->configData()->gameData.worldToPixels(box.extents.x * 2.f, box.extents.y * 2.f);
 		sf::RectangleShape shape(pixelsSize);
 
 		renderShape<BFBoxShapeComponent>(application, shape, box, transform);
@@ -223,15 +223,9 @@ namespace BlackFox::Systems
 		//Set sprite rect
 		s.setTextureRect(sprite.rect);
 
-		//Set sprite position
-		//s.setPosition(application->configData()->gameData.worldToPixels(transform.position.x, transform.position.y));
-
 		//Scale sprite
 		const auto pixelsScale = application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
 		s.setScale(pixelsScale.x / sprite.image->getSize().x, pixelsScale.y / sprite.image->getSize().y);
-
-		//Rotate sprite
-		//s.setRotation(transform.rotation.value());
 
 		placeAndRender(application, s, transform);
 	}

@@ -6,6 +6,7 @@
 #include "BFContactFilter.h"
 
 #include <sol/overload.hpp>
+#include <tuple>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingPhysicsEntity, "PhysicsEntity")
 
@@ -16,6 +17,37 @@ namespace BlackFox
     void BFLuaScriptingPhysicsEntity::registerEntity()
     {
         auto physics_ns = m_namespace["Physics"].get_or_create<sol::table>();
+
+        //Ray cast
+        std::function<std::tuple<bool, BFHitInfo>(BFWorld::Ptr, const BFVector2f&, const BFVector2f&)> rayCast =
+                [](BFWorld::Ptr world, const BFVector2f& startPoint, const BFVector2f& endPoint)
+                {
+                    BFHitInfo hitInfo;
+                    auto physicsSystem = world->getSystem<Systems::BFPhysicsSystem>();
+                    if (!physicsSystem)
+                    {
+                        BF_WARNING("Failed to ray cast: PhysicsSystem not found");
+                        return std::make_tuple(false, hitInfo);
+                    }
+
+                    return std::make_tuple(physicsSystem->rayCast(startPoint, endPoint, &hitInfo), hitInfo);
+                };
+        physics_ns["rayCast"] = rayCast;
+
+        //Ray cast all
+        std::function<std::vector<BFHitInfo>(BFWorld::Ptr, const BFVector2f&, const BFVector2f&)> rayCastAll =
+                [](BFWorld::Ptr world, const BFVector2f& startPoint, const BFVector2f& endPoint)
+                {
+                    auto physicsSystem = world->getSystem<Systems::BFPhysicsSystem>();
+                    if (!physicsSystem)
+                    {
+                        BF_WARNING("Failed to ray cast all: PhysicsSystem not found");
+                        return std::vector<BFHitInfo>();
+                    }
+
+                    return physicsSystem->rayCastAll(startPoint, endPoint);
+                };
+        physics_ns["rayCastAll"] = rayCastAll;
 
         // Physics forces
 
@@ -109,5 +141,12 @@ namespace BlackFox
         contact_filter_t["category"] = &BFContactFilter::categoryBits;
         contact_filter_t["mask"] = &BFContactFilter::maskBits;
         contact_filter_t["group"] = &BFContactFilter::groupIndex;
+
+        //Hit Info
+        auto hitInfo_t = physics_ns.new_usertype<BFHitInfo>("HitInfo");
+        hitInfo_t["hitEntity"] = &BFHitInfo::hitEntity;
+        hitInfo_t["hitPoint"] = &BFHitInfo::hitPoint;
+        hitInfo_t["normal"] = &BFHitInfo::normal;
+        hitInfo_t["fraction"] = &BFHitInfo::fraction;
     }
 } // namespace BlackFox

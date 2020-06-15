@@ -4,6 +4,7 @@
 #include "BFBoxColliderComponent.h"
 #include "BFCircleColliderComponent.h"
 #include "BFRadian.h"
+#include "BFRayCast.h"
 
 BF_SYSTEM_REGISTER(BlackFox::Systems::BFPhysicsSystem)
 
@@ -50,6 +51,24 @@ namespace BlackFox::Systems
 
 		afterStep(em);
 	}
+
+	bool BFPhysicsSystem::rayCast(const BFVector2f &startPoint, const BFVector2f &endPoint, BFHitInfo* hitInfo)
+	{
+		BFRayCastClosest rayCastClosest(startPoint, endPoint);
+		if(m_world->entityManager()->valid(rayCastClosest.hitInfo.hitEntity))
+		{
+		    *hitInfo = rayCastClosest.hitInfo;
+		    return true;
+		}
+
+		return false;
+	}
+
+    std::vector<BFHitInfo> BFPhysicsSystem::rayCastAll(const BFVector2f &startPoint, const BFVector2f &endPoint)
+    {
+        BFRayCastAll rayCastAll(startPoint, endPoint);
+        return rayCastAll.hits;
+    }
 
 	void BFPhysicsSystem::applyForce(BFRigidBodyComponent &rb, const BFVector2f &force, const BFVector2f &point, bool wake)
 	{
@@ -123,7 +142,7 @@ namespace BlackFox::Systems
 		BF_PRINT("Create body for entity {}", e);
 	}
 
-	void BFPhysicsSystem::replaceRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
+	void BFPhysicsSystem::replaceRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb)
 	{
 		//Clean rigid body if needed
 		cleanRigidBody(e, em);
@@ -132,7 +151,7 @@ namespace BlackFox::Systems
 		initRigidBody(e, em, rb);
 	}
 
-	void BFPhysicsSystem::cleanRigidBody(const entt::entity e, entt::registry& em) const
+	void BFPhysicsSystem::cleanRigidBody(const entt::entity e, entt::registry& em)
 	{
 		auto& rb = em.get<BFRigidBodyComponent>(e);
 
@@ -141,7 +160,7 @@ namespace BlackFox::Systems
 		cleanCollider<BFCircleColliderComponent>(e, em);
 
 		//Destroy body
-		if(rb.m_body) m_b2World->DestroyBody(rb.m_body);
+		if(rb.m_body) requestBodyDeletion(rb.m_body);
 
 		rb.m_isInitialized = false;
 
@@ -186,6 +205,10 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::afterStep(const EntityManager& em)
 	{
+	    //Handle all the stuff that is waiting
+	    handlePendingActions();
+
+	    //Synchronization
 		const auto view = em->view<BFRigidBodyComponent, BFTransformComponent>();
 		
 		view.each([&](auto entity, BFRigidBodyComponent& rb, BFTransformComponent& transform)
@@ -198,7 +221,36 @@ namespace BlackFox::Systems
 		});
 	}
 
-	void BFPhysicsSystem::synchronizeBody(BFRigidBodyComponent& rb, BFTransformComponent& transform)
+    void BFPhysicsSystem::requestBodyDeletion(b2Body *body)
+    {
+        m_pendingBodiesForDeletion.emplace_back(body);
+    }
+
+    void BFPhysicsSystem::requestFixtureDeletion(b2Fixture *fixture)
+    {
+        m_pendingFixturesForDeletion.emplace_back(fixture);
+    }
+
+    void BFPhysicsSystem::handlePendingActions()
+    {
+        //Delete fixtures pending for deletion
+        for(const auto& f : m_pendingFixturesForDeletion)
+        {
+            f->GetBody()->DestroyFixture(f);
+        }
+
+        m_pendingFixturesForDeletion.clear();
+
+        //Delete bodies pending for deletion
+        for(const auto& b : m_pendingBodiesForDeletion)
+        {
+            m_b2World->DestroyBody(b);
+        }
+
+        m_pendingBodiesForDeletion.clear();
+    }
+
+    void BFPhysicsSystem::synchronizeBody(BFRigidBodyComponent& rb, BFTransformComponent& transform)
 	{
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
 
