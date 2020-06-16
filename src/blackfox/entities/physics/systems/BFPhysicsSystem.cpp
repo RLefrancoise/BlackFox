@@ -55,10 +55,12 @@ namespace BlackFox::Systems
 	bool BFPhysicsSystem::rayCast(const BFVector2f &startPoint, const BFVector2f &endPoint, BFHitInfo* hitInfo)
 	{
 		BFRayCastClosest rayCastClosest(startPoint, endPoint);
-		if(m_world->entityManager()->valid(rayCastClosest.hitInfo.hitEntity))
+		m_b2World->RayCast(&rayCastClosest, b2Vec2(startPoint.x, startPoint.y), b2Vec2(endPoint.x, endPoint.y));
+
+		if(rayCastClosest.hit)
 		{
-		    *hitInfo = rayCastClosest.hitInfo;
-		    return true;
+			*hitInfo = rayCastClosest.hitInfo;
+			return true;
 		}
 
 		return false;
@@ -67,6 +69,7 @@ namespace BlackFox::Systems
     std::vector<BFHitInfo> BFPhysicsSystem::rayCastAll(const BFVector2f &startPoint, const BFVector2f &endPoint)
     {
         BFRayCastAll rayCastAll(startPoint, endPoint);
+		m_b2World->RayCast(&rayCastAll, b2Vec2(startPoint.x, startPoint.y), b2Vec2(endPoint.x, endPoint.y));
         return rayCastAll.hits;
     }
 

@@ -39,7 +39,15 @@ namespace BlackFox
 				: em->get<Components::BFLuaRuntimeComponent>(entity);
 
 			auto script = std::make_shared<BFLuaScript>(Resources::LUA_COMPONENT_SCRIPT, state);
-			script->file(componentScript);
+
+			//Load script
+			std::string errorMessage;
+			if(!script->load(componentScript, &errorMessage))
+			{
+				BF_ERROR("Failed to load lua component: {}", errorMessage);
+				return sol::nil;
+			}
+
 			luaScriptingComponent.set(componentType, script);
 
 			return static_cast<sol::object>(*luaScriptingComponent.get(componentType));

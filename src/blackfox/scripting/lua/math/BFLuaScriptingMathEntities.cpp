@@ -16,16 +16,16 @@ namespace BlackFox
         //Degree
         auto degree_t = math_ns.new_usertype<BFDegree>("Degree",
                                                        sol::constructors<BFDegree(float), BFDegree(const BFRadian&)>());
-        degree_t["value"] = sol::readonly(&BFDegree::value);
+        //degree_t["value"] = sol::readonly(&BFDegree::value);
         degree_t["degrees"] = sol::property([](BFDegree& degree) { return degree.value(); }, [&](BFDegree& degree, const float degrees) { degree = degrees; });
-        degree_t["radians"] = sol::property([](BFDegree& degree) { return BFRadian(degree); }, [&](BFDegree& degree, const float radians) { degree = BFRadian(radians); });
+        degree_t["radians"] = sol::property([](BFDegree& degree) { return BFRadian(degree).value(); }, [&](BFDegree& degree, const float radians) { degree = BFRadian(radians); });
 
         //Radian
         auto radian_t = math_ns.new_usertype<BFRadian>("Radian",
                                                        sol::constructors<BFRadian(float), BFRadian(const BFDegree&)>());
-        radian_t["value"] = sol::readonly(&BFRadian::value);
+        //radian_t["value"] = sol::readonly(&BFRadian::value);
 		radian_t["radians"] = sol::property([](BFRadian& radian) { return radian.value(); }, [&](BFRadian& radian, const float radians) { radian = radians; });
-		radian_t["degrees"] = sol::property([](BFRadian& radian) { return BFDegree(radian); }, [&](BFRadian& radian, const float degrees) { radian = BFDegree(degrees); });
+		radian_t["degrees"] = sol::property([](BFRadian& radian) { return BFDegree(radian).value(); }, [&](BFRadian& radian, const float degrees) { radian = BFDegree(degrees); });
 
         //Vector2 float
         auto vector2f_t = math_ns.new_usertype<BFVector2f>("Vector2f",

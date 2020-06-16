@@ -23,7 +23,7 @@ namespace BlackFox
         float32 fraction;
     };
 
-    struct BFFixtureData
+    struct BLACKFOX_EXPORT BFFixtureData
     {
         entt::entity entity;
         Components::BFColliderComponent* collider;

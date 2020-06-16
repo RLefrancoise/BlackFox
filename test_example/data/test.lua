@@ -1,3 +1,16 @@
+function dump(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k,v in pairs(o) do
+            if type(k) ~= 'number' then k = '"'..k..'"' end
+            s = s .. '['..k..'] = ' .. dump(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(o)
+    end
+end
+
 math.randomseed(os.time())
 
 minBodySize = 0.25
@@ -25,6 +38,7 @@ Depth = BlackFox.Components.Render.Depth.id(world)
 
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
 ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
+Laser = BlackFox.Components.Runtime.Laser.id(world)
 
 RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
 BoxCollider = BlackFox.Components.Physics.BoxCollider.id(world)
@@ -117,29 +131,26 @@ function createCircleBody(position)
     depth.depth = 0
 end
 
-function createLaser(position, rotation, length, thickness)
+function createLaser(position)
     local e,
     transform,
     renderable,
     line,
     depth,
-    autoRotate = world:createEntity(Transform, Renderable, Line, Depth, AutoRotate)
+    laser = world:createEntity(Transform, Renderable, Line, Depth, Laser)
 
     -- Transform
     transform.position = position
-    transform.rotation.degrees = rotation
+    transform.rotation.degrees = laser.scanMinAngle
     transform.scale = Vector2f:new(1,1)
 
     -- Line
-    line.length = length
-    line.thickness = thickness
-    line.color = Color.Red
+    line.length = laser.maxLength
+    line.thickness = laser.thickness
+    line.color = laser.noHitColor
 
     -- Depth
     depth.depth = -1
-
-    -- Auto Rotate
-    autoRotate.speed = 45
 end
 
 function createGround(position, scale)
@@ -309,11 +320,7 @@ for i=1,bodyCount do
 end
 
 -- Create laser line
-createLaser(
-    Screen.pixelsToWorld(Screen.width() / 2, Screen.height() / 2),
-    0,
-    3,
-    0.05)
+createLaser(roofPosition)
 
 ---for i= 1,100 do
 --    createEntity()
@@ -324,5 +331,7 @@ createLaser(
 world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
 world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("RayCastLaserSystem", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("LaserScanSystem", BlackFox.ComponentSystemGroup.GameLoop)
 
 return true

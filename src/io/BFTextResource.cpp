@@ -20,6 +20,8 @@ namespace BlackFox
 
     bool BFTextResource::load(const std::filesystem::path& file, std::string* errorMessage)
     {
+        if(!BFResource::load(file, errorMessage)) return false;
+
         std::ifstream ifs(file);
         if (!ifs.is_open() || !ifs.good())
         {

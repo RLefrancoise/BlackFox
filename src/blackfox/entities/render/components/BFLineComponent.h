@@ -12,7 +12,7 @@ namespace BlackFox::Components
     {
         BF_COMPONENT("Line")
 
-        BFLineComponent() = default;
+        BFLineComponent();
         explicit BFLineComponent(
                 float length,
                 float thickness,

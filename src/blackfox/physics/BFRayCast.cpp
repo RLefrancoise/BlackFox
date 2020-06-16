@@ -1,4 +1,5 @@
 #include "BFRayCast.h"
+#include "BFDebug.h"
 
 namespace BlackFox
 {
@@ -15,14 +16,18 @@ namespace BlackFox
             const b2Vec2& normal,
             float32 fraction)
     {
-        auto e = static_cast<entt::entity*>(fixture->GetUserData());
-        assert(e != nullptr);
+        auto data = static_cast<BFFixtureData*>(fixture->GetUserData());
 
         BFHitInfo hitInfo;
-        hitInfo.hitEntity = *e;
+        hitInfo.hitEntity = data->entity;
         hitInfo.hitPoint = BFVector2f(point.x, point.y);
         hitInfo.normal = BFVector2f(normal.x, normal.y);
         hitInfo.fraction = fraction;
+
+        /*BF_PRINT("Hit entity: {} at {}, ray length: {}",
+                hitInfo.hitEntity,
+                static_cast<std::string>(hitInfo.hitPoint),
+                hitInfo.fraction);*/
 
         return HandleHit(hitInfo, fraction);
     }

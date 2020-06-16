@@ -81,9 +81,9 @@ namespace BlackFox::Systems
 				c.m_fixture = rb->m_body->CreateFixture(&fixture);
 
 				//Store entity to easily associate fixture with it's entity
-				BFFixtureData data;
-				data.entity = e;
-				data.collider = &c;
+				BFFixtureData data = {e, &c};
+				/*data.entity = e;
+				data.collider = &c;*/
 				c.m_fixture->SetUserData(static_cast<void*>(&data));
 
 				BF_PRINT("Create collider {} for entity {}", C::name, e);

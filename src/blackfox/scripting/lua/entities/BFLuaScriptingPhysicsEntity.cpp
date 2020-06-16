@@ -7,6 +7,7 @@
 
 #include <sol/overload.hpp>
 #include <tuple>
+#include <sol/variadic_results.hpp>
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingPhysicsEntity, "PhysicsEntity")
 
@@ -19,18 +20,27 @@ namespace BlackFox
         auto physics_ns = m_namespace["Physics"].get_or_create<sol::table>();
 
         //Ray cast
-        std::function<std::tuple<bool, BFHitInfo>(BFWorld::Ptr, const BFVector2f&, const BFVector2f&)> rayCast =
-                [](BFWorld::Ptr world, const BFVector2f& startPoint, const BFVector2f& endPoint)
+        std::function<sol::variadic_results(BFWorld::Ptr, const BFVector2f&, const BFVector2f&)> rayCast =
+                [&](BFWorld::Ptr world, const BFVector2f& startPoint, const BFVector2f& endPoint) -> auto
                 {
                     BFHitInfo hitInfo;
                     auto physicsSystem = world->getSystem<Systems::BFPhysicsSystem>();
                     if (!physicsSystem)
                     {
                         BF_WARNING("Failed to ray cast: PhysicsSystem not found");
-                        return std::make_tuple(false, hitInfo);
+                        sol::variadic_results result;
+                        result.push_back({*m_state, sol::in_place_type<bool>, false});
+                        result.push_back({*m_state, sol::in_place_type<BFHitInfo>, hitInfo});
+                        return result;
                     }
 
-                    return std::make_tuple(physicsSystem->rayCast(startPoint, endPoint, &hitInfo), hitInfo);
+                    const auto hit = physicsSystem->rayCast(startPoint, endPoint, &hitInfo);
+
+                    sol::variadic_results result;
+                    result.push_back({*m_state, sol::in_place_type<bool>, hit});
+                    result.push_back({*m_state, sol::in_place_type<BFHitInfo>, hitInfo});
+
+                    return result;
                 };
         physics_ns["rayCast"] = rayCast;
 

@@ -34,7 +34,7 @@ namespace BlackFox
          *
          * @param hitInfo   Hit info to handle
          * @param fraction  Fraction of the ray when hit happened
-         * @return
+         * @return          Ray Fraction
          */
         virtual float32 HandleHit(const BFHitInfo& hitInfo, float32 fraction) = 0;
     };
