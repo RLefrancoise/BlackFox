@@ -5,6 +5,7 @@
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
 #include "BFBoxShapeComponent.h"
+#include "BFLineComponent.h"
 
 using namespace BlackFox::Components;
 
@@ -30,20 +31,32 @@ namespace BlackFox
 		sprite_t["pivot"] = &BFSpriteComponent::pivot;
 		sprite_t["color"] = &BFSpriteComponent::color;
 
+		//Drawable
+		auto drawable_t = componentsNamespace.new_usertype<BFDrawableComponent>(
+				"Drawable",
+				sol::base_classes,
+				sol::bases<IBFComponent>());
+		drawable_t["color"] = &BFDrawableComponent::color;
+
+		//Line
+		auto line_t = registerType<BFLineComponent, BFDrawableComponent>();
+		line_t["start"] = &BFLineComponent::start;
+		line_t["end"] = &BFLineComponent::end;
+
 		//Shape
 		auto shape_t = componentsNamespace.new_usertype<BFShapeComponent>(
 				"Shape",
 				sol::base_classes,
-				sol::bases<IBFComponent>());
-		shape_t["color"] = &BFShapeComponent::color;
+				sol::bases<IBFComponent, BFDrawableComponent>());
+
 		shape_t["origin"] = &BFShapeComponent::origin;
 
 		//Circle shape
-		auto circle_t = registerType<BFCircleShapeComponent, BFShapeComponent>();
+		auto circle_t = registerType<BFCircleShapeComponent, BFDrawableComponent, BFShapeComponent>();
 		circle_t["radius"] = &BFCircleShapeComponent::radius;
 
 		//Box shape
-		auto box_t = registerType<BFBoxShapeComponent, BFShapeComponent>();
+		auto box_t = registerType<BFBoxShapeComponent, BFDrawableComponent, BFShapeComponent>();
 		box_t["extents"] = &BFBoxShapeComponent::extents;
 	}
 

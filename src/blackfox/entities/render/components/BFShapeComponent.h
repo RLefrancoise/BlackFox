@@ -1,8 +1,7 @@
 #pragma once
 
 #include "BFTypeDefs.h"
-#include "BFExport.h"
-#include "BFComponent.h"
+#include "BFDrawableComponent.h"
 #include "BFVector2.h"
 
 namespace BlackFox::Components
@@ -10,11 +9,8 @@ namespace BlackFox::Components
     /*!
      * Shape component
      */
-    struct BLACKFOX_EXPORT BFShapeComponent: IBFComponent
+    struct BLACKFOX_EXPORT BFShapeComponent: BFDrawableComponent
     {
-        /// Shape color
-        BFColor color;
-
         /// Shape origin
         BFVector2f origin;
 

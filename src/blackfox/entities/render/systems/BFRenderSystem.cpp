@@ -11,6 +11,7 @@
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
 #include "BFBoxShapeComponent.h"
+#include "BFLineComponent.h"
 
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
@@ -194,6 +195,34 @@ namespace BlackFox::Systems
 		renderShape<BFBoxShapeComponent>(application, shape, box, transform);
 	}
 
+	/*!
+	 * Render Line Shape
+	 *
+	 * @param application 	Application pointer
+	 * @param line 			Line Component
+	 * @param transform 	Transform Component
+	 */
+	void renderLine(
+		BFApplication* application,
+		const BFLineComponent& line,
+		const BFTransformComponent& transform)
+	{
+    	sf::Vertex linePoints[] = {
+			sf::Vertex(
+					application->configData()->gameData.worldToPixels(
+							transform.position.x + line.start.x,
+							transform.position.y + line.start.y),
+							line.color),
+			sf::Vertex(
+					application->configData()->gameData.worldToPixels(
+							transform.position.x + line.end.x,
+							transform.position.y + line.end.y),
+							line.color)
+    	};
+
+    	application->window()->draw(linePoints, 2, sf::Lines);
+	}
+
     /*!
      * Render Sprite Component
      *
@@ -265,6 +294,12 @@ namespace BlackFox::Systems
 			if(BFBoxShapeComponent* box = em->try_get<BFBoxShapeComponent>(entity))
 			{
 				renderBoxShape(m_application.get(), *box, transform);
+			}
+
+			//Entity is a line shape
+			if(BFLineComponent* line = em->try_get<BFLineComponent>(entity))
+			{
+				renderLine(m_application.get(), *line, transform);
 			}
 		});
 
