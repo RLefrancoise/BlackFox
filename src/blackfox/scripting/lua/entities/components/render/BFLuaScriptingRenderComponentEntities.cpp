@@ -40,8 +40,8 @@ namespace BlackFox
 
 		//Line
 		auto line_t = registerType<BFLineComponent, BFDrawableComponent>();
-		line_t["start"] = &BFLineComponent::start;
-		line_t["end"] = &BFLineComponent::end;
+		line_t["length"] = &BFLineComponent::length;
+		line_t["thickness"] = &BFLineComponent::thickness;
 
 		//Shape
 		auto shape_t = componentsNamespace.new_usertype<BFShapeComponent>(

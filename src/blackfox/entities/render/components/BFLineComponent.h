@@ -14,12 +14,12 @@ namespace BlackFox::Components
 
         BFLineComponent() = default;
         explicit BFLineComponent(
-                const BFVector2f& start,
-                const BFVector2f& end,
+                float length,
+                float thickness,
                 const BFColor& = BFColor::White);
         ~BFLineComponent() override = default;
 
-        BFVector2f start;
-        BFVector2f end;
+        float length;
+        float thickness;
     };
 }

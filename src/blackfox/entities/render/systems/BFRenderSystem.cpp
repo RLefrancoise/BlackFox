@@ -196,7 +196,7 @@ namespace BlackFox::Systems
 	}
 
 	/*!
-	 * Render Line Shape
+	 * Render Line
 	 *
 	 * @param application 	Application pointer
 	 * @param line 			Line Component
@@ -207,20 +207,17 @@ namespace BlackFox::Systems
 		const BFLineComponent& line,
 		const BFTransformComponent& transform)
 	{
-    	sf::Vertex linePoints[] = {
-			sf::Vertex(
-					application->configData()->gameData.worldToPixels(
-							transform.position.x + line.start.x,
-							transform.position.y + line.start.y),
-							line.color),
-			sf::Vertex(
-					application->configData()->gameData.worldToPixels(
-							transform.position.x + line.end.x,
-							transform.position.y + line.end.y),
-							line.color)
-    	};
+		const auto pixelsSize = application->configData()->gameData.worldToPixels(line.length, line.thickness);
+    	sf::RectangleShape shape(pixelsSize);
 
-    	application->window()->draw(linePoints, 2, sf::Lines);
+    	//Origin at line start, centered
+    	shape.setOrigin(BFVector2f(0, pixelsSize.y / 2.f));
+
+    	//Line color
+    	shape.setFillColor(line.color);
+
+    	//Render line
+    	placeAndRender(application, shape, transform);
 	}
 
     /*!

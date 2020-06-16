@@ -20,6 +20,7 @@ Renderable = BlackFox.Components.Render.Renderable.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
 CircleShape = BlackFox.Components.Render.CircleShape.id(world)
 BoxShape = BlackFox.Components.Render.BoxShape.id(world)
+Line = BlackFox.Components.Render.Line.id(world)
 Depth = BlackFox.Components.Render.Depth.id(world)
 
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
@@ -114,6 +115,31 @@ function createCircleBody(position)
 
     -- Depth
     depth.depth = 0
+end
+
+function createLaser(position, rotation, length, thickness)
+    local e,
+    transform,
+    renderable,
+    line,
+    depth,
+    autoRotate = world:createEntity(Transform, Renderable, Line, Depth, AutoRotate)
+
+    -- Transform
+    transform.position = position
+    transform.rotation.degrees = rotation
+    transform.scale = Vector2f:new(1,1)
+
+    -- Line
+    line.length = length
+    line.thickness = thickness
+    line.color = Color.Red
+
+    -- Depth
+    depth.depth = -1
+
+    -- Auto Rotate
+    autoRotate.speed = 45
 end
 
 function createGround(position, scale)
@@ -282,13 +308,20 @@ for i=1,bodyCount do
     end
 end
 
+-- Create laser line
+createLaser(
+    Screen.pixelsToWorld(Screen.width() / 2, Screen.height() / 2),
+    0,
+    3,
+    0.05)
+
 ---for i= 1,100 do
 --    createEntity()
 --end
 
 -- Create systems
---world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 --world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
 world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
 
