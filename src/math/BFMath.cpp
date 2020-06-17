@@ -1,5 +1,7 @@
 #include "BFMath.h"
 
+#include <cmath>
+
 namespace BlackFox::BFMath
 {
     BFVector2f direction(const BFRadian& angle)

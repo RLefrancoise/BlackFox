@@ -1,7 +1,6 @@
 #ifndef BLACKFOX_MATH_H
 #define BLACKFOX_MATH_H
 
-#include <cmath>
 #include "BFVector2.h"
 #include "BFRadian.h"
 

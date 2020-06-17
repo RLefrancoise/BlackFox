@@ -1,4 +1,5 @@
 #include "BFLuaScriptingSFMLEntities.h"
+#include "BFColorUtils.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -54,6 +55,12 @@ namespace BlackFox
 
 		//Create a random color
 		color_t["random"] = sol::overload(&randomColor, &randomColorWithAlpha);
+
+		//Lerp color
+		color_t["lerp"] = [](const BFColor& min, const BFColor& max, const float t) -> BFColor
+		{
+			return Utils::lerp(min, max, t);
+		};
 
 		//IntRect
 		auto intrect_t = graphicsNs.new_usertype<sf::IntRect>("IntRect", 

@@ -10,6 +10,15 @@ hitColor = BlackFox.Graphics.Color.Red
 -- No hit color
 noHitColor = BlackFox.Graphics.Color.Green
 
+-- Is the laser hitting something ?
+isHitting = false
+
+-- Lerp value for hit color
+colorLerp = 0
+
+-- Lerp speed for hit color
+colorLerpSpeed = 5
+
 -- Scan direction : 1 is from left to right, -1 is from right to left
 scanDirection = 1
 

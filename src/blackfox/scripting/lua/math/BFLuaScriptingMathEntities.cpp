@@ -54,8 +54,23 @@ namespace BlackFox
         vector2i_t["y"] = &BFVector2i::y;
 
         // Various functions
+
+        // Get direction vector from angle
         math_ns["direction"] = sol::overload(
                 [](const BFRadian& rad) { return BFMath::direction(rad); },
-                [](const BFDegree& deg) { return BFMath::direction(deg); });
+                [](const BFDegree& deg) { return BFMath::direction(deg); },
+                [](const float deg) { return BFMath::direction(BFDegree(deg)); });
+
+        // Lerp float
+        math_ns["lerp"] = [](const float min, const float max, const float t)
+        {
+            return BFMath::lerp<float>(min, max, t);
+        };
+
+        //Clamp float
+        math_ns["clamp"] = [](const float value, const float min, const float max)
+        {
+            return BFMath::clamp<float>(value, min, max);
+        };
     }
 }
