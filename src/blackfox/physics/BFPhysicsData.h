@@ -15,6 +15,8 @@ namespace BlackFox
     {
         /// Entity hit by the ray
         entt::entity hitEntity;
+        /// Collider being hit
+        Components::BFColliderComponent* hitCollider;
         /// World point of the hit
         BFVector2f hitPoint;
         /// Normal direction of the hit

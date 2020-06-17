@@ -4,6 +4,7 @@
 
 #include "BFVector2.h"
 #include "BFPhysicsData.h"
+#include "BFRay.h"
 
 namespace BlackFox
 {
@@ -24,6 +25,13 @@ namespace BlackFox
          * @param endPoint      End point of the ray
          */
         explicit BFRayCast(const BFVector2f& startPoint, const BFVector2f& endPoint);
+
+        /*!
+         * Create a new ray cast object
+         *
+         * @param ray   The ray to perform the cast
+         */
+        explicit BFRayCast(const BFRay& ray);
 
         float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction) override;
 
@@ -58,6 +66,13 @@ namespace BlackFox
          */
         explicit BFRayCastClosest(const BFVector2f& startPoint, const BFVector2f& endPoint);
 
+        /*!
+         * Create a new ray cast closest object
+         *
+         * @param ray           Ray used to perform cast
+         */
+        explicit BFRayCastClosest(const BFRay& ray);
+
     protected:
         float32 HandleHit(const BFHitInfo& hitInfo, float32 fraction) override;
     };
@@ -77,6 +92,13 @@ namespace BlackFox
          * @param endPoint      End point of the ray
          */
         explicit BFRayCastAll(const BFVector2f& startPoint, const BFVector2f& endPoint);
+
+        /*!
+         * Create a new ray cast all object
+         *
+         * @param ray           Ray used to perform cast
+         */
+        explicit BFRayCastAll(const BFRay& ray);
 
     protected:
         float32 HandleHit(const BFHitInfo& hitInfo, float32 fraction) override;

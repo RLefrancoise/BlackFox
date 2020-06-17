@@ -10,7 +10,7 @@ function update(dt)
 end
 
 function laserScan(entity, dt, transform, laser)
-    local angle = transform.rotation.degrees
+    local angle = transform.rotation.degrees.value
 
     if laser.scanDirection == 1 then
         angle = angle + laser.scanSpeed * dt

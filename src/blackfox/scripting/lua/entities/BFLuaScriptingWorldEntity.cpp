@@ -107,9 +107,17 @@ namespace BlackFox
         // Iterate entities
         worldType["entities"] = [&](BFWorld& world, const sol::function& callback, const float dt, const sol::variadic_args& components) -> size_t
 		{
-			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-			runtimeRegistry->setEntityManager(world.entityManager());
-			return runtimeRegistry->entities(callback, dt, components, m_state);
+            try
+            {
+			    auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+			    runtimeRegistry->setEntityManager(world.entityManager());
+			    return runtimeRegistry->entities(callback, dt, components, m_state);
+            }
+            catch(const std::exception& e)
+            {
+                BF_ERROR("{}", e.what());
+                return 0;
+            }
 		};
 
         //System

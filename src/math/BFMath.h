@@ -1,6 +1,10 @@
 #ifndef BLACKFOX_MATH_H
 #define BLACKFOX_MATH_H
 
+#include <cmath>
+#include "BFVector2.h"
+#include "BFRadian.h"
+
 namespace BlackFox
 {
 	namespace BFMath
@@ -118,6 +122,14 @@ namespace BlackFox
 			T diff = end - start;
 			return static_cast<T>(start + diff * time);
 		}
+
+		/*!
+		 * Get direction vector from a given angle
+		 *
+		 * @param angle 	Angle
+		 * @return 			Direction vector
+		 */
+		BLACKFOX_EXPORT BFVector2f direction(const BFRadian& angle);
 	}
 }
 

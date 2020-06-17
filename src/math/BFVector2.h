@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cmath>
 #include <fmt/format.h>
 #include <SFML/System/Vector2.hpp>
 
@@ -171,6 +172,55 @@ namespace BlackFox
 			x *= scale;
 			y *= scale;
 			return *this;
+		}
+
+		/*!
+		 * Get the normalized vector of this vector
+		 *
+		 * @return	The normalized vector
+		 */
+		constexpr BFVector2<T> normalized() const
+		{
+			const auto l = length();
+
+			assert(l > 0);
+
+		    BFVector2<T> v = *this;
+
+		    v.x /= l;
+		    v.y /= l;
+		    return v;
+		}
+
+		/*!
+		 * Normalize the vector. The current vector is modified.
+		 */
+		void normalize()
+		{
+			const auto l = length();
+			assert(l > 0);
+
+			x /= l;
+			y /= l;
+		}
+
+		/*!
+		 * Get the length of the vector
+		 *
+		 * @return	The length of the vector
+		 */
+		constexpr T length() const
+		{
+			return sqrt(lengthSquared());
+		}
+
+		/*!
+		 * Get the squared length of the vector
+		 * @return 	The squared length of the vector
+		 */
+		constexpr T lengthSquared() const
+		{
+			return x * x + y * y;
 		}
 
 		/*!

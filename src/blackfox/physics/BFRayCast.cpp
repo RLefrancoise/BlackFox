@@ -10,6 +10,10 @@ namespace BlackFox
     , endPoint(endPoint)
     {}
 
+    BFRayCast::BFRayCast(const BlackFox::BFRay &ray)
+    : BFRayCast(ray.origin, ray.endPoint())
+    {}
+
     float32 BFRayCast::ReportFixture(
             b2Fixture* fixture,
             const b2Vec2& point,
@@ -20,14 +24,10 @@ namespace BlackFox
 
         BFHitInfo hitInfo;
         hitInfo.hitEntity = data->entity;
+        hitInfo.hitCollider = data->collider;
         hitInfo.hitPoint = BFVector2f(point.x, point.y);
         hitInfo.normal = BFVector2f(normal.x, normal.y);
         hitInfo.fraction = fraction;
-
-        /*BF_PRINT("Hit entity: {} at {}, ray length: {}",
-                hitInfo.hitEntity,
-                static_cast<std::string>(hitInfo.hitPoint),
-                hitInfo.fraction);*/
 
         return HandleHit(hitInfo, fraction);
     }
@@ -39,6 +39,11 @@ namespace BlackFox
             const BFVector2f& endPoint)
     : BFRayCast(startPoint, endPoint)
     , hit(false)
+    {}
+
+    BFRayCastClosest::BFRayCastClosest(
+            const BFRay& ray)
+    : BFRayCast(ray.origin, ray.endPoint())
     {}
 
     float32 BFRayCastClosest::HandleHit(const BFHitInfo& hitInfo, float32 fraction)
@@ -54,6 +59,11 @@ namespace BlackFox
             const BFVector2f& startPoint,
             const BFVector2f& endPoint)
     : BFRayCast(startPoint, endPoint)
+    {}
+
+    BFRayCastAll::BFRayCastAll(
+        const BFRay& ray)
+    : BFRayCast(ray.origin, ray.endPoint())
     {}
 
     float32 BFRayCastAll::HandleHit(const BFHitInfo& hitInfo, float32 fraction)

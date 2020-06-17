@@ -15,6 +15,7 @@
 #include "BFRigidBodyComponent.h"
 #include "BFComponentListener.h"
 #include "BFPhysicsData.h"
+#include "BFRay.h"
 
 namespace BlackFox {
 	namespace Components {
@@ -46,6 +47,15 @@ namespace BlackFox::Systems
 		 * @return              True if ray has hit something, else return false
 		 */
 		bool rayCast(const BFVector2f& startPoint, const BFVector2f& endPoint, BFHitInfo* hitInfo);
+
+		/*!
+		 * Ray cast for closest entity in the world
+		 *
+		 * @param ray			Ray
+		 * @param hitInfo		Hit Info about the ray cast
+		 * @return				True if ray has hit something, else return false
+		 */
+		bool rayCast(const BFRay& ray, BFHitInfo* hitInfo);
 
         /*!
          * Ray cast for entities in the world
@@ -82,8 +92,6 @@ namespace BlackFox::Systems
 
 				//Store entity to easily associate fixture with it's entity
 				BFFixtureData data = {e, &c};
-				/*data.entity = e;
-				data.collider = &c;*/
 				c.m_fixture->SetUserData(static_cast<void*>(&data));
 
 				BF_PRINT("Create collider {} for entity {}", C::name, e);

@@ -14,10 +14,10 @@ noHitColor = BlackFox.Graphics.Color.Green
 scanDirection = 1
 
 -- Scan min angle
-scanMinAngle = 0
+scanMinAngle = 15
 
 -- Scan max angle
-scanMaxAngle = 180
+scanMaxAngle = 165
 
 -- Scan speed
 scanSpeed = 45

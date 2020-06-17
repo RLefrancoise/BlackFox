@@ -66,6 +66,11 @@ namespace BlackFox::Systems
 		return false;
 	}
 
+	bool BFPhysicsSystem::rayCast(const BlackFox::BFRay &ray, BlackFox::BFHitInfo *hitInfo)
+	{
+		return rayCast(ray.origin, ray.endPoint(), hitInfo);
+	}
+
     std::vector<BFHitInfo> BFPhysicsSystem::rayCastAll(const BFVector2f &startPoint, const BFVector2f &endPoint)
     {
         BFRayCastAll rayCastAll(startPoint, endPoint);
