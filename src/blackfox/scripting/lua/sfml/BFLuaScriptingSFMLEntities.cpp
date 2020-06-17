@@ -70,6 +70,10 @@ namespace BlackFox
 				sf::IntRect(sf::Vector2i, sf::Vector2i)>());
 
 		//FloatRect
-		auto floatrect_t = graphicsNs.new_usertype<sf::FloatRect>("FloatRect");
+		auto floatrect_t = graphicsNs.new_usertype<sf::FloatRect>("FloatRect",
+            sol::constructors<
+                sf::FloatRect(),
+                sf::FloatRect(float, float, float, float),
+                sf::FloatRect(sf::Vector2f, sf::Vector2f)>());
 	}
 }

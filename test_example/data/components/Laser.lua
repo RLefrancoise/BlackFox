@@ -1,5 +1,5 @@
 -- Laser max length
-maxLength = 5
+maxLength = 4
 
 -- Laser thickness
 thickness = 0.05
