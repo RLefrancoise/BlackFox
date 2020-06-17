@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entity/registry.hpp>
+#include <memory>
 
 #include "BFExport.h"
 #include "BFVector2.h"
@@ -27,6 +28,13 @@ namespace BlackFox
 
     struct BLACKFOX_EXPORT BFFixtureData
     {
+        typedef std::shared_ptr<BFFixtureData> Ptr;
+
+        explicit BFFixtureData(entt::entity entity, Components::BFColliderComponent* collider)
+        : entity(entity)
+        , collider(collider)
+        {}
+
         entt::entity entity;
         Components::BFColliderComponent* collider;
     };

@@ -1,16 +1,3 @@
-function dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k,v in pairs(o) do
-            if type(k) ~= 'number' then k = '"'..k..'"' end
-            s = s .. '['..k..'] = ' .. dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
-    end
-end
-
 math.randomseed(os.time())
 
 minBodySize = 0.25
@@ -39,6 +26,7 @@ Depth = BlackFox.Components.Render.Depth.id(world)
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
 ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
 Laser = BlackFox.Components.Runtime.Laser.id(world)
+LaserTarget = BlackFox.Components.Runtime.LaserTarget.id(world)
 
 RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
 BoxCollider = BlackFox.Components.Physics.BoxCollider.id(world)
@@ -51,7 +39,8 @@ function createBody(position)
     boxCollider, 
     renderable,
     boxShape,
-    depth = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, BoxShape, Depth)
+    depth,
+    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, BoxShape, Depth, LaserTarget)
 
     -- Position
     transform.position = position
@@ -68,24 +57,29 @@ function createBody(position)
     rigidBody.bullet = true
 
     -- Box Collider
-    local randomSize = minBodySize + math.random() * (maxBodySize - minBodySize)
+    local randomSize = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random()) --minBodySize + math.random() * (maxBodySize - minBodySize)
     boxCollider.extents = Vector2f:new(randomSize / 2.0, randomSize / 2.0)
     boxCollider.center = Vector2f:new(0, 0)
     boxCollider.density = 1
     boxCollider.friction = 0.3
     boxCollider.restitution = 0.1
 
+    local color = Color.random()
+
     -- Box Shape
 
     -- Extents
-    boxShape.extents = boxCollider.extents;
+    boxShape.extents = boxCollider.extents
     -- Origin
-    boxShape.origin = boxCollider.extents;
+    boxShape.origin = boxCollider.extents
     -- Color
-    boxShape.color = Color.Blue;
+    boxShape.color = color
 
     -- Depth
     depth.depth = 0
+
+    -- Laser Target
+    laserTarget.color = color
 end
 
 function createCircleBody(position)
@@ -95,7 +89,8 @@ function createCircleBody(position)
     circleCollider,
     renderable,
     circleShape,
-    depth = world:createEntity(Transform, RigidBody, CircleCollider, Renderable, CircleShape, Depth)
+    depth,
+    laserTarget = world:createEntity(Transform, RigidBody, CircleCollider, Renderable, CircleShape, Depth, LaserTarget)
 
     -- Position
     transform.position = position
@@ -112,11 +107,13 @@ function createCircleBody(position)
     rigidBody.bullet = true
 
     -- Box Collider
-    circleCollider.radius = (minBodySize + math.random() * (maxBodySize - minBodySize)) / 2
+    circleCollider.radius = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random()) / 2 --(minBodySize + math.random() * (maxBodySize - minBodySize)) / 2
     --circleCollider.center = Vector2f:new(0, 0)
     circleCollider.density = 1
     circleCollider.friction = 0.3
     circleCollider.restitution = 0.1
+
+    local color = Color.random()
 
     -- Circle Shape
 
@@ -125,10 +122,13 @@ function createCircleBody(position)
     -- Pivot at center
     circleShape.origin = Vector2f:new(circleShape.radius, circleShape.radius)
     -- Random color
-    circleShape.color = Color.Blue;
+    circleShape.color = color
 
     -- Depth
     depth.depth = 0
+
+    -- Laser Target
+    laserTarget.color = color
 end
 
 function createLaser(position)

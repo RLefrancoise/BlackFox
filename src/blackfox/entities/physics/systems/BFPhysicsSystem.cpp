@@ -59,7 +59,9 @@ namespace BlackFox::Systems
 
 		if(rayCastClosest.hit)
 		{
+			assert(m_world->entityManager()->valid(rayCastClosest.hitInfo.hitEntity));
 			*hitInfo = rayCastClosest.hitInfo;
+			assert(hitInfo->hitEntity == rayCastClosest.hitInfo.hitEntity);
 			return true;
 		}
 
@@ -244,6 +246,7 @@ namespace BlackFox::Systems
         //Delete fixtures pending for deletion
         for(const auto& f : m_pendingFixturesForDeletion)
         {
+            m_fixturesData.erase(f); //Remove fixture data from the map
             f->GetBody()->DestroyFixture(f);
         }
 
@@ -252,6 +255,16 @@ namespace BlackFox::Systems
         //Delete bodies pending for deletion
         for(const auto& b : m_pendingBodiesForDeletion)
         {
+        	//First, clean fixture data of the body if needed
+        	auto f = b->GetFixtureList();
+        	while(f != nullptr)
+			{
+        		if(m_fixturesData.find(f) != m_fixturesData.end())
+        			m_fixturesData.erase(f);
+
+        		f = f->GetNext();
+			}
+
             m_b2World->DestroyBody(b);
         }
 

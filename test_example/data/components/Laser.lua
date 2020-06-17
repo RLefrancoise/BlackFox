@@ -29,4 +29,4 @@ scanMinAngle = 15
 scanMaxAngle = 165
 
 -- Scan speed
-scanSpeed = 45
+scanSpeed = 15

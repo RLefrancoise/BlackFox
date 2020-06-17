@@ -8,6 +8,7 @@ function onCreate()
     Transform = BlackFox.Components.Spatial.Transform.id(world)
     Line = BlackFox.Components.Render.Line.id(world)
     Laser = BlackFox.Components.Runtime.Laser.id(world)
+    LaserTarget = BlackFox.Components.Runtime.LaserTarget.id(world)
 end
 
 function update(dt)
@@ -34,7 +35,15 @@ function rayCastLaser(entity, dt, transform, line, laser)
 
     -- If hit, lerp to hit color
     if hasHit == true then
-        line.color = Color.lerp(laser.noHitColor, laser.hitColor, laser.colorLerp)
+        local targetColor = laser.hitColor
+
+        -- Look if hit entity has LaserTarget component
+        if world:hasComponent(hitInfo.hitEntity, LaserTarget) == true then
+            local laserTarget = world:getComponent(hitInfo.hitEntity, LaserTarget)
+            targetColor = laserTarget.color
+        end
+
+        line.color = Color.lerp(laser.noHitColor, targetColor, laser.colorLerp)
         line.length = laser.maxLength * hitInfo.fraction
     -- If no hit, lerp to no hit color
     else

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 #include <Box2D/Dynamics/b2World.h>
 
 #include "BFTypeDefs.h"
@@ -81,7 +82,7 @@ namespace BlackFox::Systems
 		void cleanRigidBody(entt::entity e, entt::registry& em);
 
 		template<class C>
-		void initCollider(entt::entity e, entt::registry& em, C& c) const
+		void initCollider(entt::entity e, entt::registry& em, C& c)
 		{
 			auto* rb = em.try_get<Components::BFRigidBodyComponent>(e);
 			if(rb && rb->m_body && !c.m_fixture)
@@ -91,8 +92,9 @@ namespace BlackFox::Systems
 				c.m_fixture = rb->m_body->CreateFixture(&fixture);
 
 				//Store entity to easily associate fixture with it's entity
-				BFFixtureData data = {e, &c};
-				c.m_fixture->SetUserData(static_cast<void*>(&data));
+				BFFixtureData::Ptr data = std::make_shared<BFFixtureData>(e, &c);
+				c.m_fixture->SetUserData(static_cast<void*>(data.get()));
+				m_fixturesData.insert({{c.m_fixture, data}});
 
 				BF_PRINT("Create collider {} for entity {}", C::name, e);
 			}
@@ -140,7 +142,11 @@ namespace BlackFox::Systems
 		void requestFixtureDeletion(b2Fixture* fixture);
 		void handlePendingActions();
 
+		///	Physics world
 		std::unique_ptr<b2World> m_b2World;
+
+		///	Data of fixtures
+		std::unordered_map<b2Fixture*, BFFixtureData::Ptr> m_fixturesData;
 
 		/// List of bodies that should be deleted at the end of the step
 		std::vector<b2Body*> m_pendingBodiesForDeletion;
