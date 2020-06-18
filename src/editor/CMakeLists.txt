@@ -73,9 +73,9 @@ add_executable(
 target_include_directories(editor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui imgui-filebrowser imgui-colortextedit)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui imgui-filebrowser imgui-colortextedit)
 ELSE()
-    set(LIBRARIES sfml-graphics sfml-audio sfml-network bfcommon bfmath bfio blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui imgui-filebrowser imgui-colortextedit dl pthread)
+    set(LIBRARIES sfml-graphics sfml-audio sfml-network blackfox fmt::fmt-header-only RTTR::Core libluadll imgui-sfml imgui imgui-filebrowser imgui-colortextedit dl pthread)
 ENDIF()
 
 target_link_libraries(

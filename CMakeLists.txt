@@ -23,7 +23,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdParties)
 add_subdirectory(src)
 
 IF(BLACKFOX_SHARED_LIB)
-    target_compile_definitions(bfcommon PUBLIC BLACKFOX_SHARED_LIB)
     target_compile_definitions(blackfox PUBLIC BLACKFOX_SHARED_LIB)
     target_compile_definitions(game PUBLIC BLACKFOX_SHARED_LIB)
     target_compile_definitions(editor PUBLIC BLACKFOX_SHARED_LIB)

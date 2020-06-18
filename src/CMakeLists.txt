@@ -55,25 +55,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-cpp/include)
 # YAML-Convert
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-convert)
 
-# Common
-include_directories(common)
-
-# Math
-include_directories(math)
-
-# IO
-include_directories(io)
-
 include_directories(.)
-
-# Common
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
-
-# IO
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/io)
-
-# Math
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/math)
 
 # BlackFox
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/blackfox)
@@ -84,6 +66,5 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/game)
 # Editor
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/editor)
 
-add_dependencies(blackfox bfcommon bfio bfmath)
 add_dependencies(game blackfox)
 add_dependencies(editor blackfox)

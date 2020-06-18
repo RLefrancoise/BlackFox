@@ -1,5 +1,4 @@
-#ifndef BLACKFOX_UTILS_H
-#define BLACKFOX_UTILS_H
+#pragma once
 
 #include <vector>
 #include <tuple>
@@ -22,5 +21,3 @@ namespace BlackFox
 		return vectorToTupleHelper(v, std::make_index_sequence<N>());
 	}
 }
-
-#endif
