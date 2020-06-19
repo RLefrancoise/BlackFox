@@ -7,9 +7,22 @@ namespace BlackFox
     : BFResource(type)
     {}
 
+    BFTextResource::BFTextResource(BlackFox::BFTextResource && res) noexcept
+    : m_content(res.m_content)
+    , BFResource(std::move(res))
+    {}
+
+    BFTextResource& BFTextResource::operator=(BFTextResource && res) noexcept
+    {
+        m_content = res.m_content;
+        BFResource::operator=(std::move(res));
+        return *this;
+    }
+
     bool BFTextResource::save() const
     {
-        std::ofstream ofs(m_filePath);
+        const std::filesystem::path path = static_cast<std::string>(m_filePath);
+        std::ofstream ofs(path);
         if (!ofs.is_open()) return false;
 
         ofs << content();

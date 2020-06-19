@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/System/String.hpp>
+
 #include "BFResource.h"
 
 namespace BlackFox
@@ -12,8 +14,8 @@ namespace BlackFox
 
 		BFTextResource(const BFTextResource&) = default;
 		BFTextResource& operator=(const BFTextResource&) = default;
-		BFTextResource(BFTextResource&&) = default;
-		BFTextResource& operator=(BFTextResource&&) = default;
+		BFTextResource(BFTextResource&&) noexcept;
+		BFTextResource& operator=(BFTextResource&&) noexcept;
 		
 		[[nodiscard]] bool save() const override;
 
@@ -23,6 +25,6 @@ namespace BlackFox
 		[[nodiscard]] virtual std::string content() const;
 
 	protected:
-		std::string m_content;
+		sf::String m_content;
 	};
 }

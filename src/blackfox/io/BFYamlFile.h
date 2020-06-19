@@ -29,7 +29,7 @@ namespace BlackFox
 
 				const auto f = YAML::LoadFile(file.string());
 				auto res = f.as<T>();
-				res.m_filePath = file;
+				res.m_filePath = file.string();
 
 				T* thisP = static_cast<T*>(this);
 				*thisP = res;

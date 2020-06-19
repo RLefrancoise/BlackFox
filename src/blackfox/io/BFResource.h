@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <SFML/System/String.hpp>
 
 #include "BFResourceTypes.h"
 
@@ -25,7 +26,7 @@ namespace BlackFox
 		 * 
 		 * \return The file representing the resource.
 		 */
-		[[nodiscard]] virtual const std::filesystem::path& file() const = 0;
+		[[nodiscard]] virtual std::filesystem::path file() const = 0;
 
 		/**
 		 * Set the file representing the resource.
@@ -71,11 +72,11 @@ namespace BlackFox
 		~BFResource() override = default;
 		BFResource(const BFResource&) = default;
 		BFResource& operator=(const BFResource&) = default;
-		BFResource(BFResource&&) = default;
-		BFResource& operator=(BFResource&&) = default;
+		BFResource(BFResource&&) noexcept;
+		BFResource& operator=(BFResource&&) noexcept;
 
 		[[nodiscard]] const Resources::ResourceType& type() const override;
-		[[nodiscard]] const std::filesystem::path& file() const override;
+		[[nodiscard]] std::filesystem::path file() const override;
 		void file(const std::filesystem::path& file) override;
 		
 		void saveOrThrow() const override;
@@ -87,6 +88,7 @@ namespace BlackFox
 		explicit BFResource(const Resources::ResourceType& type);
 
 		Resources::ResourceType m_type;
-		std::filesystem::path m_filePath;
+		//std::filesystem::path m_filePath;
+		sf::String m_filePath;
 	};
 }
