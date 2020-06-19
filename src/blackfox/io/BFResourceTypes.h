@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "BFExport.h"
+
 namespace BlackFox::Resources
 {
 	//Types
@@ -28,7 +30,7 @@ namespace BlackFox::Resources
 	constexpr static ResourceCategory	SCRIPT_CATEGORY = "script"_hs;
 	constexpr static ResourceCategory	UNKNOWN_CATEGORY = "unknown"_hs;
 
-	struct ResourceCategoryCompare
+	struct BLACKFOX_EXPORT ResourceCategoryCompare
 	{
 		bool operator()(const ResourceCategory& lhs, const ResourceCategory& rhs) const;
 		std::size_t operator()(const ResourceCategory& c) const;

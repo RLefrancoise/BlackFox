@@ -12,7 +12,7 @@ namespace sol {
 
 namespace BlackFox
 {
-    struct BFLuaScript : BFTextResource
+    struct BLACKFOX_EXPORT BFLuaScript : BFTextResource
     {
         typedef std::shared_ptr<BFLuaScript> Ptr;
 

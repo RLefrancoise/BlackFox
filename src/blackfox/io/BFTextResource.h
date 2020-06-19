@@ -4,7 +4,7 @@
 
 namespace BlackFox
 {
-	struct BFTextResource : BFResource
+	struct BLACKFOX_EXPORT BFTextResource : BFResource
 	{
 		explicit BFTextResource(const Resources::ResourceType& type);
 

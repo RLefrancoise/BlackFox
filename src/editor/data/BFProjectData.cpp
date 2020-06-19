@@ -1,21 +1,22 @@
 #include "BFProjectData.h"
 #include "BFStringUtils.h"
 
-using namespace YAML;
-
-Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
+namespace YAML
 {
-	out << BeginMap;
+	Emitter& operator<<(Emitter& out, const BlackFox::Editor::BFProjectData& data)
+	{
+		out << BeginMap;
 
-	//Name
-	out << Key << "name" << Value << data.name;
+		//Name
+		out << Key << "name" << Value << data.name;
 
-	//Scenes
-	out << Key << "scenes" << Value << data.scenes;
-	
-	out << EndMap;
+		//Scenes
+		out << Key << "scenes" << Value << data.scenes;
 
-	return out;
+		out << EndMap;
+
+		return out;
+	}
 }
 
 namespace BlackFox::Editor

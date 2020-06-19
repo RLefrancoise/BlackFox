@@ -56,12 +56,12 @@ namespace BlackFox
 			return out.c_str();
 		}
 
-		static void revertToFile(T& data)
+		/*static void revertToFile(T& data)
 		{
 			const auto beforeRestore = static_cast<std::string>(data);
 			data = load(data.m_filePath);
 			BF_PRINT("Restored to file\nbefore -> {}\nafter -> {}", beforeRestore, static_cast<std::string>(data));
-		}
+		}*/
 
 		virtual explicit operator std::string() const = 0;
 	};

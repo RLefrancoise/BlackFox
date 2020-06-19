@@ -1,11 +1,11 @@
-#ifndef BLACKFOX_INIFILE_H
-#define BLACKFOX_INIFILE_H
+#pragma once
 
 #include <INIReader.h>
+#include "BFExport.h"
 
 namespace BlackFox
 {
-    class BFIniFile
+    class BLACKFOX_EXPORT BFIniFile
     {
     public:
         explicit BFIniFile(const std::string& fileName);
@@ -26,5 +26,3 @@ namespace BlackFox
         INIReader m_reader;
     };
 }
-
-#endif //BLACKFOX_INIFILE_H

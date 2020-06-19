@@ -62,6 +62,6 @@ namespace YAML
 			return true;
 		}
 	};
-}
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const BlackFox::Editor::BFProjectData& data);
+	YAML::Emitter& operator<<(YAML::Emitter& out, const BlackFox::Editor::BFProjectData& data);
+}
