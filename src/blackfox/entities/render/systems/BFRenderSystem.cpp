@@ -12,6 +12,7 @@
 #include "BFCircleShapeComponent.h"
 #include "BFBoxShapeComponent.h"
 #include "BFLineComponent.h"
+#include "BFTextComponent.h"
 
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
@@ -196,6 +197,44 @@ namespace BlackFox::Systems
 	}
 
 	/*!
+	 * Render text
+	 *
+	 * @param application	Application pointer
+	 * @param text 			Text Component
+	 * @param transform 	Transform Component
+	 */
+	void renderText(
+		BFApplication* application,
+		const BFTextComponent& text,
+		const BFTransformComponent& transform)
+	{
+		sf::Text t(text.text, text.font);
+
+		//Character size
+		t.setCharacterSize(text.size);
+
+		//Origin
+		t.setOrigin(text.origin);
+
+		//Color
+		t.setFillColor(text.color);
+
+		//Scale
+		BFVector2f textSize;
+		for(const auto& c : text.text)
+		{
+			const auto glyph = text.font->getGlyph(c, text.size, false);
+			textSize.x += glyph.bounds.width;
+			if(textSize.y < glyph.bounds.height) textSize.y = glyph.bounds.height;
+		}
+
+		const auto pixelsScale = application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
+		t.setScale(pixelsScale.x / textSize.x, pixelsScale.y / textSize.y);
+
+		placeAndRender(application, t, transform);
+	}
+
+	/*!
 	 * Render Line
 	 *
 	 * @param application 	Application pointer
@@ -297,6 +336,12 @@ namespace BlackFox::Systems
 			if(BFLineComponent* line = em->try_get<BFLineComponent>(entity))
 			{
 				renderLine(m_application.get(), *line, transform);
+			}
+
+			//Entity is a text
+			if(BFTextComponent* text = em->try_get<BFTextComponent>(entity))
+			{
+				renderText(m_application.get(), *text, transform);
 			}
 		});
 

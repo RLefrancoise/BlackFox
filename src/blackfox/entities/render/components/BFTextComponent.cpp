@@ -8,10 +8,16 @@ namespace BlackFox::Components
     : BFTextComponent(FontHandle{}, "")
     {}
 
-    BFTextComponent::BFTextComponent(FontHandle font, const BFString& text, const BFColor& color, const BFVector2f& origin)
+    BFTextComponent::BFTextComponent(
+            FontHandle font,
+            const BFString& text,
+            const unsigned int size,
+            const BFColor& color,
+            const BFVector2f& origin)
     : BFDrawableComponent(color)
     , BFTransformableComponent(origin)
     , font(std::move(font))
     , text(text)
+    , size(size)
     {}
 }

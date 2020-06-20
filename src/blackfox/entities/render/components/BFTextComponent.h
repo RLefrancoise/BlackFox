@@ -26,6 +26,7 @@ namespace BlackFox::Components
         explicit BFTextComponent(
                 FontHandle font,
                 const BFString& text,
+                unsigned int size = 30u,
                 const BFColor& color = BFColor::White,
                 const BFVector2f& origin = BFVector2f());
 
@@ -34,5 +35,8 @@ namespace BlackFox::Components
 
         /// Text string to display
         BFString text;
+
+        /// Character size in pixels
+        unsigned int size;
     };
 }
