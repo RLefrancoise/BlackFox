@@ -244,7 +244,7 @@ namespace BlackFox::Systems
 		s.setColor(sprite.color);
 
 		//Set pivot
-		s.setOrigin(sprite.pivot);
+		s.setOrigin(sprite.origin);
 
 		//Set sprite rect
 		s.setTextureRect(sprite.rect);

@@ -8,6 +8,6 @@ namespace BlackFox::Components
 
     BFShapeComponent::BFShapeComponent(const BFColor &color, const BFVector2f& origin)
     : BFDrawableComponent(color)
-    , origin(origin)
+    , BFTransformableComponent(origin)
     {}
 }

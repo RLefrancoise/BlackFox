@@ -188,7 +188,7 @@ function createGround(position, scale)
     -- Full rect
     sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at bottom center
-    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
+    sprite.origin = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
     -- Black color
     sprite.color = Color.Black
 
@@ -233,7 +233,7 @@ function createWall(position)
     -- Full rect
     sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at bottom center
-    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
+    sprite.origin = Vector2f:new(sprite.image:width() / 2, sprite.image:height())
     -- Black color
     sprite.color = Color.Black
 
@@ -282,7 +282,7 @@ function createEntity()
     -- Full rect
     sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
     -- Pivot at center
-    sprite.pivot = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
+    sprite.origin = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
     -- Random color
     sprite.color = Color.random(true)
 

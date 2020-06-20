@@ -1,5 +1,6 @@
 #include "BFResourcesHolder.h"
 #include "BFTextureResourceLoader.h"
+#include "BFFontResourceLoader.h"
 #include "BFDebug.h"
 
 #include <entt/core/hashed_string.hpp>
@@ -39,6 +40,31 @@ namespace BlackFox
 	{
 		const auto handle = loadTexture(path, rect);
 		if (!handle) BF_EXCEPTION("Failed to load texture {}", path.string());
+		return handle;
+	}
+
+	FontHandle BFResourcesHolder::loadFont(const std::string& path)
+	{
+		const std::filesystem::path p(path);
+		return loadFont(p);
+	}
+
+	FontHandle BFResourcesHolder::loadFont(const std::filesystem::path &path)
+	{
+		const auto id = FontId { entt::hashed_string(path.string().c_str()) };
+		if(m_fontCache.contains(id))
+		{
+			return m_fontCache.handle(id);
+		}
+
+		BF_PRINT("Load font {}", path.string());
+		return m_fontCache.load<BFFontResourceLoader>(id, path);
+	}
+
+	FontHandle BFResourcesHolder::loadFontOrThrow(const std::filesystem::path& path)
+	{
+		const auto handle = loadFont(path);
+		if (!handle) BF_EXCEPTION("Failed to load font {}", path.string());
 		return handle;
 	}
 }

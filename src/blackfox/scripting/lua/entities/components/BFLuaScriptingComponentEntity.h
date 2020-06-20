@@ -23,7 +23,7 @@ namespace BlackFox
             auto component_t = componentsNamespace.new_usertype<C>(
                 C::name,
                 sol::base_classes,
-                sol::bases<IBFComponent, Parents...>());
+                sol::bases<Parents...>());
             component_t["id"] = [](const BFWorld& world) -> ComponentId { return world.entityManager()->type<C>(); };
             component_t["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return &(world.entityManager()->get<C>(entity)); };
 

@@ -4,7 +4,8 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
 
-#include "BFComponent.h"
+#include "BFDrawableComponent.h"
+#include "BFTransformableComponent.h"
 #include "BFVector2.h"
 
 namespace BlackFox::Components
@@ -12,11 +13,13 @@ namespace BlackFox::Components
 	/*!
 	 * Sprite component.
 	 */
-	struct BLACKFOX_EXPORT BFSpriteComponent final : IBFComponent
+	struct BLACKFOX_EXPORT BFSpriteComponent final : BFDrawableComponent, BFTransformableComponent
 	{
 		BF_COMPONENT("Sprite")
 
-		BFSpriteComponent() = default;
+		BFSpriteComponent()
+		: BFSpriteComponent(TextureHandle{})
+		{}
 
 		/*!
 		 * Create a new sprite component.
@@ -25,11 +28,15 @@ namespace BlackFox::Components
 		 * @param pivot 	Pivot of the sprite, starting frm top-left
 		 * @param c 		Sprite color. Image will be modulated by the color
 		 */
-		BFSpriteComponent(TextureHandle image, const sf::IntRect& rect, const BFVector2f& pivot, const sf::Color& c)
-		: image(std::move(image))
+		explicit BFSpriteComponent(
+				TextureHandle image,
+				const sf::IntRect& rect = sf::IntRect(),
+				const BFVector2f& pivot = BFVector2f(),
+				const sf::Color& c = sf::Color::White)
+		: BFDrawableComponent(c)
+		, BFTransformableComponent(pivot)
+		, image(std::move(image))
 		, rect(rect)
-		, pivot(pivot)
-		, color(c)
 		{}
 
 		/*!
@@ -41,15 +48,5 @@ namespace BlackFox::Components
 		 * Image rect to display.
 		 */
 		sf::IntRect rect;
-
-		/*!
-		 * Pivot of the sprite, starting from top-left.
-		 */
-		BFVector2f pivot;
-
-		/*!
-		 * Sprite color. Image will be modulated by the color.
-		 */
-		sf::Color color = sf::Color::White;
 	};
 }

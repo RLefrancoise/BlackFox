@@ -2,6 +2,7 @@
 
 #include "BFTypeDefs.h"
 #include "BFDrawableComponent.h"
+#include "BFTransformableComponent.h"
 #include "BFVector2.h"
 
 namespace BlackFox::Components
@@ -9,11 +10,8 @@ namespace BlackFox::Components
     /*!
      * Shape component
      */
-    struct BLACKFOX_EXPORT BFShapeComponent: BFDrawableComponent
+    struct BLACKFOX_EXPORT BFShapeComponent: BFDrawableComponent, BFTransformableComponent
     {
-        /// Shape origin
-        BFVector2f origin;
-
     protected:
         BFShapeComponent();
         explicit BFShapeComponent(const BFColor& color, const BFVector2f& origin = BFVector2f());

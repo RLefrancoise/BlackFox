@@ -52,5 +52,16 @@ namespace BlackFox
 			auto resourcesHolder = m_container->get<BFResourcesHolder>();
 			return resourcesHolder->loadTexture(path, rect);
 		});
+
+
+		// Font
+
+		auto fontHandle_t = resourcesNs.new_usertype<FontHandle>("FontHandle");
+
+		resourcesNs["font"] = [&](const std::string& path) -> FontHandle
+		{
+			auto resourcesHolder = m_container->get<BFResourcesHolder>();
+			return resourcesHolder->loadFont(path);
+		};
 	}
 }

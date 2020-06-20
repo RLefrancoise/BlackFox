@@ -28,7 +28,12 @@ namespace BlackFox
 		TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect());
 		TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect());
 
+		FontHandle loadFont(const std::string& path);
+		FontHandle loadFont(const std::filesystem::path& path);
+		FontHandle loadFontOrThrow(const std::filesystem::path& path);
+
 	private:
-		TextureCache m_textureCache{};
+		TextureCache m_textureCache {};
+		FontCache m_fontCache {};
 	};
 }
