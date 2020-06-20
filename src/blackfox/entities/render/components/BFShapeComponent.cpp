@@ -6,8 +6,14 @@ namespace BlackFox::Components
     : BFShapeComponent(sf::Color::White)
     {}
 
-    BFShapeComponent::BFShapeComponent(const BFColor &color, const BFVector2f& origin)
+    BFShapeComponent::BFShapeComponent(
+            const BFColor &color,
+            const BFVector2f& origin,
+            const float outlineThickness,
+            const BFColor& outlineColor)
     : BFDrawableComponent(color)
     , BFTransformableComponent(origin)
+    , outlineThickness(outlineThickness)
+    , outlineColor(outlineColor)
     {}
 }

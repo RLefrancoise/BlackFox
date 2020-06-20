@@ -11,13 +11,17 @@ namespace BlackFox::Components
     BFTextComponent::BFTextComponent(
             FontHandle font,
             const BFString& text,
-            const unsigned int size,
+            const float size,
             const BFColor& color,
-            const BFVector2f& origin)
+            const BFVector2f& origin,
+            const float outlineThickness,
+            const BFColor& outlineColor)
     : BFDrawableComponent(color)
     , BFTransformableComponent(origin)
     , font(std::move(font))
     , text(text)
     , size(size)
+    , outlineThickness(outlineThickness)
+    , outlineColor(outlineColor)
     {}
 }

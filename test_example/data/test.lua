@@ -21,6 +21,7 @@ Sprite = BlackFox.Components.Render.Sprite.id(world)
 CircleShape = BlackFox.Components.Render.CircleShape.id(world)
 BoxShape = BlackFox.Components.Render.BoxShape.id(world)
 Line = BlackFox.Components.Render.Line.id(world)
+Text = BlackFox.Components.Render.Text.id(world)
 Depth = BlackFox.Components.Render.Depth.id(world)
 
 AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
@@ -241,6 +242,38 @@ function createWall(position)
     depth.depth = 0
 end
 
+function text(position, textString)
+    local e,
+    transform,
+    renderable,
+    text,
+    depth = world:createEntity(
+        Transform,
+        Renderable,
+        Text,
+        Depth)
+
+    -- Position
+    transform.position = position
+
+    -- Rotation
+    transform.rotation.degrees = 0
+
+    -- Scale
+    transform.scale = Vector2f:new(1,1)
+
+    -- Text
+    text.font = BlackFox.Resources.font("fonts/Minecraft.ttf")
+    text.text = textString
+    text.size = 0.5
+    text.color = Color.Blue
+    text.outlineColor = Color.Yellow
+    text.outlineThickness = 2
+
+    -- Depth
+    depth.depth = -2
+end
+
 function createEntity()
     local e, 
     transform, 
@@ -321,6 +354,9 @@ end
 
 -- Create laser line
 createLaser(roofPosition)
+
+-- Text
+text(Screen.pixelsToWorld(10, 10), "This is a text")
 
 ---for i= 1,100 do
 --    createEntity()

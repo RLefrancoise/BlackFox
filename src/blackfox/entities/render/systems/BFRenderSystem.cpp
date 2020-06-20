@@ -154,7 +154,11 @@ namespace BlackFox::Systems
 		//Color
 		shape.setFillColor(c.color);
 
-		//Render circle
+		//Outline
+		shape.setOutlineThickness(c.outlineThickness);
+		shape.setOutlineColor(c.outlineColor);
+
+		//Render shape
 		placeAndRender(application, shape, transform);
 	}
 
@@ -208,10 +212,17 @@ namespace BlackFox::Systems
 		const BFTextComponent& text,
 		const BFTransformComponent& transform)
 	{
-		sf::Text t(text.text, text.font);
+		sf::Text t;
+
+		//Text
+		t.setString(text.text);
+
+		//Font
+		if(text.font) t.setFont(text.font);
 
 		//Character size
-		t.setCharacterSize(text.size);
+		const auto pixelsCharacterSize = static_cast<sf::Uint32>(application->configData()->gameData.worldToPixels(text.size));
+		t.setCharacterSize(pixelsCharacterSize);
 
 		//Origin
 		t.setOrigin(text.origin);
@@ -219,18 +230,14 @@ namespace BlackFox::Systems
 		//Color
 		t.setFillColor(text.color);
 
+		//Outline
+		t.setOutlineThickness(text.outlineThickness);
+		t.setOutlineColor(text.outlineColor);
+
 		//Scale
-		BFVector2f textSize;
-		for(const auto& c : text.text)
-		{
-			const auto glyph = text.font->getGlyph(c, text.size, false);
-			textSize.x += glyph.bounds.width;
-			if(textSize.y < glyph.bounds.height) textSize.y = glyph.bounds.height;
-		}
+		t.setScale(transform.scale);
 
-		const auto pixelsScale = application->configData()->gameData.worldToPixels(transform.scale.x, transform.scale.y);
-		t.setScale(pixelsScale.x / textSize.x, pixelsScale.y / textSize.y);
-
+		//Render
 		placeAndRender(application, t, transform);
 	}
 

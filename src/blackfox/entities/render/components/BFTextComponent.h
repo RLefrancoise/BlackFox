@@ -26,9 +26,11 @@ namespace BlackFox::Components
         explicit BFTextComponent(
                 FontHandle font,
                 const BFString& text,
-                unsigned int size = 30u,
+                float size = 1u,
                 const BFColor& color = BFColor::White,
-                const BFVector2f& origin = BFVector2f());
+                const BFVector2f& origin = BFVector2f(),
+                float outlineThickness = 0.f,
+                const BFColor& outlineColor = BFColor::White);
 
         /// Font to use to display the text
         FontHandle font;
@@ -36,7 +38,13 @@ namespace BlackFox::Components
         /// Text string to display
         BFString text;
 
-        /// Character size in pixels
-        unsigned int size;
+        /// Character size in world units
+        float size;
+
+        /// Thickness of the outline
+        float outlineThickness;
+
+        /// Color of the outline
+        BFColor outlineColor;
     };
 }

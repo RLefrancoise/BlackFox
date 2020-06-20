@@ -51,6 +51,8 @@ namespace BlackFox
 				sol::bases<BFDrawableComponent, BFTransformableComponent>());
 
 		shape_t["origin"] = &BFShapeComponent::origin;
+		shape_t["outlineThickness"] = &BFShapeComponent::outlineThickness;
+		shape_t["outlineColor"] = &BFShapeComponent::outlineColor;
 
 		//Circle shape
 		auto circle_t = registerType<BFCircleShapeComponent, BFDrawableComponent, BFTransformableComponent, BFShapeComponent>();
@@ -63,6 +65,7 @@ namespace BlackFox
 		//Text
 		auto text_t = registerType<BFTextComponent, BFDrawableComponent, BFTransformableComponent>();
 		text_t["font"] = &BFTextComponent::font;
+		text_t["size"] = &BFTextComponent::size;
 		text_t["text"] = sol::property(
 			[](BFTextComponent& text) -> std::string
 			{
@@ -72,6 +75,8 @@ namespace BlackFox
 			{
 				text.text = str;
 			});
+		text_t["outlineThickness"] = &BFTextComponent::outlineThickness;
+		text_t["outlineColor"] = &BFTextComponent::outlineColor;
 	}
 
 	std::string BFLuaScriptingRenderComponentEntities::namespaceName() const
