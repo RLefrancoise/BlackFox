@@ -16,7 +16,6 @@ world = BlackFox.getWorld("default")
 -- Component IDs
 Transform = BlackFox.Components.Spatial.Transform.id(world)
 
-Renderable = BlackFox.Components.Render.Renderable.id(world)
 Sprite = BlackFox.Components.Render.Sprite.id(world)
 CircleShape = BlackFox.Components.Render.CircleShape.id(world)
 BoxShape = BlackFox.Components.Render.BoxShape.id(world)
@@ -38,10 +37,9 @@ function createBody(position)
     transform, 
     rigidBody, 
     boxCollider, 
-    renderable,
     boxShape,
     depth,
-    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, BoxShape, Depth, LaserTarget)
+    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
 
     -- Position
     transform.position = position
@@ -88,10 +86,9 @@ function createCircleBody(position)
     transform,
     rigidBody,
     circleCollider,
-    renderable,
     circleShape,
     depth,
-    laserTarget = world:createEntity(Transform, RigidBody, CircleCollider, Renderable, CircleShape, Depth, LaserTarget)
+    laserTarget = world:createEntity(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
 
     -- Position
     transform.position = position
@@ -135,10 +132,9 @@ end
 function createLaser(position)
     local e,
     transform,
-    renderable,
     line,
     depth,
-    laser = world:createEntity(Transform, Renderable, Line, Depth, Laser)
+    laser = world:createEntity(Transform, Line, Depth, Laser)
 
     -- Transform
     transform.position = position
@@ -159,9 +155,8 @@ function createGround(position, scale)
     transform, 
     rigidBody, 
     boxCollider, 
-    renderable, 
-    sprite, 
-    depth = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, Sprite, Depth)
+    sprite,
+    depth = world:createEntity(Transform, RigidBody, BoxCollider, Sprite, Depth)
 
     -- Position
     transform.position = position
@@ -203,10 +198,9 @@ function createWall(position)
     local e, 
     transform, 
     rigidBody, 
-    boxCollider, 
-    renderable, 
+    boxCollider,
     sprite, 
-    depth = world:createEntity(Transform, RigidBody, BoxCollider, Renderable, Sprite, Depth)
+    depth = world:createEntity(Transform, RigidBody, BoxCollider, Sprite, Depth)
 
     -- Position
     transform.position = position
@@ -245,13 +239,8 @@ end
 function text(position, textString)
     local e,
     transform,
-    renderable,
     text,
-    depth = world:createEntity(
-        Transform,
-        Renderable,
-        Text,
-        Depth)
+    depth = world:createEntity(Transform, Text, Depth)
 
     -- Position
     transform.position = position
@@ -263,9 +252,9 @@ function text(position, textString)
     transform.scale = Vector2f:new(1,1)
 
     -- Text
-    text.font = BlackFox.Resources.font("fonts/Minecraft.ttf")
+    text.font = BlackFox.Resources.font("Minecraft.ttf")
     text.text = textString
-    text.size = 0.5
+    text.characterSize = 0.5
     text.color = Color.Blue
     text.outlineColor = Color.Yellow
     text.outlineThickness = 2
@@ -279,14 +268,12 @@ function createEntity()
     transform, 
     autoRotate, 
     scalePingPong,
-    renderable,
-    sprite, 
+    sprite,
     depth = world:createEntity(
         Transform, 
         AutoRotate, 
         ScalePingPong,
-        Renderable,
-        Sprite, 
+        Sprite,
         Depth)
 
     -- Position

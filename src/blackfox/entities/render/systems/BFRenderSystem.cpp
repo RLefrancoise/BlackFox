@@ -7,12 +7,12 @@
 #include "BFTransformComponent.h"
 
 #include "BFDepthComponent.h"
-#include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
 #include "BFBoxShapeComponent.h"
 #include "BFLineComponent.h"
 #include "BFTextComponent.h"
+#include "BFHiddenComponent.h"
 
 #include "BFRigidBodyComponent.h"
 #include "BFBoxColliderComponent.h"
@@ -221,7 +221,7 @@ namespace BlackFox::Systems
 		if(text.font) t.setFont(text.font);
 
 		//Character size
-		const auto pixelsCharacterSize = static_cast<sf::Uint32>(application->configData()->gameData.worldToPixels(text.size));
+		const auto pixelsCharacterSize = static_cast<sf::Uint32>(application->configData()->gameData.worldToPixels(text.characterSize));
 		t.setCharacterSize(pixelsCharacterSize);
 
 		//Origin
@@ -310,7 +310,7 @@ namespace BlackFox::Systems
 	void BFRenderSystem::update(float dt)
 	{
 		auto em = m_world->entityManager();
-		auto group = em->group<BFRenderableComponent>(entt::get<BFDepthComponent, const BFTransformComponent>);
+		auto group = em->group<BFDepthComponent>(entt::get<const BFTransformComponent>, entt::exclude<const BFHiddenComponent>);
 
 		//Sort renderable by depth
 		group.sort<BFDepthComponent>([](const BFDepthComponent& lhs, const BFDepthComponent& rhs)
@@ -319,7 +319,7 @@ namespace BlackFox::Systems
 		});
 
 		//Render
-		group.each([&](entt::entity entity, const BFRenderableComponent& renderable, const BFDepthComponent& depth, const BFTransformComponent& transform)
+		group.each([&](entt::entity entity, const BFDepthComponent& depth, const BFTransformComponent& transform)
 		{
 			//Entity is a sprite
 			if(BFSpriteComponent* sprite = em->try_get<BFSpriteComponent>(entity))

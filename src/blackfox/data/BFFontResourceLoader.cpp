@@ -11,7 +11,7 @@ namespace BlackFox
     std::shared_ptr<sf::Font> BFFontResourceLoader::load(const std::filesystem::path& path) const
     {
         auto* font = new sf::Font;
-        if (!font->loadFromFile(fmt::format("data/{}", path.string())))
+        if (!font->loadFromFile(fmt::format("data/fonts/{}", path.string())))
         {
             delete font;
             BF_EXCEPTION("Failed to load font {}", path.string());

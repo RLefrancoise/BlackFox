@@ -1,12 +1,12 @@
 #include "BFLuaScriptingRenderComponentEntities.h"
 
 #include "BFDepthComponent.h"
-#include "BFRenderableComponent.h"
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
 #include "BFBoxShapeComponent.h"
 #include "BFLineComponent.h"
 #include "BFTextComponent.h"
+#include "BFHiddenComponent.h"
 
 using namespace BlackFox::Components;
 
@@ -18,8 +18,8 @@ namespace BlackFox
 	{
 		auto componentsNamespace = componentNamespace();
 
-		//Renderable
-		registerType<BFRenderableComponent>();
+		//Hidden
+		registerType<BFHiddenComponent>();
 		
 		//Depth
 		auto depth_t = registerType<BFDepthComponent>();
@@ -65,7 +65,7 @@ namespace BlackFox
 		//Text
 		auto text_t = registerType<BFTextComponent, BFDrawableComponent, BFTransformableComponent>();
 		text_t["font"] = &BFTextComponent::font;
-		text_t["size"] = &BFTextComponent::size;
+		text_t["characterSize"] = &BFTextComponent::characterSize;
 		text_t["text"] = sol::property(
 			[](BFTextComponent& text) -> std::string
 			{

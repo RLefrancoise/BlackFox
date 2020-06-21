@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "BFTextComponent.h"
 
 namespace BlackFox::Components
@@ -20,7 +18,7 @@ namespace BlackFox::Components
     , BFTransformableComponent(origin)
     , font(std::move(font))
     , text(text)
-    , size(size)
+    , characterSize(size)
     , outlineThickness(outlineThickness)
     , outlineColor(outlineColor)
     {}

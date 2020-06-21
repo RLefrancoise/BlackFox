@@ -18,10 +18,12 @@ namespace BlackFox::Components
         /*!
          * Create a new text component
          *
-         * @param font      Font to use with the text
-         * @param text      Text to display
-         * @param color     Color of the text
-         * @param origin    Origin of the text
+         * @param font              Font to use with the text
+         * @param text              Text to display
+         * @param color             Color of the text
+         * @param origin            Origin of the text
+         * @param outlineThickness  Thickness of the outline
+         * @param outlineColor      Color of the outline
          */
         explicit BFTextComponent(
                 FontHandle font,
@@ -39,7 +41,7 @@ namespace BlackFox::Components
         BFString text;
 
         /// Character size in world units
-        float size;
+        float characterSize;
 
         /// Thickness of the outline
         float outlineThickness;
