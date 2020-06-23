@@ -83,10 +83,10 @@ namespace PhysFS
 
     Version getLinkedVersion();
 
-    void init(char const * argv0);
+    PHYSFS_ErrorCode init(char const * argv0);
 
-    void deinit();
-    
+    PHYSFS_ErrorCode deinit();
+
     ArchiveInfoList supportedArchiveTypes();
 
     string getDirSeparator();
@@ -99,13 +99,13 @@ namespace PhysFS
 
     string getBaseDir();
 
-    string getUserDir();
+    string getUserDir(const string& org, const string& app);
 
     string getWriteDir();
 
-    void setWriteDir(string const & newDir);
+    PHYSFS_ErrorCode setWriteDir(string const & newDir);
 
-    void removeFromSearchPath(string const & oldDir);
+    PHYSFS_ErrorCode removeFromSearchPath(string const & oldDir);
 
     StringList getSearchPath();
 
@@ -113,15 +113,13 @@ namespace PhysFS
 
     void setSaneConfig(string const & orgName, string const & appName, string const & archiveExt, bool includeCdRoms, bool archivesFirst);
 
-    void mkdir(string const & dirName);
+    PHYSFS_ErrorCode mkdir(string const & dirName);
 
-    void deleteFile(string const & filename);
+    PHYSFS_ErrorCode deleteFile(string const & filename);
 
     string getRealDir(string const & filename);
 
     StringList enumerateFiles(string const & directory);
-
-    void enumerateFiles(string const & directory, EnumFilesCallback callback, void * extra);
 
     bool exists(string const & filename);
 
@@ -137,7 +135,7 @@ namespace PhysFS
 
     void setAllocator(Allocator const * allocator);
 
-    void mount(string const & newDir, string const & mountPoint, bool appendToPath);
+    PHYSFS_ErrorCode mount(string const & newDir, string const & mountPoint, bool appendToPath);
 
     string getMountPoint(string const & dir);
 
