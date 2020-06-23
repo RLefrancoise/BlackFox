@@ -3,6 +3,7 @@
 #include "BFTypeDefs.h"
 #include "BFExport.h"
 
+#include <cinject/cinject.h>
 #include <memory>
 #include <filesystem>
 #include <SFML/Graphics/Rect.hpp>
@@ -18,7 +19,7 @@ namespace BlackFox
 		constexpr BFResourcesHolder(const BFResourcesHolder& app) = delete;
 		constexpr BFResourcesHolder& operator=(const BFResourcesHolder& app) = delete;
 		
-		constexpr BFResourcesHolder() = default;
+		CINJECT(BFResourcesHolder());
 		~BFResourcesHolder() = default;
 
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;

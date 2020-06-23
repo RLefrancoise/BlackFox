@@ -7,14 +7,17 @@
 
 namespace BlackFox
 {
+	BFResourcesHolder::BFResourcesHolder() = default;
+
 	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
-		: m_textureCache(std::move(holder.m_textureCache))
-	{
-	}
+	: m_textureCache(std::move(holder.m_textureCache))
+	, m_fontCache(std::move(holder.m_fontCache))
+	{}
 
 	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
 	{
 		m_textureCache = std::move(holder.m_textureCache);
+		m_fontCache = std::move(holder.m_fontCache);
 		return *this;
 	}
 

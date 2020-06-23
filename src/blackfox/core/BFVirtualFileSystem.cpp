@@ -11,7 +11,7 @@ namespace BlackFox
 
     BFVirtualFileSystem::~BFVirtualFileSystem()
     {
-        if(PhysFS::isInit()) {
+        if(isInited()) {
             BF_PRINT("Deinit virtual file system");
             PhysFS::deinit();
         }
@@ -40,5 +40,29 @@ namespace BlackFox
         BF_PRINT("Mount data folder to virtual file system");
 
         return true;
+    }
+
+    bool BFVirtualFileSystem::addSearchFolder(const std::string &folder)
+    {
+        return PhysFS::mount(folder, "data", true);
+    }
+
+    bool BFVirtualFileSystem::isInited()
+    {
+        return PhysFS::isInit();
+    }
+
+    std::string BFVirtualFileSystem::combinePath(const std::vector<std::string> &path)
+    {
+        std::string result;
+
+        for(auto it = path.cbegin(); it != path.cend();)
+        {
+            result += *it;
+            ++it;
+            if(it != path.cend()) result += PhysFS::getDirSeparator();
+        }
+
+        return result;
     }
 }

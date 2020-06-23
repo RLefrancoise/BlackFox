@@ -6,12 +6,27 @@
 
 #include "BFTypeDefs.h"
 #include "BFExport.h"
+#include "BFResourceLoader.h"
 
 namespace BlackFox
 {
-	struct BLACKFOX_EXPORT BFTextureResourceLoader final : entt::loader<BFTextureResourceLoader, sf::Texture>
+	/*!
+	 * Texture resource loader
+	 */
+	struct BLACKFOX_EXPORT BFTextureResourceLoader final : BFResourceLoader<BFTextureResourceLoader, sf::Texture>
 	{
-		[[nodiscard]] std::shared_ptr<sf::Texture> load(const std::string& path, sf::IntRect rect = sf::IntRect()) const;
-		[[nodiscard]] std::shared_ptr<sf::Texture> load(const std::filesystem::path& path, sf::IntRect rect = sf::IntRect()) const;
+		/*!
+		 * Load a texture from memory
+		 *
+		 * @param texture 	Texture to load
+		 * @param stream 	Stream to use to load the texture
+		 * @param area 		Texture area to load
+		 *
+		 * @return 			True if load success, false otherwise
+		 */
+		[[nodiscard]] bool loadResource(
+			sf::Texture* texture,
+			std::unique_ptr<BFVirtualFileInputStream>&& stream,
+			sf::IntRect area = sf::IntRect()) const;
 	};
 }

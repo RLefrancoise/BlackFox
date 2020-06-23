@@ -5,7 +5,7 @@
 
 namespace BlackFox
 {
-	std::shared_ptr<sf::Texture> BFTextureResourceLoader::load(const std::string& path, const sf::IntRect rect) const
+	/*std::shared_ptr<sf::Texture> BFTextureResourceLoader::load(const std::string& path, const sf::IntRect rect) const
 	{
 		return load(std::filesystem::path(path), rect);
 	}
@@ -38,5 +38,13 @@ namespace BlackFox
         }
 
 		return texture;
-	}
+	}*/
+
+    bool BFTextureResourceLoader::loadResource(
+        sf::Texture *texture,
+        std::unique_ptr<BFVirtualFileInputStream> &&stream,
+        sf::IntRect area) const
+    {
+        return texture->loadFromStream(*stream, area);
+    }
 }

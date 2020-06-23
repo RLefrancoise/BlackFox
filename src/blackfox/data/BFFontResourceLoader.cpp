@@ -1,22 +1,16 @@
 #include "BFFontResourceLoader.h"
 #include "BFDebug.h"
 
+#include <physfs.hpp>
+
 namespace BlackFox
 {
-    std::shared_ptr<sf::Font> BFFontResourceLoader::load(const std::string& path) const
-    {
-        return load(std::filesystem::path(path));
-    }
+    std::vector<std::unique_ptr<BFVirtualFileInputStream>> BFFontResourceLoader::m_fontStreams;
 
-    std::shared_ptr<sf::Font> BFFontResourceLoader::load(const std::filesystem::path& path) const
+    bool BFFontResourceLoader::loadResource(sf::Font *font, std::unique_ptr<BFVirtualFileInputStream>&& stream) const
     {
-        auto* font = new sf::Font;
-        if (!font->loadFromFile(fmt::format("data/fonts/{}", path.string())))
-        {
-            delete font;
-            BF_EXCEPTION("Failed to load font {}", path.string());
-        }
-
-        return std::shared_ptr<sf::Font>(font);
+        const auto res = font->loadFromStream(*stream);
+        m_fontStreams.emplace_back(std::move(stream));
+        return res;
     }
 }

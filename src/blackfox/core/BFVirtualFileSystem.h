@@ -16,6 +16,10 @@ namespace BlackFox
 
         virtual ~IBFVirtualFileSystem() = default;
         virtual bool init(const char* argv) = 0;
+        virtual bool isInited() = 0;
+        virtual bool addSearchFolder(const std::string& folder) = 0;
+
+        virtual std::string combinePath(const std::vector<std::string>& path) = 0;
     };
 
 
@@ -26,5 +30,9 @@ namespace BlackFox
         ~BFVirtualFileSystem() override;
 
         bool init(const char* argv) override;
+        bool isInited() override;
+        bool addSearchFolder(const std::string& folder) override;
+
+        std::string combinePath(const std::vector<std::string>& path) override;
     };
 }

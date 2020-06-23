@@ -1,16 +1,30 @@
 #pragma once
 
-#include <entt/resource/loader.hpp>
-#include <filesystem>
+#include <SFML/Graphics/Font.hpp>
+#include <vector>
 
-#include "BFTypeDefs.h"
-#include "BFExport.h"
+#include "BFResourceLoader.h"
 
 namespace BlackFox
 {
-    struct BLACKFOX_EXPORT BFFontResourceLoader final : entt::loader<BFFontResourceLoader, sf::Font>
+    /*!
+     * Font resource loader
+     */
+    struct BLACKFOX_EXPORT BFFontResourceLoader final : BFResourceLoader<BFFontResourceLoader, sf::Font>
     {
-        [[nodiscard]] std::shared_ptr<sf::Font> load(const std::string& path) const;
-        [[nodiscard]] std::shared_ptr<sf::Font> load(const std::filesystem::path& path) const;
+        /*!
+         * Load a font from memory
+         *
+         * @param font      Font to load
+         * @param stream    stream to use to load the font
+         *
+         * @return          True if load success, false otherwise
+         */
+        [[nodiscard]] bool loadResource(sf::Font* font, std::unique_ptr<BFVirtualFileInputStream>&& stream) const;
+
+    private:
+        /// Streams used to load the fonts. Because of SFML limitations, that require to keep stream alive when using fonts,
+        /// We need to store them to keep the data alive.
+        static std::vector<std::unique_ptr<BFVirtualFileInputStream>> m_fontStreams;
     };
 }
