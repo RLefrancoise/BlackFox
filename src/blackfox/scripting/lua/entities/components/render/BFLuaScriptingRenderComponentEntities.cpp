@@ -20,7 +20,7 @@ namespace BlackFox
 
 		//Hidden
 		registerType<BFHiddenComponent>();
-		
+
 		//Depth
 		auto depth_t = registerType<BFDepthComponent>();
 		depth_t["depth"] = &BFDepthComponent::depth;

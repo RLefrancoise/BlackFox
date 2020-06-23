@@ -55,6 +55,12 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-cpp/include)
 # YAML-Convert
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/yaml-convert)
 
+# PhysFS
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/physfs-3.0.2/src)
+
+# PhysFS++
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/physfs-cpp/include)
+
 include_directories(.)
 
 # BlackFox
