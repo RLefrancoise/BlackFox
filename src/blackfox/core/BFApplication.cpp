@@ -10,6 +10,7 @@
 #include "BFCommandManager.h"
 #include "BFConfigData.h"
 #include "BFInput.h"
+#include "BFVirtualFileSystem.h"
 #include "BFQuitApplicationCommand.h"
 
 using namespace cinject;
@@ -25,7 +26,8 @@ namespace BlackFox
 			DiContainer container,
 			BFCommandManager::Ptr commandManager,
 			BFConfigData::Ptr configData,
-			BFInput::Ptr input)
+			BFInput::Ptr input,
+			IBFVirtualFileSystem::Ptr vfs)
 			: m_app(std::move(app))
 			, m_services(std::move(services))
 			, m_deltaTime(0.0f)
@@ -33,6 +35,7 @@ namespace BlackFox
 			, m_commandManager(std::move(commandManager))
 			, m_configData(std::move(configData))
 			, m_input(std::move(input))
+			, m_vfs(std::move(vfs))
 		{
 		}
 
@@ -112,10 +115,13 @@ namespace BlackFox
 			return m_configData;
 		}
 
-		bool init()
+		bool init(int argc, char** argv)
 		{
 			try
 			{
+				//Init VFS
+				m_vfs->init(argc > 0 ? argv[0] : nullptr);
+
 				//Window
 				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
 				if (m_configData->appData.fullScreen) windowFlags |= sf::Style::Fullscreen;
@@ -207,6 +213,9 @@ namespace BlackFox
 
 		/*! \brief	Input */
 		BFInput::Ptr m_input;
+
+		///	Virtual file system
+		IBFVirtualFileSystem::Ptr m_vfs;
 	};
 
 
@@ -233,11 +242,11 @@ namespace BlackFox
 		return *this;
 	}
 
-	int BFApplication::init()
+	int BFApplication::init(int argc, char** argv)
 	{
 		m_container->bind<BFApplication::impl>().toSelf().inSingletonScope();
 		pImpl = m_container->get<BFApplication::impl>();
-		return pImpl->init();
+		return pImpl->init(argc, argv);
 	}
 
 	BFApplication::~BFApplication() noexcept = default;

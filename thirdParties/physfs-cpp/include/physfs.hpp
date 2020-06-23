@@ -137,6 +137,8 @@ namespace PhysFS
 
     PHYSFS_ErrorCode mount(string const & newDir, string const & mountPoint, bool appendToPath);
 
+    PHYSFS_ErrorCode mount(string const & newDir, bool appendToPath);
+
     string getMountPoint(string const & dir);
 
     namespace Util

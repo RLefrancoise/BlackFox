@@ -13,6 +13,6 @@ namespace BlackFox
 		constexpr BFBootstrap(const BFBootstrap& app) = delete;
 		constexpr BFBootstrap& operator=(const BFBootstrap& app) = delete;
 
-		[[nodiscard]] int run() const;
+		[[nodiscard]] int run(int argc, char** argv) const;
 	};
 }

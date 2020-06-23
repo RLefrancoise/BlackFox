@@ -8,7 +8,7 @@
 
 namespace BlackFox
 {
-	int BFBootstrap::run() const
+	int BFBootstrap::run(int argc, char** argv) const
 	{
 		try
 		{
@@ -30,7 +30,7 @@ namespace BlackFox
 
 			//Execute the app
 			const auto app = container->get<BFApplication>();
-			if(!app->init())
+			if(!app->init(argc, argv))
 			{
 				BF_EXCEPTION("Failed to init application");
 			}

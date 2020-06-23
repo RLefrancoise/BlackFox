@@ -75,7 +75,7 @@ namespace BlackFox
 		 *
 		 * \returns	Init return code
 		 */
-		int init();
+		int init(int argc, char** argv);
 		
 		/*!
 		 * \fn	int BFApplication::execute();

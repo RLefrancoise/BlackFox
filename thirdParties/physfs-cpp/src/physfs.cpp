@@ -360,6 +360,13 @@ namespace PhysFS
 		return PHYSFS_ERR_OK;
 	}
 
+    PHYSFS_ErrorCode mount(const string& newDir, bool appendToPath) {
+        if(!PHYSFS_mount(newDir.c_str(), nullptr, appendToPath))
+            return PHYSFS_getLastErrorCode();
+
+        return PHYSFS_ERR_OK;
+    }
+
 	string getMountPoint(const string& dir) {
 		const auto point = PHYSFS_getMountPoint(dir.c_str());
 		if(point == nullptr)
