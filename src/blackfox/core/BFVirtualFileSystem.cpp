@@ -1,8 +1,8 @@
 #include "BFVirtualFileSystem.h"
 #include "BFDebug.h"
+#include "BFStringUtils.h"
 
 #include <physfs.hpp>
-#include <fmt/format.h>
 #include <filesystem>
 
 namespace BlackFox
@@ -31,7 +31,8 @@ namespace BlackFox
         PhysFS::permitSymbolicLinks(false);
 
         //Mount data folder
-        const auto dataFolder = fmt::format("{}{}data", std::filesystem::current_path().string(), PhysFS::getDirSeparator());
+        const auto dataFolder = combinePath({std::filesystem::current_path().string(), "data"});
+
         if(const auto err = PhysFS::mount(dataFolder, true) != PHYSFS_ERR_OK) {
             BF_ERROR("Failed to mount data folder: {}", err);
             return false;
@@ -54,15 +55,6 @@ namespace BlackFox
 
     std::string BFVirtualFileSystem::combinePath(const std::vector<std::string> &path)
     {
-        std::string result;
-
-        for(auto it = path.cbegin(); it != path.cend();)
-        {
-            result += *it;
-            ++it;
-            if(it != path.cend()) result += PhysFS::getDirSeparator();
-        }
-
-        return result;
+        return Utils::join<std::string>(path, PhysFS::getDirSeparator(), [](const std::string& s) { return s; });
     }
 }

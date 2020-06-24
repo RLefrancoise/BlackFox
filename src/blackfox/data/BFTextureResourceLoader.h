@@ -1,11 +1,6 @@
 #pragma once
 
-#include <entt/resource/loader.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <filesystem>
-
-#include "BFTypeDefs.h"
-#include "BFExport.h"
 #include "BFResourceLoader.h"
 
 namespace BlackFox

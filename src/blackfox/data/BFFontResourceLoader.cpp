@@ -1,7 +1,4 @@
 #include "BFFontResourceLoader.h"
-#include "BFDebug.h"
-
-#include <physfs.hpp>
 
 namespace BlackFox
 {

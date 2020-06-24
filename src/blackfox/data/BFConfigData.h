@@ -10,6 +10,7 @@
 #include "BFIniFile.h"
 #include "BFVector2.h"
 #include "BFStringUtils.h"
+#include "BFColorUtils.h"
 
 namespace BlackFox
 {

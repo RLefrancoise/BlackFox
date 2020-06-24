@@ -2,8 +2,6 @@
 #include "BFDebug.h"
 #include <sol/state.hpp>
 
-#define SOL_ALL_SAFETIES_ON 1
-
 namespace BlackFox
 {
     BFLuaScript::BFLuaScript(const Resources::ResourceType& type, sol::state* state)

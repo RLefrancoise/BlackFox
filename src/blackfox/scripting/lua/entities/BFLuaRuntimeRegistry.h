@@ -18,19 +18,25 @@
 
 namespace BlackFox
 {
-	// ********************************************************************************
-	/// <summary>
-	/// Set a lua component to an entity
-	/// </summary>
-	/// <param name="em">Entity manager</param>
-	/// <param name="entity">Entity</param>
-	/// <param name="componentType">Type of the component</param>
-	/// <param name="state">Sol state</param>
-	/// <param name="componentScript">Script path of the component</param>
-	/// <returns>The component set to the entity</returns>
-	// ********************************************************************************
+	/*!
+	 * Set a lua component to an entity
+	 *
+	 * @tparam C				Type name of the component
+	 * @param em				Entity manager
+	 * @param entity			Entity
+	 * @param componentType		Type of the component
+	 * @param state				Sol state
+	 * @param componentScript	Script path of the component
+	 *
+	 * @return					The component set to the entity
+	 */
 	template <typename C>
-	static sol::object setComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state, const std::string& componentScript)
+	static sol::object setComponent(
+			const EntityManager& em,
+			const entt::entity& entity,
+			const ENTT_ID_TYPE componentType,
+			sol::state* state,
+			const std::string& componentScript)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -58,15 +64,15 @@ namespace BlackFox
 			return sol::object(view, sol::in_place_type<C*>, &em->assign_or_replace<C>(entity));
 		}
 	}
-	
-	// ********************************************************************************
-	/// <summary>
-	/// Unset a lua component from an entity
-	/// </summary>
-	/// <param name="em">Entity manager</param>
-	/// <param name="entity">Entity</param>
-	/// <param name="componentType">Type of the component to unset</param>
-	// ********************************************************************************
+
+	/*!
+	 * Unset a Lua component from an entity
+	 *
+	 * @tparam C				Type name of the component
+	 * @param em				Entity manager
+	 * @param entity			Entity
+	 * @param componentType		Type of the component to unset
+	 */
 	template <typename C>
 	static void unsetComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
 	{
@@ -86,15 +92,16 @@ namespace BlackFox
 		}
 	}
 
-	// ********************************************************************************
-	/// <summary>
-	/// Check if entity has a component
-	/// </summary>
-	/// <param name="em">Entity manager</param>
-	/// <param name="entity">Entity</param>
-	/// <param name="componentType">Component type</param>
-	/// <returns>True if entity has the component</returns>
-	// ********************************************************************************
+	/*!
+	 * Check if entity has a component
+	 *
+	 * @tparam C				Type name of the component
+	 * @param em 				Entity manager
+	 * @param entity 			Entity
+	 * @param componentType 	Component type
+	 *
+	 * @return 					True if entity has the component
+	 */
 	template <typename C>
 	static bool hasComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
 	{
@@ -113,16 +120,17 @@ namespace BlackFox
 		}
 	}
 
-	// ********************************************************************************
-	/// <summary>
-	/// Get a component from an entity
-	/// </summary>
-	/// <param name="em">Entity manager</param>
-	/// <param name="entity">Entity</param>
-	/// <param name="componentType">Type of the component</param>
-	/// <param name="state">Sol state</param>
-	/// <returns>Sol object representing the component</returns>
-	// ********************************************************************************
+	/*!
+	 * Get a component from an entity
+	 *
+	 * @tparam C				Type name of the component
+	 * @param em 				Entity manager
+	 * @param entity 			Entity
+	 * @param componentType 	Type of the component
+	 * @param state 			Sol state
+	 *
+	 * @return					Sol object representing the component
+	 */
 	template <typename C>
 	static sol::object getComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state)
 	{
@@ -144,6 +152,9 @@ namespace BlackFox
 		}
 	}
 
+	/*!
+	 * Lua runtime registry. It registers components created through Lua scripts.
+	 */
 	class BLACKFOX_EXPORT BFLuaRuntimeRegistry
 	{
 	public:
@@ -151,13 +162,32 @@ namespace BlackFox
 
 		BFLuaRuntimeRegistry();
 
+		/*!
+		 * Get next available identifier
+		 *
+		 * @return	An identifier available to be used for a new component
+		 */
 		unsigned int identifier();
 
+		/*!
+		 * Register a new runtime component in the registry
+		 *
+		 * @param componentName		Name of the component
+		 * @param scriptPath 		Path of the Lua script representing the component
+		 * @param state 			Sol state
+		 *
+		 * @return					The identifier representing the component
+		 */
 		unsigned int registerRuntimeComponent(
 			const std::string& componentName, 
 			const std::string& scriptPath, 
 			sol::state* state);
 
+		/*!
+		 * Register a native component in the registry
+		 *
+		 * @tparam Comp 	Type of the native component
+		 */
 		template <typename... Comp>
 		void registerComponent()
 		{
@@ -169,29 +199,80 @@ namespace BlackFox
 				}), ...);
 		}
 
+		/*!
+		 * Set a component to an entity
+		 *
+		 * @param entity		Entity
+		 * @param typeId		Identifier of the component
+		 * @param state			Sol state
+		 *
+		 * @return				Sol object representing the component
+		 */
 		sol::object setComponent(
 			entt::entity entity,
 			ENTT_ID_TYPE typeId,
 			sol::state* state);
 
+		/*!
+		 * Unset a component from an entity
+		 *
+		 * @param entity		Entity
+		 * @param typeId 		Identifier of the component
+		 */
 		void unsetComponent(
 			entt::entity entity,
 			ENTT_ID_TYPE typeId);
 
+		/*!
+		 * Check if an entity has a component
+		 *
+		 * @param entity		Entity
+		 * @param typeId 		Identifier of the component
+		 *
+		 * @return 				True if entity has the given component
+		 */
 		bool hasComponent(
 			entt::entity entity,
 			ENTT_ID_TYPE typeId);
 
+		/*!
+		 * Get a component from an entity
+		 *
+		 * @param entity		Entity
+		 * @param typeId 		Identifier of the component
+		 * @param state 		Sol state
+		 *
+		 * @return				Sol object representing the component
+		 */
 		sol::object getComponent(
 			entt::entity entity,
 			ENTT_ID_TYPE typeId,
 			sol::state* state);
 
+		/*!
+		 * Get a list of components from an entity
+		 *
+		 * @param state			Sol state
+		 * @param entity 		Entity
+		 * @param components 	List of component identifiers
+		 *
+		 * @return				The list of Sol objects representing the components
+		 */
 		std::vector<sol::object> getComponents(
 			sol::state* state,
 			const entt::entity& entity,
 			const sol::variadic_args& components);
 
+		/*!
+		 * Iterate entities and call a callback for each entity with the requested components as parameters
+		 *
+		 * @param callback		Callback to call on each entity
+		 * @param dt			Delta time
+		 * @param components	The list of component identifiers
+		 * @param state			Sol state
+		 *
+		 * @return				The number of found entities
+		 */
 		std::size_t entities(
 			const sol::function& callback,
 			const float dt,
@@ -229,6 +310,11 @@ namespace BlackFox
 			return size;
 		}
 
+		/*!
+		 * Set the entity manager to be used with the registry
+		 *
+		 * @param em		Entity manager
+		 */
 		void setEntityManager(EntityManager em);
 
 	private:
@@ -247,6 +333,13 @@ namespace BlackFox
 			funcTypeGet get;
 		};
 
+		/*!
+		 * Get a runtime view from a list of components
+		 *
+		 * @param components		The list of components to find on entities
+		 *
+		 * @return					A tuple containing the EnTT view, the list of native components, and the list of runtime components
+		 */
 		[[nodiscard]] std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components) const;
 
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>

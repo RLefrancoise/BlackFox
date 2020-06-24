@@ -55,7 +55,7 @@ namespace BlackFox
 
             // Load resource
             auto resource = std::make_shared<Resource>();
-            const auto loadSuccess = static_cast<const Loader*>(this)->loadResource(resource.get(), std::move(stream), args...);
+            const auto loadSuccess = static_cast<const Loader*>(this)->loadResource(resource.get(), std::move(stream), std::forward<Args>(args)...);
 
             //If failed to load, throw
             if(!loadSuccess)
