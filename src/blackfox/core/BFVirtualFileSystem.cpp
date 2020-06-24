@@ -7,6 +7,8 @@
 
 namespace BlackFox
 {
+    std::string dataFolder;
+    
     BFVirtualFileSystem::BFVirtualFileSystem() = default;
 
     BFVirtualFileSystem::~BFVirtualFileSystem()
@@ -31,7 +33,7 @@ namespace BlackFox
         PhysFS::permitSymbolicLinks(false);
 
         //Mount data folder
-        const auto dataFolder = combinePath({std::filesystem::current_path().string(), "data"});
+        dataFolder = combinePath({std::filesystem::current_path().string(), "data"});
 
         if(const auto err = PhysFS::mount(dataFolder, true) != PHYSFS_ERR_OK) {
             BF_ERROR("Failed to mount data folder: {}", err);
@@ -45,7 +47,9 @@ namespace BlackFox
 
     bool BFVirtualFileSystem::addSearchFolder(const std::string &folder)
     {
-        return PhysFS::mount(folder, "data", true);
+        const auto res = PhysFS::mount(combinePath({dataFolder, folder}), false);
+        BF_PRINT("Search path is: {}", Utils::join<std::string>(PhysFS::getSearchPath(), ",", [](const std::string& s) { return s; }));
+        return res;
     }
 
     bool BFVirtualFileSystem::isInited()

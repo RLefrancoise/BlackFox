@@ -7,7 +7,9 @@
 
 namespace BlackFox
 {
-	BFResourcesHolder::BFResourcesHolder() = default;
+	BFResourcesHolder::BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs)
+	: m_vfs(std::move(vfs))
+    {}
 
 	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
 	: m_textureCache(std::move(holder.m_textureCache))
@@ -36,7 +38,7 @@ namespace BlackFox
 		}
 
 		BF_PRINT("Load texture {}", path.string());
-		return m_textureCache.load<BFTextureResourceLoader>(id, path, rect);
+		return m_textureCache.load<BFTextureResourceLoader>(id, path, m_vfs, rect);
 	}
 
 	TextureHandle BFResourcesHolder::loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect)
@@ -61,7 +63,7 @@ namespace BlackFox
 		}
 
 		BF_PRINT("Load font {}", path.string());
-		return m_fontCache.load<BFFontResourceLoader>(id, path);
+		return m_fontCache.load<BFFontResourceLoader>(id, path, m_vfs);
 	}
 
 	FontHandle BFResourcesHolder::loadFontOrThrow(const std::filesystem::path& path)

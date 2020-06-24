@@ -2,6 +2,11 @@
 
 namespace BlackFox
 {
+    std::string BFTextureResourceLoader::subFolder() const
+    {
+        return "textures";
+    }
+
     bool BFTextureResourceLoader::loadResource(
         sf::Texture *texture,
         std::unique_ptr<BFVirtualFileInputStream> &&stream,

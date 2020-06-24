@@ -12,6 +12,8 @@ namespace BlackFox
      */
     struct BLACKFOX_EXPORT BFFontResourceLoader final : BFResourceLoader<BFFontResourceLoader, sf::Font>
     {
+        std::string subFolder() const override;
+        
         /*!
          * Load a font from memory
          *

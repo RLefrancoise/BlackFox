@@ -7,6 +7,7 @@
 
 #include "BFDebug.h"
 #include "BFVirtualFileInputStream.h"
+#include "BFVirtualFileSystem.h"
 
 namespace BlackFox
 {
@@ -20,18 +21,26 @@ namespace BlackFox
     struct BFResourceLoader : entt::loader<Loader, Resource>
     {
         /*!
+         * Get the sub folders where this kind of resources should be placed
+         * 
+         * @return  The name of the sub folder 
+         */
+        virtual std::string subFolder() const = 0;
+        
+        /*!
          * Load a resource from a path name
          *
          * @tparam Args     Arguments types to use to load the resource
          * @param path      Path of the resource
+         * @param vfs       Virtual file system
          * @param args      Arguments to use to load the resource
          *
          * @return          A pointer to the resource
          */
         template<typename... Args>
-        [[nodiscard]] std::shared_ptr<Resource> load(const std::string& path, Args... args) const
+        [[nodiscard]] std::shared_ptr<Resource> load(const std::string& path, const IBFVirtualFileSystem::Ptr& vfs, Args... args) const
         {
-            return load(std::filesystem::path(path), args...);
+            return load(std::filesystem::path(path), vfs, args...);
         }
 
         /*!
@@ -39,13 +48,17 @@ namespace BlackFox
          *
          * @tparam Args     Arguments types to use to load the resource
          * @param path      Path of the resource
+         * @param vfs       Virtual file system
          * @param args      Arguments to use to load the resource
          *
          * @return          A pointer to the resource
          */
         template<typename... Args>
-        [[nodiscard]] std::shared_ptr<Resource> load(const std::filesystem::path& path, Args... args) const
+        [[nodiscard]] std::shared_ptr<Resource> load(const std::filesystem::path& path, const IBFVirtualFileSystem::Ptr& vfs, Args... args) const
         {
+            //Prepend sub folder if there is any
+            if(subFolder() != "") vfs->addSearchFolder(subFolder());
+                
             // Create stream
             auto stream = std::make_unique<BFVirtualFileInputStream>(path.string());
             if(!stream->isOpened())

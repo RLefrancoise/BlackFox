@@ -2,6 +2,7 @@
 
 #include "BFTypeDefs.h"
 #include "BFExport.h"
+#include "BFVirtualFileSystem.h"
 
 #include <cinject/cinject.h>
 #include <memory>
@@ -19,7 +20,7 @@ namespace BlackFox
 		constexpr BFResourcesHolder(const BFResourcesHolder& app) = delete;
 		constexpr BFResourcesHolder& operator=(const BFResourcesHolder& app) = delete;
 		
-		CINJECT(BFResourcesHolder());
+		CINJECT(BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs));
 		~BFResourcesHolder() = default;
 
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
@@ -34,6 +35,7 @@ namespace BlackFox
 		FontHandle loadFontOrThrow(const std::filesystem::path& path);
 
 	private:
+		IBFVirtualFileSystem::Ptr m_vfs;
 		TextureCache m_textureCache {};
 		FontCache m_fontCache {};
 	};

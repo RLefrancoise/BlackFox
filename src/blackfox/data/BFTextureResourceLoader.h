@@ -10,6 +10,8 @@ namespace BlackFox
 	 */
 	struct BLACKFOX_EXPORT BFTextureResourceLoader final : BFResourceLoader<BFTextureResourceLoader, sf::Texture>
 	{
+		std::string subFolder() const override;
+		
 		/*!
 		 * Load a texture from memory
 		 *

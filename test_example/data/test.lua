@@ -252,7 +252,7 @@ function text(position, textString)
     transform.scale = Vector2f:new(1,1)
 
     -- Text
-    text.font = BlackFox.Resources.font("fonts/Minecraft.ttf")
+    text.font = BlackFox.Resources.font("Minecraft.ttf")
     text.text = textString
     text.characterSize = 0.5
     text.color = Color.Blue
