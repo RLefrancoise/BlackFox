@@ -3,12 +3,11 @@
 #include "BFStringUtils.h"
 
 #include <physfs.hpp>
-#include <filesystem>
 
 namespace BlackFox
 {
     std::string dataFolder;
-    
+
     BFVirtualFileSystem::BFVirtualFileSystem() = default;
 
     BFVirtualFileSystem::~BFVirtualFileSystem()
@@ -19,7 +18,7 @@ namespace BlackFox
         }
     }
 
-    bool BFVirtualFileSystem::init(const char *argv)
+    bool BFVirtualFileSystem::init(const char *argv, BFApplicationArgs::Ptr args)
     {
         //Init
         if(const auto err = PhysFS::init(argv) != PHYSFS_ERR_OK) {
@@ -33,14 +32,14 @@ namespace BlackFox
         PhysFS::permitSymbolicLinks(false);
 
         //Mount data folder
-        dataFolder = combinePath({std::filesystem::current_path().string(), "data"});
+        dataFolder = combinePath({static_cast<std::string>(args->baseFolder), "data"});
 
         if(const auto err = PhysFS::mount(dataFolder, true) != PHYSFS_ERR_OK) {
             BF_ERROR("Failed to mount data folder: {}", err);
             return false;
         }
 
-        BF_PRINT("Mount data folder to virtual file system");
+        BF_PRINT("Mount data folder to virtual file system at location {}", dataFolder);
 
         return true;
     }
@@ -48,7 +47,7 @@ namespace BlackFox
     bool BFVirtualFileSystem::addSearchFolder(const std::string &folder)
     {
         const auto res = PhysFS::mount(combinePath({dataFolder, folder}), false);
-        BF_PRINT("Search path is: {}", Utils::join<std::string>(PhysFS::getSearchPath(), ",", [](const std::string& s) { return s; }));
+        BF_PRINT("Search path is: {}", Utils::join(PhysFS::getSearchPath(), ","));
         return res;
     }
 
@@ -59,6 +58,6 @@ namespace BlackFox
 
     std::string BFVirtualFileSystem::combinePath(const std::vector<std::string> &path)
     {
-        return Utils::join<std::string>(path, PhysFS::getDirSeparator(), [](const std::string& s) { return s; });
+        return Utils::join(path, PhysFS::getDirSeparator());
     }
 }

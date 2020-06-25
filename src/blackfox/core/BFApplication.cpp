@@ -11,6 +11,7 @@
 #include "BFConfigData.h"
 #include "BFInput.h"
 #include "BFVirtualFileSystem.h"
+#include "BFApplicationArgs.h"
 #include "BFQuitApplicationCommand.h"
 
 using namespace cinject;
@@ -115,12 +116,20 @@ namespace BlackFox
 			return m_configData;
 		}
 
+		BFApplicationArgs::Ptr arguments() const
+		{
+			return m_arguments;
+		}
+
 		bool init(int argc, char** argv)
 		{
 			try
 			{
+				//Create arguments struct
+				m_arguments = std::make_shared<BFApplicationArgs>(argc, argv);
+
 				//Init VFS
-				m_vfs->init(argc > 0 ? argv[0] : nullptr);
+				m_vfs->init(argc > 0 ? argv[0] : nullptr, m_arguments);
 
 				//Window
 				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
@@ -216,6 +225,9 @@ namespace BlackFox
 
 		///	Virtual file system
 		IBFVirtualFileSystem::Ptr m_vfs;
+
+		///	Application arguments
+		BFApplicationArgs::Ptr m_arguments;
 	};
 
 
@@ -275,4 +287,9 @@ namespace BlackFox
     {
         return pImpl->configData();
     }
+
+	BFApplicationArgs::Ptr BFApplication::arguments() const
+	{
+		return pImpl->arguments();
+	}
 }

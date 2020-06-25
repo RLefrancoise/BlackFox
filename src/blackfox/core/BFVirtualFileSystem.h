@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <cinject/cinject.h>
+
+#include "BFApplicationArgs.h"
 #include "BFExport.h"
 
 namespace BlackFox
@@ -20,10 +22,11 @@ namespace BlackFox
          * Init the virtual file system
          *
          * @param argv  First argument received by the program (usually the full path to the program executable)
+         * @param args  Application arguments
          *
          * @return      True if initialization is complete, false otherwise
          */
-        virtual bool init(const char* argv) = 0;
+        virtual bool init(const char* argv, BFApplicationArgs::Ptr args) = 0;
 
         /*!
          * Is the virtual file system initialized ?
@@ -60,7 +63,7 @@ namespace BlackFox
         CINJECT(BFVirtualFileSystem());
         ~BFVirtualFileSystem() override;
 
-        bool init(const char* argv) override;
+        bool init(const char* argv, BFApplicationArgs::Ptr args) override;
         bool isInited() override;
         bool addSearchFolder(const std::string& folder) override;
 

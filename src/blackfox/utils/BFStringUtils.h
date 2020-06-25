@@ -39,4 +39,9 @@ namespace BlackFox::Utils
 
 		return str;
 	}
+
+	static std::string join(const std::vector<std::string>& v, const std::string& delimiter = ",")
+	{
+		return join<std::string>(v, delimiter, [](const std::string& s) { return s; });
+	}
 }

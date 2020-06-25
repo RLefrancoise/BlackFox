@@ -9,6 +9,7 @@
 
 namespace BlackFox
 {
+	struct BFApplicationArgs;
 	class BFCommandManager;
 	class BFConfigData;
 	class BFInput;
@@ -130,6 +131,13 @@ namespace BlackFox
          * \returns	Config data.
          */
 		[[nodiscard]] std::shared_ptr<BFConfigData> configData() const;
+
+		/*!
+		 * Get arguments given to the application at startup
+		 *
+		 * @return	Application arguments
+		 */
+		[[nodiscard]] std::shared_ptr<BFApplicationArgs> arguments() const;
 
 	private:
 		DiContainer m_container;
