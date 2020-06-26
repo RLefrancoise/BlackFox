@@ -4,7 +4,7 @@
 
 namespace BlackFox::Editor
 {
-	BFDataManager::BFDataManager(BFResourcesHolder::Ptr resourcesHolder)
+	BFDataManager::BFDataManager(IBFResourcesHolder::Ptr resourcesHolder)
 		: m_resourcesHolder(std::move(resourcesHolder))
 	{
 	}

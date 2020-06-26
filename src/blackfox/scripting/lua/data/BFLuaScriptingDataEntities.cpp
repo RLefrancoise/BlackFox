@@ -45,11 +45,11 @@ namespace BlackFox
 		//Get / Load a texture
 		resourcesNs["texture"] = sol::overload([&](const std::string& path) -> TextureHandle
 		{
-			auto resourcesHolder = m_container->get<BFResourcesHolder>();
+			auto resourcesHolder = m_container->get<IBFResourcesHolder>();
 			return resourcesHolder->loadTexture(path);
 		}, [&](const std::string& path, const sf::IntRect& rect) -> TextureHandle
 		{
-			auto resourcesHolder = m_container->get<BFResourcesHolder>();
+			auto resourcesHolder = m_container->get<IBFResourcesHolder>();
 			return resourcesHolder->loadTexture(path, rect);
 		});
 
@@ -60,7 +60,7 @@ namespace BlackFox
 
 		resourcesNs["font"] = [&](const std::string& path) -> FontHandle
 		{
-			auto resourcesHolder = m_container->get<BFResourcesHolder>();
+			auto resourcesHolder = m_container->get<IBFResourcesHolder>();
 			return resourcesHolder->loadFont(path);
 		};
 	}

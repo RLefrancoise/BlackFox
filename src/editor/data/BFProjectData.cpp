@@ -35,7 +35,7 @@ namespace BlackFox::Editor
 		return fmt::format(R""""(===Project Data===
 name: {}
 scenes: {}
-)"""", name, Utils::join<std::filesystem::path>(scenes, ',', stringifyPath));
+)"""", name, Utils::join<std::filesystem::path>(scenes, ",", stringifyPath));
 	}
 
 	std::filesystem::path BFProjectData::rootPath() const

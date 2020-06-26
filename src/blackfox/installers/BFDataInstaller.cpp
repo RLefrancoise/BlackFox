@@ -17,6 +17,6 @@ namespace BlackFox
         m_container->bind<BFConfigData>().toConstant(m_configData);
 
         //Resources holder
-        m_container->bind<BFResourcesHolder>().toSelf().inSingletonScope();
+        m_container->bind<IBFResourcesHolder>().to<BFResourcesHolder>().inSingletonScope();
     }
 }

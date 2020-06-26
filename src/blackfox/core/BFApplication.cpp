@@ -129,7 +129,7 @@ namespace BlackFox
 				m_arguments = std::make_shared<BFApplicationArgs>(argc, argv);
 
 				//Init VFS
-				m_vfs->init(argc > 0 ? argv[0] : nullptr, m_arguments);
+				m_vfs->init(m_arguments);
 
 				//Window
 				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;

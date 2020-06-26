@@ -1,6 +1,5 @@
 #include "BFDataInstaller.h"
-
-#include "BFResourcesHolder.h"
+#include "BFEditorResourcesHolder.h"
 
 namespace BlackFox::Editor
 {
@@ -10,6 +9,6 @@ namespace BlackFox::Editor
 
 	void BFDataInstaller::installBindings()
 	{
-		m_container->bind<BFResourcesHolder>().toSelf().inSingletonScope();
+		m_container->bind<IBFResourcesHolder>().to<BFEditorResourcesHolder>().inSingletonScope();
 	}
 }

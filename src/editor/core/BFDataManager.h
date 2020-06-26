@@ -33,7 +33,7 @@ namespace BlackFox::Editor
 
 		typedef std::shared_ptr<BFDataManager> Ptr;
 		
-		CINJECT(BFDataManager(BFResourcesHolder::Ptr resourcesHolder));
+		CINJECT(BFDataManager(IBFResourcesHolder::Ptr resourcesHolder));
 		~BFDataManager() = default;
 
 		BFDataManager(const BFDataManager&) = delete;
@@ -54,7 +54,7 @@ namespace BlackFox::Editor
 		TextureHandle getTextureResource(const entt::hashed_string& resource) const;
 		
 	private:
-		BFResourcesHolder::Ptr m_resourcesHolder;
+		IBFResourcesHolder::Ptr m_resourcesHolder;
 		BFProjectData::Ptr m_projectData;
 		BFEditorData::Ptr m_editorData;
 	};

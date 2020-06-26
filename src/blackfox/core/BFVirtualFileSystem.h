@@ -21,12 +21,11 @@ namespace BlackFox
         /*!
          * Init the virtual file system
          *
-         * @param argv  First argument received by the program (usually the full path to the program executable)
          * @param args  Application arguments
          *
          * @return      True if initialization is complete, false otherwise
          */
-        virtual bool init(const char* argv, BFApplicationArgs::Ptr args) = 0;
+        virtual bool init(BFApplicationArgs::Ptr args) = 0;
 
         /*!
          * Is the virtual file system initialized ?
@@ -63,7 +62,7 @@ namespace BlackFox
         CINJECT(BFVirtualFileSystem());
         ~BFVirtualFileSystem() override;
 
-        bool init(const char* argv, BFApplicationArgs::Ptr args) override;
+        bool init(BFApplicationArgs::Ptr args) override;
         bool isInited() override;
         bool addSearchFolder(const std::string& folder) override;
 

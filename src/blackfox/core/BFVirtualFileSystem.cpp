@@ -18,10 +18,10 @@ namespace BlackFox
         }
     }
 
-    bool BFVirtualFileSystem::init(const char *argv, BFApplicationArgs::Ptr args)
+    bool BFVirtualFileSystem::init(BFApplicationArgs::Ptr args)
     {
         //Init
-        if(const auto err = PhysFS::init(argv) != PHYSFS_ERR_OK) {
+        if(const auto err = PhysFS::init(args->argc() > 0 ? args->argv()[0] : nullptr) != PHYSFS_ERR_OK) {
             BF_ERROR("Failed to initialize virtual file system: {}", err);
             return false;
         }
@@ -32,7 +32,7 @@ namespace BlackFox
         PhysFS::permitSymbolicLinks(false);
 
         //Mount data folder
-        dataFolder = combinePath({static_cast<std::string>(args->baseFolder), "data"});
+        dataFolder = combinePath({static_cast<std::string>(args->baseFolder()), "data"});
 
         if(const auto err = PhysFS::mount(dataFolder, true) != PHYSFS_ERR_OK) {
             BF_ERROR("Failed to mount data folder: {}", err);

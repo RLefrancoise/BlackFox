@@ -9,6 +9,8 @@
 namespace BlackFox
 {
     BFApplicationArgs::BFApplicationArgs(int argc, char **argv)
+    : m_argc(argc)
+    , m_argv(argv)
     {
         std::vector<std::string> arguments;
         for(auto i = 1 ; i < argc; ++i)
@@ -31,14 +33,34 @@ namespace BlackFox
 
             BF_PRINT("Argument key: {} value: {}", key, value);
 
-            if(key == "baseFolder")
-                baseFolder = value;
+            m_arguments.insert({key, value});
+        }
+
+        //If base folder is not given, use current directory
+        if(m_arguments.find("baseFolder") == m_arguments.end())
+        {
+            m_arguments.insert({"baseFolder", std::filesystem::current_path().string()});
         }
 
         //If base folder is empty, use current directory
-        if(baseFolder == "")
+        else if(std::get<std::string>(m_arguments["baseFolder"]).empty())
         {
-            baseFolder = std::filesystem::current_path().string();
+            m_arguments["baseFolder"] = std::filesystem::current_path().string();
         }
+    }
+
+    int BFApplicationArgs::argc() const
+    {
+        return m_argc;
+    }
+
+    char** const BFApplicationArgs::argv() const
+    {
+        return m_argv;
+    }
+
+    const std::string& BFApplicationArgs::baseFolder() const
+    {
+        return std::get<std::string>(m_arguments.find("baseFolder")->second);
     }
 }

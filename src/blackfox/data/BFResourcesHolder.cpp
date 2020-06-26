@@ -7,19 +7,37 @@
 
 namespace BlackFox
 {
+	IBFResourcesHolder::IBFResourcesHolder() = default;
+	
+	IBFResourcesHolder::IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept
+	: m_textureCache(std::move(holder.m_textureCache))
+	, m_fontCache(std::move(holder.m_fontCache))
+	{}
+
+	IBFResourcesHolder& IBFResourcesHolder::operator=(IBFResourcesHolder&& holder) noexcept
+	{
+		m_textureCache = std::move(holder.m_textureCache);
+		m_fontCache = std::move(holder.m_fontCache);
+		return *this;
+	}
+	
+	//--------------------------------------------------------------------------------------
+	
 	BFResourcesHolder::BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs)
-	: m_vfs(std::move(vfs))
+	: IBFResourcesHolder()
+	, m_vfs(std::move(vfs))
     {}
 
 	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
-	: m_textureCache(std::move(holder.m_textureCache))
-	, m_fontCache(std::move(holder.m_fontCache))
+	: m_vfs(std::move(holder.m_vfs))
+	, IBFResourcesHolder(std::move(holder))
 	{}
 
 	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
 	{
 		m_textureCache = std::move(holder.m_textureCache);
 		m_fontCache = std::move(holder.m_fontCache);
+		IBFResourcesHolder::operator=(std::move(holder));
 		return *this;
 	}
 

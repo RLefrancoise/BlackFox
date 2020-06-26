@@ -9,7 +9,7 @@
 
 namespace BlackFox
 {
-	struct BFApplicationArgs;
+	class BFApplicationArgs;
 	class BFCommandManager;
 	class BFConfigData;
 	class BFInput;
