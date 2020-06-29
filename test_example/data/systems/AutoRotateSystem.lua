@@ -1,6 +1,6 @@
 function onCreate()
-	Transform = BlackFox.Components.Spatial.Transform.id(world)
-	AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
+	Transform = BlackFox.Components.Spatial.Transform.id()
+	AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()
 end
 
 function update(dt)

@@ -5,10 +5,10 @@ Color = BlackFox.Graphics.Color
 Ray = BlackFox.Physics.Ray
 
 function onCreate()
-    Transform = BlackFox.Components.Spatial.Transform.id(world)
-    Line = BlackFox.Components.Render.Line.id(world)
-    Laser = BlackFox.Components.Runtime.Laser.id(world)
-    LaserTarget = BlackFox.Components.Runtime.LaserTarget.id(world)
+    Transform = BlackFox.Components.Spatial.Transform.id()
+    Line = BlackFox.Components.Render.Line.id()
+    Laser = BlackFox.Components.Runtime.Laser.id()
+    LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
 end
 
 function update(dt)

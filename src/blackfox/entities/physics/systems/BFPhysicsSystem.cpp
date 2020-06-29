@@ -11,15 +11,7 @@ BF_SYSTEM_REGISTER(BlackFox::Systems::BFPhysicsSystem)
 using namespace BlackFox::Components;
 
 namespace BlackFox::Systems
-{	
-	typedef BFComponentListenerWithCallback<BFRigidBodyComponent> RigidBodyListener;
-	typedef BFComponentListenerWithCallback<BFBoxColliderComponent> BoxColliderListener;
-	typedef BFComponentListenerWithCallback<BFCircleColliderComponent> CircleColliderListener;
-
-	std::shared_ptr<RigidBodyListener> rbListener;
-	std::shared_ptr<BoxColliderListener> boxColliderListener;
-	std::shared_ptr<CircleColliderListener> circleColliderListener;
-
+{
 	BFPhysicsSystem::BFPhysicsSystem(BFApplication::Ptr app, BFWorld::Ptr world)
 	: BFComponentSystem(std::move(app), std::move(world))
 	{
@@ -32,9 +24,21 @@ namespace BlackFox::Systems
 		// Colliders
 
 		// Box
-		boxColliderListener = listenColliders<BFBoxColliderComponent>();
+		m_boxColliderListener = listenColliders<BFBoxColliderComponent>();
 		//Circle
-		circleColliderListener = listenColliders<BFCircleColliderComponent>();
+		m_circleColliderListener = listenColliders<BFCircleColliderComponent>();
+	}
+
+	BFPhysicsSystem::BFPhysicsSystem(BFPhysicsSystem&& system)
+	: BFComponentSystem(std::move(system))
+    {
+	    std::swap(m_b2World, system.m_b2World);
+    }
+
+    BFPhysicsSystem& BFPhysicsSystem::operator=(BFPhysicsSystem&& system)
+	{
+		m_b2World = std::move(system.m_b2World);
+		return *this;
 	}
 
 	void BFPhysicsSystem::update(float dt)
@@ -124,14 +128,14 @@ namespace BlackFox::Systems
 
 	void BFPhysicsSystem::listenRigidBodies()
 	{
-		RigidBodyListener::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, BFRigidBodyComponent& rb) { initRigidBody(e, r, rb); };
-		RigidBodyListener::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, BFRigidBodyComponent& rb) { replaceRigidBody(e, r, rb); };
-		RigidBodyListener::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanRigidBody(e, r); };
+		RigidBodyListener::CreateCallback createCallback = [&](entt::registry& r, entt::entity e, BFRigidBodyComponent& rb) { initRigidBody(e, r, rb); };
+		RigidBodyListener::ReplaceCallback replaceCallback = [&](entt::registry& r, entt::entity e, BFRigidBodyComponent& rb) { replaceRigidBody(e, r, rb); };
+		RigidBodyListener::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e) { cleanRigidBody(e, r); };
 
-		rbListener = m_world->registerComponentListener<RigidBodyListener>(createCallback, replaceCallback, destroyCallback);
+		m_rbListener = m_world->registerComponentListener<RigidBodyListener>(createCallback, replaceCallback, destroyCallback);
 	}
 
-	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb) const
+	void BFPhysicsSystem::initRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb)
 	{
 		const auto physicsScale = m_application->configData()->physicsData.physicsScale;
 

@@ -1,6 +1,6 @@
 function onCreate()
-	Transform = BlackFox.Components.Spatial.Transform.id(world)
-	ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
+	Transform = BlackFox.Components.Spatial.Transform.id()
+	ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
 end
 
 function update(dt)

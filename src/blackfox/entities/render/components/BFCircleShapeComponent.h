@@ -15,6 +15,9 @@ namespace BlackFox::Components
         BFCircleShapeComponent();
         explicit BFCircleShapeComponent(float radius, const BFColor& color = BFColor::White);
 
+        constexpr BFCircleShapeComponent(BFCircleShapeComponent&&) noexcept = default;
+        BFCircleShapeComponent& operator=(BFCircleShapeComponent&&) noexcept = default;
+
         /// Radius of the circle
         float radius;
     };

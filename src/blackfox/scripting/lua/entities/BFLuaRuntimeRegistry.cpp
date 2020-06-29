@@ -31,13 +31,13 @@ namespace BlackFox
 			return std::get<ENTT_ID_TYPE>(entry.second) == typeId;
 		});
 
-		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, const std::string&>(
+		const auto componentScript = getComponentScript(typeId);
+
+		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, const std::string*>(
 			entity, 
 			typeId, 
 			state, 
-			it != m_runtimeComponentLuaScripts.end() 
-			? std::get<std::string>(it->second) 
-			: std::string());
+			componentScript);
 	}
 
 	void BFLuaRuntimeRegistry::unsetComponent(const entt::entity entity, const ENTT_ID_TYPE typeId)
@@ -60,6 +60,24 @@ namespace BlackFox
 		m_entityManager = std::move(em);
 	}
 
+	bool BFLuaRuntimeRegistry::isNativeComponent(ComponentId component) const
+	{
+		const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
+			return std::get<ENTT_ID_TYPE>(entry.second) == component;
+		});
+
+		return it == m_runtimeComponentLuaScripts.cend();
+	}
+
+	const std::string* BFLuaRuntimeRegistry::getComponentScript(ComponentId component) const
+	{
+		const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
+			return std::get<ENTT_ID_TYPE>(entry.second) == component;
+		});
+
+		return (it != m_runtimeComponentLuaScripts.cend() ? &std::get<std::string>(it->second) : nullptr);
+	}
+
 	std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> BFLuaRuntimeRegistry::getView(const sol::variadic_args& components) const
 	{
 		std::vector<ComponentId> engineComponents;
@@ -67,7 +85,7 @@ namespace BlackFox
 
 		for (const auto& type : components)
 		{
-			if (static_cast<std::underlying_type_t<ComponentId>>(type) < runtimeComponentId)
+			if (isNativeComponent(static_cast<ComponentId>(type)))
 			{
 				engineComponents.push_back(type);
 			}
@@ -75,7 +93,7 @@ namespace BlackFox
 			{
 				if (runtimeComponents.empty())
 				{
-					engineComponents.push_back(m_entityManager->type<Components::BFLuaRuntimeComponent>());
+					engineComponents.push_back(entt::type_info<Components::BFLuaRuntimeComponent>::id());
 				}
 
 				runtimeComponents.push_back(type);
@@ -93,7 +111,7 @@ namespace BlackFox
 		std::vector<sol::object> v;
 		for (const auto& component : components)
 		{
-			v.push_back(getComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(component), state));
+			v.push_back(getComponent(entity, static_cast<ComponentId>(component), state));
 		}
 
 		return v;

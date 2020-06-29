@@ -34,6 +34,9 @@ namespace BlackFox::Components
                 float outlineThickness = 0.f,
                 const BFColor& outlineColor = BFColor::White);
 
+        BFTextComponent(BFTextComponent&&) noexcept;
+        BFTextComponent& operator=(BFTextComponent&&) noexcept;
+
         /// Font to use to display the text
         FontHandle font;
 

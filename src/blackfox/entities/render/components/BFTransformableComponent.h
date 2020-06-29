@@ -14,5 +14,8 @@ namespace BlackFox::Components
         : IBFComponent()
         , origin(origin)
         {}
+
+        constexpr BFTransformableComponent(BFTransformableComponent&&) noexcept = default;
+        BFTransformableComponent& operator=(BFTransformableComponent&&) noexcept = default;
     };
 }

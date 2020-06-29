@@ -24,7 +24,7 @@ namespace BlackFox
                 C::name,
                 sol::base_classes,
                 sol::bases<Parents...>());
-            component_t["id"] = [](const BFWorld& world) -> ComponentId { return world.entityManager()->type<C>(); };
+            component_t["id"] = []() -> ComponentId { return entt::type_info<C>::id(); };
             component_t["get"] = [](const BFWorld& world, const entt::entity& entity) -> auto { return &(world.entityManager()->get<C>(entity)); };
 
             //Register component to Lua runtime registry

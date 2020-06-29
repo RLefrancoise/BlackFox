@@ -310,7 +310,7 @@ namespace BlackFox::Systems
 	void BFRenderSystem::update(float dt)
 	{
 		auto em = m_world->entityManager();
-		auto group = em->group<BFDepthComponent>(entt::get<const BFTransformComponent>, entt::exclude<const BFHiddenComponent>);
+		auto group = em->group<BFDepthComponent>(entt::get<const BFTransformComponent>, entt::exclude<BFHiddenComponent>);
 
 		//Sort renderable by depth
 		group.sort<BFDepthComponent>([](const BFDepthComponent& lhs, const BFDepthComponent& rhs)

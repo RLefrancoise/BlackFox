@@ -10,5 +10,9 @@ namespace BlackFox::Components
     struct BLACKFOX_EXPORT BFHiddenComponent: IBFComponent
     {
         BF_COMPONENT("Hidden")
+
+        constexpr BFHiddenComponent() = default;
+        constexpr BFHiddenComponent(BFHiddenComponent&&) noexcept = default;
+        BFHiddenComponent& operator=(BFHiddenComponent&&) noexcept = default;
     };
 }

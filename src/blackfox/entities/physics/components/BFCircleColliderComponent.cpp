@@ -22,6 +22,22 @@ namespace BlackFox::Components
     , radius(radius)
     {}
 
+    BFCircleColliderComponent::BFCircleColliderComponent(BFCircleColliderComponent &&circle) noexcept
+    : BFColliderComponent(std::move(circle))
+    {
+        std::swap(radius, circle.radius);
+    }
+
+    BFCircleColliderComponent& BFCircleColliderComponent::operator=(BFCircleColliderComponent &&circle) noexcept
+    {
+        if(this != &circle)
+        {
+            std::swap(radius, circle.radius);
+        }
+
+        return *this;
+    }
+
     b2CircleShape* BFCircleColliderComponent::shape(float physicsScale)
     {
         m_shape.m_radius = radius;

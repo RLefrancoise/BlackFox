@@ -14,6 +14,24 @@ namespace BlackFox::Components
 	template<typename Data>
 	struct BLACKFOX_EXPORT BFRuntimeComponent : IBFComponent
 	{
+		constexpr BFRuntimeComponent() = default;
+
+		BFRuntimeComponent(BFRuntimeComponent<Data>&& c) noexcept
+		: IBFComponent(std::move(c))
+		{
+			std::swap(m_components, c.m_components);
+		}
+
+		BFRuntimeComponent<Data>& operator=(BFRuntimeComponent<Data>&& c) noexcept
+		{
+			if(this != &c)
+			{
+				std::swap(m_components, c.m_components);
+			}
+
+			return *this;
+		}
+
 		/// --------------------------------------------------------------------------------
 		/// <summary>
 		/// Is component empty ?

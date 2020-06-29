@@ -14,7 +14,9 @@ namespace BlackFox::Components
 
         BFBoxShapeComponent();
         explicit BFBoxShapeComponent(const BFVector2f& extents, const BFColor& color = BFColor::White);
-        ~BFBoxShapeComponent() override = default;
+
+        constexpr BFBoxShapeComponent(BFBoxShapeComponent&&) noexcept = default;
+        BFBoxShapeComponent& operator=(BFBoxShapeComponent&&) noexcept = default;
 
         /// Box extents
         BFVector2f extents;

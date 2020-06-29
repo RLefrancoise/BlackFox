@@ -39,6 +39,10 @@ namespace BlackFox::Components
             float32 density,
             bool isSensor = false,
             const BFContactFilter& filter = BFContactFilter());
+
+        BFColliderComponent(BFColliderComponent&& collider) noexcept;
+        BFColliderComponent& operator=(BFColliderComponent&& collider) noexcept;
+
         ~BFColliderComponent() override = default;
 
         void fixtureDef(float physicsScale, b2FixtureDef* def);

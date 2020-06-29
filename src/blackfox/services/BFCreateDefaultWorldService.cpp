@@ -4,7 +4,11 @@
 
 #include "BFApplication.h"
 #include "BFWorld.h"
-#include "BFComponentSystem.h"
+
+//#include "BFPhysicsSystem.h"
+//#include "BFRenderSystem.h"
+
+//using namespace BlackFox::Systems;
 
 namespace BlackFox
 {
@@ -22,11 +26,26 @@ namespace BlackFox
         //Create default world
         auto defaultWorld = BFWorld::create("default", m_container);
 
+        //Create systems
+        //defaultWorld->createSystem<BFRenderSystem>(BFRenderSystem::group, m_application);
+        //defaultWorld->createSystem<BFPhysicsSystem>(BFPhysicsSystem::group, m_application);
+
         //Auto create systems
         auto systems = rttr::type::get<BFComponentSystem>().get_derived_classes();
         for(const auto& s : systems)
         {
             defaultWorld->createSystemFromType(s, m_application);
         }
+
+        /*entt::resolve([&](entt::meta_type t)
+        {
+            auto base = t.base("ComponentSystem"_hs);
+            if(base)
+            {
+                defaultWorld->createSystemFromType(t, m_application);
+            }
+        });*/
+
+
     }
 }

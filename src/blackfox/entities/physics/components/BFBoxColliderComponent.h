@@ -36,6 +36,9 @@ namespace BlackFox::Components
 			bool isSensor = false,
 			const BFContactFilter& filter = BFContactFilter());
 
+		BFBoxColliderComponent(BFBoxColliderComponent&& box) noexcept;
+		BFBoxColliderComponent& operator=(BFBoxColliderComponent&& box) noexcept;
+
 		/// \brief	Extents of the box. (Extents is half the size)
 		BFVector2f extents;
 

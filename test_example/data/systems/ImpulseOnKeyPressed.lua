@@ -2,7 +2,7 @@ linearImpulseMagnitude = 2
 angularImpulseMagnitude = 30
 
 function onCreate()
-    RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
+    RigidBody = BlackFox.Components.Physics.RigidBody.id()
 end
 
 function update(dt)

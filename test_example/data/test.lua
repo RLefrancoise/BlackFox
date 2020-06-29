@@ -14,23 +14,23 @@ Screen = BlackFox.Screen
 world = BlackFox.getWorld("default")
 
 -- Component IDs
-Transform = BlackFox.Components.Spatial.Transform.id(world)
+Transform = BlackFox.Components.Spatial.Transform.id()
 
-Sprite = BlackFox.Components.Render.Sprite.id(world)
-CircleShape = BlackFox.Components.Render.CircleShape.id(world)
-BoxShape = BlackFox.Components.Render.BoxShape.id(world)
-Line = BlackFox.Components.Render.Line.id(world)
-Text = BlackFox.Components.Render.Text.id(world)
-Depth = BlackFox.Components.Render.Depth.id(world)
+Sprite = BlackFox.Components.Render.Sprite.id()
+CircleShape = BlackFox.Components.Render.CircleShape.id()
+BoxShape = BlackFox.Components.Render.BoxShape.id()
+Line = BlackFox.Components.Render.Line.id()
+Text = BlackFox.Components.Render.Text.id()
+Depth = BlackFox.Components.Render.Depth.id()
 
-AutoRotate = BlackFox.Components.Runtime.AutoRotate.id(world)
-ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id(world)
-Laser = BlackFox.Components.Runtime.Laser.id(world)
-LaserTarget = BlackFox.Components.Runtime.LaserTarget.id(world)
+AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()
+ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
+Laser = BlackFox.Components.Runtime.Laser.id()
+LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
 
-RigidBody = BlackFox.Components.Physics.RigidBody.id(world)
-BoxCollider = BlackFox.Components.Physics.BoxCollider.id(world)
-CircleCollider = BlackFox.Components.Physics.CircleCollider.id(world)
+RigidBody = BlackFox.Components.Physics.RigidBody.id()
+BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
+CircleCollider = BlackFox.Components.Physics.CircleCollider.id()
 
 function createBody(position)
     local e, 
@@ -351,7 +351,7 @@ text(Screen.pixelsToWorld(10, 10), "This is a text")
 
 -- Create systems
 --world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
+--world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
 world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("RayCastLaserSystem", BlackFox.ComponentSystemGroup.GameLoop)

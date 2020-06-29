@@ -17,7 +17,9 @@ namespace BlackFox::Components
                 float length,
                 float thickness,
                 const BFColor& = BFColor::White);
-        ~BFLineComponent() override = default;
+
+        constexpr BFLineComponent(BFLineComponent&&) noexcept = default;
+        BFLineComponent& operator=(BFLineComponent&&) noexcept = default;
 
         float length;
         float thickness;

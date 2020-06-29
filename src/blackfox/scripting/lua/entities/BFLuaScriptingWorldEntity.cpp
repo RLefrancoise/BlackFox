@@ -35,7 +35,7 @@ namespace BlackFox
 
             for (const auto& component : components)
             {
-                const auto c = runtimeRegistry->setComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(component.as<ComponentId>()), m_state);
+                const auto c = runtimeRegistry->setComponent(entity, component.as<ComponentId>(), m_state);
                 result.push_back(c);
             }
 
@@ -58,7 +58,7 @@ namespace BlackFox
             sol::table runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
 
             auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
-            component_t["id"] = [=](BFWorld* world) -> auto
+            component_t["id"] = [=]() -> auto
             {
                 return cid;
             };
@@ -69,7 +69,7 @@ namespace BlackFox
         {
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-            return runtimeRegistry->setComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
+            return runtimeRegistry->setComponent(entity, componentId, m_state);
         };
 
         // Unset component
@@ -77,7 +77,7 @@ namespace BlackFox
 		{
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			runtimeRegistry->unsetComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
+			runtimeRegistry->unsetComponent(entity, componentId);
 		};
 
         // Has component
@@ -85,7 +85,7 @@ namespace BlackFox
 		{
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			return runtimeRegistry->hasComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId));
+			return runtimeRegistry->hasComponent(entity, componentId);
 		};
     	
         // Get component
@@ -93,7 +93,7 @@ namespace BlackFox
 		{
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-			return runtimeRegistry->getComponent(entity, static_cast<std::underlying_type_t<ComponentId>>(componentId), m_state);
+			return runtimeRegistry->getComponent(entity, componentId, m_state);
 		};
 
         // Get components

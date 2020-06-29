@@ -25,6 +25,9 @@ namespace BlackFox::Components
                 const BFVector2f& origin = BFVector2f(),
                 float outlineThickness = 0.f,
                 const BFColor& outlineColor = BFColor::White);
-        ~BFShapeComponent() override = default;
+
+    public:
+        constexpr BFShapeComponent(BFShapeComponent&&) noexcept = default;
+        BFShapeComponent& operator=(BFShapeComponent&&) noexcept = default;
     };
 }

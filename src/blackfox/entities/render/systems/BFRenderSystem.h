@@ -14,6 +14,7 @@ namespace BlackFox::Systems
 	/// --------------------------------------------------------------------------------
 	class BLACKFOX_EXPORT BFRenderSystem final : public BFComponentSystem
 	{
+		//BF_SYSTEM(BFRenderSystem, "RenderSystem", ComponentSystemGroups::Render)
         BF_SYSTEM_AUTO_CREATE(BFRenderSystem, ComponentSystemGroups::Render, "RenderSystem")
 
 	public:

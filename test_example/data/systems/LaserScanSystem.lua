@@ -1,15 +1,13 @@
 -- This system moves the laser to scan from left to right
 
-function onCreate()
-    Transform = BlackFox.Components.Spatial.Transform.id(world)
-    Laser = BlackFox.Components.Runtime.Laser.id(world)
-end
+Transform = BlackFox.Components.Spatial.Transform.id()
+Laser = BlackFox.Components.Runtime.Laser.id()
 
 function update(dt)
     world:entities(laserScan, dt, Transform, Laser)
 end
 
-function laserScan(entity, dt, transform, laser)
+function laserScan(entity, dt, transform, laser)	
     local angle = transform.rotation.degrees.value
 
     if laser.scanDirection == 1 then

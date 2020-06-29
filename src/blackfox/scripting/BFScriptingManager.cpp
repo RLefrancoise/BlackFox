@@ -63,7 +63,7 @@ namespace BlackFox
 			sol::table runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
 
 			auto component_t = runtimeNs[componentName].get_or_create<sol::table>();
-			component_t["id"] = [cid](BFWorld*) -> auto
+			component_t["id"] = [cid]() -> auto
 			{
 				return cid;
 			};

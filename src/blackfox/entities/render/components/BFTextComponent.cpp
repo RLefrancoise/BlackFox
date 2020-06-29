@@ -22,4 +22,29 @@ namespace BlackFox::Components
     , outlineThickness(outlineThickness)
     , outlineColor(outlineColor)
     {}
+
+    BFTextComponent::BFTextComponent(BFTextComponent&& textComponent) noexcept
+    : BFDrawableComponent(std::move(textComponent))
+    , BFTransformableComponent(std::move(textComponent))
+    {
+        std::swap(font, textComponent.font);
+        std::swap(text, textComponent.text);
+        std::swap(characterSize, textComponent.characterSize);
+        std::swap(outlineThickness, textComponent.outlineThickness);
+        std::swap(outlineColor, textComponent.outlineColor);
+    }
+
+    BFTextComponent& BFTextComponent::operator=(BFTextComponent&& textComponent) noexcept
+    {
+        if(this != &textComponent)
+        {
+            std::swap(font, textComponent.font);
+            std::swap(text, textComponent.text);
+            std::swap(characterSize, textComponent.characterSize);
+            std::swap(outlineThickness, textComponent.outlineThickness);
+            std::swap(outlineColor, textComponent.outlineColor);
+        }
+
+        return *this;
+    }
 }

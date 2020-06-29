@@ -1,18 +1,16 @@
 #include "BFTextResource.h"
 #include <fstream>
+#include <fmt/format.h>
 
 namespace BlackFox
 {
-    BFTextResource::BFTextResource(const Resources::ResourceType& type)
-    : BFResource(type)
-    {}
+    BFTextResource::BFTextResource(const Resources::ResourceType &type)
+    : BFResource(type) {}
 
-    BFTextResource::BFTextResource(BlackFox::BFTextResource && res) noexcept
-    : m_content(res.m_content)
-    , BFResource(std::move(res))
-    {}
+    BFTextResource::BFTextResource(BlackFox::BFTextResource &&res) noexcept
+    : m_content(res.m_content), BFResource(std::move(res)) {}
 
-    BFTextResource& BFTextResource::operator=(BFTextResource && res) noexcept
+    BFTextResource &BFTextResource::operator=(BFTextResource &&res) noexcept
     {
         m_content = res.m_content;
         BFResource::operator=(std::move(res));
@@ -31,14 +29,13 @@ namespace BlackFox
         return ofs.good();
     }
 
-    bool BFTextResource::load(const std::filesystem::path& file, std::string* errorMessage)
+    bool BFTextResource::load(const std::filesystem::path &file, std::string *errorMessage)
     {
-        if(!BFResource::load(file, errorMessage)) return false;
+        if (!BFResource::load(file, errorMessage)) return false;
 
         std::ifstream ifs(file);
-        if (!ifs.is_open() || !ifs.good())
-        {
-            *errorMessage = "Failed to open file";
+        if (!ifs.is_open() || !ifs.good()) {
+            *errorMessage = fmt::format("Failed to open file {}", file.string());
             return false;
         }
 
@@ -50,7 +47,7 @@ namespace BlackFox
         return true;
     }
 
-    void BFTextResource::content(const std::string& content)
+    void BFTextResource::content(const std::string &content)
     {
         m_content = content;
     }

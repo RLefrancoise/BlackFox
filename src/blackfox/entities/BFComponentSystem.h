@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <rttr/rttr_enable.h>
+#include <entt/entt.hpp>
 
 #include "BFExport.h"
 
@@ -31,8 +32,8 @@ namespace BlackFox
 		 */
 		typedef std::shared_ptr<BFComponentSystem> Ptr;
 
-		constexpr BFComponentSystem(const BFComponentSystem& app) = delete;
-		constexpr BFComponentSystem& operator=(const BFComponentSystem& app) = delete;
+		constexpr BFComponentSystem(const BFComponentSystem& system) = delete;
+		constexpr BFComponentSystem& operator=(const BFComponentSystem& system) = delete;
 		
 		BFComponentSystem(BFComponentSystem&& system) noexcept;
 		BFComponentSystem& operator=(BFComponentSystem&& system) noexcept;

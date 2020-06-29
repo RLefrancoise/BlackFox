@@ -12,6 +12,8 @@ namespace BlackFox::Components
 
     protected:
         explicit BFDrawableComponent(const BFColor& color = BFColor::White);
-        ~BFDrawableComponent() override = default;
+
+        constexpr BFDrawableComponent(BFDrawableComponent&&) noexcept = default;
+        BFDrawableComponent& operator=(BFDrawableComponent&&) noexcept = default;
     };
 }

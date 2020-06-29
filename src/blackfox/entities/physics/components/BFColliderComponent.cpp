@@ -20,6 +20,30 @@ namespace BlackFox::Components
         , m_fixture(nullptr)
     {}
 
+    BFColliderComponent::BFColliderComponent(BlackFox::Components::BFColliderComponent &&collider) noexcept
+    {
+        std::swap(friction, collider.friction);
+        std::swap(restitution, collider.restitution);
+        std::swap(density, collider.density);
+        std::swap(isSensor, collider.isSensor);
+        std::swap(filter, collider.filter);
+        std::swap(m_fixture, collider.m_fixture);
+    }
+
+    BFColliderComponent& BFColliderComponent::operator=(BlackFox::Components::BFColliderComponent &&collider) noexcept
+    {
+        if(this != &collider)
+        {
+            std::swap(friction, collider.friction);
+            std::swap(restitution, collider.restitution);
+            std::swap(density, collider.density);
+            std::swap(isSensor, collider.isSensor);
+            std::swap(filter, collider.filter);
+            std::swap(m_fixture, collider.m_fixture);
+        }
+        return *this;
+    }
+
     void BFColliderComponent::fixtureDef(float physicsScale, b2FixtureDef* def)
     {
         def->density = density;

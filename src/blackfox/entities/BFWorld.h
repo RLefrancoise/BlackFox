@@ -6,6 +6,7 @@
 #include <rttr/type.h>
 #include <vector>
 #include <unordered_map>
+#include <entt/entt.hpp>
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
@@ -42,8 +43,12 @@ namespace BlackFox
 		 * \brief	Alias for world list.
 		 */
 		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
+
+		typedef BFComponentSystem::Ptr SystemType;
+
 		/// <summary>Alias for system list</summary>
-		typedef std::unordered_map<std::string, BFComponentSystem::Ptr> SystemList;
+		typedef std::unordered_map<std::string, SystemType> SystemList;
+
         /// <summary>Alias for systems by group</summary>
         typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> SystemGroupList;
 
@@ -140,22 +145,22 @@ namespace BlackFox
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 
-			const auto type = rttr::type::get<S>();
-
 			if(hasSystem<S>())
 			{
-				warning("World has already the system {}, create system will return the registered system", type.get_name().to_string());
+				BF_WARNING("World has already the system {}, create system will return the registered system", S::name);
 				return getSystem<S>();
 			}
 
 			//Create system
-			auto system = std::make_shared<S>(application, shared_from_this());
-			//Add the system to the system list
-			m_registeredSystems.insert(std::make_pair(type.get_name().to_string(), system));
-			//Add the system to its group
-			m_systemGroups[group].emplace_back(system);
+			auto system = m_container->get<S>();
+			//SystemType system = std::make_shared<S>(application, shared_from_this());
 
-			BF_PRINT("System {} created", type.get_name().to_string());
+			//Add the system to the system list
+			m_registeredSystems.insert(std::make_pair(S::name, system));
+			//Add the system to its group
+			m_systemGroups[S::group].emplace_back(system);
+
+			BF_PRINT("System {} created", S::name);
 
 			return system.get();
 		}
@@ -170,6 +175,7 @@ namespace BlackFox
 		/// --------------------------------------------------------------------------------
 		BFComponentSystem* createSystemFromType(const rttr::type& system, std::shared_ptr<BFApplication> application);
 
+		BFComponentSystem* createSystemFromType(entt::meta_type system, std::shared_ptr<BFApplication> application);
 
 		/// --------------------------------------------------------------------------------
 		/// <summary>
@@ -208,8 +214,7 @@ namespace BlackFox
 		template <typename S>
 		bool hasSystem()
 		{
-			const auto type = rttr::type::get<S>();
-			return m_registeredSystems.find(type.get_name().to_string()) != m_registeredSystems.end();
+			return m_registeredSystems.find(S::name) != m_registeredSystems.end();
 		}
 
 		/// --------------------------------------------------------------------------------
@@ -236,15 +241,13 @@ namespace BlackFox
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of getSystem must derive from BFComponentSystem");
 
-			const auto type = rttr::type::get<S>();
-
 			if (!hasSystem<S>())
 			{
-				BF_WARNING("World has no system {}. getSystem will return a null pointer", type.get_name().to_string());
+				BF_WARNING("World has no system {}. getSystem will return a null pointer", S::name);
 				return nullptr;
 			}
 
-			return static_cast<S*>(m_registeredSystems[type.get_name().to_string()].get());
+			return static_cast<S*>(m_registeredSystems[S::name].get());
 		}
 
 		/// --------------------------------------------------------------------------------
@@ -259,18 +262,8 @@ namespace BlackFox
 		template<class ComponentListener, typename... Args>
 		std::shared_ptr<ComponentListener> registerComponentListener(Args... args)
 		{
-			auto listener = std::make_shared<ComponentListener>(args...);
-			registerComponentListener<ComponentListener>(listener.get());
-			
+			auto listener = std::make_shared<ComponentListener>(m_entityManager.get(), args...);
 			return listener;
-		}
-
-		template<class ComponentListener>
-		void registerComponentListener(ComponentListener* listener)
-		{
-			m_entityManager->on_construct<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onCreate>(*listener);
-			m_entityManager->on_replace<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onReplace>(*listener);
-			m_entityManager->on_destroy<typename ComponentListener::ComponentType>().template connect<&ComponentListener::onDestroy>(*listener);
 		}
 
 	private:

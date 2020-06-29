@@ -34,9 +34,14 @@ namespace BlackFox::Systems
      */
 	class BLACKFOX_EXPORT BFPhysicsSystem final: public BFComponentSystem
 	{
+		//BF_SYSTEM(BFPhysicsSystem, "PhysicsSystem", ComponentSystemGroups::FixedTime)
 		BF_SYSTEM_AUTO_CREATE(BFPhysicsSystem, ComponentSystemGroups::FixedTime, "PhysicsSystem")
 
 		CINJECT(BFPhysicsSystem(BFApplication::Ptr app, std::shared_ptr<BFWorld> world));
+
+		BFPhysicsSystem(BFPhysicsSystem&& system);
+		BFPhysicsSystem& operator=(BFPhysicsSystem&& system);
+
 		void update(float dt) override;
 
 		/*!
@@ -77,7 +82,7 @@ namespace BlackFox::Systems
 	private:
 		void listenRigidBodies();
 		
-		void initRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb) const;
+		void initRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb);
 		void replaceRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb);
 		void cleanRigidBody(entt::entity e, entt::registry& em);
 
@@ -125,9 +130,9 @@ namespace BlackFox::Systems
 		template<class C>
 		auto listenColliders()
 		{
-			typename BFComponentListenerWithCallback<C>::CreateCallback createCallback = [&](entt::entity e, entt::registry& r, C& c) { /*initCollider<C>(e, r, c);*/ };
-			typename BFComponentListenerWithCallback<C>::ReplaceCallback replaceCallback = [&](entt::entity e, entt::registry& r, C& c) { replaceCollider<C>(e, r, c); };
-			typename BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::entity e, entt::registry& r) { cleanCollider<C>(e, r); };
+			typename BFComponentListenerWithCallback<C>::CreateCallback createCallback = [&](entt::registry& r, entt::entity e, C& c) { /*initCollider<C>(e, r, c);*/ };
+			typename BFComponentListenerWithCallback<C>::ReplaceCallback replaceCallback = [&](entt::registry& r, entt::entity e, C& c) { replaceCollider<C>(e, r, c); };
+			typename BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e) { cleanCollider<C>(e, r); };
 
 			return m_world->registerComponentListener<BFComponentListenerWithCallback<C>>(createCallback, replaceCallback, destroyCallback);
 		}
@@ -153,5 +158,13 @@ namespace BlackFox::Systems
 
 		/// List of fixtures that should be deleted at the end of the step
 		std::vector<b2Fixture*> m_pendingFixturesForDeletion;
+
+		typedef BFComponentListenerWithCallback<Components::BFRigidBodyComponent> RigidBodyListener;
+		typedef BFComponentListenerWithCallback<Components::BFBoxColliderComponent> BoxColliderListener;
+		typedef BFComponentListenerWithCallback<Components::BFCircleColliderComponent> CircleColliderListener;
+
+		std::shared_ptr<RigidBodyListener> m_rbListener;
+		std::shared_ptr<BoxColliderListener> m_boxColliderListener;
+		std::shared_ptr<CircleColliderListener> m_circleColliderListener;
 	};
 }

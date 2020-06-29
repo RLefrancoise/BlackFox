@@ -26,6 +26,9 @@ namespace BlackFox::Components
             bool isSensor = false,
             const BFContactFilter& filter = BFContactFilter());
 
+        BFCircleColliderComponent(BFCircleColliderComponent&& circle) noexcept;
+        BFCircleColliderComponent& operator=(BFCircleColliderComponent&& circle) noexcept;
+
         float radius;
 
     protected:

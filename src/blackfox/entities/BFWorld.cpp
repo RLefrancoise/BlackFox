@@ -114,6 +114,56 @@ namespace BlackFox
 		return sPtr;
 	}
 
+	BFComponentSystem* BFWorld::createSystemFromType(entt::meta_type system, BFApplication::Ptr application)
+	{
+		const std::string name = system.data("name"_hs).get(system).cast<const char*>();
+
+		//Check if the system is already created or not
+		if(hasSystemByName(name))
+		{
+			BF_WARNING("System {} is already created", name);
+			return nullptr;
+		}
+
+		auto ctor = system.ctor<BFApplication::Ptr, BFWorld::Ptr>();
+		if(!ctor)
+		{
+			BF_WARNING("Failed to find ctor with the given arguments");
+			return nullptr;
+		}
+
+		//Create system from type
+		auto instance = ctor.invoke(application, shared_from_this());
+		if(!instance)
+		{
+			BF_WARNING("Failed to create system {}", name);
+			return nullptr;
+		}
+
+		//Get the system group
+		const auto group = system.data("group"_hs).get(system).cast<ComponentSystemGroups>();
+
+		const auto sPtr = instance.try_cast<BFComponentSystem>();
+		if(!sPtr)
+		{
+			BF_ERROR("Failed to convert meta type for system {} to BFComponentSystem*", name);
+			return nullptr;
+		}
+
+		BFComponentSystem::Ptr ptr(sPtr);
+
+		//Add the system to the systems map
+		m_systemGroups[group].emplace_back(ptr);
+		BF_PRINT("System {} added to the group {}", name, group);
+
+		//Remember the registration of the system
+		m_registeredSystems.insert(std::make_pair(name, ptr));
+
+		BF_PRINT("System {} created", name);
+
+		return sPtr;
+	}
+
     BFComponentSystem* BFWorld::createSystemFromName(
     		const std::string& systemName
     		, BFComponentSystem::Ptr system
@@ -126,11 +176,12 @@ namespace BlackFox
             return getSystemByName(systemName);
         }
 
-        //Add the system to its group
-        m_systemGroups[group].emplace_back(system);
+		//Add the system to its group
+		m_systemGroups[group].emplace_back(system);
 		BF_PRINT("System {} added to the group {}", systemName, group);
 
 		//Add the system to the system list
+		//entt::meta_any instance = system;
 		m_registeredSystems.insert(std::make_pair(systemName, system));
 		BF_PRINT("System {} created", systemName);
 
@@ -146,20 +197,30 @@ namespace BlackFox
 		//for each system
 		for(const auto& system : systems)
 		{
-		    //for each world
-			for(const auto& world : worlds)
-			{
-				system->update(deltaTime);
-			}
+			system->update(deltaTime);	
 		}
 	}
 
     bool BFWorld::hasSystemByName(const std::string& name, const bool nameIsType)
     {
+		auto found = true;
 		if(nameIsType)
 		{
+			//Check RTTR
 			const auto type = rttr::type::get_by_name(name);
 			if(!type.is_valid())
+			{
+				found = false;
+			}
+
+			//Check EnTT
+			if(!found)
+			{
+				const auto t = entt::resolve_id(entt::hashed_string(name.c_str()));
+				if(t) found = true;
+			}
+
+			if(!found)
 			{
 				BF_WARNING("Cannot find type with name {}", name);
 				return false;

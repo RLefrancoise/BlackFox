@@ -16,6 +16,9 @@ namespace BlackFox::Components
 			, rotation(rotation)
 			, scale(scale) {}
 
+		constexpr BFTransformComponent(BFTransformComponent&&) noexcept = default;
+		BFTransformComponent& operator=(BFTransformComponent&&) noexcept = default;
+
 		BFVector2f position;
 		BFDegree rotation;
 		BFVector2f scale;		

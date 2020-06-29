@@ -39,6 +39,9 @@ namespace BlackFox::Components
 		, rect(rect)
 		{}
 
+		BFSpriteComponent(BFSpriteComponent&&) noexcept = default;
+		BFSpriteComponent& operator=(BFSpriteComponent&&) noexcept = default;
+
 		/*!
 		 * Image of the sprite.
 		 */

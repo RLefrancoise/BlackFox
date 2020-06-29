@@ -9,6 +9,8 @@ namespace BlackFox
 	protected:
 		IBFComponent() = default;
 	public:
+		IBFComponent(IBFComponent&&) = default;
+		IBFComponent& operator=(IBFComponent&&) = default;
 		virtual ~IBFComponent() noexcept = default;
 	};
 

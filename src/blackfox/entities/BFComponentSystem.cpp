@@ -25,10 +25,26 @@ RTTR_REGISTRATION
 
 namespace BlackFox
 {
-	BFComponentSystem::BFComponentSystem(BFComponentSystem&& system) noexcept
-	: m_application(std::move(system.m_application))
-	, m_world(std::move(system.m_world))
+	struct register_component_system
 	{
+		register_component_system()
+		{
+			entt::meta<BFComponentSystem>()
+				.type("ComponentSystem"_hs);
+		}
+	};
+
+	register_component_system register__;
+
+	//------------------------------------------------------------------------
+
+	/*BFComponentSystem::BFComponentSystem(const BFComponentSystem& system) = default;
+	BFComponentSystem& BFComponentSystem::operator=(const BFComponentSystem& system) = default;*/
+
+	BFComponentSystem::BFComponentSystem(BFComponentSystem&& system) noexcept
+	{
+		std::swap(m_application, system.m_application);
+		std::swap(m_world, system.m_world);
 	}
 
 	BFComponentSystem& BFComponentSystem::operator=(BFComponentSystem&& system) noexcept
@@ -41,6 +57,5 @@ namespace BlackFox
 	BFComponentSystem::BFComponentSystem(BFApplication::Ptr application, BFWorld::Ptr world)
 	: m_application(std::move(application))
 	, m_world(std::move(world))
-	{
-	}
+	{}
 }
