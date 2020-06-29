@@ -18,9 +18,6 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/entt/src)
 # TermColor
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/termcolor/include)
 
-# ChaiScript
-include_directories(${CMAKE_SOURCE_DIR}/thirdParties/ChaiScript/include)
-
 # RTTR
 find_package(RTTR CONFIG REQUIRED Core)
 

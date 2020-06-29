@@ -1,6 +1,3 @@
-[submodule "thirdParties/cpp-sdl2"]
-	path = thirdParties/cpp-sdl2
-	url = https://github.com/Edhebi/cpp-sdl2.git
 [submodule "thirdParties/entt"]
 	path = thirdParties/entt
 	url = https://github.com/skypjack/entt.git
@@ -16,9 +13,6 @@
 [submodule "thirdParties/cinject"]
 	path = thirdParties/cinject
 	url = https://github.com/mjirous/cinject
-[submodule "thirdParties/ChaiScript"]
-	path = thirdParties/ChaiScript
-	url = https://github.com/ChaiScript/ChaiScript.git
 [submodule "thirdParties/inih"]
 	path = thirdParties/inih
 	url = https://github.com/jtilly/inih.git

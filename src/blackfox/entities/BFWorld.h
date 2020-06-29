@@ -50,7 +50,7 @@ namespace BlackFox
 		typedef std::unordered_map<std::string, SystemType> SystemList;
 
         /// <summary>Alias for systems by group</summary>
-        typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem::Ptr>> SystemGroupList;
+        typedef std::unordered_map<ComponentSystemGroups, std::vector<SystemType>> SystemGroupList;
 
 		constexpr BFWorld(const BFWorld& app) = delete;
 		constexpr BFWorld& operator=(const BFWorld& app) = delete;
@@ -152,8 +152,8 @@ namespace BlackFox
 			}
 
 			//Create system
-			auto system = m_container->get<S>();
-			//SystemType system = std::make_shared<S>(application, shared_from_this());
+			//auto system = m_container->get<S>();
+			SystemType system = std::make_shared<S>(std::move(application), shared_from_this());
 
 			//Add the system to the system list
 			m_registeredSystems.insert(std::make_pair(S::name, system));

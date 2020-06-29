@@ -130,7 +130,7 @@ namespace BlackFox::Systems
 	{
 		RigidBodyListener::CreateCallback createCallback = [&](entt::registry& r, entt::entity e, BFRigidBodyComponent& rb) { initRigidBody(e, r, rb); };
 		RigidBodyListener::ReplaceCallback replaceCallback = [&](entt::registry& r, entt::entity e, BFRigidBodyComponent& rb) { replaceRigidBody(e, r, rb); };
-		RigidBodyListener::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e) { cleanRigidBody(e, r); };
+		RigidBodyListener::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e, BFRigidBodyComponent& rb) { cleanRigidBody(e, r, rb); };
 
 		m_rbListener = m_world->registerComponentListener<RigidBodyListener>(createCallback, replaceCallback, destroyCallback);
 	}
@@ -159,16 +159,14 @@ namespace BlackFox::Systems
 	void BFPhysicsSystem::replaceRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb)
 	{
 		//Clean rigid body if needed
-		cleanRigidBody(e, em);
+		cleanRigidBody(e, em, rb);
 
 		//Create body
 		initRigidBody(e, em, rb);
 	}
 
-	void BFPhysicsSystem::cleanRigidBody(const entt::entity e, entt::registry& em)
+	void BFPhysicsSystem::cleanRigidBody(const entt::entity e, entt::registry& em, BFRigidBodyComponent& rb)
 	{
-		auto& rb = em.get<BFRigidBodyComponent>(e);
-
 		//Clean colliders
 		cleanCollider<BFBoxColliderComponent>(e, em);
 		cleanCollider<BFCircleColliderComponent>(e, em);

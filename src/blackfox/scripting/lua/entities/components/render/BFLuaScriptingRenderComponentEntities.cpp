@@ -7,6 +7,7 @@
 #include "BFLineComponent.h"
 #include "BFTextComponent.h"
 #include "BFHiddenComponent.h"
+#include "BFViewComponent.h"
 
 using namespace BlackFox::Components;
 
@@ -77,6 +78,11 @@ namespace BlackFox
 			});
 		text_t["outlineThickness"] = &BFTextComponent::outlineThickness;
 		text_t["outlineColor"] = &BFTextComponent::outlineColor;
+
+		//View
+		auto view_t = registerType<BFViewComponent>();
+		view_t["size"] = &BFViewComponent::size;
+		view_t["viewport"] = &BFViewComponent::viewport;
 	}
 
 	std::string BFLuaScriptingRenderComponentEntities::namespaceName() const

@@ -82,6 +82,11 @@ namespace BlackFox
             return BFVector2f(x * worldUnitPixels, y * worldUnitPixels);
         }
 
+        [[nodiscard]] BFVector2f worldToPixels(const BFVector2f& value) const
+        {
+            return BFVector2f(value.x * worldUnitPixels, value.y * worldUnitPixels);
+        }
+
         /// --------------------------------------------------------------------------------
         /// <summary>
         /// Convert pixels to world units
@@ -93,6 +98,11 @@ namespace BlackFox
         [[nodiscard]] BFVector2f pixelsToWorld(const float x, const float y) const
         {
             return BFVector2f(x / worldUnitPixels, y / worldUnitPixels);
+        }
+
+        [[nodiscard]] BFVector2f pixelsToWorld(const BFVector2f& value) const
+        {
+            return BFVector2f(value.x / worldUnitPixels, value.y / worldUnitPixels);
         }
     };
 

@@ -27,12 +27,12 @@ namespace BlackFox
 
 		virtual void listenDestroy(entt::registry& r, entt::entity e)
 		{
-			onDestroy(r, e);
+			onDestroy(r, e, r.get<Component>(e));
 		}
 
 		virtual void onCreate(entt::registry& r, entt::entity e, Component& c) = 0;
 		virtual void onReplace(entt::registry& r, entt::entity e, Component& c) = 0;
-		virtual void onDestroy(entt::registry& r, entt::entity e) = 0;
+		virtual void onDestroy(entt::registry& r, entt::entity e, Component& c) = 0;
 
 		BFComponentListener(entt::connection&& create, entt::connection&& replace, entt::connection&& destroy)
 		: createConnection(create)
@@ -57,7 +57,7 @@ namespace BlackFox
 
 		typedef std::function<void(entt::registry&, entt::entity, Component&)> CreateCallback;
 		typedef std::function<void(entt::registry&, entt::entity, Component&)> ReplaceCallback;
-		typedef std::function<void(entt::registry&, entt::entity)> DestroyCallback;
+		typedef std::function<void(entt::registry&, entt::entity, Component&)> DestroyCallback;
 
 		BFComponentListenerWithCallback(
 				entt::registry* r, 
@@ -73,19 +73,19 @@ namespace BlackFox
 		, m_onDestroyCallback(destroyCallback)
 		{}
 
-		void onCreate(entt::registry& r, entt::entity e, Component& rb) override
+		void onCreate(entt::registry& r, entt::entity e, Component& c) override
 		{
-			m_onCreateCallback(r, e, rb);
+			m_onCreateCallback(r, e, c);
 		}
 
-		void onReplace(entt::registry& r, entt::entity e, Component& rb) override
+		void onReplace(entt::registry& r, entt::entity e, Component& c) override
 		{
-			m_onReplaceCallback(r, e, rb);
+			m_onReplaceCallback(r, e, c);
 		}
 
-		void onDestroy(entt::registry& r, entt::entity e) override
+		void onDestroy(entt::registry& r, entt::entity e, Component& c) override
 		{
-			m_onDestroyCallback(r, e);
+			m_onDestroyCallback(r, e, c);
 		}
 
 	private:

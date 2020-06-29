@@ -181,7 +181,6 @@ namespace BlackFox
 		BF_PRINT("System {} added to the group {}", systemName, group);
 
 		//Add the system to the system list
-		//entt::meta_any instance = system;
 		m_registeredSystems.insert(std::make_pair(systemName, system));
 		BF_PRINT("System {} created", systemName);
 
@@ -203,24 +202,10 @@ namespace BlackFox
 
     bool BFWorld::hasSystemByName(const std::string& name, const bool nameIsType)
     {
-		auto found = true;
 		if(nameIsType)
 		{
-			//Check RTTR
 			const auto type = rttr::type::get_by_name(name);
 			if(!type.is_valid())
-			{
-				found = false;
-			}
-
-			//Check EnTT
-			if(!found)
-			{
-				const auto t = entt::resolve_id(entt::hashed_string(name.c_str()));
-				if(t) found = true;
-			}
-
-			if(!found)
 			{
 				BF_WARNING("Cannot find type with name {}", name);
 				return false;

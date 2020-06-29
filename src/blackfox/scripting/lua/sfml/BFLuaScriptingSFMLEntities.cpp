@@ -69,11 +69,47 @@ namespace BlackFox
 				sf::IntRect(int, int, int, int),
 				sf::IntRect(sf::Vector2i, sf::Vector2i)>());
 
+		intrect_t["contains"] = sol::overload(
+				[&](sf::IntRect& rect, const int x, const int y) {
+					return rect.contains(x, y);
+				},
+				[&](sf::IntRect& rect, const sf::Vector2i& v) {
+					return rect.contains(v);
+				});
+
+		intrect_t["intersects"] = [&](sf::IntRect& rect, const sf::IntRect& testRect) {
+			sf::IntRect intersection;
+			return std::make_tuple(rect.intersects(testRect, intersection), intersection);
+		};
+
+		intrect_t["left"] = &sf::IntRect::left;
+		intrect_t["top"] = &sf::IntRect::top;
+		intrect_t["width"] = &sf::IntRect::width;
+		intrect_t["height"] = &sf::IntRect::height;
+
 		//FloatRect
 		auto floatrect_t = graphicsNs.new_usertype<sf::FloatRect>("FloatRect",
             sol::constructors<
                 sf::FloatRect(),
                 sf::FloatRect(float, float, float, float),
                 sf::FloatRect(sf::Vector2f, sf::Vector2f)>());
+
+		floatrect_t["contains"] = sol::overload(
+				[&](sf::FloatRect& rect, const float x, const float y) {
+					return rect.contains(x, y);
+				},
+				[&](sf::FloatRect& rect, const sf::Vector2f& v) {
+					return rect.contains(v);
+				});
+
+		floatrect_t["intersects"] = [&](sf::FloatRect& rect, const sf::FloatRect& testRect) {
+			sf::FloatRect intersection;
+			return std::make_tuple(rect.intersects(testRect, intersection), intersection);
+		};
+
+		floatrect_t["left"] = &sf::FloatRect::left;
+		floatrect_t["top"] = &sf::FloatRect::top;
+		floatrect_t["width"] = &sf::FloatRect::width;
+		floatrect_t["height"] = &sf::FloatRect::height;
 	}
 }

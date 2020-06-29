@@ -6,6 +6,7 @@
 
 #include "BFTransformComponent.h"
 
+#include "BFViewComponent.h"
 #include "BFDepthComponent.h"
 #include "BFSpriteComponent.h"
 #include "BFCircleShapeComponent.h"
@@ -310,13 +311,38 @@ namespace BlackFox::Systems
 	void BFRenderSystem::update(float dt)
 	{
 		auto em = m_world->entityManager();
+
+		//Iterate views
+		auto views = em->view<const BFViewComponent>();
+
+		//If there are any views, use them
+		if(views.size() > 0)
+		{
+			views.each([&](entt::entity e, const BFViewComponent& view)
+			{
+				renderPass(static_cast<sf::View>(view));
+			});
+		}
+		//Else, use default view to render
+		else
+		{
+			renderPass(m_application->window()->getDefaultView());
+		}
+	}
+
+	void BFRenderSystem::renderPass(const sf::View& view)
+	{
+		//Apply view to window
+		m_application->window()->setView(view);
+
+		auto em = m_world->entityManager();
 		auto group = em->group<BFDepthComponent>(entt::get<const BFTransformComponent>, entt::exclude<BFHiddenComponent>);
 
 		//Sort renderable by depth
 		group.sort<BFDepthComponent>([](const BFDepthComponent& lhs, const BFDepthComponent& rhs)
-		{
-			return lhs.depth > rhs.depth;
-		});
+		 {
+			 return lhs.depth > rhs.depth;
+		 });
 
 		//Render
 		group.each([&](entt::entity entity, const BFDepthComponent& depth, const BFTransformComponent& transform)
@@ -324,31 +350,31 @@ namespace BlackFox::Systems
 			//Entity is a sprite
 			if(BFSpriteComponent* sprite = em->try_get<BFSpriteComponent>(entity))
 			{
-				renderSprite(m_application.get(), *sprite, transform);
+			   renderSprite(m_application.get(), *sprite, transform);
 			}
 
 			//Entity is a circle shape
 			if(BFCircleShapeComponent* circle = em->try_get<BFCircleShapeComponent>(entity))
-            {
-			    renderCircleShape(m_application.get(), *circle, transform);
-            }
+			{
+			   renderCircleShape(m_application.get(), *circle, transform);
+			}
 
 			//Entity is a box shape
 			if(BFBoxShapeComponent* box = em->try_get<BFBoxShapeComponent>(entity))
 			{
-				renderBoxShape(m_application.get(), *box, transform);
+			   renderBoxShape(m_application.get(), *box, transform);
 			}
 
 			//Entity is a line shape
 			if(BFLineComponent* line = em->try_get<BFLineComponent>(entity))
 			{
-				renderLine(m_application.get(), *line, transform);
+			   renderLine(m_application.get(), *line, transform);
 			}
 
 			//Entity is a text
 			if(BFTextComponent* text = em->try_get<BFTextComponent>(entity))
 			{
-				renderText(m_application.get(), *text, transform);
+			   renderText(m_application.get(), *text, transform);
 			}
 		});
 

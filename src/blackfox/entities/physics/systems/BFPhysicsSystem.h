@@ -84,7 +84,7 @@ namespace BlackFox::Systems
 		
 		void initRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb);
 		void replaceRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb);
-		void cleanRigidBody(entt::entity e, entt::registry& em);
+		void cleanRigidBody(entt::entity e, entt::registry& em, Components::BFRigidBodyComponent& rb);
 
 		template<class C>
 		void initCollider(entt::entity e, entt::registry& em, C& c)
@@ -108,7 +108,7 @@ namespace BlackFox::Systems
 		template<class C>
 		void replaceCollider(entt::entity e, entt::registry& em, C& c)
 		{
-			cleanCollider<C>(e, em);
+			cleanCollider<C>(e, em, c);
 			//Init will be done in the before step
 			//initCollider<C>(e, em, c);
 		}
@@ -116,12 +116,17 @@ namespace BlackFox::Systems
 		template<class C>
 		void cleanCollider(entt::entity e, entt::registry& em)
 		{
-			auto* c = em.try_get<C>(e);
-
-			if (c->m_fixture && c->m_fixture->GetBody())
+			auto c = em.try_get<C>(e);
+			if(c) cleanCollider<C>(e, em, *c);
+		}
+		
+		template<class C>
+		void cleanCollider(entt::entity e, entt::registry& em, C& c)
+		{
+			if (c.m_fixture && c.m_fixture->GetBody())
 			{
-			    requestFixtureDeletion(c->m_fixture);
-				c->m_fixture = nullptr;
+			    requestFixtureDeletion(c.m_fixture);
+				c.m_fixture = nullptr;
 
 				BF_PRINT("Clean collider {} for entity {}", C::name, e);
 			}
@@ -132,7 +137,7 @@ namespace BlackFox::Systems
 		{
 			typename BFComponentListenerWithCallback<C>::CreateCallback createCallback = [&](entt::registry& r, entt::entity e, C& c) { /*initCollider<C>(e, r, c);*/ };
 			typename BFComponentListenerWithCallback<C>::ReplaceCallback replaceCallback = [&](entt::registry& r, entt::entity e, C& c) { replaceCollider<C>(e, r, c); };
-			typename BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e) { cleanCollider<C>(e, r); };
+			typename BFComponentListenerWithCallback<C>::DestroyCallback destroyCallback = [&](entt::registry& r, entt::entity e, C& c) { cleanCollider<C>(e, r, c); };
 
 			return m_world->registerComponentListener<BFComponentListenerWithCallback<C>>(createCallback, replaceCallback, destroyCallback);
 		}
