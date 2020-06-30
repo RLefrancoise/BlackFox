@@ -8,7 +8,7 @@ namespace BlackFox::Components
 {
 	struct BFPositionComponent final : IBFComponent
 	{
-	    BF_COMPONENT("Position")
+	    BF_COMPONENT(BFPositionComponent, "Position")
 
 		constexpr BFPositionComponent() 
 		: x(0)

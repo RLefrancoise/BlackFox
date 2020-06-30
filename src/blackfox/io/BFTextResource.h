@@ -6,8 +6,9 @@
 
 namespace BlackFox
 {
-	struct BLACKFOX_EXPORT BFTextResource : BFResource
+	class BLACKFOX_EXPORT BFTextResource : public BFResource
 	{
+	public:
 		explicit BFTextResource(const Resources::ResourceType& type);
 
 		~BFTextResource() override = default;

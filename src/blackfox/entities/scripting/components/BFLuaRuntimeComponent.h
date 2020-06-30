@@ -12,5 +12,6 @@ namespace BlackFox::Components
 	/// --------------------------------------------------------------------------------
 	struct BLACKFOX_EXPORT BFLuaRuntimeComponent final : BFRuntimeComponent<BFLuaScript::Ptr>
 	{
+		BF_COMPONENT(BFLuaRuntimeComponent, "LuaRuntime")
 	};
 }

@@ -10,7 +10,7 @@ namespace BlackFox::Components
      */
     struct BFCircleShapeComponent final: BFShapeComponent
     {
-        BF_COMPONENT("CircleShape")
+        BF_COMPONENT(BFCircleShapeComponent, "CircleShape")
 
         BFCircleShapeComponent();
         explicit BFCircleShapeComponent(float radius, const BFColor& color = BFColor::White);

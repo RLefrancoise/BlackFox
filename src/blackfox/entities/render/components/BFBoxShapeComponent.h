@@ -10,7 +10,7 @@ namespace BlackFox::Components
      */
     struct BLACKFOX_EXPORT BFBoxShapeComponent final: BFShapeComponent
     {
-        BF_COMPONENT("BoxShape")
+        BF_COMPONENT(BFBoxShapeComponent, "BoxShape")
 
         BFBoxShapeComponent();
         explicit BFBoxShapeComponent(const BFVector2f& extents, const BFColor& color = BFColor::White);

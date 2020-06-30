@@ -15,7 +15,7 @@ namespace BlackFox::Components
 	 */
 	struct BLACKFOX_EXPORT BFSpriteComponent final : BFDrawableComponent, BFTransformableComponent
 	{
-		BF_COMPONENT("Sprite")
+		BF_COMPONENT(BFSpriteComponent, "Sprite")
 
 		BFSpriteComponent()
 		: BFSpriteComponent(TextureHandle{})

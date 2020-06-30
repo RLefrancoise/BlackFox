@@ -8,7 +8,7 @@ namespace BlackFox::Components
 {
 	struct BLACKFOX_EXPORT BFTransformComponent final : IBFComponent
 	{
-		BF_COMPONENT("Transform")
+		BF_COMPONENT(BFTransformComponent, "Transform")
 
 		constexpr BFTransformComponent() = default;
 		constexpr BFTransformComponent(const BFVector2f& position, const BFDegree& rotation, const BFVector2f& scale)

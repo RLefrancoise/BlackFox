@@ -32,15 +32,28 @@ RigidBody = BlackFox.Components.Physics.RigidBody.id()
 BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
 CircleCollider = BlackFox.Components.Physics.CircleCollider.id()
 
+-- Archetypes
+BoxLaserTargetArchetype = world:createArchetype(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
+CircleLaserTargetArchetype = world:createArchetype(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
+
 function createBody(position)
-    local e, 
+    --[[local e,
     transform, 
     rigidBody, 
     boxCollider, 
     boxShape,
     depth,
-    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
+    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)]]--
 
+    -- Instantiate box target archetype
+    local e = BoxLaserTargetArchetype:instance(world)
+    local transform = world:getComponent(e, Transform)
+    local rigidBody = world:getComponent(e, RigidBody)
+    local boxCollider = world:getComponent(e, BoxCollider)
+    local boxShape = world:getComponent(e, BoxShape)
+    local depth = world:getComponent(e, Depth)
+    local laserTarget = world:getComponent(e, LaserTarget)
+    
     -- Position
     transform.position = position
 

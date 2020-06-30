@@ -11,7 +11,7 @@ namespace BlackFox::Components
      */
     struct BLACKFOX_EXPORT BFTextComponent final: BFDrawableComponent, BFTransformableComponent
     {
-        BF_COMPONENT("Text")
+        BF_COMPONENT(BFTextComponent, "Text")
 
         BFTextComponent();
 

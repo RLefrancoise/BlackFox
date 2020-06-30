@@ -9,7 +9,7 @@ namespace BlackFox::Components
 	 */
 	struct BLACKFOX_EXPORT BFDepthComponent final : IBFComponent
 	{
-		BF_COMPONENT("Depth")
+		BF_COMPONENT(BFDepthComponent, "Depth")
 
 		constexpr BFDepthComponent() : BFDepthComponent(0) {}
 		constexpr explicit BFDepthComponent(int depth) : depth(depth) {}

@@ -9,8 +9,9 @@
 namespace BlackFox
 {
 	template <class T>
-	struct BFYamlFile : BFTextResource
-	{		
+	class BFYamlFile : public BFTextResource
+	{
+	public:
 		using Super = BFYamlFile<T>;
 
 		explicit BFYamlFile(const Resources::ResourceType& type) : BFTextResource(type) {}

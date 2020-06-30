@@ -14,7 +14,7 @@ namespace BlackFox::Components
     {
         friend class Systems::BFPhysicsSystem;
 
-        BF_COMPONENT("CircleCollider")
+        BF_COMPONENT(BFCircleColliderComponent, "CircleCollider")
 
         BFCircleColliderComponent();
         explicit BFCircleColliderComponent(float radius);

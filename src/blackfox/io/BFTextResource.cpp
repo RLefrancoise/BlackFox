@@ -5,15 +5,23 @@
 namespace BlackFox
 {
     BFTextResource::BFTextResource(const Resources::ResourceType &type)
-    : BFResource(type) {}
+    : BFResource(type)
+    {}
 
     BFTextResource::BFTextResource(BlackFox::BFTextResource &&res) noexcept
-    : m_content(res.m_content), BFResource(std::move(res)) {}
+    : BFResource(std::move(res))
+    {
+        std::swap(m_content, res.m_content);
+    }
 
     BFTextResource &BFTextResource::operator=(BFTextResource &&res) noexcept
     {
-        m_content = res.m_content;
-        BFResource::operator=(std::move(res));
+        if(this != &res)
+        {
+            m_content = res.m_content;
+            res.m_content = "";
+        }
+
         return *this;
     }
 

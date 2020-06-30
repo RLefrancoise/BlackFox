@@ -9,7 +9,7 @@ namespace BlackFox::Components
 {
 	struct BFRotationComponent final : IBFComponent
 	{
-	    BF_COMPONENT("Rotation")
+	    BF_COMPONENT(BFRotationComponent, "Rotation")
 
 		constexpr BFRotationComponent() 
 		: angle(0) 

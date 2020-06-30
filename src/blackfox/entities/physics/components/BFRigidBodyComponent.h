@@ -17,7 +17,7 @@ namespace BlackFox::Components
 	{
 		friend class Systems::BFPhysicsSystem;
 		
-		BF_COMPONENT("RigidBody")
+		BF_COMPONENT(BFRigidBodyComponent, "RigidBody")
 
 		BFRigidBodyComponent();
         ~BFRigidBodyComponent() override = default;

@@ -4,11 +4,13 @@
 #include <sol/variadic_results.hpp>
 #include <sol/object.hpp>
 #include <sol/usertype.hpp>
+#include <algorithm>
 
 #include "BFWorld.h"
 #include "BFApplication.h"
 #include "BFLuaComponentSystem.h"
 #include "BFLuaRuntimeRegistry.h"
+#include "BFLuaEntityArchetype.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
@@ -19,8 +21,44 @@ namespace BlackFox
 	    auto componentType = m_namespace.new_usertype<ComponentId>("ComponentId");
 	    auto entityType = m_namespace.new_usertype<entt::entity>("Entity");
 	    auto worldType = m_namespace.new_usertype<BFWorld>("World");
-        
-    	//Entities
+
+    	// Archetype
+    	auto archetypeType = m_namespace.new_usertype<BFLuaEntityArchetype>("EntityArchetype");
+
+    	archetypeType["instance"] = [&](BFLuaEntityArchetype& archetype, BFWorld::Ptr world) -> entt::entity
+        {
+    	    return archetype.instance(world->entityManager());
+        };
+
+    	archetypeType["entities"] = [&](BFLuaEntityArchetype& archetype, BFWorld::Ptr world, const sol::function& callback, const float dt) -> size_t
+        {
+            try
+            {
+                auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+                runtimeRegistry->setEntityManager(world->entityManager());
+                return runtimeRegistry->entities(callback, dt, archetype.components(), m_state);
+            }
+            catch(const std::exception& e)
+            {
+                BF_ERROR("{}", e.what());
+                return 0;
+            }
+        };
+
+    	worldType["createArchetype"] = [&](BFWorld& world, const sol::variadic_args& components)
+        {
+    	    auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
+    	    runtimeRegistry->setEntityManager(world.entityManager());
+
+            // Convert variadic args to component id vector
+            std::vector<ComponentId> ids;
+            ids.resize(components.size());
+            std::transform(components.cbegin(), components.cend(), ids.begin(), [&](const auto& a) { return a.template as<ComponentId>(); });
+
+            return std::make_shared<BFLuaEntityArchetype>(ids, runtimeRegistry, m_state);
+        };
+
+        //Entities
 
         // Create entity
         worldType["createEntity"] = [&](BFWorld& world, const sol::variadic_args& components)
@@ -101,7 +139,9 @@ namespace BlackFox
         {
 			auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			runtimeRegistry->setEntityManager(world.entityManager());
-            return sol::as_returns(runtimeRegistry->getComponents(m_state, entity, components));
+
+            std::vector<ComponentId> ids(components.cbegin(), components.cend());
+            return sol::as_returns(runtimeRegistry->getComponents(m_state, entity, ids));
         };
 
         // Iterate entities
@@ -111,7 +151,13 @@ namespace BlackFox
             {
 			    auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
 			    runtimeRegistry->setEntityManager(world.entityManager());
-			    return runtimeRegistry->entities(callback, dt, components, m_state);
+
+			    // Convert variadic args to component id vector
+			    std::vector<ComponentId> ids;
+			    ids.resize(components.size());
+			    std::transform(components.cbegin(), components.cend(), ids.begin(), [&](const auto& a) { return a.template as<ComponentId>(); });
+
+			    return runtimeRegistry->entities(callback, dt, ids, m_state);
             }
             catch(const std::exception& e)
             {

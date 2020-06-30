@@ -20,13 +20,12 @@ constexpr decltype(auto) systemTypes()
 }
 
 #define BF_SYSTEM(system, systemName, systemGroup)              public: \
-                                                                    static constexpr const entt::id_type id = entt::type_info<system>::id(); \
+                                                                    static constexpr const auto id = entt::type_info<system>::id(); \
                                                                     static constexpr const BlackFox::ComponentSystemGroups group = systemGroup; \
-                                                                    static constexpr const char* name = systemName; \
+                                                                    static constexpr const char* name = systemName;
 
 #define BF_SYSTEM_AUTO_CREATE(system, systemGroup, systemName)  RTTR_ENABLE(BlackFox::BFComponentSystem) \
-                                                                BF_SYSTEM(system, systemName, systemGroup) \
-                                                                BlackFox::ComponentSystemGroups get_group() const { return group; }
+                                                                BF_SYSTEM(system, systemName, systemGroup)
 
 #define BF_BEFORE_SYSTEM(...)                                   public: \
                                                                     static constexpr const auto beforeSystems = systemTypes<__VA_ARGS__>();
@@ -42,8 +41,9 @@ constexpr decltype(auto) systemTypes()
                                                                     registration::class_<system>(system::name) \
                                                                     .constructor<std::shared_ptr<BlackFox::BFApplication>,std::shared_ptr<BlackFox::BFWorld>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
+                                                                    .method("id", []() { return system::id; }) \
                                                                     .method("name", []() { return system::name; }) \
-                                                                    .method("get_group", &system::get_group); \
+                                                                    .method("group", []() { return system::group; }); \
                                                                 }
 
 #else
@@ -54,6 +54,7 @@ constexpr decltype(auto) systemTypes()
                                                                     registration::class_<system>(system::name) \
                                                                     .constructor<std::shared_ptr<BlackFox::BFApplication>,std::shared_ptr<BlackFox::BFWorld>>()(rttr::policy::ctor::as_raw_ptr) \
                                                                     .method("update", &system::update) \
+                                                                    .method("id", []() { return system::id; }) \
                                                                     .method("name", []() { return system::name; }) \
                                                                     .method("get_group", &system::get_group); \
                                                                 }

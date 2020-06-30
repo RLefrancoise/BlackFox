@@ -13,7 +13,7 @@ namespace BlackFox::Components
 	{
 		friend class Systems::BFPhysicsSystem;
 		
-		BF_COMPONENT("BoxCollider")
+		BF_COMPONENT(BFBoxColliderComponent, "BoxCollider")
 
 		BFBoxColliderComponent();
 

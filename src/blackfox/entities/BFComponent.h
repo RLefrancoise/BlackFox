@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BFExport.h"
+#include <entt/core/type_info.hpp>
 
 namespace BlackFox
 {
@@ -41,4 +42,5 @@ namespace BlackFox
 	};*/
 }
 
-#define BF_COMPONENT(componentName)				static constexpr const char* name = componentName;
+#define BF_COMPONENT(component, componentName)				static constexpr const char* name = componentName; \
+															static constexpr auto id = entt::type_info<component>::id();

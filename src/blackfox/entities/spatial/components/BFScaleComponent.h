@@ -8,7 +8,7 @@ namespace BlackFox::Components
 {
     struct BFScaleComponent final : IBFComponent
     {
-        BF_COMPONENT("Scale")
+        BF_COMPONENT(BFScaleComponent, "Scale")
 
 		constexpr BFScaleComponent()
 		: scaleX(0)

@@ -19,7 +19,7 @@ namespace BlackFox::Components
     {
         friend class Systems::BFUpdateViewSystem;
 
-        BF_COMPONENT("View")
+        BF_COMPONENT(BFViewComponent, "View")
 
         BFViewComponent();
 

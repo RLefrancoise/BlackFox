@@ -10,7 +10,7 @@ namespace BlackFox::Components
      */
     struct BLACKFOX_EXPORT BFLineComponent final: BFDrawableComponent
     {
-        BF_COMPONENT("Line")
+        BF_COMPONENT(BFLineComponent, "Line")
 
         BFLineComponent();
         explicit BFLineComponent(

@@ -69,37 +69,47 @@ namespace BlackFox
 		    return value / worldUnitPixels;
         }
 
-        /// --------------------------------------------------------------------------------
-        /// <summary>
-        /// Convert world units to pixels
-        /// </summary>
-        /// <param name="x">X coordinate in world unit</param>
-        /// <param name="y">Y coordinate in world unit</param>
-        /// <returns>Position in pixels</returns>
-        /// --------------------------------------------------------------------------------
+        /*!
+         * Convert world to pixels coordinates
+         *
+         * @param x     World X coordinate
+         * @param y     World Y coordinate
+         * @return      Pixels coordinates
+         */
         [[nodiscard]] BFVector2f worldToPixels(const float x, const float y) const
         {
             return BFVector2f(x * worldUnitPixels, y * worldUnitPixels);
         }
 
+        /*!
+         * Convert world to pixels coordinates
+         *
+         * @param value     World coordinates
+         * @return          Pixels coordinates
+         */
         [[nodiscard]] BFVector2f worldToPixels(const BFVector2f& value) const
         {
             return BFVector2f(value.x * worldUnitPixels, value.y * worldUnitPixels);
         }
 
-        /// --------------------------------------------------------------------------------
-        /// <summary>
-        /// Convert pixels to world units
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        /// --------------------------------------------------------------------------------
+        /*!
+         * Convert pixels to world units
+         *
+         * @param x     Pixel X coordinate
+         * @param y     Pixel Y coordinate
+         * @return      World coordinates
+         */
         [[nodiscard]] BFVector2f pixelsToWorld(const float x, const float y) const
         {
             return BFVector2f(x / worldUnitPixels, y / worldUnitPixels);
         }
 
+        /*!
+         * Convert pixels to world units
+         *
+         * @param value Pixels coordinates
+         * @return World coordinates
+         */
         [[nodiscard]] BFVector2f pixelsToWorld(const BFVector2f& value) const
         {
             return BFVector2f(value.x / worldUnitPixels, value.y / worldUnitPixels);

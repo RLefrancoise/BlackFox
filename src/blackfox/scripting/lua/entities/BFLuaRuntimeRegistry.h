@@ -34,7 +34,7 @@ namespace BlackFox
 	static sol::object setComponent(
 			const EntityManager& em,
 			const entt::entity& entity,
-			const ENTT_ID_TYPE componentType,
+			const ComponentId componentType,
 			sol::state* state,
 			const std::string* componentScript)
 	{
@@ -74,7 +74,7 @@ namespace BlackFox
 	 * @param componentType		Type of the component to unset
 	 */
 	template <typename C>
-	static void unsetComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
+	static void unsetComponent(const EntityManager& em, const entt::entity& entity, const ComponentId componentType)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -103,7 +103,7 @@ namespace BlackFox
 	 * @return 					True if entity has the component
 	 */
 	template <typename C>
-	static bool hasComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType)
+	static bool hasComponent(const EntityManager& em, const entt::entity& entity, const ComponentId componentType)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -132,7 +132,7 @@ namespace BlackFox
 	 * @return					Sol object representing the component
 	 */
 	template <typename C>
-	static sol::object getComponent(const EntityManager& em, const entt::entity& entity, const ENTT_ID_TYPE componentType, sol::state* state)
+	static sol::object getComponent(const EntityManager& em, const entt::entity& entity, const ComponentId componentType, sol::state* state)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -188,15 +188,18 @@ namespace BlackFox
 		 *
 		 * @tparam Comp 	Type of the native component
 		 */
-		template <typename... Comp>
+		template <typename Comp>
 		void registerComponent()
 		{
-			((m_func[entt::type_info<Comp>::id()] = {
+			//Check that component is not already registered
+			assert(("Component is already registered or its id conflicts with another component", m_func.find(Comp::id) == m_func.end()));
+
+			m_func[Comp::id] = {
 				&BlackFox::setComponent<Comp>,
 				&BlackFox::unsetComponent<Comp>,
 				&BlackFox::hasComponent<Comp>,
 				&BlackFox::getComponent<Comp>
-				}), ...);
+            };
 		}
 
 		/*!
@@ -210,7 +213,7 @@ namespace BlackFox
 		 */
 		sol::object setComponent(
 			entt::entity entity,
-			ENTT_ID_TYPE typeId,
+			ComponentId typeId,
 			sol::state* state);
 
 		/*!
@@ -221,7 +224,7 @@ namespace BlackFox
 		 */
 		void unsetComponent(
 			entt::entity entity,
-			ENTT_ID_TYPE typeId);
+			ComponentId typeId);
 
 		/*!
 		 * Check if an entity has a component
@@ -233,7 +236,7 @@ namespace BlackFox
 		 */
 		bool hasComponent(
 			entt::entity entity,
-			ENTT_ID_TYPE typeId);
+			ComponentId typeId);
 
 		/*!
 		 * Get a component from an entity
@@ -246,7 +249,7 @@ namespace BlackFox
 		 */
 		sol::object getComponent(
 			entt::entity entity,
-			ENTT_ID_TYPE typeId,
+			ComponentId typeId,
 			sol::state* state);
 
 		/*!
@@ -261,7 +264,7 @@ namespace BlackFox
 		std::vector<sol::object> getComponents(
 			sol::state* state,
 			const entt::entity& entity,
-			const sol::variadic_args& components);
+			const std::vector<ComponentId>& components);
 
 		/*!
 		 * Iterate entities and call a callback for each entity with the requested components as parameters
@@ -276,7 +279,7 @@ namespace BlackFox
 		std::size_t entities(
 			const sol::function& callback,
 			const float dt,
-			const sol::variadic_args& components,
+			const std::vector<ComponentId>& components,
 			sol::state* state)
 		{
 			const auto [view, engine_components, runtime_components] = getView(components);
@@ -321,14 +324,14 @@ namespace BlackFox
 		const std::string* getComponentScript(ComponentId component) const;
 
 	private:
-		static constexpr ENTT_ID_TYPE runtimeComponentId = 10000;
+		static constexpr ComponentId runtimeComponentId = 10000;
 
 		struct funcMap
 		{
-			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, const ENTT_ID_TYPE, sol::state*, const std::string*);
-			using funcTypeUnset = void(*)(const EntityManager&, const entt::entity&, const ENTT_ID_TYPE);
-			using funcTypeHas = bool(*)(const EntityManager&, const entt::entity&, const ENTT_ID_TYPE);
-			using funcTypeGet = sol::object(*)(const EntityManager&, const entt::entity&, const ENTT_ID_TYPE, sol::state*);
+			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, const ComponentId, sol::state*, const std::string*);
+			using funcTypeUnset = void(*)(const EntityManager&, const entt::entity&, const ComponentId);
+			using funcTypeHas = bool(*)(const EntityManager&, const entt::entity&, const ComponentId);
+			using funcTypeGet = sol::object(*)(const EntityManager&, const entt::entity&, const ComponentId, sol::state*);
 
 			funcTypeSet set;
 			funcTypeUnset unset;
@@ -343,18 +346,18 @@ namespace BlackFox
 		 *
 		 * @return					A tuple containing the EnTT view, the list of native components, and the list of runtime components
 		 */
-		[[nodiscard]] std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const sol::variadic_args& components) const;
+		[[nodiscard]] std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> getView(const std::vector<ComponentId>& components) const;
 
 		template <typename Func, typename Ret, Func funcMap:: * F, typename... Args>
-		Ret invoke(const entt::entity& entity, const ENTT_ID_TYPE typeId, Args... args)
+		Ret invoke(const entt::entity& entity, const ComponentId typeId, Args... args)
 		{
 			auto funcId = typeId;
 			
-			const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
-				return std::get<ENTT_ID_TYPE>(entry.second) == typeId;
-			});
+			/*const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
+				return std::get<ComponentId>(entry.second) == typeId;
+			});*/
 			
-			if(it != m_runtimeComponentLuaScripts.cend())
+			if(!isNativeComponent(typeId))
 			//if (typeId >= runtimeComponentId)
 			{
 				funcId = entt::type_info<Components::BFLuaRuntimeComponent>::id();
@@ -369,8 +372,8 @@ namespace BlackFox
 			return (m_func[funcId].*F)(m_entityManager, entity, typeId, args...);
 		}
 
-		std::map<ENTT_ID_TYPE, funcMap> m_func;
-		std::map<std::string, std::tuple<ENTT_ID_TYPE, std::string>> m_runtimeComponentLuaScripts;
+		std::map<ComponentId, funcMap> m_func;
+		std::map<std::string, std::tuple<ComponentId, std::string>> m_runtimeComponentLuaScripts;
 		EntityManager m_entityManager;
 	};
 }

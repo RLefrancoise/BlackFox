@@ -90,7 +90,7 @@ namespace BlackFox
 		}
 
 		//Get the system group
-		const auto group = system.get_method("get_group").invoke(s).get_value<ComponentSystemGroups>();
+		const auto group = system.get_method("group").invoke(s).get_value<ComponentSystemGroups>();
 
 		auto ok = false;
 		const auto sPtr = s.convert<BFComponentSystem*>(&ok);

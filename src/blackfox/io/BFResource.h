@@ -10,8 +10,9 @@ namespace BlackFox
 	/**
 	 * Interface for any BlackFox resource.
 	 */
-	struct BLACKFOX_EXPORT IBFResource
+	class BLACKFOX_EXPORT IBFResource
 	{
+	public:
 		virtual ~IBFResource() = default;
 
 		/**
@@ -67,8 +68,9 @@ namespace BlackFox
 	/**
 	 * Base class for BlackFox resource.
 	 */
-	struct BLACKFOX_EXPORT BFResource : IBFResource
+	class BLACKFOX_EXPORT BFResource : public IBFResource
 	{
+	public:
 		~BFResource() override = default;
 		BFResource(const BFResource&) = default;
 		BFResource& operator=(const BFResource&) = default;
