@@ -23,7 +23,7 @@ namespace BlackFox
          * @param em    Entity manager
          * @return      The entity with components from the archetype
          */
-        virtual entt::entity instance(EntityManager em) = 0;
+        virtual entt::entity instance(EntityManager em) const = 0;
     };
 
     /*!
@@ -35,7 +35,7 @@ namespace BlackFox
     class BFEntityArchetype : public IBFEntityArchetype
     {
     public:
-        entt::entity instance(EntityManager em) override
+        entt::entity instance(EntityManager em) const override
         {
             auto entity = em->create();
             em->emplace<Component...>(entity);
@@ -65,7 +65,7 @@ namespace BlackFox
         /// The list of component ids
         std::vector<ComponentId> m_components;
 
-        virtual void setComponent(entt::entity e, ComponentId component) = 0;
+        virtual void setComponent(entt::entity e, ComponentId component) const = 0;
 
     public:
         /*!
@@ -75,7 +75,7 @@ namespace BlackFox
          */
         explicit BFRuntimeEntityArchetype(std::vector<ComponentId> components);
 
-        entt::entity instance(EntityManager em) override;
+        entt::entity instance(EntityManager em) const override;
 
         /*!
          * Get the list of components corresponding to the archetype

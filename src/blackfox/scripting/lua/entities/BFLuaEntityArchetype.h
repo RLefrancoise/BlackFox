@@ -15,7 +15,7 @@ namespace BlackFox
         sol::state* m_state;
 
     protected:
-        void setComponent(entt::entity e, ComponentId c) override;
+        void setComponent(entt::entity e, ComponentId c) const override;
 
     public:
         explicit BFLuaEntityArchetype(

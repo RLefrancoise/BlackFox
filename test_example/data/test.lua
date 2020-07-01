@@ -33,26 +33,17 @@ BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
 CircleCollider = BlackFox.Components.Physics.CircleCollider.id()
 
 -- Archetypes
-BoxLaserTargetArchetype = world:createArchetype(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
-CircleLaserTargetArchetype = world:createArchetype(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
+BoxLaserTargetArchetype = world:archetype(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
+CircleLaserTargetArchetype = world:archetype(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
 
 function createBody(position)
-    --[[local e,
+    local e,
     transform, 
     rigidBody, 
     boxCollider, 
     boxShape,
     depth,
-    laserTarget = world:createEntity(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)]]--
-
-    -- Instantiate box target archetype
-    local e = BoxLaserTargetArchetype:instance(world)
-    local transform = world:getComponent(e, Transform)
-    local rigidBody = world:getComponent(e, RigidBody)
-    local boxCollider = world:getComponent(e, BoxCollider)
-    local boxShape = world:getComponent(e, BoxShape)
-    local depth = world:getComponent(e, Depth)
-    local laserTarget = world:getComponent(e, LaserTarget)
+    laserTarget = world:createArchetype(BoxLaserTargetArchetype)
     
     -- Position
     transform.position = position
@@ -101,7 +92,7 @@ function createCircleBody(position)
     circleCollider,
     circleShape,
     depth,
-    laserTarget = world:createEntity(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
+    laserTarget = world:createArchetype(CircleLaserTargetArchetype)
 
     -- Position
     transform.position = position
@@ -118,7 +109,7 @@ function createCircleBody(position)
     rigidBody.bullet = true
 
     -- Box Collider
-    circleCollider.radius = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random()) / 2 --(minBodySize + math.random() * (maxBodySize - minBodySize)) / 2
+    circleCollider.radius = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random()) / 2
     --circleCollider.center = Vector2f:new(0, 0)
     circleCollider.density = 1
     circleCollider.friction = 0.3

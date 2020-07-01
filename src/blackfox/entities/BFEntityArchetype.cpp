@@ -6,7 +6,7 @@ namespace BlackFox
     : m_components(std::move(components))
     {}
 
-    entt::entity BFRuntimeEntityArchetype::instance(EntityManager em)
+    entt::entity BFRuntimeEntityArchetype::instance(EntityManager em) const
     {
         auto entity = em->create();
 

@@ -11,7 +11,7 @@ namespace BlackFox
     , m_state(state)
     {}
 
-    void BFLuaEntityArchetype::setComponent(entt::entity e, ComponentId c)
+    void BFLuaEntityArchetype::setComponent(entt::entity e, ComponentId c) const
     {
         m_luaRegistry->setComponent(e, c, m_state);
     }
