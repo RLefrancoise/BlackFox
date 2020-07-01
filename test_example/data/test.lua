@@ -1,42 +1,49 @@
 math.randomseed(os.time())
 
-minBodySize = 0.25
-maxBodySize = 0.5
-bodyCount = 50
+-- Settings
+local minBodySize = 0.25
+local maxBodySize = 0.5
+local bodyCount = 50
+
+local backgroundEntityMinSize = 1
+local backgroundEntityMaxSize = 3
+local backgroundEntityCount = 150
+local backgroundEntityStartDepth = 5
 
 -- Aliases
-Vector2f = BlackFox.Math.Vector2f
-IntRect = BlackFox.Graphics.IntRect
-Color = BlackFox.Graphics.Color
-Screen = BlackFox.Screen
+local Vector2f = BlackFox.Math.Vector2f
+local IntRect = BlackFox.Graphics.IntRect
+local Color = BlackFox.Graphics.Color
+local Screen = BlackFox.Screen
 
 -- Default world
-world = BlackFox.getWorld("default")
+local world = BlackFox.getWorld("default")
 
 -- Component IDs
-Transform = BlackFox.Components.Spatial.Transform.id()
+local Transform = BlackFox.Components.Spatial.Transform.id()
 
-Sprite = BlackFox.Components.Render.Sprite.id()
-CircleShape = BlackFox.Components.Render.CircleShape.id()
-BoxShape = BlackFox.Components.Render.BoxShape.id()
-Line = BlackFox.Components.Render.Line.id()
-Text = BlackFox.Components.Render.Text.id()
-Depth = BlackFox.Components.Render.Depth.id()
+local Sprite = BlackFox.Components.Render.Sprite.id()
+local CircleShape = BlackFox.Components.Render.CircleShape.id()
+local BoxShape = BlackFox.Components.Render.BoxShape.id()
+local Line = BlackFox.Components.Render.Line.id()
+local Text = BlackFox.Components.Render.Text.id()
+local Depth = BlackFox.Components.Render.Depth.id()
+local View = BlackFox.Components.Render.View.id()
 
-AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()
-ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
-Laser = BlackFox.Components.Runtime.Laser.id()
-LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
+local AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()
+local ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
+local Laser = BlackFox.Components.Runtime.Laser.id()
+local LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
 
-RigidBody = BlackFox.Components.Physics.RigidBody.id()
-BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
-CircleCollider = BlackFox.Components.Physics.CircleCollider.id()
+local RigidBody = BlackFox.Components.Physics.RigidBody.id()
+local BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
+local CircleCollider = BlackFox.Components.Physics.CircleCollider.id()
 
 -- Archetypes
-BoxLaserTargetArchetype = world:archetype(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
-CircleLaserTargetArchetype = world:archetype(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
+local BoxLaserTargetArchetype = world:archetype(Transform, RigidBody, BoxCollider, BoxShape, Depth, LaserTarget)
+local CircleLaserTargetArchetype = world:archetype(Transform, RigidBody, CircleCollider, CircleShape, Depth, LaserTarget)
 
-function createBody(position)
+local function createBody(position)
     local e,
     transform, 
     rigidBody, 
@@ -60,7 +67,7 @@ function createBody(position)
     rigidBody.bullet = true
 
     -- Box Collider
-    local randomSize = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random()) --minBodySize + math.random() * (maxBodySize - minBodySize)
+    local randomSize = BlackFox.Math.lerp(minBodySize, maxBodySize, math.random())
     boxCollider.extents = Vector2f:new(randomSize / 2.0, randomSize / 2.0)
     boxCollider.center = Vector2f:new(0, 0)
     boxCollider.density = 1
@@ -85,7 +92,7 @@ function createBody(position)
     laserTarget.color = color
 end
 
-function createCircleBody(position)
+local function createCircleBody(position)
     local e,
     transform,
     rigidBody,
@@ -133,7 +140,7 @@ function createCircleBody(position)
     laserTarget.color = color
 end
 
-function createLaser(position)
+local function createLaser(position)
     local e,
     transform,
     line,
@@ -154,7 +161,7 @@ function createLaser(position)
     depth.depth = -1
 end
 
-function createGround(position, scale)
+local function createGround(position, scale)
     local e, 
     transform, 
     rigidBody, 
@@ -198,7 +205,7 @@ function createGround(position, scale)
     return e
 end
 
-function createWall(position)
+local function createWall(position)
     local e, 
     transform, 
     rigidBody, 
@@ -240,7 +247,7 @@ function createWall(position)
     depth.depth = 0
 end
 
-function text(position, textString)
+local function textEntity(position, textString)
     local e,
     transform,
     text,
@@ -267,17 +274,17 @@ function text(position, textString)
     depth.depth = -2
 end
 
-function createEntity()
+local function createBackgroundEntity(depthValue)
     local e, 
     transform, 
     autoRotate, 
     scalePingPong,
-    sprite,
+    boxShape,
     depth = world:createEntity(
         Transform, 
         AutoRotate, 
         ScalePingPong,
-        Sprite,
+        BoxShape,
         Depth)
 
     -- Position
@@ -292,47 +299,61 @@ function createEntity()
     transform.scale = Vector2f:new(1,1)
 
     -- Auto Rotate
-    autoRotate.speed = math.random() * 360.0
+    autoRotate.speed = BlackFox.Math.lerp(-180, 180, math.random())
 
     -- Scale ping pong
     scalePingPong.min = transform.scale.x
     scalePingPong.max = scalePingPong.min + 1 + math.random()
-    scalePingPong.speed = 1 + math.random() * 2 -- Random between 1 and 3
+    scalePingPong.speed = BlackFox.Math.lerp(1, 3, math.random()) -- Random between 1 and 3
 
-    -- Sprite
-    -- Test image
-    sprite.image = BlackFox.Resources.texture("test.png")
-    sprite.image.smooth = true
-    -- Full rect
-    sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
-    -- Pivot at center
-    sprite.origin = Vector2f:new(sprite.image:width() / 2, sprite.image:height() / 2)
-    -- Random color
-    sprite.color = Color.random(true)
+    local color = Color.random(false)
+    color.a = math.floor(BlackFox.Math.lerp(32, 128, math.random()))
 
-    -- Depth (between 0 and 5)
-    depth.depth = math.floor(math.random() * 5)
+    -- Box Shape
+
+    local randomSize = BlackFox.Math.lerp(backgroundEntityMinSize, backgroundEntityMaxSize, math.random())
+
+    -- Extents
+    boxShape.extents = Vector2f:new(randomSize / 2, randomSize / 2)
+    -- Origin
+    boxShape.origin = boxShape.extents
+    -- Color
+    boxShape.color = color
+
+    -- Depth
+    depth.depth = depthValue
+end
+
+local function createView(viewport)
+    local e, transform, view = world:createEntity(Transform, View)
+
+    -- Transform
+    transform.position = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() / 2)
+
+    -- View
+    view.size = Screen.pixelsToWorld(Screen.width(), Screen.height())
+    view.viewport = viewport
 end
 
 -- Create ground
-groundPosition = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() - 100)
-groundScale = Vector2f:new(8, 2)
-ground = createGround(groundPosition, groundScale)
+local groundPosition = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() - 100)
+local groundScale = Vector2f:new(8, 2)
+local ground = createGround(groundPosition, groundScale)
 
 -- Create walls
-leftWallPosition = Vector2f:new(groundPosition.x - groundScale.x / 2.0 - 1, groundPosition.y)
-rightWallPosition = Vector2f:new(groundPosition.x + groundScale.x / 2.0 + 1, groundPosition.y)
+local leftWallPosition = Vector2f:new(groundPosition.x - groundScale.x / 2.0 - 1, groundPosition.y)
+local rightWallPosition = Vector2f:new(groundPosition.x + groundScale.x / 2.0 + 1, groundPosition.y)
 
 createWall(leftWallPosition)
 createWall(rightWallPosition)
 
 -- Create roof
-roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
-roofScale = groundScale
-roof = createGround(roofPosition, groundScale)
+local roofPosition = Vector2f:new(groundPosition.x, groundPosition.y - 6)
+local roofScale = groundScale
+local roof = createGround(roofPosition, roofScale)
 
 -- Create bodies
-createFunctions = { createBody, createCircleBody }
+local createFunctions = { createBody, createCircleBody }
 
 for i=1,bodyCount do
     local createFnc = createFunctions[math.random(1, #createFunctions)]
@@ -347,18 +368,23 @@ end
 createLaser(roofPosition)
 
 -- Text
-text(Screen.pixelsToWorld(10, 10), "This is a text")
+textEntity(Screen.pixelsToWorld(10, 10), "This is a text")
 
----for i= 1,100 do
---    createEntity()
---end
+-- Create background effect
+for i= 1,backgroundEntityCount do
+    createBackgroundEntity(backgroundEntityStartDepth + i)
+end
+
+-- Create view
+createView(BlackFox.Graphics.FloatRect:new(0, 0, 1, 1))
 
 -- Create systems
---world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
---world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
 world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("RayCastLaserSystem", BlackFox.ComponentSystemGroup.GameLoop)
 world:createSystem("LaserScanSystem", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("MoveViewWithKeyboard", BlackFox.ComponentSystemGroup.GameLoop)
 
 return true

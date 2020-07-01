@@ -37,7 +37,12 @@ namespace BlackFox::Systems
 
     BFPhysicsSystem& BFPhysicsSystem::operator=(BFPhysicsSystem&& system)
 	{
-		m_b2World = std::move(system.m_b2World);
+		if(this != &system)
+		{
+			m_b2World = std::move(system.m_b2World);
+			system.m_b2World = std::unique_ptr<b2World>();
+		}
+		
 		return *this;
 	}
 

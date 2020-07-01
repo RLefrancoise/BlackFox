@@ -4,12 +4,11 @@
 Color = BlackFox.Graphics.Color
 Ray = BlackFox.Physics.Ray
 
-function onCreate()
-    Transform = BlackFox.Components.Spatial.Transform.id()
-    Line = BlackFox.Components.Render.Line.id()
-    Laser = BlackFox.Components.Runtime.Laser.id()
-    LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
-end
+-- Component IDs
+local Transform = BlackFox.Components.Spatial.Transform.id()
+local Line = BlackFox.Components.Render.Line.id()
+local Laser = BlackFox.Components.Runtime.Laser.id()
+local LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
 
 function update(dt)
     world:entities(rayCastLaser, dt, Transform, Line, Laser)

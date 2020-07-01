@@ -353,12 +353,7 @@ namespace BlackFox
 		{
 			auto funcId = typeId;
 			
-			/*const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
-				return std::get<ComponentId>(entry.second) == typeId;
-			});*/
-			
 			if(!isNativeComponent(typeId))
-			//if (typeId >= runtimeComponentId)
 			{
 				funcId = entt::type_info<Components::BFLuaRuntimeComponent>::id();
 			}

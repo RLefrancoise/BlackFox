@@ -1,10 +1,9 @@
-function onCreate()
-	Transform = BlackFox.Components.Spatial.Transform.id()
-	ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
-end
+-- Component IDs
+local Transform = BlackFox.Components.Spatial.Transform.id()
+local ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
 
 function update(dt)
-	local entities = world:entities(
+	world:entities(
 		scaleEntity,
 		dt,
 		Transform,

@@ -1,9 +1,9 @@
-linearImpulseMagnitude = 2
-angularImpulseMagnitude = 30
+-- Component IDs
+local RigidBody = BlackFox.Components.Physics.RigidBody.id()
 
-function onCreate()
-    RigidBody = BlackFox.Components.Physics.RigidBody.id()
-end
+-- Settings
+local linearImpulseMagnitude = 2
+local angularImpulseMagnitude = 30
 
 function update(dt)
     if BlackFox.Input.isKeyDown(BlackFox.Input.KeyCode.Space) == true then
