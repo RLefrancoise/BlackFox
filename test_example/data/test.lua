@@ -34,6 +34,7 @@ local AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()
 local ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()
 local Laser = BlackFox.Components.Runtime.Laser.id()
 local LaserTarget = BlackFox.Components.Runtime.LaserTarget.id()
+local PlayerView = BlackFox.Components.Runtime.PlayerView.id()
 
 local RigidBody = BlackFox.Components.Physics.RigidBody.id()
 local BoxCollider = BlackFox.Components.Physics.BoxCollider.id()
@@ -324,15 +325,18 @@ local function createBackgroundEntity(depthValue)
     depth.depth = depthValue
 end
 
-local function createView(viewport)
-    local e, transform, view = world:createEntity(Transform, View)
+local function createView(size, viewport, playerId)
+    local e, transform, view, playerView = world:createEntity(Transform, View, PlayerView)
 
     -- Transform
     transform.position = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() / 2)
 
     -- View
-    view.size = Screen.pixelsToWorld(Screen.width(), Screen.height())
+    view.size = size --Screen.pixelsToWorld(Screen.width(), Screen.height())
     view.viewport = viewport
+
+    -- Player View
+    playerView.playerId = playerId
 end
 
 -- Create ground
@@ -376,7 +380,8 @@ for i= 1,backgroundEntityCount do
 end
 
 -- Create view
-createView(BlackFox.Graphics.FloatRect:new(0, 0, 1, 1))
+createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0, 0, 0.5, 1), 1) -- Player 1
+createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0.5, 0, 0.5, 1), 2) -- Player 2
 
 -- Create systems
 world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)

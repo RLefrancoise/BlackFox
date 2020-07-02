@@ -4,9 +4,10 @@ namespace BlackFox::Components
 {
     BFViewComponent::BFViewComponent() = default;
 
-    BFViewComponent::BFViewComponent(const BFVector2f& size, const sf::FloatRect& viewport)
+    BFViewComponent::BFViewComponent(const BFVector2f& size, const float zoom, const sf::FloatRect& viewport)
     : IBFComponent()
     , size(size)
+    , zoom(zoom)
     , viewport(viewport)
     {}
 
@@ -14,6 +15,7 @@ namespace BlackFox::Components
     : IBFComponent(std::move(view))
     {
         std::swap(size, view.size);
+        std::swap(zoom, view.zoom);
         std::swap(viewport, view.viewport);
     }
 
@@ -22,9 +24,11 @@ namespace BlackFox::Components
         if(this != &view)
         {
             size = view.size;
+            zoom = view.zoom;
             viewport = view.viewport;
 
             view.size = BFVector2f();
+            view.zoom = 0;
             view.viewport = sf::FloatRect();
         }
 

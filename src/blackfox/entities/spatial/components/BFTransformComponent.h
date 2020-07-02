@@ -10,7 +10,10 @@ namespace BlackFox::Components
 	{
 		BF_COMPONENT(BFTransformComponent, "Transform")
 
-		constexpr BFTransformComponent() = default;
+		constexpr BFTransformComponent()
+		: BFTransformComponent(BFVector2f(), BFDegree(0), BFVector2f(1,1))
+		{}
+
 		constexpr BFTransformComponent(const BFVector2f& position, const BFDegree& rotation, const BFVector2f& scale)
 			: position(position)
 			, rotation(rotation)

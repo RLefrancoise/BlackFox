@@ -29,8 +29,9 @@ namespace BlackFox::Components
          * @param size      Size of the view in world units
          * @param viewport  Viewport of the view, in normalized values.
          */
-        BFViewComponent(
+        explicit BFViewComponent(
                 const BFVector2f& size,
+                const float zoom = 1.f,
                 const sf::FloatRect& viewport = sf::FloatRect(0,0,1,1));
 
         BFViewComponent(BFViewComponent&&) noexcept;
@@ -38,6 +39,9 @@ namespace BlackFox::Components
 
         /// Size of the camera in world units
         BFVector2f size;
+
+        /// Zoom factor
+        float zoom;
 
         /// Viewport of the view. Useful to display it only on some part on the screen.
         sf::FloatRect viewport;

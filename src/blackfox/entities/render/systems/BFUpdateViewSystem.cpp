@@ -23,8 +23,15 @@ namespace BlackFox::Systems
 
         views.each([&](const entt::entity e, BFViewComponent& view, const BFTransformComponent& transform)
         {
+            //Transform
             view.m_view.setCenter(gameData.worldToPixels(transform.position));
-            view.m_view.setSize(gameData.worldToPixels(view.size));
+            view.m_view.setRotation(transform.rotation);
+            view.m_view.zoom(view.zoom);
+
+            //View
+            view.m_view.setSize(gameData.worldToPixels(
+                    view.size.x * transform.scale.x,
+                    view.size.y * transform.scale.y));
             view.m_view.setViewport(view.viewport);
         });
     }
