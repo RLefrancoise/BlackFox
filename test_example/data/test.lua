@@ -332,11 +332,14 @@ local function createView(size, viewport, playerId)
     transform.position = Screen.pixelsToWorld(Screen.width() / 2, Screen.height() / 2)
 
     -- View
-    view.size = size --Screen.pixelsToWorld(Screen.width(), Screen.height())
+    view.size = size
     view.viewport = viewport
 
     -- Player View
     playerView.playerId = playerId
+    playerView.startPosition = Vector2f:new(transform.position)
+
+    print("Create view for player", playerId, "at position", playerView.startPosition.x, playerView.startPosition.y)
 end
 
 -- Create ground

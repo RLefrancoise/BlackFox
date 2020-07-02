@@ -2,7 +2,9 @@
 
 namespace BlackFox::Components
 {
-    BFViewComponent::BFViewComponent() = default;
+    BFViewComponent::BFViewComponent()
+    : BFViewComponent(BFVector2f())
+    {}
 
     BFViewComponent::BFViewComponent(const BFVector2f& size, const float zoom, const sf::FloatRect& viewport)
     : IBFComponent()

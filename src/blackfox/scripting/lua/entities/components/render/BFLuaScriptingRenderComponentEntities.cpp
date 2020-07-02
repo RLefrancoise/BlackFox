@@ -82,6 +82,7 @@ namespace BlackFox
 		//View
 		auto view_t = registerType<BFViewComponent>();
 		view_t["size"] = &BFViewComponent::size;
+		view_t["zoom"] = &BFViewComponent::zoom;
 		view_t["viewport"] = &BFViewComponent::viewport;
 	}
 

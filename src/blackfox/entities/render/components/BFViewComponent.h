@@ -31,7 +31,7 @@ namespace BlackFox::Components
          */
         explicit BFViewComponent(
                 const BFVector2f& size,
-                const float zoom = 1.f,
+                float zoom = 1.f,
                 const sf::FloatRect& viewport = sf::FloatRect(0,0,1,1));
 
         BFViewComponent(BFViewComponent&&) noexcept;

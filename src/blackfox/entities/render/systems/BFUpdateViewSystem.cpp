@@ -26,12 +26,12 @@ namespace BlackFox::Systems
             //Transform
             view.m_view.setCenter(gameData.worldToPixels(transform.position));
             view.m_view.setRotation(transform.rotation);
-            view.m_view.zoom(view.zoom);
 
             //View
             view.m_view.setSize(gameData.worldToPixels(
                     view.size.x * transform.scale.x,
                     view.size.y * transform.scale.y));
+            view.m_view.zoom(view.zoom);
             view.m_view.setViewport(view.viewport);
         });
     }
