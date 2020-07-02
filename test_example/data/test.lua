@@ -366,8 +366,8 @@ for i=1,bodyCount do
     local createFnc = createFunctions[math.random(1, #createFunctions)]
     if createFnc ~= nil then
         createFnc(Vector2f:new(
-            math.random(math.floor(leftWallPosition.x + 2), math.floor(rightWallPosition.x - 2)),
-            math.random(math.floor(roofPosition.y + 2), math.floor(groundPosition.y - 2))))
+                BlackFox.Math.lerp(leftWallPosition.x + 2, rightWallPosition.x - 2, math.random()),
+                BlackFox.Math.lerp(roofPosition.y + 2, groundPosition.y - 2, math.random())))
     end
 end
 
