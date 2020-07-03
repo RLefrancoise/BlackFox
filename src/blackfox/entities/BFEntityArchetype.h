@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <vector>
+#include <tuple>
 #include <entt/core/type_info.hpp>
 
 #include "BFTypeDefs.h"
@@ -34,11 +35,25 @@ namespace BlackFox
     template <typename ...Component>
     class BFEntityArchetype : public IBFEntityArchetype
     {
+    private:
+        template<typename C>
+        auto emplaceComponent(const EntityManager& em, entt::entity e) const
+        {
+            em->emplace<C>(e);
+            return true;
+        }
+
+        template<typename ...D>
+        void dummy(D&&...) const {}
+
     public:
         entt::entity instance(EntityManager em) const override
         {
             auto entity = em->create();
-            em->emplace<Component...>(entity);
+
+            /// Trick from : https://stackoverflow.com/questions/15501322/iterating-over-variadic-templates-type-parameters
+            dummy((emplaceComponent<Component>(em, entity))...);
+
             return entity;
         }
 

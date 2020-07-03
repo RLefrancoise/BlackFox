@@ -34,3 +34,6 @@
 [submodule "thirdParties/ImGuiColorTextEdit"]
 	path = thirdParties/ImGuiColorTextEdit
 	url = https://github.com/BalazsJako/ImGuiColorTextEdit.git
+[submodule "thirdParties/Catch2"]
+	path = thirdParties/Catch2
+	url = https://github.com/catchorg/Catch2.git

@@ -115,3 +115,6 @@ set(PHYSFS_LIBRARY ${CMAKE_BINARY_DIR}/thirdParties/physfs-3.0.2/physfs.lib)
 # PhysFS++
 add_subdirectory(physfs-cpp)
 target_include_directories(physfs++ PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/physfs-3.0.2/src)
+
+# Catch2
+add_subdirectory(Catch2)

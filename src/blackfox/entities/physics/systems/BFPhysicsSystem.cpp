@@ -33,6 +33,9 @@ namespace BlackFox::Systems
 	: BFComponentSystem(std::move(system))
     {
 	    std::swap(m_b2World, system.m_b2World);
+	    std::swap(m_fixturesData, system.m_fixturesData);
+	    std::swap(m_pendingBodiesForDeletion, system.m_pendingBodiesForDeletion);
+	    std::swap(m_pendingFixturesForDeletion, system.m_pendingFixturesForDeletion);
     }
 
     BFPhysicsSystem& BFPhysicsSystem::operator=(BFPhysicsSystem&& system)
@@ -40,7 +43,14 @@ namespace BlackFox::Systems
 		if(this != &system)
 		{
 			m_b2World = std::move(system.m_b2World);
+			m_fixturesData = std::move(system.m_fixturesData);
+			m_pendingBodiesForDeletion = std::move(m_pendingBodiesForDeletion);
+			m_pendingFixturesForDeletion = std::move(m_pendingFixturesForDeletion);
+
 			system.m_b2World = std::unique_ptr<b2World>();
+			system.m_fixturesData = std::unordered_map<b2Fixture*, BFFixtureData::Ptr>();
+			system.m_pendingBodiesForDeletion = std::vector<b2Body*>();
+			system.m_pendingFixturesForDeletion = std::vector<b2Fixture*>();
 		}
 		
 		return *this;
