@@ -1,3 +1,5 @@
+Name = "AutoRotateSystem"
+
 -- Component IDs
 local Transform = BlackFox.Components.Spatial.Transform.id()
 local AutoRotate = BlackFox.Components.Runtime.AutoRotate.id()

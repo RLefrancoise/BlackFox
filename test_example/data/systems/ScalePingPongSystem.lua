@@ -1,3 +1,5 @@
+Name = "ScalePingPongSystem"
+
 -- Component IDs
 local Transform = BlackFox.Components.Spatial.Transform.id()
 local ScalePingPong = BlackFox.Components.Runtime.ScalePingPong.id()

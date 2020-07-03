@@ -1,13 +1,15 @@
 math.randomseed(os.time())
 
 -- Settings
+local twoPlayers = false
+
 local minBodySize = 0.25
 local maxBodySize = 0.5
 local bodyCount = 50
 
 local backgroundEntityMinSize = 1
 local backgroundEntityMaxSize = 3
-local backgroundEntityCount = 150
+local backgroundEntityCount = 50
 local backgroundEntityStartDepth = 5
 
 -- Aliases
@@ -383,8 +385,12 @@ for i= 1,backgroundEntityCount do
 end
 
 -- Create view
-createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0, 0, 0.5, 1), 1) -- Player 1
-createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0.5, 0, 0.5, 1), 2) -- Player 2
+if twoPlayers == true then
+    createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0, 0, 0.5, 1), 1) -- Player 1
+    createView(Screen.pixelsToWorld(Screen.width() / 2, Screen.height()), BlackFox.Graphics.FloatRect:new(0.5, 0, 0.5, 1), 2) -- Player 2
+else
+    createView(Screen.pixelsToWorld(Screen.width(), Screen.height()), BlackFox.Graphics.FloatRect:new(0, 0, 1, 1), 1) -- Player 1
+end
 
 -- Create systems
 world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)

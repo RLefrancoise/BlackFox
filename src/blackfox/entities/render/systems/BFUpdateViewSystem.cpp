@@ -13,7 +13,7 @@ using namespace BlackFox::Components;
 namespace BlackFox::Systems
 {
     BFUpdateViewSystem::BFUpdateViewSystem(BFApplication::Ptr app, BFWorld::Ptr world)
-    : BFComponentSystem(std::move(app), std::move(world))
+    : Super(std::move(app), std::move(world))
     {}
 
     void BFUpdateViewSystem::update(float dt)

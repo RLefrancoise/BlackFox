@@ -1,3 +1,5 @@
+Name = "ImpulseOnKeyPressedSystem"
+
 -- Component IDs
 local RigidBody = BlackFox.Components.Physics.RigidBody.id()
 

@@ -11,7 +11,7 @@ namespace BlackFox::Systems
 	/*!
 	 * Render system. It renders all stuff that can be displayed (basically, all renderable components).
 	 */
-	class BLACKFOX_EXPORT BFRenderSystem final : public BFComponentSystem
+	class BLACKFOX_EXPORT BFRenderSystem final : public BFComponentSystemBase<BFRenderSystem>
 	{
         BF_SYSTEM_AUTO_CREATE(BFRenderSystem, ComponentSystemGroups::Render, "RenderSystem")
 

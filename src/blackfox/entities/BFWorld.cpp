@@ -1,5 +1,6 @@
 #include "BFWorld.h"
 #include "BFApplication.h"
+#include "BFStringUtils.h"
 #include <rttr/method.h>
 
 namespace BlackFox
@@ -13,15 +14,28 @@ namespace BlackFox
 	}
 
 	BFWorld::BFWorld(BFWorld&& world) noexcept
-	: m_container(std::move(world.m_container))
-	, m_entityManager(std::move(world.m_entityManager))
 	{
+	    std::swap(m_container, world.m_container);
+	    std::swap(m_entityManager, world.m_entityManager);
+	    std::swap(m_registeredSystems, world.m_registeredSystems);
+	    std::swap(m_systemGroups, world.m_systemGroups);
 	}
 
 	BFWorld& BFWorld::operator=(BFWorld&& world) noexcept
 	{
-		m_container = std::move(world.m_container);
-		m_entityManager = std::move(world.m_entityManager);
+	    if(this != &world)
+        {
+		    m_container = std::move(world.m_container);
+		    m_entityManager = std::move(world.m_entityManager);
+		    m_registeredSystems = std::move(world.m_registeredSystems);
+		    m_systemGroups = std::move(world.m_systemGroups);
+
+		    world.m_container = DiContainer();
+		    world.m_entityManager = EntityManager();
+		    world.m_registeredSystems = SystemList();
+		    world.m_systemGroups = SystemGroupList();
+        }
+
 		return *this;
 	}
 
@@ -32,7 +46,7 @@ namespace BlackFox
 
 	bool BFWorld::hasWorld(const std::string & worldId)
 	{
-		return !(worlds.find(worldId) == worlds.end());
+		return (worlds.find(worldId) != worlds.end());
 	}
 
 	BFWorld::Ptr BFWorld::world(const std::string & worldId)
@@ -103,8 +117,7 @@ namespace BlackFox
 		BFComponentSystem::Ptr sharedPtr(sPtr);
 
 		//Add the system to the systems map
-		m_systemGroups[group].emplace_back(sharedPtr);
-		BF_PRINT("System {} added to the group {}", system.get_name().to_string(), group);
+		addSystemToGroup(group, sharedPtr);
 
 		//Remember the registration of the system
 		m_registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
@@ -153,8 +166,7 @@ namespace BlackFox
 		BFComponentSystem::Ptr ptr(sPtr);
 
 		//Add the system to the systems map
-		m_systemGroups[group].emplace_back(ptr);
-		BF_PRINT("System {} added to the group {}", name, group);
+		addSystemToGroup(group, ptr);
 
 		//Remember the registration of the system
 		m_registeredSystems.insert(std::make_pair(name, ptr));
@@ -177,8 +189,7 @@ namespace BlackFox
         }
 
 		//Add the system to its group
-		m_systemGroups[group].emplace_back(system);
-		BF_PRINT("System {} added to the group {}", systemName, group);
+        addSystemToGroup(group, system);
 
 		//Add the system to the system list
 		m_registeredSystems.insert(std::make_pair(systemName, system));
@@ -225,4 +236,31 @@ namespace BlackFox
 
         return m_registeredSystems[name].get();
     }
+
+    void BFWorld::sortSystems(ComponentSystemGroups group)
+	{
+		std::vector<BFComponentSystem*>& systems = m_systemGroups[group];
+		std::sort(systems.begin(), systems.end(), [&](BFComponentSystem* const & system1, BFComponentSystem* const & system2) {
+			if(system1->isBeforeSystem(*system2)) return true;
+			else if(system1->isAfterSystem(*system2)) return false;
+			else if(system2->isBeforeSystem(*system1)) return false;
+			else if(system2->isAfterSystem(*system1)) return true;
+			return false;
+		});
+
+		BF_PRINT("Systems order in group {} is now: {}",
+		        group,
+		        Utils::join<BFComponentSystem*>(
+		                systems,
+		                ",",
+		                [](BFComponentSystem* const & system) -> std::string { return system->getName(); }));
+
+	}
+
+	void BFWorld::addSystemToGroup(ComponentSystemGroups group, const BFComponentSystem::Ptr& system)
+	{
+        BF_PRINT("System {} added to the group {}", std::string(system->getName()), group);
+		m_systemGroups[group].emplace_back(system.get());
+		sortSystems(group);
+	}
 }

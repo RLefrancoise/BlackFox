@@ -32,9 +32,8 @@ namespace BlackFox::Systems
     /*!
      * Physics system. It handles physics simulation.
      */
-	class BLACKFOX_EXPORT BFPhysicsSystem final: public BFComponentSystem
+	class BLACKFOX_EXPORT BFPhysicsSystem final: public BFComponentSystemBase<BFPhysicsSystem>
 	{
-		//BF_SYSTEM(BFPhysicsSystem, "PhysicsSystem", ComponentSystemGroups::FixedTime)
 		BF_SYSTEM_AUTO_CREATE(BFPhysicsSystem, ComponentSystemGroups::FixedTime, "PhysicsSystem")
 
 		CINJECT(BFPhysicsSystem(BFApplication::Ptr app, std::shared_ptr<BFWorld> world));

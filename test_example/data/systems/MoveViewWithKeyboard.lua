@@ -1,4 +1,5 @@
 -- This system moves the view with the keyboard
+Name = "MoveViewWithKeyboardSystem"
 
 -- Component IDs
 local Transform = BlackFox.Components.Spatial.Transform.id()

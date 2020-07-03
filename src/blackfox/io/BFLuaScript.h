@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <type_traits>
 #include <sol/environment.hpp>
 #include <sol/protected_function_result.hpp>
 #include <filesystem>
+
 #include "BFTextResource.h"
 
 namespace sol {
@@ -24,7 +26,8 @@ namespace BlackFox
         template <typename T>
         [[nodiscard]] bool has(const std::string& name) const
         {
-            return get<T>(name) != sol::nil;
+            sol::optional<T> optional = m_environment[name];
+            return optional != sol::nullopt;
         }
 
         template <typename T>

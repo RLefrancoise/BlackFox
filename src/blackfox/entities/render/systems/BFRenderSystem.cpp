@@ -304,9 +304,8 @@ namespace BlackFox::Systems
 	}
 	
 	BFRenderSystem::BFRenderSystem(BFApplication::Ptr application, BFWorld::Ptr world)
-	: BFComponentSystem(std::move(application), std::move(world))
-	{
-	}
+	: Super(std::move(application), std::move(world))
+	{}
 
 	void BFRenderSystem::update(float dt)
 	{

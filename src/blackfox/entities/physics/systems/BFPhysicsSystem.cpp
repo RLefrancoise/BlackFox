@@ -13,7 +13,7 @@ using namespace BlackFox::Components;
 namespace BlackFox::Systems
 {
 	BFPhysicsSystem::BFPhysicsSystem(BFApplication::Ptr app, BFWorld::Ptr world)
-	: BFComponentSystem(std::move(app), std::move(world))
+	: Super(std::move(app), std::move(world))
 	{
 		const auto gravity = m_application->configData()->physicsData.gravity;
 		m_b2World = std::make_unique<b2World>(b2Vec2{ gravity.x, gravity.y });
@@ -30,7 +30,7 @@ namespace BlackFox::Systems
 	}
 
 	BFPhysicsSystem::BFPhysicsSystem(BFPhysicsSystem&& system)
-	: BFComponentSystem(std::move(system))
+	: Super(std::move(system))
     {
 	    std::swap(m_b2World, system.m_b2World);
 	    std::swap(m_fixturesData, system.m_fixturesData);

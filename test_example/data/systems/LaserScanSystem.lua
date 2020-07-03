@@ -1,4 +1,5 @@
 -- This system moves the laser to scan from left to right
+Name = "LaserScanSystem"
 
 Transform = BlackFox.Components.Spatial.Transform.id()
 Laser = BlackFox.Components.Runtime.Laser.id()

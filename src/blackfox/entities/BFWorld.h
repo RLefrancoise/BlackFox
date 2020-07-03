@@ -50,7 +50,7 @@ namespace BlackFox
 		typedef std::unordered_map<std::string, SystemType> SystemList;
 
         /// <summary>Alias for systems by group</summary>
-        typedef std::unordered_map<ComponentSystemGroups, std::vector<SystemType>> SystemGroupList;
+        typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem*>> SystemGroupList;
 
 		constexpr BFWorld(const BFWorld& app) = delete;
 		constexpr BFWorld& operator=(const BFWorld& app) = delete;
@@ -158,7 +158,7 @@ namespace BlackFox
 			//Add the system to the system list
 			m_registeredSystems.insert(std::make_pair(S::name, system));
 			//Add the system to its group
-			m_systemGroups[S::group].emplace_back(system);
+			addSystemToGroup(S::group, system);
 
 			BF_PRINT("System {} created", S::name);
 
@@ -267,6 +267,14 @@ namespace BlackFox
 		}
 
 	private:
+
+		/*!
+		 * Sort the systems inside groups according to before and after requirements.
+		 */
+		void sortSystems(ComponentSystemGroups group);
+
+		void addSystemToGroup(ComponentSystemGroups group, const BFComponentSystem::Ptr& system);
+
 		/*! \brief	The level DI container */
 		DiContainer m_container;
 		/*! \brief	The entity manager */
