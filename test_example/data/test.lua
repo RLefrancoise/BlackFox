@@ -393,12 +393,12 @@ else
 end
 
 -- Create systems
-world:createSystem("ScalePingPongSystem", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("AutoRotateSystem", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("QuitOnEscapePressedSystem", BlackFox.ComponentSystemGroup.EndOfFrame)
-world:createSystem("ImpulseOnKeyPressed", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("RayCastLaserSystem", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("LaserScanSystem", BlackFox.ComponentSystemGroup.GameLoop)
-world:createSystem("MoveViewWithKeyboard", BlackFox.ComponentSystemGroup.GameLoop)
+world:createSystem("ScalePingPongSystem")
+world:createSystem("AutoRotateSystem")
+world:createSystem("QuitOnEscapePressedSystem")
+world:createSystem("ImpulseOnKeyPressed")
+world:createSystem("RayCastLaserSystem")
+world:createSystem("LaserScanSystem")
+world:createSystem("MoveViewWithKeyboard")
 
 return true

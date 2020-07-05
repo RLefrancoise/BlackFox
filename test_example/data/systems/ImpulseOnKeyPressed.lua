@@ -1,4 +1,5 @@
 Name = "ImpulseOnKeyPressedSystem"
+Group = BlackFox.ComponentSystemGroup.GameLoop
 
 -- Component IDs
 local RigidBody = BlackFox.Components.Physics.RigidBody.id()

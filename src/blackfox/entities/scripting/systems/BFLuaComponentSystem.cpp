@@ -9,15 +9,22 @@ namespace BlackFox
     BFLuaComponentSystem::BFLuaComponentSystem(
             BFApplication::Ptr app,
             BFWorld::Ptr world,
-            const BFLuaScript &script,
-            ComponentSystemGroups group)
+            const BFLuaScript &script)
     : Super(std::move(app), std::move(world))
     , m_id(++systemIdGenerator)
     , m_script(script)
-    , m_group(group)
     {
+        //Name
         if (script.has<std::string>("Name")) m_name = (script.get<std::string>("Name"));
         else m_name = fmt::format("{}", m_script.file().filename().string());
+
+        //Group
+        if(script.has<ComponentSystemGroups>("Group")) m_group = script.get<ComponentSystemGroups >("Group");
+        else
+        {
+            BF_WARNING("System {} has no group specified, unknown group will be assigned", m_name.value());
+            m_group = ComponentSystemGroups::Unknown;
+        }
 
         if (script.has<sol::protected_function>("onCreate")) m_onCreateFnc = (script.get<sol::protected_function>("onCreate"));
         if (script.has<sol::protected_function>("onDestroy")) m_onDestroyFnc = (script.get<sol::protected_function>("onDestroy"));
@@ -95,6 +102,6 @@ namespace BlackFox
 
     ComponentSystemGroups BFLuaComponentSystem::getGroup() const
     {
-        return m_group;
+        return m_group.value();
     }
 }

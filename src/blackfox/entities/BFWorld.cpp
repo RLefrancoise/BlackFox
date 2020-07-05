@@ -58,7 +58,7 @@ namespace BlackFox
 		return worlds[worldId];
 	}
 
-	BFWorld::Ptr BFWorld::create(const std::string& worldId, DiContainer container)
+	BFWorld::Ptr BFWorld::create(const std::string& worldId, const DiContainer& container)
 	{
 		if(hasWorld(worldId))
 		{
@@ -102,10 +102,7 @@ namespace BlackFox
 			BF_WARNING("Failed to create system {}", system.get_name().to_string());
 			return nullptr;
 		}
-
-		//Get the system group
-		const auto group = system.get_method("group").invoke(s).get_value<ComponentSystemGroups>();
-
+		
 		auto ok = false;
 		const auto sPtr = s.convert<BFComponentSystem*>(&ok);
 		if(!ok)
@@ -117,7 +114,7 @@ namespace BlackFox
 		BFComponentSystem::Ptr sharedPtr(sPtr);
 
 		//Add the system to the systems map
-		addSystemToGroup(group, sharedPtr);
+		addSystemToGroup(sharedPtr);
 
 		//Remember the registration of the system
 		m_registeredSystems.insert(std::make_pair(system.get_name().to_string(), sharedPtr));
@@ -166,7 +163,7 @@ namespace BlackFox
 		BFComponentSystem::Ptr ptr(sPtr);
 
 		//Add the system to the systems map
-		addSystemToGroup(group, ptr);
+		addSystemToGroup(ptr);
 
 		//Remember the registration of the system
 		m_registeredSystems.insert(std::make_pair(name, ptr));
@@ -177,10 +174,9 @@ namespace BlackFox
 	}
 
     BFComponentSystem* BFWorld::createSystemFromName(
-    		const std::string& systemName
-    		, BFComponentSystem::Ptr system
-    		, ComponentSystemGroups group
-    		, const bool nameIsType)
+    		const std::string& systemName, 
+    		const BFComponentSystem::Ptr& system, 
+    		const bool nameIsType)
     {
         if(hasSystemByName(systemName, nameIsType))
         {
@@ -189,7 +185,7 @@ namespace BlackFox
         }
 
 		//Add the system to its group
-        addSystemToGroup(group, system);
+        addSystemToGroup(system);
 
 		//Add the system to the system list
 		m_registeredSystems.insert(std::make_pair(systemName, system));
@@ -249,7 +245,7 @@ namespace BlackFox
 		});
 
 		BF_PRINT("Systems order in group {} is now: {}",
-		        group,
+		        toString(group),
 		        Utils::join<BFComponentSystem*>(
 		                systems,
 		                ",",
@@ -257,10 +253,11 @@ namespace BlackFox
 
 	}
 
-	void BFWorld::addSystemToGroup(ComponentSystemGroups group, const BFComponentSystem::Ptr& system)
+	void BFWorld::addSystemToGroup(const BFComponentSystem::Ptr& system)
 	{
-        BF_PRINT("System {} added to the group {}", std::string(system->getName()), group);
+	    const auto group = system->getGroup();
 		m_systemGroups[group].emplace_back(system.get());
+        BF_PRINT("System {} added to the group {}", std::string(system->getName()), toString(group));
 		sortSystems(group);
 	}
 }

@@ -1,5 +1,6 @@
 -- This system changes the color of the laser when it hits an entity
 Name = "RayCastLaserSystem"
+Group = BlackFox.ComponentSystemGroup.GameLoop
 
 -- Aliases
 Color = BlackFox.Graphics.Color

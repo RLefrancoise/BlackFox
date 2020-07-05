@@ -1,4 +1,5 @@
 Name = "AutoRotateSystem"
+Group = BlackFox.ComponentSystemGroup.GameLoop
 
 -- Component IDs
 local Transform = BlackFox.Components.Spatial.Transform.id()

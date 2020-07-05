@@ -5,7 +5,7 @@
 #include <entt/core/type_info.hpp>
 #include <array>
 
-#include "BFComponentSystemFlags.h"
+#include "BFComponentSystemEnums.h"
 #include "BFUtils.h"
 
 namespace BlackFox {

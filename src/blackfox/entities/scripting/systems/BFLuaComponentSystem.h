@@ -18,13 +18,11 @@ namespace BlackFox
          * @param app       Application
          * @param world     World
          * @param script    Lua script containing the system
-         * @param group     Group of the system
          */
         explicit BFLuaComponentSystem(
                 std::shared_ptr<BFApplication> app,
                 std::shared_ptr<BFWorld> world,
-                const BFLuaScript& script,
-                ComponentSystemGroups group);
+                const BFLuaScript& script);
         BFLuaComponentSystem(BFLuaComponentSystem&& system) noexcept ;
         BFLuaComponentSystem& operator=(BFLuaComponentSystem&& system) noexcept;
 
@@ -42,14 +40,14 @@ namespace BlackFox
         /// Lua system id
         int m_id;
 
-        /// Lua system group
-        ComponentSystemGroups  m_group;
-
         /// Lua script containing the system
         BFLuaScript m_script;
 
         /// Lua system name
         sol::optional<std::string>  m_name;
+
+        /// Lua system group
+        sol::optional<ComponentSystemGroups>  m_group;
 
         /// onCreate function of the system
         sol::optional<sol::protected_function> m_onCreateFnc;

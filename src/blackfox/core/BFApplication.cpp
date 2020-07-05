@@ -6,7 +6,7 @@
 
 #include "IBFApplicationService.h"
 #include "BFWorld.h"
-#include "BFComponentSystemFlags.h"
+#include "BFComponentSystemEnums.h"
 #include "BFCommandManager.h"
 #include "BFConfigData.h"
 #include "BFInput.h"

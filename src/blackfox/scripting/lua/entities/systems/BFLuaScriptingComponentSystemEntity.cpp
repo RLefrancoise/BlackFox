@@ -1,5 +1,5 @@
 #include "BFLuaScriptingComponentSystemEntity.h"
-#include "BFComponentSystemFlags.h"
+#include "BFComponentSystemEnums.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingComponentSystemEntity, "ComponentSystem")
 

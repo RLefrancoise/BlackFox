@@ -11,7 +11,7 @@
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
 #include "BFComponentSystem.h"
-#include "BFComponentSystemFlags.h"
+#include "BFComponentSystemEnums.h"
 #include "BFComponentListener.h"
 
 namespace BlackFox
@@ -19,51 +19,34 @@ namespace BlackFox
 	class BFApplication;
 
 	/*!
-	 * \class	BFWorld
-	 *
-	 * \brief	BlackFox world.
-	 *
-	 * \author	Renaud Lefrançoise
-	 * \date	24/11/2019
+	 * Blackfox world class
 	 */
 	class BLACKFOX_EXPORT BFWorld : public std::enable_shared_from_this<BFWorld>
 	{
 	public:
 
-		/*!
-		 * \typedef	std::shared_ptr<BFWorld> Ptr
-		 *
-		 * \brief	Alias for BlackFox world pointer
-		 */
+	    ///	Alias for BlackFox world pointer
 		typedef std::shared_ptr<BFWorld> Ptr;
 
-		/*!
-		 * \typedef	std::unordered_map<std::string, BFWorld::Ptr> WorldList
-		 *
-		 * \brief	Alias for world list.
-		 */
+		///	Alias for world list.
 		typedef std::unordered_map<std::string, BFWorld::Ptr> WorldList;
 
+		/// Alias for system pointer
 		typedef BFComponentSystem::Ptr SystemType;
 
-		/// <summary>Alias for system list</summary>
+		/// Alias for system list
 		typedef std::unordered_map<std::string, SystemType> SystemList;
 
-        /// <summary>Alias for systems by group</summary>
+        /// Alias for systems by group
         typedef std::unordered_map<ComponentSystemGroups, std::vector<BFComponentSystem*>> SystemGroupList;
 
 		constexpr BFWorld(const BFWorld& app) = delete;
 		constexpr BFWorld& operator=(const BFWorld& app) = delete;
 		
 		/*!
-		 * \fn	explicit BFWorld::BFWorld(DiContainer container);
+		 * Constructor
 		 *
-		 * \brief	Constructor
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	24/11/2019
-		 *
-		 * \param	container	The DI container.
+		 * @param	container	The DI container.
 		 */
 		CINJECT(BFWorld(DiContainer container));
 
@@ -73,75 +56,57 @@ namespace BlackFox
 		BFWorld& operator=(BFWorld&& world) noexcept;
 		
 		/*!
-		 * \fn	EntityManager BFWorld::entityManager() const;
+		 * Get the Entity manager
 		 *
-		 * \brief	Get the Entity manager
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	24/11/2019
-		 *
-		 * \returns	An EntityManager.
+		 * @return	EntityManager associated to this world
 		 */
 		[[nodiscard]] EntityManager entityManager() const;
 
 		/*!
-		 * \fn	bool BFApplication::hasWorld(const std::string& worldId);
+		 * Check if world exists
 		 *
-		 * \brief	Check if world exists
+		 * @param	worldId	Identifier for the world.
 		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	worldId	Identifier for the world.
-		 *
-		 * \returns	True if world exists, false if not.
+		 * @return	True if world exists, false if not.
 		 */
 		static bool hasWorld(const std::string& worldId);
 
 		/*!
-		 * \fn	BFWorld::Ptr BFApplication::world(const std::string& worldId);
+		 * Get a world by its identifier.
 		 *
-		 * \brief	Get a world by its identifier.
+		 * @param	worldId	Identifier for the world.
 		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	26/11/2019
-		 *
-		 * \param	worldId	Identifier for the world.
-		 *
-		 * \returns	A BFWorld::Ptr.
+		 * @return	Created world
 		 */
 		static BFWorld::Ptr world(const std::string& worldId);
 
-		
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Create a new world
-		/// </summary>
-		/// <param name="worldId">Id of the world</param>
-		/// <param name="container">The DI container</param>
-		/// <returns>The created world</returns>
-		/// --------------------------------------------------------------------------------
-		static BFWorld::Ptr create(const std::string& worldId, DiContainer container);
+		/*!
+		 * Create a new world
+		 *
+		 * @param worldId       Id of the world
+		 * @param container     DI Container
+		 *
+		 * @return              The created world
+		 */
+		static BFWorld::Ptr create(const std::string& worldId, const DiContainer& container);
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Get all the created worlds
-		/// </summary>
-		/// <returns>The list of created worlds</returns>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Get all the created worlds
+		 *
+		 * @return The list of created worlds
+		 */
 		static std::vector<BFWorld::Ptr> all();
 
 		/*!
-		 * \brief	Creates a system in the world.
+		 * Creates a system in the world.
 		 *
-		 * \tparam	S			Type of the system.
-		 * \param	group		The group the system will belong to.
-		 * \param	application	The application.
+		 * @tparam	S			Type of the system.
+		 * @param	application	The application.
 		 *
-		 * \returns	The created system.
+		 * @return	The created system.
 		 */
 		template <typename S>
-		S* createSystem(const ComponentSystemGroups group, std::shared_ptr<BFApplication> application)
+		S* createSystem(std::shared_ptr<BFApplication> application)
 		{
 			static_assert(std::is_base_of<BFComponentSystem, S>::value, "Type parameter of createSystem must derive from BFComponentSystem");
 
@@ -152,7 +117,6 @@ namespace BlackFox
 			}
 
 			//Create system
-			//auto system = m_container->get<S>();
 			SystemType system = std::make_shared<S>(std::move(application), shared_from_this());
 
 			//Add the system to the system list
@@ -165,51 +129,46 @@ namespace BlackFox
 			return system.get();
 		}
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Creates a new system from a type.
-		/// </summary>
-		/// <param name="system">Type of the system</param>
-		/// <param name="application">Application</param>
-		/// <returns>The created system</returns>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Create a new system from a type
+		 *
+		 * @param system        Type of the system
+		 * @param application   Application
+		 *
+		 * @return              The created system
+		 */
 		BFComponentSystem* createSystemFromType(const rttr::type& system, std::shared_ptr<BFApplication> application);
 
 		BFComponentSystem* createSystemFromType(entt::meta_type system, std::shared_ptr<BFApplication> application);
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Creates a new system from a name
-		/// </summary>
-		/// <param name="systemName">Name of the system</param>
-		/// <param name="system">System to register</param>
-		/// <param name="group">Group of the system</param>
-		/// <param name="nameIsType">Name is a type name ?</param>
-		/// <returns>The created system</returns>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Create a new system from a name
+		 *
+		 * @param systemName        Name of the system
+		 * @param system            System to create
+		 * @param nameIsType        Name is a type name ?
+		 *
+		 * @return                  The created system
+		 */
 		BFComponentSystem* createSystemFromName(
-				const std::string& systemName
-				, BFComponentSystem::Ptr system
-				, ComponentSystemGroups group
-				, bool nameIsType = true);
+				const std::string& systemName, 
+				const BFComponentSystem::Ptr& system, 
+				bool nameIsType = true);
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Refresh all the systems of a given group.
-		/// </summary>
-		/// <param name="group">Group to refresh</param>
-		/// <param name="deltaTime">Delta time</param>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Refresh all the systems of a given group
+		 *
+		 * @param group         Group to refresh
+		 * @param deltaTime     Delta time
+		 */
 		void refreshSystems(ComponentSystemGroups group, float deltaTime);
 
 		/*!
-		 * \fn	template <typename S> static bool BFWorld::hasSystem()
+		 * Check if the world has the given system or not
 		 *
-		 * \brief	Check if the world has the given system or not
+		 * @tparam	S	Type of the system.
 		 *
-		 * \tparam	S	Type of the system.
-		 *
-		 * \returns	True if the world has the system, false if not.
+		 * @return	True if the world has the system, false if not.
 		 */
 		template <typename S>
 		bool hasSystem()
@@ -217,24 +176,22 @@ namespace BlackFox
 			return m_registeredSystems.find(S::name) != m_registeredSystems.end();
 		}
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Check if a system is created, by its name
-		/// </summary>
-		/// <param name="name">Name of the system</param>
-		/// <param name="nameIsType">Name is a type name ?</param>
-		/// <returns>True if system exist, false if not</returns>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Check if a system is created, by its name
+		 *
+		 * @param name          Name of the system
+		 * @param nameIsType    Name is a type name ?
+		 *
+		 * @return              True if system exist, false if not
+		 */
 		bool hasSystemByName(const std::string& name, bool nameIsType = true);
 
 		/*!
-		 * \fn	template <typename S> static S* BFWorld::getSystem()
+		 * Gets the given system. Returns null pointer if the system does not exist.
 		 *
-		 * \brief	Gets the given system. Returns null pointer if the system does not exist.
+		 * @tparam	S	Type of the system.
 		 *
-		 * \tparam	S	Type of the system.
-		 *
-		 * \returns	The system.
+		 * @return	The system.
 		 */
 		template <typename S>
 		S* getSystem()
@@ -250,19 +207,29 @@ namespace BlackFox
 			return static_cast<S*>(m_registeredSystems[S::name].get());
 		}
 
-		/// --------------------------------------------------------------------------------
-		/// <summary>
-		/// Get a system by its name
-		/// </summary>
-		/// <param name="name">Name of the system</param>
-		/// <returns>The system if found, nullptr if not</returns>
-		/// --------------------------------------------------------------------------------
+		/*!
+		 * Get a system by its name
+		 *
+		 * @param name      Name of the system
+		 *
+		 * @return          The system if found, nullptr if not
+		 */
 		BFComponentSystem* getSystemByName(const std::string& name);
 
+		/*!
+		 * Register a component listener
+		 *
+		 * @tparam ComponentListener        Type of the listener
+		 * @tparam Args                     Type of args to give to the listener
+		 *
+		 * @param args                      List of arguments to give to the listener
+		 *
+		 * @return                          The listener
+		 */
 		template<class ComponentListener, typename... Args>
 		std::shared_ptr<ComponentListener> registerComponentListener(Args... args)
 		{
-			auto listener = std::make_shared<ComponentListener>(m_entityManager.get(), args...);
+			auto listener = std::make_shared<ComponentListener>(m_entityManager.get(), std::forward<Args>(args)...);
 			return listener;
 		}
 
@@ -273,7 +240,12 @@ namespace BlackFox
 		 */
 		void sortSystems(ComponentSystemGroups group);
 
-		void addSystemToGroup(ComponentSystemGroups group, const BFComponentSystem::Ptr& system);
+		/*!
+		 * Add the system to its group
+		 * 
+		 * @param system 
+		 */
+		void addSystemToGroup(const BFComponentSystem::Ptr& system);
 
 		/*! \brief	The level DI container */
 		DiContainer m_container;

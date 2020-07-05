@@ -249,15 +249,15 @@ namespace BlackFox
 		};
 
         //System
-        worldType["createSystem"] = [&](BFWorld& world, const std::string& systemName, const ComponentSystemGroups group) -> BFComponentSystem*
+        worldType["createSystem"] = [&](BFWorld& world, const std::string& systemName) -> BFComponentSystem*
         {
             BFLuaScript luaScript(Resources::LUA_SYSTEM_SCRIPT, m_state);
             luaScript.loadOrThrow(fmt::format("data/systems/{}.lua", systemName));
 
             const auto app = m_container->get<BFApplication>();
-            const auto system = std::make_shared<BFLuaComponentSystem>(app, world.shared_from_this(), luaScript, group);
+            const auto system = std::make_shared<BFLuaComponentSystem>(app, world.shared_from_this(), luaScript);
 
-            return world.createSystemFromName(systemName, system, group, false);
+            return world.createSystemFromName(systemName, system, false);
         };
 
         worldType["hasSystem"] = [&](BFWorld& world, const std::string& systemName) -> bool
