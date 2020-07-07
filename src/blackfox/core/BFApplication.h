@@ -12,7 +12,6 @@ namespace BlackFox
 	class BFApplicationArgs;
 	class BFCommandManager;
 	class BFConfigData;
-	class BFInput;
 
 	/*!
 	 * \class	BFApplication

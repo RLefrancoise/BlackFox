@@ -5,6 +5,7 @@
 
 #include "BFComponentSystemMacros.h"
 #include "BFComponentSystem.h"
+#include "BFRenderLayers.h"
 
 namespace BlackFox::Systems
 {
@@ -24,8 +25,9 @@ namespace BlackFox::Systems
 		 * Execute a render pass. Basically, it is called for each view component in the world. If no view, it it called
 		 * once with the default view.
 		 *
-		 * @param view	The view to use for the pass
+		 * @param view		The view to use for the pass
+		 * @param layers	Layers to render
 		 */
-		void renderPass(const sf::View& view);
+		void renderPass(const sf::View& view, Graphics::BFRenderLayers layers);
 	};
 }

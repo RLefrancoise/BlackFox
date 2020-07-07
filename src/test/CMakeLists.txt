@@ -20,9 +20,42 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 add_executable(test ${SOURCES})
 
 IF(WIN32)
-    set(LIBRARIES Catch2 sfml-system sfml-graphics sfml-audio sfml-network blackfox fmt::fmt-header-only RTTR::Core libluadll)
+    set(
+            LIBRARIES
+            Catch2
+            sfml-system
+            sfml-window
+            sfml-graphics
+            sfml-audio
+            sfml-network
+            blackfox
+            blackfox.input
+            blackfox.entities
+            blackfox.physics
+            blackfox.graphics
+            blackfox.scripting
+            fmt::fmt-header-only
+            RTTR::Core
+            libluadll)
 ELSE()
-    set(LIBRARIES Catch2 sfml-system sfml-graphics sfml-audio sfml-network blackfox fmt::fmt-header-only RTTR::Core liblua dl pthread)
+    set(
+            LIBRARIES
+            Catch2
+            sfml-system
+            sfml-graphics
+            sfml-audio
+            sfml-network
+            blackfox
+            blackfox.input
+            blackfox.entities
+            blackfox.physics
+            blackfox.graphics
+            blackfox.scripting
+            fmt::fmt-header-only
+            RTTR::Core
+            liblua
+            dl
+            pthread)
 ENDIF()
 
 target_link_libraries(

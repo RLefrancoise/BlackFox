@@ -19,6 +19,13 @@ namespace BlackFox
 	{
 		auto componentsNamespace = componentNamespace();
 
+		auto renderLayerType = m_namespace.new_usertype<Graphics::BFRenderLayer>("RenderLayer");
+		auto renderLayersType = m_namespace.new_usertype<Graphics::BFRenderLayers>("RenderLayers");
+
+		renderLayersType["None"] = sol::var(std::ref(Graphics::RenderLayers::None));
+		renderLayersType["Default"] = sol::var(std::ref(Graphics::RenderLayers::Default));
+		renderLayersType["All"] = sol::var(std::ref(Graphics::RenderLayers::All));
+
 		//Hidden
 		registerType<BFHiddenComponent>();
 
@@ -29,6 +36,7 @@ namespace BlackFox
 		//Drawable
 		auto drawable_t = componentsNamespace.new_usertype<BFDrawableComponent>("Drawable");
 		drawable_t["color"] = &BFDrawableComponent::color;
+		drawable_t["layer"] = &BFDrawableComponent::layer;
 
 		//Line
 		auto line_t = registerType<BFLineComponent, BFDrawableComponent>();
@@ -84,6 +92,7 @@ namespace BlackFox
 		view_t["size"] = &BFViewComponent::size;
 		view_t["zoom"] = &BFViewComponent::zoom;
 		view_t["viewport"] = &BFViewComponent::viewport;
+		view_t["layers"] = &BFViewComponent::layers;
 	}
 
 	std::string BFLuaScriptingRenderComponentEntities::namespaceName() const

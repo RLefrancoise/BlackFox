@@ -3,6 +3,7 @@
 #include "BFApplication.h"
 #include "BFWorld.h"
 #include "BFConfigData.h"
+#include "BFUtils.h"
 
 #include "BFTransformComponent.h"
 
@@ -319,17 +320,17 @@ namespace BlackFox::Systems
 		{
 			views.each([&](entt::entity e, const BFViewComponent& view)
 			{
-				renderPass(static_cast<sf::View>(view));
+				renderPass(static_cast<sf::View>(view), view.layers);
 			});
 		}
 		//Else, use default view to render
 		else
 		{
-			renderPass(m_application->window()->getDefaultView());
+			renderPass(m_application->window()->getDefaultView(), Graphics::RenderLayers::All);
 		}
 	}
 
-	void BFRenderSystem::renderPass(const sf::View& view)
+	void BFRenderSystem::renderPass(const sf::View& view, const Graphics::BFRenderLayers layers)
 	{
 		//Apply view to window
 		m_application->window()->setView(view);
@@ -349,31 +350,36 @@ namespace BlackFox::Systems
 			//Entity is a sprite
 			if(BFSpriteComponent* sprite = em->try_get<BFSpriteComponent>(entity))
 			{
-			   renderSprite(m_application.get(), *sprite, transform);
+				if(hasFlag(layers, sprite->layer))
+			   		renderSprite(m_application.get(), *sprite, transform);
 			}
 
 			//Entity is a circle shape
 			if(BFCircleShapeComponent* circle = em->try_get<BFCircleShapeComponent>(entity))
 			{
-			   renderCircleShape(m_application.get(), *circle, transform);
+				if(hasFlag(layers, circle->layer))
+			   		renderCircleShape(m_application.get(), *circle, transform);
 			}
 
 			//Entity is a box shape
 			if(BFBoxShapeComponent* box = em->try_get<BFBoxShapeComponent>(entity))
 			{
-			   renderBoxShape(m_application.get(), *box, transform);
+				if(hasFlag(layers, box->layer))
+			   		renderBoxShape(m_application.get(), *box, transform);
 			}
 
 			//Entity is a line shape
 			if(BFLineComponent* line = em->try_get<BFLineComponent>(entity))
 			{
-			   renderLine(m_application.get(), *line, transform);
+				if(hasFlag(layers, line->layer))
+			   		renderLine(m_application.get(), *line, transform);
 			}
 
 			//Entity is a text
 			if(BFTextComponent* text = em->try_get<BFTextComponent>(entity))
 			{
-			   renderText(m_application.get(), *text, transform);
+				if(hasFlag(layers, text->layer))
+			   		renderText(m_application.get(), *text, transform);
 			}
 		});
 

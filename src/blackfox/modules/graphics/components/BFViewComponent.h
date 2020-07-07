@@ -2,6 +2,7 @@
 
 #include "BFComponent.h"
 #include "BFVector2.h"
+#include "BFRenderLayers.h"
 
 #include <SFML/Graphics/View.hpp>
 
@@ -32,7 +33,8 @@ namespace BlackFox::Components
         explicit BFViewComponent(
                 const BFVector2f& size,
                 float zoom = 1.f,
-                const sf::FloatRect& viewport = sf::FloatRect(0,0,1,1));
+                const sf::FloatRect& viewport = sf::FloatRect(0,0,1,1),
+                Graphics::BFRenderLayers layers = Graphics::RenderLayers::All);
 
         BFViewComponent(BFViewComponent&&) noexcept;
         BFViewComponent& operator=(BFViewComponent&&) noexcept;
@@ -45,6 +47,9 @@ namespace BlackFox::Components
 
         /// Viewport of the view. Useful to display it only on some part on the screen.
         sf::FloatRect viewport;
+
+        /// Layers to display with this view
+        Graphics::BFRenderLayers layers;
 
         explicit operator const sf::View&() const;
 
