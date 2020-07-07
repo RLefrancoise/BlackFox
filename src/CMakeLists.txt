@@ -72,6 +72,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/editor)
 # Test
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-add_dependencies(game blackfox)
-add_dependencies(editor blackfox)
-add_dependencies(test blackfox)
+add_dependencies(game blackfox blackfox.input blackfox.entities blackfox.physics blackfox.graphics blackfox.scripting)
+add_dependencies(editor blackfox blackfox.input blackfox.entities blackfox.physics blackfox.graphics blackfox.scripting)
+add_dependencies(test blackfox blackfox.input blackfox.entities blackfox.physics blackfox.graphics blackfox.scripting)

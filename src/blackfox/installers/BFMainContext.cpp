@@ -1,9 +1,6 @@
 #include "BFMainContext.h"
 #include "BFCoreInstaller.h"
-#include "BFEntitiesInstaller.h"
 #include "BFDataInstaller.h"
-#include "BFScriptingInstaller.h"
-#include "BFServicesInstaller.h"
 
 namespace BlackFox
 {
@@ -15,9 +12,6 @@ namespace BlackFox
 	void BFMainContext::init()
 	{
 		addInstaller(std::make_shared<BFCoreInstaller>(m_container));
-		addInstaller(std::make_shared<BFEntitiesInstaller>(m_container));
 		addInstaller(std::make_shared<BFDataInstaller>(m_container));
-		addInstaller(std::make_shared<BFScriptingInstaller>(m_container));
-		addInstaller(std::make_shared<BFServicesInstaller>(m_container));
 	}
 }

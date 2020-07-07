@@ -16,20 +16,12 @@ file(
     "core/*.cpp"
     "data/*.h"
     "data/*.cpp"
-    "entities/*.h"
-    "entities/*.cpp"
     "installers/*.h"
     "installers/*.cpp"
     "io/*.h"
     "io/*.cpp"
     "math/*.h"
     "math/*.cpp"
-    "physics/*.h"
-    "physics/*.cpp"
-    "scripting/*.h"
-    "scripting/*.cpp"
-    "services/*.h"
-    "services/*.cpp"
     "utils/*.h"
     "utils/*.cpp"
 )
@@ -83,3 +75,6 @@ target_link_libraries(
 )
 
 target_compile_features(blackfox PRIVATE cxx_std_17)
+
+# Modules
+add_subdirectory(modules)

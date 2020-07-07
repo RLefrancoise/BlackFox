@@ -2,7 +2,6 @@
 
 #include "BFCommandManager.h"
 #include "BFApplication.h"
-#include "BFInput.h"
 #include "BFConfigData.h"
 #include "BFVirtualFileSystem.h"
 
@@ -22,9 +21,6 @@ namespace BlackFox
 
 		//Application
 		m_container->bind<BFApplication>().toSelf().inSingletonScope();
-
-		//Input
-		m_container->bind<BFInput>().toSelf().inSingletonScope();
 
 		//VFS
 		m_container->bind<IBFVirtualFileSystem>().to<BFVirtualFileSystem>().inSingletonScope();

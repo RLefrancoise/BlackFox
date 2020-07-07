@@ -4,12 +4,9 @@
 #include <utility>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "IBFApplicationService.h"
-#include "BFWorld.h"
-#include "BFComponentSystemEnums.h"
+#include "IBFApplicationModule.h"
 #include "BFCommandManager.h"
 #include "BFConfigData.h"
-#include "BFInput.h"
 #include "BFVirtualFileSystem.h"
 #include "BFApplicationArgs.h"
 #include "BFQuitApplicationCommand.h"
@@ -23,28 +20,22 @@ namespace BlackFox
 	public:
 		impl(
 			BFApplication::Ptr app,
-			std::vector<IBFApplicationService::Ptr> services,
 			DiContainer container,
 			BFCommandManager::Ptr commandManager,
 			BFConfigData::Ptr configData,
-			BFInput::Ptr input,
-			IBFVirtualFileSystem::Ptr vfs)
+			IBFVirtualFileSystem::Ptr vfs,
+			std::vector<IBFApplicationModule::Ptr> modules)
 			: m_app(std::move(app))
-			, m_services(std::move(services))
 			, m_deltaTime(0.0f)
 			, m_container(std::move(container))
 			, m_commandManager(std::move(commandManager))
 			, m_configData(std::move(configData))
-			, m_input(std::move(input))
 			, m_vfs(std::move(vfs))
-		{
-		}
+			, m_modules(std::move(modules))
+		{}
 
 		int execute()
 		{
-			//init
-			//if (!init()) return EXIT_FAILURE;
-
 			sf::Clock clock;
 			sf::Clock fixedUpdateClock;
 
@@ -72,7 +63,9 @@ namespace BlackFox
 					m_polledEvents.emplace_back(ev);
 				}
 
-				m_input->updateEvents(m_polledEvents);
+				//Update modules
+				for(const auto& module : m_modules)
+				    module->onEvent(m_polledEvents);
 
 				//loop
 				loop();
@@ -138,17 +131,20 @@ namespace BlackFox
 				sf::ContextSettings windowSettings;
 				windowSettings.antialiasingLevel = m_configData->appData.antiAliasing;
 
-				m_window.create(sf::VideoMode(m_configData->appData.windowSize.x, m_configData->appData.windowSize.y), m_configData->appData.name, windowFlags, windowSettings);
+				m_window.create(
+				        sf::VideoMode(m_configData->appData.windowSize.x, m_configData->appData.windowSize.y),
+				        m_configData->appData.name,
+				        windowFlags,
+				        windowSettings);
 
 				//Framerate
 				m_window.setFramerateLimit(m_configData->appData.frameRate);
 
-				//Run services
-				BF_PRINT("Found {} services", m_services.size());
-				for(const auto& service : m_services)
-				{
-					service->run();
-				}
+                //Init modules
+				for(const auto& module : m_modules)
+                {
+				    module->onInit();
+                }
 			}
 			catch (std::exception& err)
 			{
@@ -162,9 +158,8 @@ namespace BlackFox
 	private:
 		void loop() const
 		{
-			auto worlds = BFWorld::all();
-			for(const auto& w : worlds)
-				w->refreshSystems(ComponentSystemGroups::GameLoop, m_deltaTime);
+            for(const auto& module : m_modules)
+                module->onUpdate(m_deltaTime);
 		}
 
 		void render()
@@ -172,9 +167,8 @@ namespace BlackFox
 			//Clear window
 			m_window.clear(sf::Color::White);
 
-			auto worlds = BFWorld::all();
-			for (const auto& w : worlds)
-				w->refreshSystems(ComponentSystemGroups::Render, m_deltaTime);
+            for(const auto& module : m_modules)
+                module->onRender(m_deltaTime);
 
 			//Draw window content
 			m_window.display();
@@ -182,25 +176,24 @@ namespace BlackFox
 
 		void endOfFrame() const
 		{
-			auto worlds = BFWorld::all();
-			for (const auto& w : worlds)
-				w->refreshSystems(ComponentSystemGroups::EndOfFrame, m_deltaTime);
+            for(const auto& module : m_modules)
+                module->onEndOfFrame(m_deltaTime);
 		}
 
 		void fixedUpdate() const
 		{
-			auto worlds = BFWorld::all();
-			for (const auto& w : worlds)
-				w->refreshSystems(ComponentSystemGroups::FixedTime, m_configData->timeData.fixedUpdateInterval);
+            for(const auto& module : m_modules)
+                module->onFixedUpdate(m_configData->timeData.fixedUpdateInterval);
 		}
 
-		void cleanup() {}
+		void cleanup()
+		{
+            for(const auto& module : m_modules)
+                module->onDestroy();
+		}
 
 		/*! \brief	Application */
 		BFApplication::Ptr m_app;
-
-		/*! \brief	Application services */
-		std::vector<IBFApplicationService::Ptr> m_services;
 
 		/*! \brief	window */
 		sf::RenderWindow m_window;
@@ -220,14 +213,14 @@ namespace BlackFox
 		/*! \brief  Config data */
 		BFConfigData::Ptr m_configData;
 
-		/*! \brief	Input */
-		BFInput::Ptr m_input;
-
 		///	Virtual file system
 		IBFVirtualFileSystem::Ptr m_vfs;
 
 		///	Application arguments
 		BFApplicationArgs::Ptr m_arguments;
+
+		/// Application modules
+		std::vector<IBFApplicationModule::Ptr> m_modules;
 	};
 
 
