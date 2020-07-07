@@ -4,7 +4,6 @@
 #include "BFDebug.h"
 #include "BFScriptingManager.h"
 
-
 namespace BlackFox::Scripting
 {
     BFScriptingModule::BFScriptingModule(DiContainer container)
@@ -24,5 +23,8 @@ namespace BlackFox::Scripting
 
         auto scriptingManager = m_container->get<BFScriptingManager>();
         scriptingManager->registerEntities();
+
+        //Languages
+        scriptingManager->registerLanguages();
     }
 }

@@ -7,12 +7,21 @@
 #include "BFLuaRuntimeRegistry.h"
 #include "BFWorld.h"
 
+#include "BFLuaScriptingLanguage.h"
+
 namespace BlackFox
 {
     BFScriptingManager::BFScriptingManager(DiContainer container)
     : m_container(std::move(container))
     {
-        m_state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os, sol::lib::table, sol::lib::string);
+        m_state.open_libraries(
+                sol::lib::base,
+                sol::lib::package,
+                sol::lib::math,
+                sol::lib::os,
+                sol::lib::table,
+                sol::lib::string,
+                sol::lib::debug);
 
         //Lua entities
         const auto entityType = rttr::type::get<IBFLuaScriptingEntity>();
@@ -68,6 +77,9 @@ namespace BlackFox
 				return cid;
 			};
 		}
+
+		//Languages
+		addLanguage(std::make_shared<Scripting::Lua::BFLuaScriptingLanguage>(m_container, &m_state));
     }
 
     BFScriptingManager::BFScriptingManager(BFScriptingManager&& manager) noexcept
@@ -94,5 +106,16 @@ namespace BlackFox
         {
             entity->registerEntity();
         }
+    }
+
+    void BFScriptingManager::addLanguage(Scripting::IBFScriptingLanguage::Ptr language)
+    {
+        m_languages.emplace_back(std::move(language));
+    }
+
+    void BFScriptingManager::registerLanguages()
+    {
+        for(const auto& language : m_languages)
+            language->use();
     }
 }

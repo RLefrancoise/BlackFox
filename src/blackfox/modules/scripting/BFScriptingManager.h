@@ -3,10 +3,12 @@
 #include <sol/state.hpp>
 #include <sol/protected_function_result.hpp>
 #include <memory>
+#include <vector>
 
 #include "BFDebug.h"
 #include "BFTypeDefs.h"
 #include "BFExport.h"
+#include "IBFScriptingLanguage.h"
 
 namespace BlackFox
 {
@@ -30,6 +32,9 @@ namespace BlackFox
 
 		void addEntity(std::shared_ptr<IBFScriptingEntity> entity);
 		void registerEntities();
+
+		void addLanguage(Scripting::IBFScriptingLanguage::Ptr language);
+		void registerLanguages();
 
 		template<typename T>
 		T evalScript(const std::string& script)
@@ -61,5 +66,8 @@ namespace BlackFox
 		DiContainer m_container;
 		sol::state m_state;
 		std::vector<std::shared_ptr<IBFScriptingEntity>> m_entities;
+
+		///	Languages
+		std::vector<Scripting::IBFScriptingLanguage::Ptr> m_languages;
 	};
 }
