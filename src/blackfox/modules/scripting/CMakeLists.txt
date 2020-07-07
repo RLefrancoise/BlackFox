@@ -8,8 +8,12 @@ file(
         ${CMAKE_CURRENT_SOURCE_DIR}
         "*.h"
         "*.cpp"
+        "components/*.h"
+        "components/*.cpp"
         "lua/*.h"
         "lua/*.cpp"
+        "systems/*.h"
+        "systems/*.cpp"
 )
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})

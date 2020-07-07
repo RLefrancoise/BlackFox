@@ -12,7 +12,7 @@ namespace BlackFox::Components
         BFColor color;
 
         /// Draw layer
-        sf::Uint32 layer;
+        Graphics::BFRenderLayer layer;
 
     protected:
         explicit BFDrawableComponent(
