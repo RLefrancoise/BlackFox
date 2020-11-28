@@ -13,13 +13,13 @@ namespace BlackFox
 	typedef std::shared_ptr<entt::registry> EntityManager;
 	typedef ENTT_ID_TYPE ComponentId;
 
-	typedef entt::cache<sf::Texture> TextureCache;
+	typedef entt::resource_cache<sf::Texture> TextureCache;
 	typedef entt::id_type TextureId;
-	typedef entt::handle<sf::Texture> TextureHandle;
+	typedef entt::resource_handle<sf::Texture> TextureHandle;
 
-	typedef entt::cache<sf::Font> FontCache;
+	typedef entt::resource_cache<sf::Font> FontCache;
 	typedef entt::id_type FontId;
-	typedef entt::handle<sf::Font> FontHandle;
+	typedef entt::resource_handle<sf::Font> FontHandle;
 
 	typedef sf::Color	BFColor;
 	typedef sf::String	BFString;

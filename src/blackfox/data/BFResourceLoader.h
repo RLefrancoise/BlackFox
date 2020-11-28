@@ -18,7 +18,7 @@ namespace BlackFox
      * @tparam Resource     Resource class
      */
     template<class Loader, class Resource>
-    struct BFResourceLoader : entt::loader<Loader, Resource>
+    struct BFResourceLoader : entt::resource_loader<Loader, Resource>
     {
         /*!
          * Get the sub folders where this kind of resources should be placed
