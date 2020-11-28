@@ -22,7 +22,7 @@ namespace BlackFox
         explicit BFLuaComponentSystem(
                 std::shared_ptr<BFApplication> app,
                 std::shared_ptr<BFWorld> world,
-                const BFLuaScript& script);
+                BFLuaScript::Ptr script);
         BFLuaComponentSystem(BFLuaComponentSystem&& system) noexcept ;
         BFLuaComponentSystem& operator=(BFLuaComponentSystem&& system) noexcept;
 
@@ -41,7 +41,7 @@ namespace BlackFox
         int m_id;
 
         /// Lua script containing the system
-        BFLuaScript m_script;
+        BFLuaScript::Ptr m_script;
 
         /// Lua system name
         sol::optional<std::string>  m_name;
