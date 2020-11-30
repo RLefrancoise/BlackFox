@@ -2,7 +2,7 @@
 
 #include "BFApplication.h"
 #include "BFWorld.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 #include "BFUtils.h"
 
 #include "BFTransformComponent.h"

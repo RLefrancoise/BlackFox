@@ -11,7 +11,7 @@ namespace BlackFox
 {
 	class BFApplicationArgs;
 	class BFCommandManager;
-	class BFConfigData;
+	class BFEngineConfig;
 
 	/*!
 	 * \class	BFApplication
@@ -129,7 +129,7 @@ namespace BlackFox
          *
          * \returns	Config data.
          */
-		[[nodiscard]] std::shared_ptr<BFConfigData> configData() const;
+		[[nodiscard]] std::shared_ptr<BFEngineConfig> configData() const;
 
 		/*!
 		 * Get arguments given to the application at startup

@@ -5,7 +5,7 @@
 
 namespace BlackFox::Editor
 {
-    struct TextureLoader : entt::loader<TextureLoader, sf::Texture>
+    struct TextureLoader : entt::resource_loader<TextureLoader, sf::Texture>
     {
         std::shared_ptr<sf::Texture> load(const std::filesystem::path& path, sf::IntRect rect) const
         {
@@ -17,7 +17,7 @@ namespace BlackFox::Editor
         }
     };
 
-    struct FontLoader : entt::loader<FontLoader, sf::Font>
+    struct FontLoader : entt::resource_loader<FontLoader, sf::Font>
     {
         std::shared_ptr<sf::Font> load(const std::filesystem::path& path) const
         {
@@ -33,10 +33,21 @@ namespace BlackFox::Editor
 
     BFEditorResourcesHolder::BFEditorResourcesHolder() = default;
 
+    TextureHandle BFEditorResourcesHolder::loadTexture(const std::string &path)
+    {
+        const std::filesystem::path p(path);
+        return loadTexture(p);
+    }
+
     TextureHandle BFEditorResourcesHolder::loadTexture(const std::string &path, const sf::IntRect &rect)
     {
         const std::filesystem::path p(path);
         return loadTexture(p, rect);
+    }
+
+    TextureHandle BFEditorResourcesHolder::loadTexture(const std::filesystem::path &path)
+    {
+        return loadTexture(path, sf::IntRect());
     }
 
     TextureHandle BFEditorResourcesHolder::loadTexture(const std::filesystem::path &path, const sf::IntRect &rect)
@@ -49,6 +60,11 @@ namespace BlackFox::Editor
 
         BF_PRINT("Load texture {}", path.string());
         return m_textureCache.load<TextureLoader>(id, path, rect);
+    }
+
+    TextureHandle BFEditorResourcesHolder::loadTextureOrThrow(const std::filesystem::path &path)
+    {
+        return loadTextureOrThrow(path, sf::IntRect());
     }
 
     TextureHandle BFEditorResourcesHolder::loadTextureOrThrow(const std::filesystem::path &path, const sf::IntRect &rect)

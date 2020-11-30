@@ -2,13 +2,16 @@
 
 #include <INIReader.h>
 #include "BFExport.h"
+#include "BFTextResource.h"
 
 namespace BlackFox
 {
-    class BLACKFOX_EXPORT BFIniFile
+    class BLACKFOX_EXPORT BFIniFile : public BFTextResource
     {
     public:
-        explicit BFIniFile(const std::string& fileName);
+        explicit BFIniFile(const Resources::ResourceType& type);
+
+        bool load(const std::filesystem::path& file, std::string* errorMessage) override;
 
         std::string get(const std::string& section, const std::string& key, const std::string& defaultValue) const;
         int getInt(const std::string& section, const std::string& key, int defaultValue = 0) const;

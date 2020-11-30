@@ -6,7 +6,7 @@
 
 #include "IBFApplicationModule.h"
 #include "BFCommandManager.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 #include "BFVirtualFileSystem.h"
 #include "BFApplicationArgs.h"
 #include "BFQuitApplicationCommand.h"
@@ -22,7 +22,7 @@ namespace BlackFox
 			BFApplication::Ptr app,
 			DiContainer container,
 			BFCommandManager::Ptr commandManager,
-			BFConfigData::Ptr configData,
+			BFEngineConfig::Ptr configData,
 			IBFVirtualFileSystem::Ptr vfs,
 			std::vector<IBFApplicationModule::Ptr> modules)
 			: m_app(std::move(app))
@@ -104,7 +104,7 @@ namespace BlackFox
 			return &m_window;
 		}
 
-		BFConfigData::Ptr configData() const
+		BFEngineConfig::Ptr configData() const
 		{
 			return m_configData;
 		}
@@ -211,7 +211,7 @@ namespace BlackFox
 		BFCommandManager::Ptr m_commandManager;
 
 		/*! \brief  Config data */
-		BFConfigData::Ptr m_configData;
+		BFEngineConfig::Ptr m_configData;
 
 		///	Virtual file system
 		IBFVirtualFileSystem::Ptr m_vfs;
@@ -276,7 +276,7 @@ namespace BlackFox
 		return pImpl->window();
 	}
 
-    BFConfigData::Ptr BFApplication::configData() const
+    BFEngineConfig::Ptr BFApplication::configData() const
     {
         return pImpl->configData();
     }

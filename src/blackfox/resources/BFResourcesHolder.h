@@ -22,9 +22,14 @@ namespace BlackFox
 		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
 		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
 
-		virtual TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect = sf::IntRect()) = 0;
-		virtual TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect()) = 0;
-		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect = sf::IntRect()) = 0;
+		virtual TextureHandle loadTexture(const std::string& path) = 0;
+		virtual TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) = 0;
+
+		virtual TextureHandle loadTexture(const std::filesystem::path& path) = 0;
+		virtual TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
+
+		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path) = 0;
+		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
 
 		virtual FontHandle loadFont(const std::string& path) = 0;
 		virtual FontHandle loadFont(const std::filesystem::path& path) = 0;
@@ -49,8 +54,13 @@ namespace BlackFox
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
 		
+		TextureHandle loadTexture(const std::string& path) override;
 		TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
+
+		TextureHandle loadTexture(const std::filesystem::path& path) override;
 		TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) override;
+
+		TextureHandle loadTextureOrThrow(const std::filesystem::path& path) override;
 		TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) override;
 
 		FontHandle loadFont(const std::string& path) override;

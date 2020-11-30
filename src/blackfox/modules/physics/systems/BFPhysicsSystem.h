@@ -7,7 +7,7 @@
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
 #include "BFApplication.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 #include "BFWorld.h"
 #include "BFVector2.h"
 #include "BFRadian.h"

@@ -192,15 +192,15 @@ namespace BlackFox
 
     /// --------------------------------------------------------------------------------
     /// <summary>
-    /// BlackFox config data
+    /// BlackFox engine config
     /// </summary>
     /// --------------------------------------------------------------------------------
-    class BLACKFOX_EXPORT BFConfigData
+    class BLACKFOX_EXPORT BFEngineConfig
     {
     public:
-        typedef std::shared_ptr<BFConfigData> Ptr;
+        typedef std::shared_ptr<BFEngineConfig> Ptr;
 
-        explicit BFConfigData(const BFIniFile& file)
+        explicit BFEngineConfig(const BFIniFile& file)
         {
             //App data
             appData = {

@@ -2,10 +2,13 @@
 
 #include "BFCommandManager.h"
 #include "BFApplication.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 #include "BFVirtualFileSystem.h"
 
 #include "BFQuitApplicationCommand.h"
+
+#include "BFDebug.h"
+#include "BFResourcesHolder.h"
 
 namespace BlackFox
 {
@@ -16,16 +19,36 @@ namespace BlackFox
 
 	void BFCoreInstaller::installBindings()
 	{
-		//Command manager
-		m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
+		try
+		{
+			//Command manager
+			m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
 
-		//Application
-		m_container->bind<BFApplication>().toSelf().inSingletonScope();
+			//Application
+			m_container->bind<BFApplication>().toSelf().inSingletonScope();
 
-		//VFS
-		m_container->bind<IBFVirtualFileSystem>().to<BFVirtualFileSystem>().inSingletonScope();
+			//VFS
+			m_container->bind<IBFVirtualFileSystem>().to<BFVirtualFileSystem>().inSingletonScope();
 
-		//Commands
-		m_container->bind<BFQuitApplicationCommand>().toSelf();
+			//Commands
+			m_container->bind<BFQuitApplicationCommand>().toSelf();
+
+			//Config data
+			auto configFile = BFIniFile(Resources::ENGINE_CONFIG);
+			configFile.loadOrThrow("data/config.ini");
+
+			auto engineConfig = std::make_shared<BFEngineConfig>(configFile);
+			BF_PRINT(*engineConfig);
+			m_container->bind<BFEngineConfig>().toConstant(std::move(engineConfig));
+
+			//Resources holder
+			m_container->bind<IBFResourcesHolder>().to<BFResourcesHolder>().inSingletonScope();
+		}
+		catch(std::exception& err)
+		{
+			BF_ERROR("{}", err.what());
+		}
+
+
 	}
 }

@@ -16,8 +16,15 @@ namespace BlackFox
 
 	IBFResourcesHolder& IBFResourcesHolder::operator=(IBFResourcesHolder&& holder) noexcept
 	{
-		m_textureCache = std::move(holder.m_textureCache);
-		m_fontCache = std::move(holder.m_fontCache);
+		if(this != &holder)
+		{
+			m_textureCache = std::move(holder.m_textureCache);
+			m_fontCache = std::move(holder.m_fontCache);
+
+			holder.m_textureCache = TextureCache {};
+			holder.m_fontCache = FontCache {};
+		}
+
 		return *this;
 	}
 	
@@ -29,22 +36,35 @@ namespace BlackFox
     {}
 
 	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
-	: m_vfs(std::move(holder.m_vfs))
+	: m_vfs(std::exchange(holder.m_vfs, nullptr))
 	, IBFResourcesHolder(std::move(holder))
 	{}
 
 	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
 	{
-		m_textureCache = std::move(holder.m_textureCache);
-		m_fontCache = std::move(holder.m_fontCache);
-		IBFResourcesHolder::operator=(std::move(holder));
+		if(this != &holder)
+		{
+			m_vfs = std::exchange(holder.m_vfs, nullptr);
+		}
+
 		return *this;
+	}
+
+	TextureHandle BFResourcesHolder::loadTexture(const std::string& path)
+	{
+		const std::filesystem::path p = path;
+		return loadTexture(p);
 	}
 
 	TextureHandle BFResourcesHolder::loadTexture(const std::string& path, const sf::IntRect& rect)
 	{
 		const std::filesystem::path p = path;
 		return loadTexture(p, rect);
+	}
+
+	TextureHandle BFResourcesHolder::loadTexture(const std::filesystem::path& path)
+	{
+		return loadTexture(path, sf::IntRect());
 	}
 
 	TextureHandle BFResourcesHolder::loadTexture(const std::filesystem::path& path, const sf::IntRect& rect)
@@ -57,6 +77,11 @@ namespace BlackFox
 
 		BF_PRINT("Load texture {}", path.string());
 		return m_textureCache.load<BFTextureResourceLoader>(id, path, m_vfs, rect);
+	}
+
+	TextureHandle BFResourcesHolder::loadTextureOrThrow(const std::filesystem::path& path)
+	{
+		return loadTextureOrThrow(path, sf::IntRect());
 	}
 
 	TextureHandle BFResourcesHolder::loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect)

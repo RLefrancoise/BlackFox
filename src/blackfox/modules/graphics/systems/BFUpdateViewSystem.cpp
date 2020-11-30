@@ -1,7 +1,7 @@
 #include "BFUpdateViewSystem.h"
 #include "BFApplication.h"
 #include "BFWorld.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 
 #include "BFViewComponent.h"
 #include "BFTransformComponent.h"

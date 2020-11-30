@@ -1,7 +1,7 @@
 #include "BFLuaScriptingApplicationEntity.h"
 #include "BFApplication.h"
 #include "BFCommandManager.h"
-#include "BFConfigData.h"
+#include "BFEngineConfig.h"
 #include <sol/property.hpp>
 #include <sol/overload.hpp>
 
