@@ -4,6 +4,7 @@
 #include <utility>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "BFGame.h"
 #include "IBFApplicationModule.h"
 #include "BFCommandManager.h"
 #include "BFEngineConfig.h"
@@ -21,6 +22,7 @@ namespace BlackFox
 		impl(
 			BFApplication::Ptr app,
 			DiContainer container,
+			IBFGame::Ptr game,
 			BFCommandManager::Ptr commandManager,
 			BFEngineConfig::Ptr configData,
 			IBFVirtualFileSystem::Ptr vfs,
@@ -28,6 +30,7 @@ namespace BlackFox
 			: m_app(std::move(app))
 			, m_deltaTime(0.0f)
 			, m_container(std::move(container))
+			, m_game(std::move(game))
 			, m_commandManager(std::move(commandManager))
 			, m_configData(std::move(configData))
 			, m_vfs(std::move(vfs))
@@ -145,6 +148,9 @@ namespace BlackFox
                 {
 				    module->onInit();
                 }
+
+				//Init game
+				m_game->onInit();
 			}
 			catch (std::exception& err)
 			{
@@ -160,6 +166,8 @@ namespace BlackFox
 		{
             for(const auto& module : m_modules)
                 module->onUpdate(m_deltaTime);
+
+            m_game->onUpdate(m_deltaTime);
 		}
 
 		void render()
@@ -184,12 +192,16 @@ namespace BlackFox
 		{
             for(const auto& module : m_modules)
                 module->onFixedUpdate(m_configData->timeData.fixedUpdateInterval);
+
+            m_game->onFixedUpdate();
 		}
 
 		void cleanup()
 		{
             for(const auto& module : m_modules)
                 module->onDestroy();
+
+            m_game->onShutdown();
 		}
 
 		/*! \brief	Application */
@@ -206,6 +218,9 @@ namespace BlackFox
 
 		/*! \brief	DI container */
 		DiContainer m_container;
+
+		/*! Game */
+		IBFGame::Ptr m_game;
 
 		/*! \brief	Command Manager */
 		BFCommandManager::Ptr m_commandManager;

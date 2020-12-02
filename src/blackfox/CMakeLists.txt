@@ -74,5 +74,8 @@ target_link_libraries(
 
 target_compile_features(blackfox PRIVATE cxx_std_17)
 
+# Boot
+add_subdirectory(boot)
+
 # Modules
 add_subdirectory(modules)

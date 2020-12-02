@@ -78,14 +78,9 @@ namespace BlackFox
 		int init(int argc, char** argv);
 		
 		/*!
-		 * \fn	int BFApplication::execute();
+		 * Execute the engine application
 		 *
-		 * \brief	Executes the application
-		 *
-		 * \author	Renaud Lefrançoise
-		 * \date	12/11/2019
-		 *
-		 * \returns	Execution return code
+		 * @return Execute code
 		 */
 		[[nodiscard]] int execute() const;
 

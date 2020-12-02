@@ -2,6 +2,7 @@
 
 #include "IBFContext.h"
 #include "IBFApplicationModule.h"
+#include "BFGame.h"
 
 namespace BlackFox
 {
@@ -16,6 +17,7 @@ namespace BlackFox
 		constexpr BFBootstrap(const BFBootstrap& app) = delete;
 		constexpr BFBootstrap& operator=(const BFBootstrap& app) = delete;
 
+		template<class Game = IBFGame>
 		[[nodiscard]] int run(int argc, char** argv);
 
 	private:
@@ -30,11 +32,8 @@ namespace BlackFox
 	     * @tparam Module Module type
 	     */
 	    template<class Module = IBFApplicationModule>
-	    void loadModule() const
-        {
-            auto module = std::make_shared<Module>(m_container);
-            m_container->bind<IBFApplicationModule>().toConstant(module);
-            module->install(m_context);
-        }
+	    void loadModule() const;
 	};
 }
+
+#include "BFBootstrap.inl"
