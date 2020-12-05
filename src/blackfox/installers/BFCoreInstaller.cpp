@@ -34,7 +34,7 @@ namespace BlackFox
 			m_container->bind<BFQuitApplicationCommand>().toSelf();
 
 			//Config data
-			auto configFile = BFIniFile(Resources::ENGINE_CONFIG);
+			auto configFile = BFIniFile(Resources::ENGINE_CONFIG, Resources::pathToGuid("data/config.ini"));
 			configFile.loadOrThrow("data/config.ini");
 
 			auto engineConfig = std::make_shared<BFEngineConfig>(configFile);

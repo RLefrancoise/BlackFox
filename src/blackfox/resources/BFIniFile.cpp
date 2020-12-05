@@ -3,7 +3,7 @@
 
 namespace BlackFox
 {
-    BFIniFile::BFIniFile(const Resources::ResourceType& type) : BFTextResource(type)
+    BFIniFile::BFIniFile(const Resources::ResourceType& type, const ResourceGuid& guid) : BFTextResource(type, guid)
     {
     }
 

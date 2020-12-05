@@ -9,6 +9,7 @@
 #include "BFTypeDefs.h"
 #include "BFExport.h"
 #include "IBFScriptingLanguage.h"
+#include "BFVirtualFileSystem.h"
 
 namespace BlackFox
 {
@@ -25,7 +26,7 @@ namespace BlackFox
 		constexpr BFScriptingManager(const BFScriptingManager& app) = delete;
 		constexpr BFScriptingManager& operator=(const BFScriptingManager& app) = delete;
 		
-		CINJECT(BFScriptingManager(DiContainer container));
+		CINJECT(BFScriptingManager(DiContainer container, IBFVirtualFileSystem::Ptr vfs));
 		BFScriptingManager(BFScriptingManager&& manager) noexcept;
 		BFScriptingManager& operator=(BFScriptingManager&& manager) noexcept;
 		~BFScriptingManager() = default;
@@ -63,9 +64,14 @@ namespace BlackFox
 		}
 
 	private:
+
+		typedef std::vector<std::shared_ptr<IBFScriptingEntity>> Entities;
+
 		DiContainer m_container;
+		IBFVirtualFileSystem::Ptr m_vfs;
+
 		sol::state m_state;
-		std::vector<std::shared_ptr<IBFScriptingEntity>> m_entities;
+		Entities m_entities;
 
 		///	Languages
 		std::vector<Scripting::IBFScriptingLanguage::Ptr> m_languages;

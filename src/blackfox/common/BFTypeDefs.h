@@ -13,6 +13,9 @@ namespace BlackFox
 	typedef std::shared_ptr<entt::registry> EntityManager;
 	typedef ENTT_ID_TYPE ComponentId;
 
+	typedef entt::hashed_string ResourceGuid;
+	typedef entt::hashed_string::hash_type ResourceHandle;
+
 	typedef entt::resource_cache<sf::Texture> TextureCache;
 	typedef entt::id_type TextureId;
 	typedef entt::resource_handle<sf::Texture> TextureHandle;

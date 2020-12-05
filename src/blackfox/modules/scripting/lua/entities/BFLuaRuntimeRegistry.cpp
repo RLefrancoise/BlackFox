@@ -4,7 +4,8 @@
 
 namespace BlackFox
 {
-	BFLuaRuntimeRegistry::BFLuaRuntimeRegistry()
+	BFLuaRuntimeRegistry::BFLuaRuntimeRegistry(IBFResourcesHolder::Ptr holder)
+	: m_resourcesHolder(std::move(holder))
 	{
 		registerComponent<Components::BFLuaRuntimeComponent>();
 	}
@@ -15,7 +16,10 @@ namespace BlackFox
 		return next++;
 	}
 
-	unsigned int BFLuaRuntimeRegistry::registerRuntimeComponent(const std::string& componentName, const std::string& scriptPath, sol::state* state)
+	unsigned int BFLuaRuntimeRegistry::registerRuntimeComponent(
+			const std::string& componentName,
+			const std::string& scriptPath,
+			sol::state* state)
 	{
 		BF_PRINT("Register runtime component {} ({})", componentName, scriptPath);
 		auto id = identifier();
@@ -24,7 +28,10 @@ namespace BlackFox
 		return id;
 	}
 
-	sol::object BFLuaRuntimeRegistry::setComponent(const entt::entity entity, const ComponentId typeId, sol::state* state)
+	sol::object BFLuaRuntimeRegistry::setComponent(
+			const entt::entity entity,
+			const ComponentId typeId,
+			sol::state* state)
 	{
 		auto it = std::find_if(m_runtimeComponentLuaScripts.begin(), m_runtimeComponentLuaScripts.end(), [&](const auto& entry) -> bool
 		{
@@ -32,12 +39,13 @@ namespace BlackFox
 		});
 
 		const auto componentScript = getComponentScript(typeId);
+		auto handle = m_resourcesHolder->loadTextAsset(Resources::pathToGuid(*componentScript));
 
-		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, const std::string*>(
+		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, BFTextResource::Handle>(
 			entity, 
 			typeId, 
 			state, 
-			componentScript);
+			handle);
 	}
 
 	void BFLuaRuntimeRegistry::unsetComponent(const entt::entity entity, const ComponentId typeId)

@@ -6,6 +6,7 @@
 #include <SFML/System/MemoryInputStream.hpp>
 
 #include "BFDebug.h"
+#include "BFTypeDefs.h"
 #include "BFVirtualFileInputStream.h"
 #include "BFVirtualFileSystem.h"
 
@@ -26,44 +27,28 @@ namespace BlackFox
          * @return  The name of the sub folder 
          */
         virtual std::string subFolder() const = 0;
-        
-        /*!
-         * Load a resource from a path name
-         *
-         * @tparam Args     Arguments types to use to load the resource
-         * @param path      Path of the resource
-         * @param vfs       Virtual file system
-         * @param args      Arguments to use to load the resource
-         *
-         * @return          A pointer to the resource
-         */
-        template<typename... Args>
-        [[nodiscard]] std::shared_ptr<Resource> load(const std::string& path, const IBFVirtualFileSystem::Ptr& vfs, Args... args) const
-        {
-            return load(std::filesystem::path(path), vfs, args...);
-        }
 
         /*!
-         * Load a resource from a path
+         * Load a resource from a Guid
          *
          * @tparam Args     Arguments types to use to load the resource
-         * @param path      Path of the resource
+         * @param guid      Resource Guid
          * @param vfs       Virtual file system
          * @param args      Arguments to use to load the resource
          *
          * @return          A pointer to the resource
          */
         template<typename... Args>
-        [[nodiscard]] std::shared_ptr<Resource> load(const std::filesystem::path& path, const IBFVirtualFileSystem::Ptr& vfs, Args... args) const
+        [[nodiscard]] std::shared_ptr<Resource> load(const ResourceGuid& guid, const IBFVirtualFileSystem::Ptr& vfs, Args... args) const
         {
             //Prepend sub folder if there is any
             if(subFolder() != "") vfs->addSearchFolder(subFolder());
                 
             // Create stream
-            auto stream = std::make_unique<BFVirtualFileInputStream>(path.string());
+            auto stream = std::make_unique<BFVirtualFileInputStream>(std::filesystem::path(guid.data()).string());
             if(!stream->isOpened())
             {
-                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", path.string());
+                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", guid.data());
             }
 
             // Load resource
@@ -73,7 +58,7 @@ namespace BlackFox
             //If failed to load, throw
             if(!loadSuccess)
             {
-                BF_EXCEPTION("Failed to load resource {}", path.string());
+                BF_EXCEPTION("Failed to load resource {}", guid.data());
             }
 
             return resource;

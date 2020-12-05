@@ -14,12 +14,19 @@ namespace sol {
 
 namespace BlackFox
 {
-    class BLACKFOX_EXPORT BFLuaScript : public BFTextResource
+    class BLACKFOX_EXPORT BFLuaScript
     {
     public:
+
+        enum ScriptType
+        {
+            Component,
+            System
+        };
+
         typedef std::shared_ptr<BFLuaScript> Ptr;
 
-        explicit BFLuaScript(const Resources::ResourceType& type, sol::state* state);
+        explicit BFLuaScript(ScriptType type, BFTextResource::Handle handle, sol::state* state);
 
         BFLuaScript(const BFLuaScript& script) = delete;
         BFLuaScript(BFLuaScript&& script) noexcept;
@@ -27,7 +34,8 @@ namespace BlackFox
         BFLuaScript& operator=(const BFLuaScript&) = delete;
         BFLuaScript& operator=(BFLuaScript&& script) noexcept;
 
-        bool load(const std::filesystem::path& file, std::string* errorMessage) override;
+        bool load(std::string* errorMessage);
+        std::string name() const;
 
         template <typename T>
         [[nodiscard]] bool has(const std::string& name) const
@@ -66,6 +74,8 @@ namespace BlackFox
         }
 
     private:
+        ScriptType m_type;
+        BFTextResource::Handle m_handle;
         sol::state* m_state;
         sol::environment m_environment;
         sol::protected_function_result m_result;

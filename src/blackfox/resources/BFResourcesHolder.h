@@ -3,6 +3,7 @@
 #include "BFTypeDefs.h"
 #include "BFExport.h"
 #include "BFVirtualFileSystem.h"
+#include "BFTextResource.h"
 
 #include <cinject/cinject.h>
 #include <memory>
@@ -22,17 +23,23 @@ namespace BlackFox
 		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
 		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
 
+		virtual BFTextResource::Handle loadTextAsset(const ResourceGuid& guid) = 0;
+
 		virtual TextureHandle loadTexture(const std::string& path) = 0;
 		virtual TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) = 0;
 
 		virtual TextureHandle loadTexture(const std::filesystem::path& path) = 0;
 		virtual TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
 
+		virtual TextureHandle loadTexture(const ResourceGuid& guid) = 0;
+		virtual TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) = 0;
+
 		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path) = 0;
 		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
 
 		virtual FontHandle loadFont(const std::string& path) = 0;
 		virtual FontHandle loadFont(const std::filesystem::path& path) = 0;
+		virtual FontHandle loadFont(const ResourceGuid& guid) = 0;
 		virtual FontHandle loadFontOrThrow(const std::filesystem::path& path) = 0;
 
 	protected:
@@ -53,18 +60,25 @@ namespace BlackFox
 
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
-		
+
+		BFTextResource::Handle loadTextAsset(const ResourceGuid& guid) override;
+
 		TextureHandle loadTexture(const std::string& path) override;
 		TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
 
 		TextureHandle loadTexture(const std::filesystem::path& path) override;
 		TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) override;
 
+		TextureHandle loadTexture(const ResourceGuid& guid) override;
+		TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) override;
+
 		TextureHandle loadTextureOrThrow(const std::filesystem::path& path) override;
 		TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) override;
 
 		FontHandle loadFont(const std::string& path) override;
 		FontHandle loadFont(const std::filesystem::path& path) override;
+		FontHandle loadFont(const ResourceGuid& guid) override;
+
 		FontHandle loadFontOrThrow(const std::filesystem::path& path) override;
 
 	private:

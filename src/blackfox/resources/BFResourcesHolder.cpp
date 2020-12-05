@@ -50,6 +50,11 @@ namespace BlackFox
 		return *this;
 	}
 
+	BFTextResource::Handle BFResourcesHolder::loadTextAsset(const ResourceGuid& guid)
+	{
+		return BFTextResource::Handle{}; //TODO: handle
+	}
+
 	TextureHandle BFResourcesHolder::loadTexture(const std::string& path)
 	{
 		const std::filesystem::path p = path;
@@ -69,14 +74,23 @@ namespace BlackFox
 
 	TextureHandle BFResourcesHolder::loadTexture(const std::filesystem::path& path, const sf::IntRect& rect)
 	{
-		const auto id = TextureId{ entt::hashed_string(path.string().c_str()) };
-		if (m_textureCache.contains(id))
+		return loadTexture(ResourceGuid(path.string().c_str()), rect);
+	}
+
+	TextureHandle BFResourcesHolder::loadTexture(const ResourceGuid& guid)
+	{
+		return loadTexture(guid, sf::IntRect());
+	}
+
+	TextureHandle BFResourcesHolder::loadTexture(const ResourceGuid& guid, const sf::IntRect& rect)
+	{
+		if (m_textureCache.contains(guid))
 		{
-			return m_textureCache.handle(id);
+			return m_textureCache.handle(guid);
 		}
 
-		BF_PRINT("Load texture {}", path.string());
-		return m_textureCache.load<BFTextureResourceLoader>(id, path, m_vfs, rect);
+		BF_PRINT("Load texture {}", guid.data());
+		return m_textureCache.load<BFTextureResourceLoader>(guid, guid, m_vfs, rect);
 	}
 
 	TextureHandle BFResourcesHolder::loadTextureOrThrow(const std::filesystem::path& path)
@@ -99,14 +113,18 @@ namespace BlackFox
 
 	FontHandle BFResourcesHolder::loadFont(const std::filesystem::path &path)
 	{
-		const auto id = FontId { entt::hashed_string(path.string().c_str()) };
-		if(m_fontCache.contains(id))
+		return loadFont(ResourceGuid(path.string().c_str()));
+	}
+
+	FontHandle BFResourcesHolder::loadFont(const ResourceGuid& guid)
+	{
+		if(m_fontCache.contains(guid))
 		{
-			return m_fontCache.handle(id);
+			return m_fontCache.handle(guid);
 		}
 
-		BF_PRINT("Load font {}", path.string());
-		return m_fontCache.load<BFFontResourceLoader>(id, path, m_vfs);
+		BF_PRINT("Load font {}", guid.data());
+		return m_fontCache.load<BFFontResourceLoader>(guid, guid, m_vfs);
 	}
 
 	FontHandle BFResourcesHolder::loadFontOrThrow(const std::filesystem::path& path)

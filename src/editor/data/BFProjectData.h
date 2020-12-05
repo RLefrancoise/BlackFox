@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include "BFYamlFile.h"
+#include "BFYamlData.h"
 #include <yaml-convert.h>
 
 namespace BlackFox::Editor
@@ -9,13 +9,13 @@ namespace BlackFox::Editor
 	/**
 	 * Project data
 	 */
-	struct BFProjectData final: BFYamlFile<BFProjectData>
+	struct BFProjectData final: BFYamlData<BFProjectData>
 	{		
 		typedef std::shared_ptr<BFProjectData> Ptr;
 
 		BFProjectData();
 
-		explicit operator std::string() const override;
+		explicit operator std::string() const;
 
 		/**
 		 * Get the root path of the project.

@@ -11,8 +11,9 @@
 
 namespace BlackFox
 {
-    BFScriptingManager::BFScriptingManager(DiContainer container)
+    BFScriptingManager::BFScriptingManager(DiContainer container, IBFVirtualFileSystem::Ptr vfs)
     : m_container(std::move(container))
+    , m_vfs(std::move(vfs))
     {
         m_state.open_libraries(
                 sol::lib::base,
@@ -83,15 +84,23 @@ namespace BlackFox
     }
 
     BFScriptingManager::BFScriptingManager(BFScriptingManager&& manager) noexcept
-	: m_container(std::move(manager.m_container))
-	, m_entities(std::move(manager.m_entities))
+	: m_container(std::exchange(manager.m_container, nullptr))
+	, m_vfs(std::exchange(manager.m_vfs, nullptr))
+	, m_entities(std::exchange(manager.m_entities, Entities()))
     {
     }
 
     BFScriptingManager& BFScriptingManager::operator=(BFScriptingManager&& manager) noexcept
     {
-        m_container = std::move(manager.m_container);
-        m_entities = std::move(manager.m_entities);
+        if(this != &manager)
+        {
+            m_container = std::exchange(manager.m_container, nullptr);
+            m_vfs = std::exchange(manager.m_vfs, nullptr);
+            m_entities = std::move(manager.m_entities);
+
+            manager.m_entities = Entities();
+        }
+
         return *this;
     }
 

@@ -15,6 +15,7 @@
 #include "BFExport.h"
 #include "BFLuaRuntimeComponent.h"
 #include "BFLuaScript.h"
+#include "BFResourcesHolder.h"
 
 namespace BlackFox
 {
@@ -26,7 +27,7 @@ namespace BlackFox
 	 * @param entity			Entity
 	 * @param componentType		Type of the component
 	 * @param state				Sol state
-	 * @param componentScript	Script path of the component
+	 * @param handle	        Handle of the text resource containing the script
 	 *
 	 * @return					The component set to the entity
 	 */
@@ -36,7 +37,7 @@ namespace BlackFox
 			const entt::entity& entity,
 			const ComponentId componentType,
 			sol::state* state,
-			const std::string* componentScript)
+			BFTextResource::Handle handle)
 	{
 		if constexpr (std::is_same_v<C, Components::BFLuaRuntimeComponent>)
 		{
@@ -44,11 +45,11 @@ namespace BlackFox
 				? em->emplace<Components::BFLuaRuntimeComponent>(entity)
 				: em->get<Components::BFLuaRuntimeComponent>(entity);
 
-			auto script = std::make_shared<BFLuaScript>(Resources::LUA_COMPONENT_SCRIPT, state);
+			auto script = std::make_shared<BFLuaScript>(BFLuaScript::ScriptType::Component, handle, state);
 
 			//Load script
 			std::string errorMessage;
-			if(!script->load(*componentScript, &errorMessage))
+			if(!script->load(&errorMessage))
 			{
 				BF_ERROR("Failed to load lua component: {}", errorMessage);
 				return sol::nil;
@@ -160,7 +161,7 @@ namespace BlackFox
 	public:
 		typedef std::shared_ptr<BFLuaRuntimeRegistry> Ptr;
 
-		BFLuaRuntimeRegistry();
+		explicit BFLuaRuntimeRegistry(IBFResourcesHolder::Ptr holder);
 
 		/*!
 		 * Get next available identifier
@@ -328,7 +329,7 @@ namespace BlackFox
 
 		struct funcMap
 		{
-			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, const ComponentId, sol::state*, const std::string*);
+			using funcTypeSet = sol::object(*)(const EntityManager&, const entt::entity&, const ComponentId, sol::state*, BFTextResource::Handle);
 			using funcTypeUnset = void(*)(const EntityManager&, const entt::entity&, const ComponentId);
 			using funcTypeHas = bool(*)(const EntityManager&, const entt::entity&, const ComponentId);
 			using funcTypeGet = sol::object(*)(const EntityManager&, const entt::entity&, const ComponentId, sol::state*);
@@ -370,5 +371,6 @@ namespace BlackFox
 		std::map<ComponentId, funcMap> m_func;
 		std::map<std::string, std::tuple<ComponentId, std::string>> m_runtimeComponentLuaScripts;
 		EntityManager m_entityManager;
+		IBFResourcesHolder::Ptr m_resourcesHolder;
 	};
 }

@@ -15,8 +15,7 @@ namespace BlackFox
     , m_script(std::move(script))
     {
         //Name
-        if (m_script->has<std::string>("Name")) m_name = (m_script->get<std::string>("Name"));
-        else m_name = fmt::format("{}", m_script->file().filename().string());
+        m_name = m_script->name();
 
         //Group
         if(m_script->has<ComponentSystemGroups>("Group")) m_group = m_script->get<ComponentSystemGroups >("Group");

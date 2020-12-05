@@ -9,7 +9,7 @@ namespace BlackFox
     class BLACKFOX_EXPORT BFIniFile : public BFTextResource
     {
     public:
-        explicit BFIniFile(const Resources::ResourceType& type);
+        explicit BFIniFile(const Resources::ResourceType& type, const ResourceGuid& guid);
 
         bool load(const std::filesystem::path& file, std::string* errorMessage) override;
 

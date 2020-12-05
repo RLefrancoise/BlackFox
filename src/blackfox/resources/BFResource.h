@@ -4,6 +4,7 @@
 #include <SFML/System/String.hpp>
 
 #include "BFResourceTypes.h"
+#include "BFTypeDefs.h"
 
 namespace BlackFox
 {
@@ -21,20 +22,13 @@ namespace BlackFox
 		 * \return The type of the resource.
 		 */
 		[[nodiscard]] virtual const Resources::ResourceType& type() const = 0;
-		
-		/**
-		 * Get the file representing the resource.
-		 * 
-		 * \return The file representing the resource.
-		 */
-		[[nodiscard]] virtual std::filesystem::path file() const = 0;
 
-		/**
-		 * Set the file representing the resource.
-		 * 
-		 * \param file	The file representing the resource.
+		/*!
+		 * Get the Guid.
+		 *
+		 * @return	Guid
 		 */
-		virtual void file(const std::filesystem::path& file) = 0;
+		[[nodiscard]] virtual ResourceGuid guid() const = 0;
 		
 		/**
 		 * Save the resource on disk.
@@ -68,29 +62,36 @@ namespace BlackFox
 	/**
 	 * Base class for BlackFox resource.
 	 */
+	template<class T>
 	class BLACKFOX_EXPORT BFResource : public IBFResource
 	{
 	public:
-		~BFResource() override = default;
-		BFResource(const BFResource&) = default;
-		BFResource& operator=(const BFResource&) = default;
-		BFResource(BFResource&&) noexcept;
-		BFResource& operator=(BFResource&&) noexcept;
+		typedef entt::resource_handle<T> Handle;
+		using Super = BFResource<T>;
 
-		[[nodiscard]] const Resources::ResourceType& type() const override;
-		[[nodiscard]] std::filesystem::path file() const override;
-		void file(const std::filesystem::path& file) override;
-		
+		~BFResource() override = default;
+
+		BFResource(const BFResource&) = delete;
+		BFResource& operator=(const BFResource&) = delete;
+
+		constexpr BFResource(BFResource&&) noexcept;
+		constexpr BFResource& operator=(BFResource&&) noexcept;
+
+		[[nodiscard]] constexpr const Resources::ResourceType& type() const override;
+
+		[[nodiscard]] constexpr ResourceGuid guid() const override;
+
 		void saveOrThrow() const override;
 
 		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage) override;
 		void loadOrThrow(const std::filesystem::path& file) override;
 		
 	protected:
-		explicit BFResource(const Resources::ResourceType& type);
+		constexpr explicit BFResource(const Resources::ResourceType& type, const ResourceGuid& guid);
 
 		Resources::ResourceType m_type;
-		//std::filesystem::path m_filePath;
-		sf::String m_filePath;
+		ResourceGuid m_guid;
 	};
 }
+
+#include "BFResource.inl"

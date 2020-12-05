@@ -11,6 +11,7 @@
 #include "BFLuaComponentSystem.h"
 #include "BFLuaRuntimeRegistry.h"
 #include "BFLuaEntityArchetype.h"
+#include "BFResourcesHolder.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
@@ -251,8 +252,17 @@ namespace BlackFox
         //System
         worldType["createSystem"] = [&](BFWorld& world, const std::string& systemName) -> BFComponentSystem*
         {
-            BFLuaScript::Ptr luaScript = std::make_shared<BFLuaScript>(Resources::LUA_SYSTEM_SCRIPT, m_state);
-            luaScript->loadOrThrow(fmt::format("data/systems/{}.lua", systemName));
+            auto resourcesHolder = m_container->get<IBFResourcesHolder>();
+            auto handle = resourcesHolder->loadTextAsset(Resources::pathToGuid(fmt::format("data/systems/{}.lua", systemName)));
+
+            BFLuaScript::Ptr luaScript = std::make_shared<BFLuaScript>(BFLuaScript::ScriptType::System, handle, m_state);
+
+            std::string errorMessage;
+            if(!luaScript->load(&errorMessage))
+            {
+                BF_ERROR("Failed to create system {} : {}", systemName, errorMessage);
+                return nullptr;
+            }
 
             const auto app = m_container->get<BFApplication>();
             const auto system = std::make_shared<BFLuaComponentSystem>(app, world.shared_from_this(), luaScript);

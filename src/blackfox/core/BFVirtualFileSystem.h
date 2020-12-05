@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 #include <cinject/cinject.h>
 
 #include "BFApplicationArgs.h"
@@ -51,6 +52,38 @@ namespace BlackFox
          * @return      The combined path
          */
         virtual std::string combinePath(const std::vector<std::string>& path) = 0;
+
+        /*!
+         * Scan the content of a directory and returns files inside it.
+         *
+         * @param dirPath   Path of the directory
+         * @return          List of files
+         */
+        virtual std::vector<std::filesystem::path> scanDir(const std::filesystem::path& dirPath) = 0;
+
+        /*!
+         * Check if a path is a directory.
+         *
+         * @param path      Path to check
+         * @return          True if path is directory
+         */
+        virtual bool isDirectory(const std::filesystem::path& path) = 0;
+
+        /*!
+         * Check if a path is a file.
+         *
+         * @param path      Path to check
+         * @return          True if path is file
+         */
+        virtual bool isFile(const std::filesystem::path& path) = 0;
+
+        /*!
+         * Check if a path is a symbolic link.
+         *
+         * @param path      Path to check
+         * @return          True if path is symbolic link
+         */
+        virtual bool isSymbolicLink(const std::filesystem::path& path) = 0;
     };
 
     /*!
@@ -67,5 +100,9 @@ namespace BlackFox
         bool addSearchFolder(const std::string& folder) override;
 
         std::string combinePath(const std::vector<std::string>& path) override;
+        std::vector<std::filesystem::path> scanDir(const std::filesystem::path& dirPath) override;
+        bool isDirectory(const std::filesystem::path& path) override;
+        bool isFile(const std::filesystem::path& path) override;
+        bool isSymbolicLink(const std::filesystem::path& path) override;
     };
 }

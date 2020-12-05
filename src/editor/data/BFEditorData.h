@@ -7,7 +7,7 @@
 #include <entt/core/hashed_string.hpp>
 
 #include "BFStringUtils.h"
-#include "BFYamlFile.h"
+#include "BFYamlData.h"
 
 namespace BlackFox::Editor
 {
@@ -71,7 +71,7 @@ namespace BlackFox::Editor
 	/**
 	 * Editor data
 	 */
-	struct BFEditorData final: BFYamlFile<BFEditorData>
+	struct BFEditorData final: BFYamlData<BFEditorData>
 	{
 		typedef std::shared_ptr<BFEditorData> Ptr;
 
@@ -82,7 +82,7 @@ namespace BlackFox::Editor
 		BFEditorData(BFEditorData&&) = default;
 		BFEditorData& operator=(BFEditorData&&) = default;
 
-		explicit operator std::string() const override;
+		explicit operator std::string() const;
 
 		/**
 		 * Add project to editor history.

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "BFYamlFile.h"
+#include "BFYamlData.h"
 #include <yaml-convert.h>
 
 namespace BlackFox::Editor
 {
-    struct BFResourceData final : BFYamlFile<BFResourceData>
+    struct BFResourceData final : BFYamlData<BFResourceData>
     {
         BFResourceData();
 
-		explicit operator std::string() const override;
+		explicit operator std::string() const;
     	
         Resources::ResourceType type;
     };

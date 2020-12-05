@@ -26,7 +26,7 @@ namespace BlackFox::Editor
 		return p.string();
 	};
 
-	BFProjectData::BFProjectData() : Super(Resources::PROJECT_DATA)
+	BFProjectData::BFProjectData() : BFYamlData<BFProjectData>(BFYamlFile(Resources::PROJECT_DATA))
 	{
 	}
 
@@ -40,7 +40,7 @@ scenes: {}
 
 	std::filesystem::path BFProjectData::rootPath() const
 	{
-		auto p = file();
+		auto p = m_file.file();
 		return p.remove_filename();
 	}
 }

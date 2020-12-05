@@ -20,11 +20,14 @@ namespace BlackFox::Editor
         TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
         TextureHandle loadTexture(const std::filesystem::path& path) override;
         TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) override;
+        TextureHandle loadTexture(const ResourceGuid& guid) override;
+        TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) override;
         TextureHandle loadTextureOrThrow(const std::filesystem::path& path) override;
         TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) override;
 
         FontHandle loadFont(const std::string& path) override;
         FontHandle loadFont(const std::filesystem::path& path) override;
+        FontHandle loadFont(const ResourceGuid& guid) override;
         FontHandle loadFontOrThrow(const std::filesystem::path& path) override;
     };
 }

@@ -1,15 +1,14 @@
 #pragma once
 
 #include <SFML/System/String.hpp>
-
 #include "BFResource.h"
 
 namespace BlackFox
 {
-	class BLACKFOX_EXPORT BFTextResource : public BFResource
+	class BLACKFOX_EXPORT BFTextResource : public BFResource<BFTextResource>
 	{
 	public:
-		explicit BFTextResource(const Resources::ResourceType& type);
+		explicit BFTextResource(const Resources::ResourceType& type, const ResourceGuid& guid);
 
 		~BFTextResource() override = default;
 

@@ -1,5 +1,4 @@
 #include "TestGame.h"
-#include "BFDebug.h"
 #include "BFScriptingManager.h"
 
 using namespace BlackFox;

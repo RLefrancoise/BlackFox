@@ -4,8 +4,8 @@
 
 namespace BlackFox
 {
-    BFTextResource::BFTextResource(const Resources::ResourceType &type)
-    : BFResource(type)
+    BFTextResource::BFTextResource(const Resources::ResourceType &type, const ResourceGuid& guid)
+    : BFResource(type, guid)
     {}
 
     BFTextResource::BFTextResource(BlackFox::BFTextResource &&res) noexcept
@@ -27,7 +27,7 @@ namespace BlackFox
 
     bool BFTextResource::save() const
     {
-        const std::filesystem::path path = static_cast<std::string>(m_filePath);
+        const std::filesystem::path path = Resources::guidToPath(guid());
         std::ofstream ofs(path);
         if (!ofs.is_open()) return false;
 
