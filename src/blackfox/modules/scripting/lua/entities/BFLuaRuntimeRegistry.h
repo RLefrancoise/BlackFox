@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cinject/cinject.h>
 #include <entt/entity/registry.hpp>
 #include <sol/state.hpp>
 #include <sol/object.hpp>
@@ -161,7 +162,7 @@ namespace BlackFox
 	public:
 		typedef std::shared_ptr<BFLuaRuntimeRegistry> Ptr;
 
-		explicit BFLuaRuntimeRegistry(IBFResourcesHolder::Ptr holder);
+		CINJECT(BFLuaRuntimeRegistry(IBFResourcesHolder::Ptr holder));
 
 		/*!
 		 * Get next available identifier
@@ -181,7 +182,7 @@ namespace BlackFox
 		 */
 		unsigned int registerRuntimeComponent(
 			const std::string& componentName, 
-			const std::string& scriptPath, 
+			const std::filesystem::path& scriptPath,
 			sol::state* state);
 
 		/*!
@@ -322,7 +323,7 @@ namespace BlackFox
 		void setEntityManager(EntityManager em);
 
 		bool isNativeComponent(ComponentId component) const;
-		const std::string* getComponentScript(ComponentId component) const;
+		const std::filesystem::path* getComponentScript(ComponentId component) const;
 
 	private:
 		static constexpr ComponentId runtimeComponentId = 10000;
@@ -369,7 +370,7 @@ namespace BlackFox
 		}
 
 		std::map<ComponentId, funcMap> m_func;
-		std::map<std::string, std::tuple<ComponentId, std::string>> m_runtimeComponentLuaScripts;
+		std::map<std::string, std::tuple<ComponentId, std::filesystem::path>> m_runtimeComponentLuaScripts;
 		EntityManager m_entityManager;
 		IBFResourcesHolder::Ptr m_resourcesHolder;
 	};

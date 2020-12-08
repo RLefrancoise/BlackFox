@@ -9,23 +9,22 @@ namespace BlackFox
     {}
 
     BFTextResource::BFTextResource(BlackFox::BFTextResource &&res) noexcept
-    : BFResource(std::move(res))
+    : Super(std::move(res))
+    , m_content(std::exchange(res.m_content, ""))
     {
-        std::swap(m_content, res.m_content);
     }
 
     BFTextResource &BFTextResource::operator=(BFTextResource &&res) noexcept
     {
         if(this != &res)
         {
-            m_content = res.m_content;
-            res.m_content = "";
+            m_content = std::exchange(res.m_content, "");
         }
 
         return *this;
     }
 
-    bool BFTextResource::save() const
+    /*bool BFTextResource::save(IBFVirtualFileSystem::Ptr vfs) const
     {
         const std::filesystem::path path = Resources::guidToPath(guid());
         std::ofstream ofs(path);
@@ -35,13 +34,22 @@ namespace BlackFox
         ofs.close();
 
         return ofs.good();
-    }
+    }*/
 
-    bool BFTextResource::load(const std::filesystem::path &file, std::string *errorMessage)
+    bool BFTextResource::load(BFVirtualFileInputStream& stream,
+                              std::string *errorMessage)
     {
-        if (!BFResource::load(file, errorMessage)) return false;
+        try
+        {
+            m_content = stream.text();
+        }
+        catch(std::exception& e)
+        {
+            *errorMessage = e.what();
+            return false;
+        }
 
-        std::ifstream ifs(file);
+        /*std::ifstream ifs(file);
         if (!ifs.is_open() || !ifs.good()) {
             *errorMessage = fmt::format("Failed to open file {}", file.string());
             return false;
@@ -50,7 +58,7 @@ namespace BlackFox
         const std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
         m_content = str;
 
-        ifs.close();
+        ifs.close();*/
 
         return true;
     }

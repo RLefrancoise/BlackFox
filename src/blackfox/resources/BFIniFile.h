@@ -1,17 +1,15 @@
 #pragma once
 
+#include <filesystem>
 #include <INIReader.h>
 #include "BFExport.h"
-#include "BFTextResource.h"
 
 namespace BlackFox
 {
-    class BLACKFOX_EXPORT BFIniFile : public BFTextResource
+    class BLACKFOX_EXPORT BFIniFile //: public BFTextResource
     {
     public:
-        explicit BFIniFile(const Resources::ResourceType& type, const ResourceGuid& guid);
-
-        bool load(const std::filesystem::path& file, std::string* errorMessage) override;
+        explicit BFIniFile(const std::filesystem::path& path);
 
         std::string get(const std::string& section, const std::string& key, const std::string& defaultValue) const;
         int getInt(const std::string& section, const std::string& key, int defaultValue = 0) const;
@@ -25,6 +23,7 @@ namespace BlackFox
         bool getBool(const std::string& section, const std::string& key, bool defaultValue = false) const;
         float getFloat(const std::string& section, const std::string& key, float defaultValue = 0.0f) const;
         double getDouble(const std::string& section, const std::string& key, double defaultValue = 0.0) const;
+
     private:
         INIReader m_reader;
     };

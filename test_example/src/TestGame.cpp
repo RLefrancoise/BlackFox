@@ -12,8 +12,8 @@ namespace TestExample
     void TestGame::onInit()
     {
         //Launch test script
-        const auto scriptManager = m_container->get<BFScriptingManager>();
-        BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
+        //const auto scriptManager = m_container->get<BFScriptingManager>();
+        //BF_PRINT("Test.lua result: {}", scriptManager->evalFile<bool>("data/test.lua"));
     }
 
     void TestGame::onShutdown() {}

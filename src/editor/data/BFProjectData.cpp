@@ -21,11 +21,6 @@ namespace YAML
 
 namespace BlackFox::Editor
 {
-	std::function<std::string(const std::filesystem::path&)> stringifyPath = [](const std::filesystem::path& p)
-	{
-		return p.string();
-	};
-
 	BFProjectData::BFProjectData() : BFYamlData<BFProjectData>(BFYamlFile(Resources::PROJECT_DATA))
 	{
 	}
@@ -35,7 +30,7 @@ namespace BlackFox::Editor
 		return fmt::format(R""""(===Project Data===
 name: {}
 scenes: {}
-)"""", name, Utils::join<std::filesystem::path>(scenes, ",", stringifyPath));
+)"""", name, Utils::join<std::filesystem::path>(scenes, ",", Utils::stringifyPath));
 	}
 
 	std::filesystem::path BFProjectData::rootPath() const

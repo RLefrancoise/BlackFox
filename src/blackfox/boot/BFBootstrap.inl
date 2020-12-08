@@ -53,7 +53,7 @@ namespace BlackFox
             m_container->bind<cinject::Container>().toConstant(m_container);
 
             //Create main context
-            m_context = makeContext<BFMainContext>(m_container);
+            m_context = makeContext<BFMainContext>(m_container, false);
 
             //load modules
             loadModule<Input::BFInputModule>();

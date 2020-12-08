@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <SFML/System/String.hpp>
 
+#include "BFVirtualFileInputStream.h"
 #include "BFResourceTypes.h"
 #include "BFTypeDefs.h"
 
@@ -29,34 +30,25 @@ namespace BlackFox
 		 * @return	Guid
 		 */
 		[[nodiscard]] virtual ResourceGuid guid() const = 0;
-		
-		/**
-		 * Save the resource on disk.
-		 * 
-		 * \return True if save is successful, false otherwise.
-		 */
-		[[nodiscard]] virtual bool save() const = 0;
 
-		/**
-		 * Save the resource on disk, and throw if an error occured.
+		/*!
+		 * Load the resource from a stream.
+		 *
+		 * @param stream		Stream
+		 * @param errorMessage 	Error message if load failed
+		 *
+		 * @return				True if load successful, false otherwise
 		 */
-		virtual void saveOrThrow() const = 0;
+		[[nodiscard]] virtual bool load(
+				BFVirtualFileInputStream& stream,
+				std::string* errorMessage) = 0;
 
-		/**
-		 * Load the resource from a file.
+		/*!
+		 * Load the resource from a stream, and throw if an error occurred.
 		 * 
-		 * \param	file	File to load the resource
-		 * \param	errorMessage	Error message if load failed
-		 * \return	True if load is successful, false otherwise. 
+		 * @param stream		Stream
 		 */
-		[[nodiscard]] virtual bool load(const std::filesystem::path& file, std::string* errorMessage) = 0;
-
-		/**
-		 * Load the resource from a file, and throw if an error occured.
-		 * 
-		 * \param file	File to load the resource
-		 */
-		virtual void loadOrThrow(const std::filesystem::path& file) = 0;
+		virtual void loadOrThrow(BFVirtualFileInputStream& stream) = 0;
 	};
 
 	/**
@@ -74,20 +66,16 @@ namespace BlackFox
 		BFResource(const BFResource&) = delete;
 		BFResource& operator=(const BFResource&) = delete;
 
-		constexpr BFResource(BFResource&&) noexcept;
-		constexpr BFResource& operator=(BFResource&&) noexcept;
+		BFResource(BFResource&&) noexcept;
+		BFResource& operator=(BFResource&&) noexcept;
 
-		[[nodiscard]] constexpr const Resources::ResourceType& type() const override;
+		[[nodiscard]] const Resources::ResourceType& type() const override;
+		[[nodiscard]] ResourceGuid guid() const override;
 
-		[[nodiscard]] constexpr ResourceGuid guid() const override;
-
-		void saveOrThrow() const override;
-
-		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage) override;
-		void loadOrThrow(const std::filesystem::path& file) override;
+		void loadOrThrow(BFVirtualFileInputStream& stream) override;
 		
 	protected:
-		constexpr explicit BFResource(const Resources::ResourceType& type, const ResourceGuid& guid);
+		explicit BFResource(const Resources::ResourceType& type, const ResourceGuid& guid);
 
 		Resources::ResourceType m_type;
 		ResourceGuid m_guid;

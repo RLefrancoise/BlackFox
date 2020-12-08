@@ -35,9 +35,9 @@ ENDIF()
 target_include_directories(blackfox.physics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 IF(WIN32)
-    set(LIBRARIES blackfox blackfox.entities box2d)
+    set(LIBRARIES blackfox blackfox.entities box2d RTTR::Core)
 ELSE()
-    set(LIBRARIES blackfox blackfox.entities box2d dl pthread)
+    set(LIBRARIES blackfox blackfox.entities box2d RTTR::Core dl pthread)
 ENDIF()
 
 target_link_libraries(

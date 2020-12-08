@@ -18,10 +18,10 @@ namespace BlackFox
 
 	unsigned int BFLuaRuntimeRegistry::registerRuntimeComponent(
 			const std::string& componentName,
-			const std::string& scriptPath,
+			const std::filesystem::path& scriptPath,
 			sol::state* state)
 	{
-		BF_PRINT("Register runtime component {} ({})", componentName, scriptPath);
+		BF_PRINT("Register runtime component {} ({})", componentName, scriptPath.string());
 		auto id = identifier();
 		m_runtimeComponentLuaScripts[componentName] = std::make_tuple(id, scriptPath);
 
@@ -33,13 +33,16 @@ namespace BlackFox
 			const ComponentId typeId,
 			sol::state* state)
 	{
-		auto it = std::find_if(m_runtimeComponentLuaScripts.begin(), m_runtimeComponentLuaScripts.end(), [&](const auto& entry) -> bool
-		{
-			return std::get<ComponentId>(entry.second) == typeId;
-		});
+	    BFTextResource::Handle handle;
 
-		const auto componentScript = getComponentScript(typeId);
-		auto handle = m_resourcesHolder->loadTextAsset(Resources::pathToGuid(*componentScript));
+	    if(!isNativeComponent(typeId))
+        {
+		    const auto componentScript = getComponentScript(typeId);
+		    if(componentScript == nullptr)
+		        BF_EXCEPTION("Failed to get component script for component {} on entity {}. Component may not be registered", typeId, entity);
+		    else
+		    	handle = m_resourcesHolder->loadTextAsset(Resources::LUA_COMPONENT_SCRIPT, *componentScript);
+        }
 
 		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, BFTextResource::Handle>(
 			entity, 
@@ -77,13 +80,13 @@ namespace BlackFox
 		return it == m_runtimeComponentLuaScripts.cend();
 	}
 
-	const std::string* BFLuaRuntimeRegistry::getComponentScript(ComponentId component) const
+	const std::filesystem::path* BFLuaRuntimeRegistry::getComponentScript(ComponentId component) const
 	{
 		const auto it = std::find_if(m_runtimeComponentLuaScripts.cbegin(), m_runtimeComponentLuaScripts.cend(), [&](const auto& entry) {
 			return std::get<ComponentId>(entry.second) == component;
 		});
 
-		return (it != m_runtimeComponentLuaScripts.cend() ? &std::get<std::string>(it->second) : nullptr);
+		return (it != m_runtimeComponentLuaScripts.cend() ? &std::get<std::filesystem::path>(it->second) : nullptr);
 	}
 
 	std::tuple<entt::runtime_view, std::vector<ComponentId>, std::vector<ComponentId>> BFLuaRuntimeRegistry::getView(const std::vector<ComponentId>& components) const
@@ -117,6 +120,8 @@ namespace BlackFox
 		const std::vector<ComponentId>& components)
 	{
 		std::vector<sol::object> v;
+		v.reserve(components.size());
+
 		for (const auto& component : components)
 		{
 			v.push_back(getComponent(entity, component, state));

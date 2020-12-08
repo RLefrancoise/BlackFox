@@ -320,7 +320,7 @@ namespace PhysFS
 	bool isDirectory(const string& filename) {
 		PHYSFS_Stat stat;
 		if(!PHYSFS_stat(filename.c_str(), &stat))
-			throw std::runtime_error(string("isDirectory error: ") + std::to_string(PHYSFS_getLastErrorCode()));
+			throw std::runtime_error(string("isDirectory error: ") + std::string(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 
 		return stat.filetype == PHYSFS_FILETYPE_DIRECTORY;
 	}
@@ -328,7 +328,7 @@ namespace PhysFS
 	bool isSymbolicLink(const string& filename) {
 		PHYSFS_Stat stat;
 		if(!PHYSFS_stat(filename.c_str(), &stat))
-			throw std::runtime_error(string("isSymbolicLink error: ") + std::to_string(PHYSFS_getLastErrorCode()));
+			throw std::runtime_error(string("isSymbolicLink error: ") + std::string(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 
 		return stat.filetype == PHYSFS_FILETYPE_SYMLINK;
 	}
@@ -336,7 +336,7 @@ namespace PhysFS
 	sint64 getLastModTime(const string& filename) {
 		PHYSFS_Stat stat;
 		if(!PHYSFS_stat(filename.c_str(), &stat))
-			throw std::runtime_error(string("getLastModTime error: ") + std::to_string(PHYSFS_getLastErrorCode()));
+			throw std::runtime_error(string("getLastModTime error: ") + std::string(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 
 		return stat.modtime;
 	}

@@ -2,7 +2,7 @@
 
 namespace BlackFox
 {
-    BFYamlFile::BFYamlFile(const Resources::ResourceType& type, const ResourceGuid& guid)
+    /*BFYamlFile::BFYamlFile(const Resources::ResourceType& type, const ResourceGuid& guid)
     : BFTextResource(type, guid)
     {}
 
@@ -28,5 +28,5 @@ namespace BlackFox
     {
         BFTextResource::content(content);
         m_root = YAML::Load(m_content);
-    }
+    }*/
 }

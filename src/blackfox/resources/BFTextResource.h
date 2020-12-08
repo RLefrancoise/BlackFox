@@ -9,17 +9,14 @@ namespace BlackFox
 	{
 	public:
 		explicit BFTextResource(const Resources::ResourceType& type, const ResourceGuid& guid);
-
 		~BFTextResource() override = default;
 
-		BFTextResource(const BFTextResource&) = default;
-		BFTextResource& operator=(const BFTextResource&) = default;
 		BFTextResource(BFTextResource&&) noexcept;
 		BFTextResource& operator=(BFTextResource&&) noexcept;
-		
-		[[nodiscard]] bool save() const override;
 
-		[[nodiscard]] bool load(const std::filesystem::path& file, std::string* errorMessage) override;
+		[[nodiscard]] virtual bool load(
+				BFVirtualFileInputStream& stream,
+				std::string* errorMessage) override;
 		
 		virtual void content(const std::string& content);
 		[[nodiscard]] virtual std::string content() const;

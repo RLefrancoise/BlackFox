@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <filesystem>
 
 #include "BFTypeDefs.h"
 #include "BFExport.h"
@@ -17,6 +18,11 @@ namespace BlackFox::Utils
 	static std::function<std::string(const T&)> defaultStringify = [](const T& t) -> std::string {
 		if constexpr(std::is_same_v<T, std::string>) return t;
 		return std::to_string(t);
+	};
+
+	static std::function<std::string(const std::filesystem::path&)> stringifyPath = [](const std::filesystem::path& p)
+	{
+		return p.string();
 	};
 
 	/*!

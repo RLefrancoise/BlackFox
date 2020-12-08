@@ -34,7 +34,7 @@ namespace BlackFox
     {
     protected:
 
-        CINJECT(BFGame(DiContainer container, BFApplication::Ptr application));
+        BFGame(DiContainer container, BFApplication::Ptr application);
 
         BFGame(BFGame&& game) noexcept;
         BFGame& operator=(BFGame&& game) noexcept;

@@ -21,28 +21,30 @@ namespace BlackFox
 	{
 		try
 		{
-			//Command manager
-			m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
+			//Config data
+			/*auto holder = m_container->get<IBFResourcesHolder>();
+			auto handle = holder->loadTextAsset("data/config.ini");
+			auto configFile = BFIniFile(handle);
+			configFile.loadOrThrow();*/
 
-			//Application
-			m_container->bind<BFApplication>().toSelf().inSingletonScope();
+			auto engineConfig = std::make_shared<BFEngineConfig>(BFIniFile("config/engine.ini"));
+			BF_PRINT(*engineConfig);
+			m_container->bind<BFEngineConfig>().toConstant(engineConfig);
 
 			//VFS
 			m_container->bind<IBFVirtualFileSystem>().to<BFVirtualFileSystem>().inSingletonScope();
 
+			//Resources holder
+			m_container->bind<IBFResourcesHolder>().to<BFResourcesHolder>().inSingletonScope();
+
+			//Command manager
+			m_container->bind<BFCommandManager>().toSelf().inSingletonScope();
+
 			//Commands
 			m_container->bind<BFQuitApplicationCommand>().toSelf();
 
-			//Config data
-			auto configFile = BFIniFile(Resources::ENGINE_CONFIG, Resources::pathToGuid("data/config.ini"));
-			configFile.loadOrThrow("data/config.ini");
-
-			auto engineConfig = std::make_shared<BFEngineConfig>(configFile);
-			BF_PRINT(*engineConfig);
-			m_container->bind<BFEngineConfig>().toConstant(std::move(engineConfig));
-
-			//Resources holder
-			m_container->bind<IBFResourcesHolder>().to<BFResourcesHolder>().inSingletonScope();
+			//Application
+			m_container->bind<BFApplication>().toSelf().inSingletonScope();
 		}
 		catch(std::exception& err)
 		{

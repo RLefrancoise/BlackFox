@@ -6,8 +6,6 @@
 
 namespace BlackFox
 {
-    std::string dataFolder;
-
     BFVirtualFileSystem::BFVirtualFileSystem() = default;
 
     BFVirtualFileSystem::~BFVirtualFileSystem()
@@ -33,23 +31,26 @@ namespace BlackFox
         //No symlink
         PhysFS::permitSymbolicLinks(false);
 
-        //Mount data folder
-        dataFolder = combinePath({static_cast<std::string>(args->baseFolder()), "data"});
+        m_baseDir = args->baseFolder();
 
-        if(const auto err = PhysFS::mount(dataFolder, true) != PHYSFS_ERR_OK)
+        //Mount base dir
+        if(const auto err = PhysFS::mount(m_baseDir.string(), true) != PHYSFS_ERR_OK)
         {
-            BF_ERROR("Failed to mount data folder: {}", err);
+            BF_ERROR("Failed to mount base folder: {}", err);
             return false;
         }
 
-        BF_PRINT("Mount data folder to virtual file system at location {}", dataFolder);
+        BF_PRINT("Mount base folder to virtual file system at location {}", m_baseDir.string());
+
+        //Add data to search folder
+        addSearchFolder("data");
 
         return true;
     }
 
     bool BFVirtualFileSystem::addSearchFolder(const std::string &folder)
     {
-        const auto res = PhysFS::mount(combinePath({dataFolder, folder}), false);
+        const auto res = PhysFS::mount(combinePath({m_baseDir.string(), folder}), false);
         BF_PRINT("Search path is: {}", Utils::join(PhysFS::getSearchPath(), ","));
         return res;
     }
@@ -64,10 +65,31 @@ namespace BlackFox
         return Utils::join(path, PhysFS::getDirSeparator());
     }
 
+    std::vector<std::filesystem::path> BFVirtualFileSystem::getSearchFolders()
+    {
+        const auto folders = PhysFS::getSearchPath();
+        std::vector<std::filesystem::path> paths;
+        paths.reserve(folders.size());
+
+        for(const auto& folder : folders)
+        {
+            paths.emplace_back(std::filesystem::path(folder));
+        }
+
+        return paths;
+    }
+
+    std::filesystem::path BFVirtualFileSystem::getBaseDir()
+    {
+        return m_baseDir;
+    }
+
     std::vector<std::filesystem::path> BFVirtualFileSystem::scanDir(const std::filesystem::path& dirPath)
     {
-        std::vector<std::filesystem::path> files;
         const auto list = PhysFS::enumerateFiles(dirPath.string());
+
+        std::vector<std::filesystem::path> files;
+        files.reserve(list.size());
 
         for (const auto &file : list)
         {
@@ -77,9 +99,62 @@ namespace BlackFox
         return files;
     }
 
+    std::vector<std::filesystem::path> BFVirtualFileSystem::scanDirRecursive(const std::filesystem::path& dirPath)
+    {
+        const auto list = PhysFS::enumerateFiles(dirPath.string());
+
+        std::vector<std::filesystem::path> files;
+
+        for (const auto &file : list)
+        {
+            if(isSymbolicLink(file)) continue;
+
+            files.emplace_back(file);
+
+            if(isDirectory(file))
+            {
+                const auto subDirFiles = scanDirRecursive(file);
+                for(const auto& subFile : subDirFiles)
+                {
+                    files.emplace_back(file / subFile);
+                }
+            }
+        }
+
+        return files;
+    }
+
+    void BFVirtualFileSystem::getContent(const std::filesystem::path& path, std::string* content)
+    {
+        auto ifs = PhysFS::ifstream(path.string());
+        if(!ifs.good())
+        {
+            BF_EXCEPTION("Failed to get content from path {}", path.string());
+        }
+
+        const std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+        *content = str;
+
+        //ifs >> *content;
+    }
+
+    std::size_t BFVirtualFileSystem::getBytes(const std::filesystem::path& path, char** buffer)
+    {
+        auto ifs = PhysFS::ifstream(path.string());
+        if(!ifs.good())
+        {
+            BF_EXCEPTION("Failed to get bytes from path {}", path.string());
+        }
+
+        *buffer = new char[ifs.length()];
+        ifs.read(*buffer, ifs.length());
+
+        return ifs.length();
+    }
+
     bool BFVirtualFileSystem::isDirectory(const std::filesystem::path& path)
     {
-        return PhysFS::isDirectory(path.string());
+        return PhysFS::exists(path.string()) && PhysFS::isDirectory(path.string());
     }
 
     bool BFVirtualFileSystem::isFile(const std::filesystem::path& path)
@@ -89,6 +164,6 @@ namespace BlackFox
 
     bool BFVirtualFileSystem::isSymbolicLink(const std::filesystem::path &path)
     {
-        return PhysFS::isSymbolicLink(path.string());
+        return PhysFS::symbolicLinksPermitted() && PhysFS::exists(path.string()) && PhysFS::isSymbolicLink(path.string());
     }
 }

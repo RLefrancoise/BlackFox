@@ -1,28 +1,71 @@
 #include "BFResourcesHolder.h"
 #include "BFTextureResourceLoader.h"
 #include "BFFontResourceLoader.h"
+#include "BFTextResourceLoader.h"
 #include "BFDebug.h"
+#include "BFStringUtils.h"
 
 #include <entt/core/hashed_string.hpp>
 
 namespace BlackFox
 {
+	BFResourcesMetaData::BFResourcesMetaData(const ResourceGuid& guid, const std::filesystem::path& path, const Resources::ResourceType& type)
+	{
+		this->guid = guid;
+		this->path = path;
+		this->type = type;
+	}
+
+    void BFResourcesMetaTable::initFromFileSystem(IBFVirtualFileSystem::Ptr vfs)
+    {
+		BF_PRINT("Base dir is {}", vfs->getBaseDir().string());
+
+		const auto files = vfs->scanDirRecursive("data");
+		BF_PRINT("Search data folder - {}", Utils::join<std::filesystem::path>(files, "\n", Utils::stringifyPath));
+    }
+
+    void BFResourcesMetaTable::addResource(
+        const std::string &path,
+        const BlackFox::Resources::ResourceType &type)
+    {
+        BFResourcesMetaData metaData(ResourceGuid {path.c_str()}, path, type);
+        m_table.insert(std::make_pair(metaData.guid, metaData));
+    }
+
+    const BFResourcesMetaData& BFResourcesMetaTable::getResourceMetaData(const BlackFox::ResourceGuid &guid) const
+    {
+        const auto it = m_table.find(guid);
+        if(it == m_table.cend())
+            BF_EXCEPTION("Resource with guid {} not found in meta table", guid.data());
+        return it->second;
+    }
+
+    const BFResourcesMetaData& BFResourcesMetaTable::getResourceMetaData(const std::filesystem::path& path) const
+    {
+        const auto it = std::find_if(m_table.cbegin(), m_table.cend(), [&](const auto& entry) {
+            return entry.second.path == path;
+        });
+
+        if(it == m_table.cend())
+            BF_EXCEPTION("Resource with path {} not found in meta table", path.string().c_str());
+        return it->second;
+    }
+
+    //--------------------------------------------------------------------------------------
+
 	IBFResourcesHolder::IBFResourcesHolder() = default;
 	
 	IBFResourcesHolder::IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept
-	: m_textureCache(std::move(holder.m_textureCache))
-	, m_fontCache(std::move(holder.m_fontCache))
+	: m_textureCache(std::exchange(holder.m_textureCache, TextureCache{}))
+	, m_fontCache(std::exchange(holder.m_fontCache, FontCache{}))
 	{}
 
 	IBFResourcesHolder& IBFResourcesHolder::operator=(IBFResourcesHolder&& holder) noexcept
 	{
 		if(this != &holder)
 		{
-			m_textureCache = std::move(holder.m_textureCache);
-			m_fontCache = std::move(holder.m_fontCache);
-
-			holder.m_textureCache = TextureCache {};
-			holder.m_fontCache = FontCache {};
+			m_textureCache = std::exchange(holder.m_textureCache, TextureCache{});
+			m_fontCache = std::exchange(holder.m_fontCache, FontCache{});
 		}
 
 		return *this;
@@ -33,11 +76,14 @@ namespace BlackFox
 	BFResourcesHolder::BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs)
 	: IBFResourcesHolder()
 	, m_vfs(std::move(vfs))
-    {}
+    {
+	    m_metaTable.initFromFileSystem(m_vfs);
+    }
 
 	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
-	: m_vfs(std::exchange(holder.m_vfs, nullptr))
-	, IBFResourcesHolder(std::move(holder))
+	: IBFResourcesHolder(std::move(holder))
+	, m_vfs(std::exchange(holder.m_vfs, nullptr))
+	, m_metaTable(std::move(holder.m_metaTable))
 	{}
 
 	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
@@ -45,14 +91,31 @@ namespace BlackFox
 		if(this != &holder)
 		{
 			m_vfs = std::exchange(holder.m_vfs, nullptr);
+			m_metaTable = std::move(holder.m_metaTable);
 		}
 
 		return *this;
 	}
 
-	BFTextResource::Handle BFResourcesHolder::loadTextAsset(const ResourceGuid& guid)
+	BFTextResource::Handle BFResourcesHolder::loadTextAsset(
+			const Resources::ResourceType& type,
+			const std::filesystem::path& path)
 	{
-		return BFTextResource::Handle{}; //TODO: handle
+		const auto guid = Resources::pathToGuid(path.string());
+		return loadTextAsset(type, guid);
+	}
+
+	BFTextResource::Handle BFResourcesHolder::loadTextAsset(
+			const Resources::ResourceType& type,
+			const ResourceGuid& guid)
+	{
+		if (m_textAssetCache.contains(guid))
+		{
+			return m_textAssetCache.handle(guid);
+		}
+
+		BF_PRINT("Load text asset {}", Resources::guidToPath(guid).string());
+		return m_textAssetCache.load<BFTextResourceLoader>(guid, type, guid, m_vfs);
 	}
 
 	TextureHandle BFResourcesHolder::loadTexture(const std::string& path)
@@ -89,7 +152,7 @@ namespace BlackFox
 			return m_textureCache.handle(guid);
 		}
 
-		BF_PRINT("Load texture {}", guid.data());
+		BF_PRINT("Load texture {}", Resources::guidToPath(guid).string());
 		return m_textureCache.load<BFTextureResourceLoader>(guid, guid, m_vfs, rect);
 	}
 
@@ -123,7 +186,7 @@ namespace BlackFox
 			return m_fontCache.handle(guid);
 		}
 
-		BF_PRINT("Load font {}", guid.data());
+		BF_PRINT("Load font {}", Resources::guidToPath(guid).string());
 		return m_fontCache.load<BFFontResourceLoader>(guid, guid, m_vfs);
 	}
 

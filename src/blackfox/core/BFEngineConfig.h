@@ -11,6 +11,7 @@
 #include "BFVector2.h"
 #include "BFStringUtils.h"
 #include "BFColorUtils.h"
+#include "BFResourcesHolder.h"
 
 namespace BlackFox
 {
@@ -200,48 +201,8 @@ namespace BlackFox
     public:
         typedef std::shared_ptr<BFEngineConfig> Ptr;
 
-        explicit BFEngineConfig(const BFIniFile& file)
-        {
-            //App data
-            appData = {
-                file.get("Application", "name", "BlackFox"), //name
-                file.getIntTo<sf::Uint32>("Application", "frameRate", 60), //frame rate
-                file.getBool("Application", "fullScreen", false), //full screen
-                BFVector2u( //window size
-                    file.getIntTo<unsigned int>("Application", "width", 800),
-                    file.getIntTo<unsigned int>("Application", "height", 600)),
-                file.getBool("Application", "showFrameRate", false), //show frame rate
-                file.getIntTo<sf::Uint32>("Application", "antiAliasing", 0) // Anti aliasing
-            };
+        BFEngineConfig(const BFIniFile& iniFile);
 
-            //Game data
-            gameData = {
-                file.getFloat("Game", "worldUnitPixels", 32) // world unit pixels
-            };
-
-            //Time data
-            timeData = {
-                file.getFloat("Time", "fixedUpdateInterval", 0.016f) // fixed update interval
-            };
-
-        	//Physics data
-            physicsData = {
-                vector2fFromString(file.get("Physics", "gravity", "0.0,-9.81")),
-				file.getIntTo<sf::Uint32>("Physics", "velocityIterations", 8),
-				file.getIntTo<sf::Uint32>("Physics", "positionIterations", 3),
-                file.getFloat("Physics", "physicsScale", 1)
-            };
-
-            //Debug data
-            debugData = {
-                file.getBool("Debug", "debugPhysics", false),
-                file.getFloat("Debug", "physicsCollidersOutlineThickness", 0.2f),
-                Utils::colorFromString(file.get("Debug", "physicsCollidersOutlineColor", "255,0,0,255")),
-                file.getFloat("Debug", "physicsCollidersCenterRadius", 2.f),
-                Utils::colorFromString(file.get("Debug", "physicsCollidersCenterColor", "0,0,255,255"))
-            };
-        }
-        
         /// Application data
         ConfigApplicationData appData;
         /// Game data

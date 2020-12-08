@@ -8,12 +8,11 @@
 
 namespace BlackFox
 {
-	class BFYamlFile : public BFTextResource
+	class BFYamlFile
 	{
-	public:
+	/*public:
 		explicit BFYamlFile(const Resources::ResourceType& type, const ResourceGuid& guid);
 
-		~BFYamlFile() override = default;
 		BFYamlFile(BFYamlFile&&) noexcept = default;
 		BFYamlFile& operator=(BFYamlFile&&) noexcept = default;
 
@@ -37,6 +36,7 @@ namespace BlackFox
 		void content(const std::string& content) override;
 
 	protected:
-	    YAML::Node m_root;
+		BFTextResource::Handle m_handle;
+	    YAML::Node m_root;*/
 	};
 }

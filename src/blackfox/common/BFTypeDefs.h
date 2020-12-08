@@ -26,4 +26,20 @@ namespace BlackFox
 
 	typedef sf::Color	BFColor;
 	typedef sf::String	BFString;
+
+	struct ResourceGuidHash
+	{
+		std::size_t operator()(const ResourceGuid& guid) const
+		{
+			return guid.value();
+		}
+	};
+
+	struct ResourceGuidEqual
+	{
+		bool operator()(const ResourceGuid& first, const ResourceGuid& second) const
+		{
+			return first.value() == second.value();
+		}
+	};
 }

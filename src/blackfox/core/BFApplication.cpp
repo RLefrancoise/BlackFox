@@ -252,13 +252,17 @@ namespace BlackFox
 	}
 
 	BFApplication::BFApplication(BFApplication&& app) noexcept
-	: pImpl(std::move(app.pImpl))
+	: pImpl(std::exchange(app.pImpl, nullptr))
 	{
 	}
 
 	BFApplication& BFApplication::operator=(BFApplication&& app) noexcept
 	{
-		pImpl = std::move(app.pImpl);
+		if (this != &app)
+		{
+			pImpl = std::exchange(app.pImpl, nullptr);
+		}
+		
 		return *this;
 	}
 

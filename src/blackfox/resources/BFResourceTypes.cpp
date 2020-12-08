@@ -23,4 +23,14 @@ namespace BlackFox::Resources
 
         return UNKNOWN_CATEGORY;
     }
+
+    ResourceGuid pathToGuid(const std::string& path)
+    {
+        return ResourceGuid(path.c_str());
+    }
+
+    std::filesystem::path guidToPath(const ResourceGuid& guid)
+    {
+        return std::filesystem::path{guid.data()};
+    }
 }

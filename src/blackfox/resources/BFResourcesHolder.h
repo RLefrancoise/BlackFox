@@ -8,11 +8,35 @@
 #include <cinject/cinject.h>
 #include <memory>
 #include <filesystem>
+#include <unordered_map>
 #include <SFML/Graphics/Rect.hpp>
 #include <string>
 
 namespace BlackFox
 {
+    struct BLACKFOX_EXPORT BFResourcesMetaData
+    {
+    	explicit BFResourcesMetaData(const ResourceGuid& guid, const std::filesystem::path& path, const Resources::ResourceType& type);
+
+        ResourceGuid guid;
+        std::filesystem::path path;
+        Resources::ResourceType type;
+    };
+
+    class BLACKFOX_EXPORT BFResourcesMetaTable
+    {
+    public:
+    	BFResourcesMetaTable() = default;
+
+        void initFromFileSystem(IBFVirtualFileSystem::Ptr vfs);
+        void addResource(const std::string& path, const Resources::ResourceType& type);
+        const BFResourcesMetaData& getResourceMetaData(const ResourceGuid& guid) const;
+        const BFResourcesMetaData& getResourceMetaData(const std::filesystem::path& path) const;
+
+    private:
+        std::unordered_map<ResourceGuid, BFResourcesMetaData, ResourceGuidHash, ResourceGuidEqual> m_table;
+    };
+
 	class BLACKFOX_EXPORT IBFResourcesHolder
 	{
 	public:
@@ -23,7 +47,8 @@ namespace BlackFox
 		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
 		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
 
-		virtual BFTextResource::Handle loadTextAsset(const ResourceGuid& guid) = 0;
+		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) = 0;
+		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) = 0;
 
 		virtual TextureHandle loadTexture(const std::string& path) = 0;
 		virtual TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) = 0;
@@ -47,6 +72,7 @@ namespace BlackFox
 
 		TextureCache m_textureCache {};
 		FontCache m_fontCache {};
+		entt::resource_cache<BFTextResource> m_textAssetCache {};
 	};
 
 	class BLACKFOX_EXPORT BFResourcesHolder final : public IBFResourcesHolder
@@ -61,7 +87,8 @@ namespace BlackFox
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
 
-		BFTextResource::Handle loadTextAsset(const ResourceGuid& guid) override;
+		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) override;
+		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) override;
 
 		TextureHandle loadTexture(const std::string& path) override;
 		TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
@@ -83,5 +110,6 @@ namespace BlackFox
 
 	private:
 		IBFVirtualFileSystem::Ptr m_vfs;
+		BFResourcesMetaTable m_metaTable;
 	};
 }

@@ -3,22 +3,12 @@
 
 namespace BlackFox
 {
-    BFVirtualFileInputStream::BFVirtualFileInputStream(const std::string &path)
+    BFVirtualFileInputStream::BFVirtualFileInputStream(const std::filesystem::path& path, IBFVirtualFileSystem::Ptr vfs)
     {
         try
         {
-            //Create PhysFS stream
-            m_ifStream = std::make_unique<PhysFS::ifstream>(path);
-
-            // Read file bytes and store into memory
-            char* buffer = new char[m_ifStream->length()];
-            m_ifStream->read(buffer, m_ifStream->length());
-            if(!m_ifStream->good())
-            {
-                BF_EXCEPTION("Failed to load resource {}. Failed to open file", path);
-            }
-
-            open(buffer, m_ifStream->length());
+            const auto bytesRead = vfs->getBytes(path, &m_buffer);
+            open(m_buffer, bytesRead);
 
             //File is opened
             m_isOpened = true;
@@ -28,6 +18,11 @@ namespace BlackFox
             BF_ERROR(err.what());
             m_isOpened = false;
         }
+    }
+
+    BFVirtualFileInputStream::~BFVirtualFileInputStream()
+    {
+        delete m_buffer;
     }
 
     bool BFVirtualFileInputStream::isOpened()
@@ -57,5 +52,31 @@ namespace BlackFox
     {
         if(!isOpened()) return -1;
         return sf::MemoryInputStream::getSize();
+    }
+
+    std::string BFVirtualFileInputStream::text()
+    {
+        if(!isOpened()) BF_EXCEPTION("Stream not opened");
+
+        std::string str;
+        str.reserve(getSize());
+
+        if(seek(0) == -1)
+        {
+            BF_EXCEPTION("Failed to seek stream at position {}", 0);
+        }
+
+        const auto bytesRead = read(str.data(), str.size());
+        if(bytesRead == -1)
+        {
+            BF_EXCEPTION("Failed to read stream");
+        }
+
+        if(seek(bytesRead) == -1)
+        {
+            BF_EXCEPTION("Failed to seek stream at position {}", bytesRead);
+        }
+
+        return str;
     }
 }

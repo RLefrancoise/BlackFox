@@ -253,7 +253,9 @@ namespace BlackFox
         worldType["createSystem"] = [&](BFWorld& world, const std::string& systemName) -> BFComponentSystem*
         {
             auto resourcesHolder = m_container->get<IBFResourcesHolder>();
-            auto handle = resourcesHolder->loadTextAsset(Resources::pathToGuid(fmt::format("data/systems/{}.lua", systemName)));
+            auto handle = resourcesHolder->loadTextAsset(
+                    Resources::LUA_SYSTEM_SCRIPT,
+                    Resources::pathToGuid(fmt::format("data/systems/{}.lua", systemName)));
 
             BFLuaScript::Ptr luaScript = std::make_shared<BFLuaScript>(BFLuaScript::ScriptType::System, handle, m_state);
 
