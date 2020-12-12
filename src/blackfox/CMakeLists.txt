@@ -61,9 +61,9 @@ ENDIF()
 target_include_directories(blackfox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCES_FOLDERS})
 
 IF(WIN32)
-    set(LIBRARIES sfml-system sfml-graphics sfml-audio sfml-network fmt::fmt-header-only RTTR::Core libluadll yaml-cpp box2d physfs physfs++)
+    set(LIBRARIES sfml-system sfml-graphics sfml-audio sfml-network fmt::fmt-header-only RTTR::Core libluadll yaml-cpp box2d physfs physfs++ cereal)
 ELSE()
-    set(LIBRARIES sfml-system sfml-graphics sfml-audio sfml-network fmt::fmt-header-only RTTR::Core liblua yaml-cpp box2d physfs physfs++ dl pthread)
+    set(LIBRARIES sfml-system sfml-graphics sfml-audio sfml-network fmt::fmt-header-only RTTR::Core liblua yaml-cpp box2d physfs physfs++ cereal dl pthread)
 ENDIF()
 
 target_link_libraries(

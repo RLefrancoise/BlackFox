@@ -10,6 +10,7 @@
 #include "BFResourceTypes.h"
 #include "BFVirtualFileInputStream.h"
 #include "BFVirtualFileSystem.h"
+#include "BFResourcesHolder.h"
 
 namespace BlackFox
 {
@@ -32,12 +33,12 @@ namespace BlackFox
         template<typename... Args>
         [[nodiscard]] std::shared_ptr<Resource> load(
                 const Resources::ResourceType& type,
-                const ResourceGuid& guid,
+                const BFResourcesMetaData& data,
                 const IBFVirtualFileSystem::Ptr& vfs,
                 Args... args) const
         {
-            auto res = createResource(type, guid);
-            return load(guid, res, vfs, std::forward<Args>(args)...);
+            auto res = createResource(type, data.guid);
+            return load(data, res, vfs, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
@@ -48,7 +49,7 @@ namespace BlackFox
 
         template<typename... Args>
         std::shared_ptr<Resource> load(
-                const ResourceGuid& guid,
+                const BFResourcesMetaData& data,
                 std::shared_ptr<Resource> res,
                 const IBFVirtualFileSystem::Ptr& vfs,
                 Args... args) const
@@ -57,10 +58,10 @@ namespace BlackFox
             //if(subFolder() != "") vfs->addSearchFolder(subFolder());
 
             // Create stream
-            auto stream = std::make_unique<BFVirtualFileInputStream>(Resources::guidToPath(guid), vfs);
+            auto stream = std::make_unique<BFVirtualFileInputStream>(data.path, vfs);
             if(!stream->isOpened())
             {
-                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", guid.data());
+                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", data.path.string());
             }
 
             // Load resource
@@ -72,7 +73,7 @@ namespace BlackFox
             //If failed to load, throw
             if(!loadSuccess)
             {
-                BF_EXCEPTION("Failed to load resource {}", guid.data());
+                BF_EXCEPTION("Failed to load resource {}", data.path.string());
             }
 
             return res;
@@ -90,12 +91,12 @@ namespace BlackFox
          */
         template<typename... Args>
         [[nodiscard]] std::shared_ptr<Resource> load(
-                const ResourceGuid& guid,
+                const BFResourcesMetaData& data,
                 const IBFVirtualFileSystem::Ptr& vfs,
                 Args... args) const
         {
             auto resource = createResource();
-            return load(guid, resource, vfs);
+            return load(data, resource, vfs);
         }
     };
 }

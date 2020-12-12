@@ -1,5 +1,6 @@
 #include "BFLuaScriptingLanguage.h"
 #include "BFLuaMathModule.h"
+#include "BFLuaIOModule.h"
 
 namespace BlackFox::Scripting::Lua
 {
@@ -11,5 +12,8 @@ namespace BlackFox::Scripting::Lua
 
         //Math
         addModule(std::make_shared<BFLuaMathModule>(m_container, m_state, m_namespace));
+
+        //IO
+        addModule(std::make_shared<BFLuaIOModule>(m_container, m_state, m_namespace));
     }
 }

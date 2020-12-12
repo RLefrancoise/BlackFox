@@ -37,3 +37,6 @@
 [submodule "thirdParties/Catch2"]
 	path = thirdParties/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "thirdParties/cereal"]
+	path = thirdParties/cereal
+	url = https://github.com/USCiLab/cereal.git

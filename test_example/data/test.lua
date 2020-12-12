@@ -17,6 +17,7 @@ local Vector2f = BlackFox.Math.Vector2f
 local IntRect = BlackFox.Graphics.IntRect
 local Color = BlackFox.Graphics.Color
 local Screen = BlackFox.Screen
+local IO = BlackFox.IO
 
 -- Default world
 local world = BlackFox.getWorld("default")
@@ -193,7 +194,7 @@ local function createGround(position, scale)
     
     -- Sprite
     -- Test image
-    sprite.image = BlackFox.Resources.texture("textures/test.png")
+    sprite.image = BlackFox.Resources.texture(IO.path("textures", "test.png"))
     sprite.image.smooth = false
     -- Full rect
     sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
@@ -237,7 +238,7 @@ local function createWall(position)
     
     -- Sprite
     -- Test image
-    sprite.image = BlackFox.Resources.texture("textures/test.png")
+    sprite.image = BlackFox.Resources.texture(IO.path("textures", "test.png"))
     sprite.image.smooth = false
     -- Full rect
     sprite.rect = IntRect:new(0, 0, sprite.image:width(), sprite.image:height())
@@ -266,7 +267,7 @@ local function textEntity(position, textString)
     transform.scale = Vector2f:new(1,1)
 
     -- Text
-    text.font = BlackFox.Resources.font("fonts/Minecraft.ttf")
+    text.font = BlackFox.Resources.font(IO.path("fonts", "Minecraft.ttf"))
     text.text = textString
     text.characterSize = 0.5
     text.color = Color.Blue

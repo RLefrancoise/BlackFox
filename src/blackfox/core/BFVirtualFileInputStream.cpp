@@ -4,6 +4,8 @@
 namespace BlackFox
 {
     BFVirtualFileInputStream::BFVirtualFileInputStream(const std::filesystem::path& path, IBFVirtualFileSystem::Ptr vfs)
+        : sf::MemoryInputStream()
+        , m_buffer(nullptr)
     {
         try
         {
@@ -22,7 +24,7 @@ namespace BlackFox
 
     BFVirtualFileInputStream::~BFVirtualFileInputStream()
     {
-        delete m_buffer;
+        delete[] m_buffer;
     }
 
     bool BFVirtualFileInputStream::isOpened()

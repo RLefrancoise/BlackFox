@@ -62,7 +62,12 @@ namespace BlackFox
 
     std::string BFVirtualFileSystem::combinePath(const std::vector<std::string> &path)
     {
-        return Utils::join(path, PhysFS::getDirSeparator());
+        return Utils::join(path, getDirSeparator());
+    }
+
+    std::string BFVirtualFileSystem::getDirSeparator()
+    {
+        return PhysFS::getDirSeparator();
     }
 
     std::vector<std::filesystem::path> BFVirtualFileSystem::getSearchFolders()
@@ -139,7 +144,7 @@ namespace BlackFox
     }
 
     std::size_t BFVirtualFileSystem::getBytes(const std::filesystem::path& path, char** buffer)
-    {
+    {        
         auto ifs = PhysFS::ifstream(path.string());
         if(!ifs.good())
         {

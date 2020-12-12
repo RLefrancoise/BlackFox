@@ -2,6 +2,7 @@
 
 #include "BFTypeDefs.h"
 #include "BFExport.h"
+#include "BFResourcesMetaData.h"
 #include "BFVirtualFileSystem.h"
 #include "BFTextResource.h"
 
@@ -14,15 +15,6 @@
 
 namespace BlackFox
 {
-    struct BLACKFOX_EXPORT BFResourcesMetaData
-    {
-    	explicit BFResourcesMetaData(const ResourceGuid& guid, const std::filesystem::path& path, const Resources::ResourceType& type);
-
-        ResourceGuid guid;
-        std::filesystem::path path;
-        Resources::ResourceType type;
-    };
-
     class BLACKFOX_EXPORT BFResourcesMetaTable
     {
     public:
@@ -46,6 +38,8 @@ namespace BlackFox
 
 		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
 		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
+
+		virtual ResourceGuid getGuidFromPath(const std::filesystem::path& path) = 0;
 
 		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) = 0;
 		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) = 0;
@@ -86,6 +80,8 @@ namespace BlackFox
 
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
+
+		ResourceGuid getGuidFromPath(const std::filesystem::path& path) override;
 
 		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) override;
 		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) override;

@@ -62,6 +62,13 @@ namespace BlackFox
         virtual std::string combinePath(const std::vector<std::string>& path) = 0;
 
         /*!
+         * Get the director separator used by the platform.
+         *
+         * @return      The directory separator
+         */
+        virtual std::string getDirSeparator() = 0;
+
+        /*!
          * Get the base directory
          *
          * @return          Base directory
@@ -141,6 +148,8 @@ namespace BlackFox
         bool addSearchFolder(const std::string& folder) override;
 
         std::string combinePath(const std::vector<std::string>& path) override;
+        std::string getDirSeparator() override;
+
         std::vector<std::filesystem::path> getSearchFolders() override;
         std::filesystem::path getBaseDir() override;
         std::vector<std::filesystem::path> scanDir(const std::filesystem::path& dirPath) override;

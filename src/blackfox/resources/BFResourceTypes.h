@@ -63,7 +63,7 @@ namespace BlackFox::Resources
 	 * @param path	Path to convert to a Guid
 	 * @return 		Guid
 	 */
-	BLACKFOX_EXPORT ResourceGuid pathToGuid(const std::string& path);
+	//BLACKFOX_EXPORT ResourceGuid pathToGuid(const std::string& path);
 
 	/*!
 	 * Get a path from a Guid
@@ -71,5 +71,5 @@ namespace BlackFox::Resources
 	 * @param guid	Guid to convert to a path
 	 * @return 		Path from the Guid
 	 */
-    BLACKFOX_EXPORT std::filesystem::path guidToPath(const ResourceGuid& guid);
+    //BLACKFOX_EXPORT std::filesystem::path guidToPath(const ResourceGuid& guid);
 }

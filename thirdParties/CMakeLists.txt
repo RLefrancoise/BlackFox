@@ -116,5 +116,9 @@ set(PHYSFS_LIBRARY ${CMAKE_BINARY_DIR}/thirdParties/physfs-3.0.2/physfs.lib)
 add_subdirectory(physfs-cpp)
 target_include_directories(physfs++ PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/physfs-3.0.2/src)
 
+# Cereal
+set(SKIP_PERFORMANCE_COMPARISON ON)
+add_subdirectory(cereal)
+
 # Catch2
 add_subdirectory(Catch2)

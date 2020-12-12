@@ -9,6 +9,10 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 option(BLACKFOX_SHARED_LIB "Build BlackFox Shared lib? For now, only shared libs are supported, so it should be on" ON)
 
+IF(NOT MSVC)
+    add_compile_options(-Wa,-mbig-obj)
+ENDIF()
+
 # SFML
 find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED)
 
@@ -78,6 +82,8 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdParties/physfs-3.0.2/src)
 # PhysFS++
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/physfs-cpp/include)
 
+# Cereal
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/cereal/include)
 
 
 

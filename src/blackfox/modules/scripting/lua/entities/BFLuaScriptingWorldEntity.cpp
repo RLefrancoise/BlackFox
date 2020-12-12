@@ -12,6 +12,7 @@
 #include "BFLuaRuntimeRegistry.h"
 #include "BFLuaEntityArchetype.h"
 #include "BFResourcesHolder.h"
+#include "BFLuaUtils.h"
 
 BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingWorldEntity, "WorldEntity")
 
@@ -25,14 +26,14 @@ namespace BlackFox
      *
      * @return          The vector
      */
-    template<typename T>
+    /*template<typename T>
     std::vector<T> argsToVector(const sol::variadic_args& args)
     {
         std::vector<T> v;
         v.resize(args.size());
         std::transform(args.cbegin(), args.cend(), v.begin(), [&](const auto& a) { return a.template as<T>(); });
         return v;
-    }
+    }*/
 
     /*!
      * Create an entity from a list of component ids
@@ -163,7 +164,7 @@ namespace BlackFox
     	    auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
     	    runtimeRegistry->setEntityManager(world.entityManager());
 
-            return std::make_shared<BFLuaEntityArchetype>(argsToVector<ComponentId>(components), runtimeRegistry, m_state);
+            return std::make_shared<BFLuaEntityArchetype>(Scripting::Lua::argsToVector<ComponentId>(components), runtimeRegistry, m_state);
         };
 
     	worldType["createArchetype"] = [&](BFWorld& world, const BFLuaEntityArchetype& archetype)
@@ -176,7 +177,7 @@ namespace BlackFox
         // Create entity
         worldType["createEntity"] = [&](BFWorld& world, const sol::variadic_args& components)
         {
-            return createEntityFromComponentList(world, m_container, argsToVector<ComponentId>(components), m_state);
+            return createEntityFromComponentList(world, m_container, Scripting::Lua::argsToVector<ComponentId>(components), m_state);
         };
 
         // Destroy entity
@@ -246,7 +247,7 @@ namespace BlackFox
         // Iterate entities
         worldType["entities"] = [&](BFWorld& world, const sol::function& callback, const float dt, const sol::variadic_args& components) -> size_t
 		{
-            return iterateEntities(world, m_container, callback, dt, argsToVector<ComponentId>(components), m_state);
+            return iterateEntities(world, m_container, callback, dt, Scripting::Lua::argsToVector<ComponentId>(components), m_state);
 		};
 
         //System
@@ -255,7 +256,7 @@ namespace BlackFox
             auto resourcesHolder = m_container->get<IBFResourcesHolder>();
             auto handle = resourcesHolder->loadTextAsset(
                     Resources::LUA_SYSTEM_SCRIPT,
-                    Resources::pathToGuid(fmt::format("data/systems/{}.lua", systemName)));
+                    fmt::format("data/systems/{}.lua", systemName));
 
             BFLuaScript::Ptr luaScript = std::make_shared<BFLuaScript>(BFLuaScript::ScriptType::System, handle, m_state);
 

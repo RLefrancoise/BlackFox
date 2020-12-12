@@ -41,7 +41,7 @@ namespace BlackFox
             m_result = m_state->safe_script(m_handle->content(), m_environment);
             if(!m_result.valid())
             {
-                BF_EXCEPTION("Failed to load Lua script {}", Resources::guidToPath(m_handle->guid()).string());
+                BF_EXCEPTION("Failed to load Lua script {}", m_handle->guid().data());
             }
         }
         catch(const std::exception& e)
