@@ -121,6 +121,9 @@ set(SKIP_PERFORMANCE_COMPARISON ON)
 add_subdirectory(cereal)
 
 # STDUUID
+set(UUID_BUILD_TESTS OFF)
+set(UUID_SYSTEM_GENERATOR ON)
+set(UUID_USING_CXX20_SPAN OFF)
 add_subdirectory(stduuid)
 
 # Catch2

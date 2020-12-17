@@ -18,6 +18,8 @@ find_package(SFML 2.5.1 COMPONENTS system window graphics audio network REQUIRED
 
 # STD UUID
 include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdParties/stduuid/gsl)
+add_compile_definitions(UUID_SYSTEM_GENERATOR)
 
 # ThirdParties (ImGui, ...)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdParties)
