@@ -61,7 +61,7 @@ namespace BlackFox
             auto stream = std::make_unique<BFVirtualFileInputStream>(data.path, vfs);
             if(!stream->isOpened())
             {
-                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", data.path.string());
+                BF_EXCEPTION("Failed to open virtual file input stream for resource {}", std::string(data.path));
             }
 
             // Load resource
@@ -73,7 +73,7 @@ namespace BlackFox
             //If failed to load, throw
             if(!loadSuccess)
             {
-                BF_EXCEPTION("Failed to load resource {}", data.path.string());
+                BF_EXCEPTION("Failed to load resource {}", std::string(data.path));
             }
 
             return res;

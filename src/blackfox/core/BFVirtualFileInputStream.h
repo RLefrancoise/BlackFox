@@ -5,6 +5,7 @@
 #include <memory>
 #include <filesystem>
 
+#include "BFTypeDefs.h"
 #include "BFExport.h"
 #include "BFVirtualFileSystem.h"
 
@@ -16,7 +17,7 @@ namespace BlackFox
     class BLACKFOX_EXPORT BFVirtualFileInputStream final: public sf::MemoryInputStream
     {
     public:
-        explicit BFVirtualFileInputStream(const std::filesystem::path& path, IBFVirtualFileSystem::Ptr vfs);
+        explicit BFVirtualFileInputStream(const BFString& path, IBFVirtualFileSystem::Ptr vfs);
         ~BFVirtualFileInputStream() override;
 
         bool isOpened();

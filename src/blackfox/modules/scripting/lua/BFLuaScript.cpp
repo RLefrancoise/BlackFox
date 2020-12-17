@@ -41,7 +41,7 @@ namespace BlackFox
             m_result = m_state->safe_script(m_handle->content(), m_environment);
             if(!m_result.valid())
             {
-                BF_EXCEPTION("Failed to load Lua script {}", m_handle->guid().data());
+                BF_EXCEPTION("Failed to load Lua script {}", m_handle->guid());
             }
         }
         catch(const std::exception& e)
@@ -57,6 +57,6 @@ namespace BlackFox
     {
         return has<std::string>("Name")
                 ? get<std::string>("Name")
-                : m_handle->guid().data();
+                : uuids::to_string(m_handle->guid());
     }
 }

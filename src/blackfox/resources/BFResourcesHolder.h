@@ -21,12 +21,13 @@ namespace BlackFox
     	BFResourcesMetaTable() = default;
 
         void initFromFileSystem(IBFVirtualFileSystem::Ptr vfs);
-        void addResource(const std::string& path, const Resources::ResourceType& type);
+        void addResource(const BFString& path, const Resources::ResourceType& type);
         const BFResourcesMetaData& getResourceMetaData(const ResourceGuid& guid) const;
-        const BFResourcesMetaData& getResourceMetaData(const std::filesystem::path& path) const;
+        const BFResourcesMetaData& getResourceMetaData(const BFString& path) const;
+        entt::id_type getUniqueId(const ResourceGuid& guid) const;
 
     private:
-        std::unordered_map<ResourceGuid, BFResourcesMetaData, ResourceGuidHash, ResourceGuidEqual> m_table;
+        std::unordered_map<ResourceGuid, BFResourcesMetaData> m_table;
     };
 
 	class BLACKFOX_EXPORT IBFResourcesHolder
@@ -39,27 +40,23 @@ namespace BlackFox
 		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
 		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
 
-		virtual ResourceGuid getGuidFromPath(const std::filesystem::path& path) = 0;
+		virtual ResourceGuid getGuidFromPath(const BFString& path) = 0;
 
 		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) = 0;
-		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) = 0;
+		virtual BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const BFString& path) = 0;
 
-		virtual TextureHandle loadTexture(const std::string& path) = 0;
-		virtual TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) = 0;
-
-		virtual TextureHandle loadTexture(const std::filesystem::path& path) = 0;
-		virtual TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
+		virtual TextureHandle loadTexture(const BFString& path) = 0;
+		virtual TextureHandle loadTexture(const BFString& path, const sf::IntRect& rect) = 0;
 
 		virtual TextureHandle loadTexture(const ResourceGuid& guid) = 0;
 		virtual TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) = 0;
 
-		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path) = 0;
-		virtual TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) = 0;
+		virtual TextureHandle loadTextureOrThrow(const BFString& path) = 0;
+		virtual TextureHandle loadTextureOrThrow(const BFString& path, const sf::IntRect& rect) = 0;
 
-		virtual FontHandle loadFont(const std::string& path) = 0;
-		virtual FontHandle loadFont(const std::filesystem::path& path) = 0;
+		virtual FontHandle loadFont(const BFString& path) = 0;
 		virtual FontHandle loadFont(const ResourceGuid& guid) = 0;
-		virtual FontHandle loadFontOrThrow(const std::filesystem::path& path) = 0;
+		virtual FontHandle loadFontOrThrow(const BFString& path) = 0;
 
 	protected:
 		IBFResourcesHolder();
@@ -81,28 +78,24 @@ namespace BlackFox
 		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
 		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
 
-		ResourceGuid getGuidFromPath(const std::filesystem::path& path) override;
+		ResourceGuid getGuidFromPath(const BFString& path) override;
 
 		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const ResourceGuid& guid) override;
-		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const std::filesystem::path& path) override;
+		BFTextResource::Handle loadTextAsset(const Resources::ResourceType& type, const BFString& path) override;
 
-		TextureHandle loadTexture(const std::string& path) override;
-		TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
-
-		TextureHandle loadTexture(const std::filesystem::path& path) override;
-		TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) override;
+		TextureHandle loadTexture(const BFString& path) override;
+		TextureHandle loadTexture(const BFString& path, const sf::IntRect& rect) override;
 
 		TextureHandle loadTexture(const ResourceGuid& guid) override;
 		TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) override;
 
-		TextureHandle loadTextureOrThrow(const std::filesystem::path& path) override;
-		TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) override;
+		TextureHandle loadTextureOrThrow(const BFString& path) override;
+		TextureHandle loadTextureOrThrow(const BFString& path, const sf::IntRect& rect) override;
 
-		FontHandle loadFont(const std::string& path) override;
-		FontHandle loadFont(const std::filesystem::path& path) override;
+		FontHandle loadFont(const BFString& path) override;
 		FontHandle loadFont(const ResourceGuid& guid) override;
 
-		FontHandle loadFontOrThrow(const std::filesystem::path& path) override;
+		FontHandle loadFontOrThrow(const BFString& path) override;
 
 	private:
 		IBFVirtualFileSystem::Ptr m_vfs;

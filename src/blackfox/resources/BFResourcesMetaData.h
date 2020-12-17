@@ -8,10 +8,10 @@ namespace BlackFox
 {
     struct BLACKFOX_EXPORT BFResourcesMetaData
     {
-        explicit BFResourcesMetaData(const ResourceGuid& guid, const std::filesystem::path& path, const Resources::ResourceType& type);
+        explicit BFResourcesMetaData(const ResourceGuid& guid, const BFString& path, const Resources::ResourceType& type);
 
         ResourceGuid guid;
-        std::filesystem::path path;
+        BFString path;
         Resources::ResourceType type;
     };
 }

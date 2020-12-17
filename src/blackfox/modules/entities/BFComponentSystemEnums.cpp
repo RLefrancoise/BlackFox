@@ -18,7 +18,7 @@ namespace BlackFox
             case ComponentSystemGroups ::Unknown:
                 return "Unknown";
             default:
-                BF_EXCEPTION("Unknown group value {}", group);
+                BF_EXCEPTION("Unknown group value {}", (int) group);
                 break;
         }
     }

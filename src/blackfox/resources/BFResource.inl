@@ -54,7 +54,7 @@ namespace BlackFox
 		std::string err;
 		if (!load(stream, &err))
 		{
-			BF_EXCEPTION("Failed to load resource {}: {}", m_guid.data(), err);
+			BF_EXCEPTION("Failed to load resource {}: {}", m_guid, err);
 		}
 	}
 }

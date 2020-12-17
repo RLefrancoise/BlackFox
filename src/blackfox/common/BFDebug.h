@@ -1,15 +1,35 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+#include <sstream>
 #include <fmt/format.h>
 #include <termcolor/termcolor.hpp>
 
+#include "BFTypeDefs.h"
+
 namespace BlackFox
 {
+    static std::string transformArg(ResourceGuid&& guid)
+    {
+        return uuids::to_string(guid);
+    }
+
+    template<typename T>
+    static T transformArg(T&& arg)
+    {
+        return arg;
+    }
+
+    static std::string transformArg(BFString&& arg)
+    {
+        return arg;
+    }
+
 	template<typename FormatType, typename ...Args>
 	static std::string format(const char* file, const int line, const char* function, FormatType str, Args... args)
 	{
-		return fmt::format("{}:{} - {} - {}", file, line, function, fmt::format(static_cast<std::string>(str), args...));
+		return fmt::format("{}:{} - {} - {}", file, line, function, fmt::format(static_cast<std::string>(str), transformArg(std::forward<Args>(args))...));
 	}
 
 	template<typename FormatType, typename ...Args>

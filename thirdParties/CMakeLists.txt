@@ -120,5 +120,8 @@ target_include_directories(physfs++ PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/physfs-3.
 set(SKIP_PERFORMANCE_COMPARISON ON)
 add_subdirectory(cereal)
 
+# STDUUID
+add_subdirectory(stduuid)
+
 # Catch2
 add_subdirectory(Catch2)

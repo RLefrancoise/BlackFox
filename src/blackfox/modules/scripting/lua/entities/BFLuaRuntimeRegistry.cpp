@@ -41,7 +41,7 @@ namespace BlackFox
 		    if(componentScript == nullptr)
 		        BF_EXCEPTION("Failed to get component script for component {} on entity {}. Component may not be registered", typeId, entity);
 		    else
-		    	handle = m_resourcesHolder->loadTextAsset(Resources::LUA_COMPONENT_SCRIPT, *componentScript);
+		    	handle = m_resourcesHolder->loadTextAsset(Resources::LUA_COMPONENT_SCRIPT, componentScript->string());
         }
 
 		return invoke<funcMap::funcTypeSet, sol::object, &funcMap::set, sol::state*, BFTextResource::Handle>(

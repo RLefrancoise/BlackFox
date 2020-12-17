@@ -3,7 +3,7 @@
 
 namespace BlackFox
 {
-    BFVirtualFileInputStream::BFVirtualFileInputStream(const std::filesystem::path& path, IBFVirtualFileSystem::Ptr vfs)
+    BFVirtualFileInputStream::BFVirtualFileInputStream(const BFString& path, IBFVirtualFileSystem::Ptr vfs)
         : sf::MemoryInputStream()
         , m_buffer(nullptr)
     {

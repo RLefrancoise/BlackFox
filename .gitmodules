@@ -40,3 +40,6 @@
 [submodule "thirdParties/cereal"]
 	path = thirdParties/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "thirdParties/stduuid"]
+	path = thirdParties/stduuid
+	url = https://github.com/mariusbancila/stduuid.git

@@ -11,16 +11,31 @@
 
 namespace BlackFox::Utils
 {
+    template<typename T>
+    static BFString stringify(const T& arg)
+    {
+        return BFString(std::to_string(arg));
+    }
+
+    static BFString stringify(const BFString& arg)
+    {
+        return arg;
+    }
+
+    static BFString stringify(const std::string& arg)
+    {
+        return arg;
+    }
+
 	/*!
 	 *	Default stringify function for join function. It uses std::to_string.
 	 */
 	template<typename T>
-	static std::function<std::string(const T&)> defaultStringify = [](const T& t) -> std::string {
-		if constexpr(std::is_same_v<T, std::string>) return t;
-		return std::to_string(t);
+	static std::function<BFString(const T&)> defaultStringify = [](const T& t) -> BFString {
+		return stringify(t);
 	};
 
-	static std::function<std::string(const std::filesystem::path&)> stringifyPath = [](const std::filesystem::path& p)
+	static std::function<BFString(const std::filesystem::path&)> stringifyPath = [](const std::filesystem::path& p) -> BFString
 	{
 		return p.string();
 	};
@@ -33,12 +48,12 @@ namespace BlackFox::Utils
 	 * \param	stringify	Function to use to stringify each value
 	 */
 	template <typename T>
-	static std::string join(const std::vector<T>& v, const std::string& delimiter = ",", std::function<std::string(const T&)> stringify = defaultStringify<T>)
+	static BFString join(const std::vector<T>& v, const BFString& delimiter = ",", std::function<BFString(const T&)> stringify = defaultStringify<T>)
 	{
-		std::string str;
+        BFString str;
 		if (!v.empty())
 		{
-			str = std::accumulate(v.begin() + 1, v.end(), stringify(v[0]), [delimiter, stringify](const std::string& a, const T& b) {
+			str = std::accumulate(v.begin() + 1, v.end(), stringify(v[0]), [delimiter, stringify](const BFString& a, const T& b) {
 				return a + delimiter + stringify(b);
 			});
 		}
@@ -46,8 +61,41 @@ namespace BlackFox::Utils
 		return str;
 	}
 
-	static std::string join(const std::vector<std::string>& v, const std::string& delimiter = ",")
+	static BFString join(const std::vector<BFString>& v, const BFString& delimiter = ",")
 	{
-		return join<std::string>(v, delimiter, [](const std::string& s) { return s; });
+		return join<BFString>(v, delimiter);
 	}
+
+    static BFString join(const std::vector<std::string>& v, const BFString& delimiter = ",")
+    {
+        std::vector<BFString> vec;
+        vec.reserve(v.size());
+
+        for(const auto& s : v)
+        {
+            vec.emplace_back(s);
+        }
+
+        return join<BFString>(vec, delimiter);
+    }
+
+    /*!
+     * Convert an array of elements to a BFString array
+     * @tparam T    Type of the elements
+     * @param v     The array
+     * @return      The array of BFString
+     */
+    template<typename T>
+    static std::vector<BFString> toBFStringArray(const std::vector<T>& v)
+    {
+        std::vector<BFString> arr;
+        arr.reserve(v.size());
+
+        for(const auto& t : v)
+        {
+            arr.emplace_back(stringify(t));
+        }
+
+        return arr;
+    }
 }

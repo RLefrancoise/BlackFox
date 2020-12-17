@@ -1,6 +1,7 @@
 #include "BFLuaIOModule.h"
 #include "BFVirtualFileSystem.h"
 #include "BFLuaUtils.h"
+#include "BFStringUtils.h"
 
 namespace BlackFox::Scripting::Lua
 {
@@ -13,7 +14,7 @@ namespace BlackFox::Scripting::Lua
         m_namespace["path"] = [&](const sol::variadic_args& parts) -> std::string
         {
             auto vfs = m_container->get<IBFVirtualFileSystem>();
-            return vfs->combinePath(argsToVector<std::string>(parts));
+            return vfs->combinePath(Utils::toBFStringArray(argsToVector<std::string>(parts)));
         };
     }
 }
