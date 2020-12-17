@@ -44,8 +44,10 @@ namespace BlackFox
 			const auto type = getTypeFromResource(file);
 			if(type == Resources::UNKNOWN_TYPE) continue;
 
-			addResource(file, type);
-			BF_PRINT("Add resource {} (type: {}) to meta table", file, type.data());
+			BFString agnosticFile(file);
+			agnosticFile.replace(vfs->getDirSeparator(), "/");
+			addResource(agnosticFile, type);
+			BF_PRINT("Add resource {} (type: {}) to meta table", agnosticFile, type.data());
 		}
     }
 

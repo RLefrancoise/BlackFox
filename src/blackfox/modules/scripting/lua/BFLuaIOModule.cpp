@@ -14,7 +14,8 @@ namespace BlackFox::Scripting::Lua
         m_namespace["path"] = [&](const sol::variadic_args& parts) -> std::string
         {
             auto vfs = m_container->get<IBFVirtualFileSystem>();
-            return vfs->combinePath(Utils::toBFStringArray(argsToVector<std::string>(parts)));
+            return Utils::join<std::string>(argsToVector<std::string>(parts), "/");
+            //return vfs->combinePath(Utils::toBFStringArray(argsToVector<std::string>(parts)));
         };
     }
 }

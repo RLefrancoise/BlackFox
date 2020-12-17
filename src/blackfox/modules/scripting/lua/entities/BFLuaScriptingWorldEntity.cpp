@@ -190,7 +190,7 @@ namespace BlackFox
         worldType["registerComponent"] = [&](const std::string& componentName)
         {
             auto runtimeRegistry = m_container->get<BFLuaRuntimeRegistry>();
-            const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, fmt::format("data/components/{}.lua", componentName), m_state);
+            const auto cid = runtimeRegistry->registerRuntimeComponent(componentName, fmt::format("components/{}.lua", componentName), m_state);
 
             sol::table componentsNs = m_namespace["Components"].get_or_create<sol::table>();
             sol::table runtimeNs = componentsNs["Runtime"].get_or_create<sol::table>();
@@ -256,7 +256,7 @@ namespace BlackFox
             auto resourcesHolder = m_container->get<IBFResourcesHolder>();
             auto handle = resourcesHolder->loadTextAsset(
                     Resources::LUA_SYSTEM_SCRIPT,
-                    fmt::format("data/systems/{}.lua", systemName));
+                    fmt::format("systems/{}.lua", systemName));
 
             BFLuaScript::Ptr luaScript = std::make_shared<BFLuaScript>(BFLuaScript::ScriptType::System, handle, m_state);
 

@@ -1,6 +1,8 @@
 #include "BFLuaScriptingLanguage.h"
 #include "BFLuaMathModule.h"
 #include "BFLuaIOModule.h"
+#include "BFLuaResourcesModule.h"
+#include "BFLuaPhysicsModule.h"
 
 namespace BlackFox::Scripting::Lua
 {
@@ -15,5 +17,11 @@ namespace BlackFox::Scripting::Lua
 
         //IO
         addModule(std::make_shared<BFLuaIOModule>(m_container, m_state, m_namespace));
+
+        //Resources
+        addModule(std::make_shared<BFLuaResourcesModule>(m_container, m_state, m_namespace));
+
+        //Physics
+        addModule(std::make_shared<BFLuaPhysicsModule>(m_container, m_state, m_namespace));
     }
 }

@@ -33,14 +33,14 @@ namespace BlackFox
 
         m_baseDir = args->baseFolder();
 
-        //Mount base dir
+        //Mount data folder
         if(const auto err = PhysFS::mount(m_baseDir, true) != PHYSFS_ERR_OK)
         {
             BF_ERROR("Failed to mount base folder: {}", err);
             return false;
         }
 
-        BF_PRINT("Mount base folder to virtual file system at location {}", std::string(m_baseDir));
+        BF_PRINT("Mount base folder to virtual file system at location {}", m_baseDir);
 
         //Add data to search folder
         addSearchFolder("data");
@@ -154,7 +154,7 @@ namespace BlackFox
         {
             BF_EXCEPTION("File {} does not exist", path);
         }
-        
+
         auto ifs = PhysFS::ifstream(path);
         if(!ifs.good())
         {

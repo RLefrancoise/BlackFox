@@ -1,4 +1,4 @@
-#include "BFLuaScriptingPhysicsEntity.h"
+#include "BFLuaPhysicsModule.h"
 #include "BFWorld.h"
 #include "BFDegree.h"
 #include "BFRigidBodyComponent.h"
@@ -11,16 +11,16 @@
 #include <sol/variadic_results.hpp>
 #include <sol/property.hpp>
 
-//BF_SCRIPTING_LUA_ENTITY_REGISTER(BlackFox::BFLuaScriptingPhysicsEntity, "PhysicsEntity")
-
 using namespace BlackFox::Components;
 
-namespace BlackFox
+namespace BlackFox::Scripting::Lua
 {
-    void BFLuaScriptingPhysicsEntity::registerEntity()
+    BFLuaPhysicsModule::BFLuaPhysicsModule(DiContainer container, sol::state *state, sol::table &parentNamespace)
+    : BFLuaModule("Physics", std::move(container), state, parentNamespace)
+    {}
+    
+    void BFLuaPhysicsModule::registerModule()
     {
-        auto physics_ns = m_namespace["Physics"].get_or_create<sol::table>();
-
         //Ray cast
         const auto rayCast = [&](BFWorld& world, const BFVector2f& startPoint, const BFVector2f& endPoint) -> auto
         {
@@ -49,7 +49,7 @@ namespace BlackFox
             return rayCast(world, ray.origin, ray.endPoint());
         };
 
-        physics_ns["rayCast"] = sol::overload(rayCast, rayCastWithRay);
+        m_namespace["rayCast"] = sol::overload(rayCast, rayCastWithRay);
 
         //Ray cast all
         const auto rayCastAll = [](BFWorld& world, const BFVector2f& startPoint, const BFVector2f& endPoint)
@@ -63,7 +63,7 @@ namespace BlackFox
 
             return physicsSystem->rayCastAll(startPoint, endPoint);
         };
-        physics_ns["rayCastAll"] = rayCastAll;
+        m_namespace["rayCastAll"] = rayCastAll;
 
         // Physics forces
 
@@ -80,7 +80,7 @@ namespace BlackFox
             applyForceWithWake(world, rb, force, point, true);
         };
 
-        physics_ns["applyForce"] = sol::overload(applyForce, applyForceWithWake);
+        m_namespace["applyForce"] = sol::overload(applyForce, applyForceWithWake);
 
         //Apply force to center
         const auto applyForceToCenterWithWake = [](BFWorld& world, BFRigidBodyComponent &rb, const BFVector2f &force, bool wake = true)
@@ -95,7 +95,7 @@ namespace BlackFox
             applyForceToCenterWithWake(world, rb, force, true);
         };
 
-        physics_ns["applyForceToCenter"] = sol::overload(applyForceToCenter, applyForceToCenterWithWake);
+        m_namespace["applyForceToCenter"] = sol::overload(applyForceToCenter, applyForceToCenterWithWake);
 
         //Apply torque
         const auto applyTorqueWithWake = [](BFWorld& world, BFRigidBodyComponent& rb, float torque, bool wake = true)
@@ -110,7 +110,7 @@ namespace BlackFox
             applyTorqueWithWake(world, rb, torque, true);
         };
 
-        physics_ns["applyTorque"] = sol::overload(applyTorque, applyTorqueWithWake);
+        m_namespace["applyTorque"] = sol::overload(applyTorque, applyTorqueWithWake);
 
         //Apply linear impulse
         const auto applyLinearImpulseWithWake = [](BFWorld& world, BFRigidBodyComponent &rb, const BFVector2f &impulse, const BFVector2f &point, bool wake = true)
@@ -125,7 +125,7 @@ namespace BlackFox
             applyLinearImpulseWithWake(world, rb, impulse, point, true);
         };
 
-        physics_ns["applyLinearImpulse"] = sol::overload(applyLinearImpulse, applyLinearImpulseWithWake);
+        m_namespace["applyLinearImpulse"] = sol::overload(applyLinearImpulse, applyLinearImpulseWithWake);
 
         //Apply linear impulse to center
         const auto applyLinearImpulseToCenterWithWake = [](BFWorld& world, BFRigidBodyComponent &rb, const BFVector2f &impulse, bool wake = true)
@@ -140,7 +140,7 @@ namespace BlackFox
             applyLinearImpulseToCenterWithWake(world, rb, impulse, true);
         };
 
-        physics_ns["applyLinearImpulseToCenter"] = sol::overload(applyLinearImpulseToCenter, applyLinearImpulseToCenterWithWake);
+        m_namespace["applyLinearImpulseToCenter"] = sol::overload(applyLinearImpulseToCenter, applyLinearImpulseToCenterWithWake);
 
         //Apply angular impulse
         const auto applyAngularImpulseWithWake = [](BFWorld& world, BFRigidBodyComponent& rb, float impulse, bool wake = true)
@@ -155,25 +155,25 @@ namespace BlackFox
             applyAngularImpulseWithWake(world, rb, impulse, true);
         };
 
-        physics_ns["applyAngularImpulse"] = sol::overload(applyAngularImpulseWithWake, applyAngularImpulse);
+        m_namespace["applyAngularImpulse"] = sol::overload(applyAngularImpulseWithWake, applyAngularImpulse);
 
         //Contact filter
-        auto contact_filter_t = physics_ns.new_usertype<BFContactFilter>("ContactFilter");
+        auto contact_filter_t = m_namespace.new_usertype<BFContactFilter>("ContactFilter");
         contact_filter_t["category"] = &BFContactFilter::categoryBits;
         contact_filter_t["mask"] = &BFContactFilter::maskBits;
         contact_filter_t["group"] = &BFContactFilter::groupIndex;
 
         //Hit Info
-        auto hitInfo_t = physics_ns.new_usertype<BFHitInfo>("HitInfo");
+        auto hitInfo_t = m_namespace.new_usertype<BFHitInfo>("HitInfo");
         hitInfo_t["hitEntity"] = &BFHitInfo::hitEntity;
         hitInfo_t["hitPoint"] = &BFHitInfo::hitPoint;
         hitInfo_t["normal"] = &BFHitInfo::normal;
         hitInfo_t["fraction"] = &BFHitInfo::fraction;
 
         //Ray
-        auto ray_t = physics_ns.new_usertype<BFRay>("Ray", sol::constructors<BFRay(const BFVector2f&, const BFVector2f&, float)>());
+        auto ray_t = m_namespace.new_usertype<BFRay>("Ray", sol::constructors<BFRay(const BFVector2f&, const BFVector2f&, float)>());
         ray_t["origin"] = &BFRay::origin;
         ray_t["direction"] = &BFRay::direction;
         ray_t["endPoint"] = sol::readonly_property([](BFRay& ray) { return ray.endPoint(); });
     }
-} // namespace BlackFox
+}

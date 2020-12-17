@@ -55,13 +55,18 @@ namespace BlackFox
         }
 
 		//Register all Lua runtime components
-		for (auto& dir : std::filesystem::recursive_directory_iterator("data/components/", std::filesystem::directory_options::skip_permission_denied))
+		const auto components = m_vfs->scanDirRecursive("data/components");
+		for(const auto& file : components)
+		//for (auto& dir : std::filesystem::recursive_directory_iterator("data/components/", std::filesystem::directory_options::skip_permission_denied))
 		{
-			if (dir.is_directory()) continue;
-			if (dir.path().extension().string() != ".lua") continue;
+			if (m_vfs->isDirectory(file)) continue;
 
-			const auto componentName = dir.path().filename().replace_extension("").string();
-			const auto componentPath = dir.path().string();
+            std::filesystem::path dir(fmt::format("components/{}", static_cast<std::string>(file)));
+
+			if (dir.extension().string() != ".lua") continue;
+
+			const auto componentName = dir.filename().replace_extension("").string();
+			const auto componentPath = dir.string();
 
             BF_PRINT("Register Lua component {} ({})", componentName, componentPath);
 
