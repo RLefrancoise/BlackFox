@@ -144,8 +144,6 @@ namespace BlackFox
 
         const std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
         *content = str;
-
-        //ifs >> *content;
     }
 
     std::size_t BFVirtualFileSystem::getBytes(const BFString& path, char** buffer)

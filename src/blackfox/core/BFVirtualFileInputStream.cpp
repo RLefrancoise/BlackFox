@@ -14,6 +14,8 @@ namespace BlackFox
 
             //File is opened
             m_isOpened = true;
+
+            read(m_buffer, bytesRead);
         }
         catch(const std::exception& err)
         {
@@ -60,25 +62,7 @@ namespace BlackFox
     {
         if(!isOpened()) BF_EXCEPTION("Stream not opened");
 
-        std::string str;
-        str.reserve(getSize());
-
-        if(seek(0) == -1)
-        {
-            BF_EXCEPTION("Failed to seek stream at position {}", 0);
-        }
-
-        const auto bytesRead = read(str.data(), str.size());
-        if(bytesRead == -1)
-        {
-            BF_EXCEPTION("Failed to read stream");
-        }
-
-        if(seek(bytesRead) == -1)
-        {
-            BF_EXCEPTION("Failed to seek stream at position {}", bytesRead);
-        }
-
+        std::string str(m_buffer, getSize());
         return str;
     }
 }
