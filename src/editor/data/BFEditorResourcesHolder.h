@@ -4,30 +4,20 @@
 
 namespace BlackFox::Editor
 {
-    class BFEditorResourcesHolder final : public IBFResourcesHolder
+    class BFDataManager;
+
+    class BFEditorResourcesHolder final : public BFResourcesHolderBase
     {
     public:
-        constexpr BFEditorResourcesHolder(const BFEditorResourcesHolder& app) = delete;
-        constexpr BFEditorResourcesHolder& operator=(const BFEditorResourcesHolder& app) = delete;
-
-        CINJECT(BFEditorResourcesHolder());
+        CINJECT(BFEditorResourcesHolder(std::shared_ptr<BFDataManager> dataManager));
         ~BFEditorResourcesHolder() override = default;
 
         BFEditorResourcesHolder(BFEditorResourcesHolder&& holder) noexcept = default;
         BFEditorResourcesHolder& operator=(BFEditorResourcesHolder&& holder) noexcept = default;
 
-        TextureHandle loadTexture(const std::string& path) override;
-        TextureHandle loadTexture(const std::string& path, const sf::IntRect& rect) override;
-        TextureHandle loadTexture(const std::filesystem::path& path) override;
-        TextureHandle loadTexture(const std::filesystem::path& path, const sf::IntRect& rect) override;
-        TextureHandle loadTexture(const ResourceGuid& guid) override;
-        TextureHandle loadTexture(const ResourceGuid& guid, const sf::IntRect& rect) override;
-        TextureHandle loadTextureOrThrow(const std::filesystem::path& path) override;
-        TextureHandle loadTextureOrThrow(const std::filesystem::path& path, const sf::IntRect& rect) override;
-
-        FontHandle loadFont(const std::string& path) override;
-        FontHandle loadFont(const std::filesystem::path& path) override;
-        FontHandle loadFont(const ResourceGuid& guid) override;
-        FontHandle loadFontOrThrow(const std::filesystem::path& path) override;
+    protected:
+        BFTextResource::Handle createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type) override;
+        TextureHandle createTextureHandle(entt::id_type id, const ResourceGuid& guid, const sf::IntRect& rect) override;
+        FontHandle createFontHandle(entt::id_type id, const ResourceGuid& guid) override;
     };
 }

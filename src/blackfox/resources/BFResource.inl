@@ -1,4 +1,4 @@
-#include "BFResource.h"
+//#include "BFResource.h"
 #include "BFDebug.h"
 
 namespace BlackFox

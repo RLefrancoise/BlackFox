@@ -33,8 +33,7 @@ namespace BlackFox::Editor
 			project->file(projectFile);
 			project->name = projectData.name;
 
-			if (!project->save())
-				throw std::runtime_error(fmt::format("Failed to save project file in project folder {}", projectData.folder.string()));
+			project->saveOrThrow();
 
 			//Create folders
 

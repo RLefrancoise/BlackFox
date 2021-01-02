@@ -64,7 +64,8 @@ namespace BlackFox::Editor
 		{
 			return fmt::format("resourcesPath: {}\nbackgroundColor: {}\n"
 				, resourcesPath.string()
-				, Utils::join(std::vector<float>{backgroundColor.Value.x, backgroundColor.Value.y, backgroundColor.Value.z, backgroundColor.Value.w}));
+				, static_cast<std::string>(Utils::join(
+						std::vector<float>{backgroundColor.Value.x, backgroundColor.Value.y, backgroundColor.Value.z, backgroundColor.Value.w})));
 		}
 	};
 

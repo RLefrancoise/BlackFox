@@ -22,10 +22,10 @@ namespace BlackFox
 		impl(
 			BFApplication::Ptr app,
 			DiContainer container,
+			BFApplicationArgs::Ptr args,
 			IBFGame::Ptr game,
 			BFCommandManager::Ptr commandManager,
 			BFEngineConfig::Ptr configData,
-			IBFVirtualFileSystem::Ptr vfs,
 			std::vector<IBFApplicationModule::Ptr> modules)
 			: m_app(std::move(app))
 			, m_deltaTime(0.0f)
@@ -33,7 +33,7 @@ namespace BlackFox
 			, m_game(std::move(game))
 			, m_commandManager(std::move(commandManager))
 			, m_configData(std::move(configData))
-			, m_vfs(std::move(vfs))
+			, m_arguments(std::move(args))
 			, m_modules(std::move(modules))
 		{}
 
@@ -121,12 +121,6 @@ namespace BlackFox
 		{
 			try
 			{
-				//Create arguments struct
-				m_arguments = std::make_shared<BFApplicationArgs>(argc, argv);
-
-				//Init VFS
-				m_vfs->init(m_arguments);
-
 				//Window
 				sf::Uint32 windowFlags = sf::Style::Titlebar | sf::Style::Close;
 				if (m_configData->appData.fullScreen) windowFlags |= sf::Style::Fullscreen;
@@ -227,9 +221,6 @@ namespace BlackFox
 
 		/*! \brief  Config data */
 		BFEngineConfig::Ptr m_configData;
-
-		///	Virtual file system
-		IBFVirtualFileSystem::Ptr m_vfs;
 
 		///	Application arguments
 		BFApplicationArgs::Ptr m_arguments;

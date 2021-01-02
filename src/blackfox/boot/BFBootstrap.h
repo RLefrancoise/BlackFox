@@ -11,8 +11,8 @@ namespace BlackFox
 	public:
 		constexpr BFBootstrap() = default;
 		~BFBootstrap() = default;
-		BFBootstrap(BFBootstrap&& bootstrap) noexcept = default;
-		BFBootstrap& operator=(BFBootstrap&& bootstrap) = default;
+		BFBootstrap(BFBootstrap&& bootstrap) noexcept;
+		BFBootstrap& operator=(BFBootstrap&& bootstrap) noexcept;
 		
 		constexpr BFBootstrap(const BFBootstrap& app) = delete;
 		constexpr BFBootstrap& operator=(const BFBootstrap& app) = delete;

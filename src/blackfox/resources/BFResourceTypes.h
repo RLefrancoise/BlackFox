@@ -57,6 +57,8 @@ namespace BlackFox::Resources
 
 	static ResourceCategory getResourceTypeCategory(const ResourceType& type);
 
+	BLACKFOX_EXPORT Resources::ResourceType getTypeFromResource(const BFString& path);
+
 	/*!
 	 * Get a Guid from a path.
 	 *

@@ -5,16 +5,8 @@
 
 #include "BFTypeDefs.h"
 
-namespace BlackFox
-{
-	class BFCommandManager;
-}
-
 namespace BlackFox::Editor
 {
-	class BFWindowManager;
-	class BFDataManager;
-	
 	class BFEditorApplication
 	{
 	public:
@@ -24,16 +16,13 @@ namespace BlackFox::Editor
 		constexpr BFEditorApplication(const BFEditorApplication& app) = delete;
 		constexpr BFEditorApplication& operator=(const BFEditorApplication& app) = delete;
 
-		CINJECT(BFEditorApplication(
-			DiContainer container, 
-			std::shared_ptr<BFCommandManager> commandManager,
-			std::shared_ptr<BFWindowManager> windowManager,
-			std::shared_ptr<BFDataManager> dataManager));
+		CINJECT(BFEditorApplication(DiContainer container));
 		
 		~BFEditorApplication() noexcept;
 		BFEditorApplication(BFEditorApplication&& app) noexcept;
 		BFEditorApplication& operator=(BFEditorApplication&& app) noexcept;
 
+		int init(int argc, char** argv);
 		[[nodiscard]] int execute() const;
 		void quit() const;
 
@@ -41,7 +30,7 @@ namespace BlackFox::Editor
 		DiContainer m_container;
 		
 		class impl;
-		std::unique_ptr<impl> pImpl;
+		std::shared_ptr<impl> pImpl;
 
 		friend class impl;
 	};

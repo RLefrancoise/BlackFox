@@ -6,7 +6,11 @@
 
 namespace BlackFox
 {
-    BFVirtualFileSystem::BFVirtualFileSystem() = default;
+    BFVirtualFileSystem::BFVirtualFileSystem(BFApplicationArgs::Ptr args)
+    : m_args(std::move(args))
+    {
+        init(m_args);
+    }
 
     BFVirtualFileSystem::~BFVirtualFileSystem()
     {

@@ -2,8 +2,8 @@
 
 using namespace BlackFox::Editor;
 
-int main()
+int main(int argc, char** argv)
 {
 	const BFEditorBootstrap bootstrap;
-	return bootstrap.run();
+	return bootstrap.run(argc, argv);
 }

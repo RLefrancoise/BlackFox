@@ -10,27 +10,6 @@
 
 namespace BlackFox
 {
-	Resources::ResourceType getTypeFromResource(const BFString& path)
-	{
-	    const std::filesystem::path p(path);
-		const auto extension = p.extension().string();
-		if(extension == ".lua")
-		{
-			if(path.find("components") == 0) return Resources::LUA_COMPONENT_SCRIPT;
-			if(path.find("systems") == 0) return Resources::LUA_SYSTEM_SCRIPT;
-		}
-		else if(extension == ".png")
-		{
-			return Resources::TEXTURE_ASSET;
-		}
-		else if(extension == ".ttf")
-		{
-			return Resources::FONT_ASSET;
-		}
-
-		return Resources::UNKNOWN_TYPE;
-	}
-
     void BFResourcesMetaTable::initFromFileSystem(IBFVirtualFileSystem::Ptr vfs)
     {
 		BF_PRINT("Base dir is {}", std::string(vfs->getBaseDir()));
@@ -41,7 +20,7 @@ namespace BlackFox
 		{
 			if(!vfs->isFile(file)) continue;
 
-			const auto type = getTypeFromResource(file);
+			const auto type = Resources::getTypeFromResource(file);
 			if(type == Resources::UNKNOWN_TYPE) continue;
 
 			BFString agnosticFile(file);
@@ -80,7 +59,7 @@ namespace BlackFox
 
     entt::id_type BFResourcesMetaTable::getUniqueId(const ResourceGuid& guid) const
     {
-	    auto i = -1;
+	    entt::id_type i = 0;
 	    for(const auto& it : m_table)
         {
 	        i++;
@@ -90,61 +69,33 @@ namespace BlackFox
 	        }
         }
 
-	    return -1;
+	    BF_EXCEPTION("Failed to get unique id for resource {}. Resource is not registered in the meta table", guid);
+	    return 0; //To suppress warning
     }
 
-    //--------------------------------------------------------------------------------------
 
-	IBFResourcesHolder::IBFResourcesHolder() = default;
-	
-	IBFResourcesHolder::IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept
-	: m_textureCache(std::exchange(holder.m_textureCache, TextureCache{}))
-	, m_fontCache(std::exchange(holder.m_fontCache, FontCache{}))
-	{}
-
-	IBFResourcesHolder& IBFResourcesHolder::operator=(IBFResourcesHolder&& holder) noexcept
-	{
-		if(this != &holder)
-		{
-			m_textureCache = std::exchange(holder.m_textureCache, TextureCache{});
-			m_fontCache = std::exchange(holder.m_fontCache, FontCache{});
-		}
-
-		return *this;
-	}
-	
 	//--------------------------------------------------------------------------------------
-	
-	BFResourcesHolder::BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs)
-	: IBFResourcesHolder()
-	, m_vfs(std::move(vfs))
-    {
-	    m_metaTable.initFromFileSystem(m_vfs);
-    }
 
-	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
-	: IBFResourcesHolder(std::move(holder))
-	, m_vfs(std::exchange(holder.m_vfs, nullptr))
-	, m_metaTable(std::move(holder.m_metaTable))
+	BFResourcesHolderBase::BFResourcesHolderBase(BFResourcesHolderBase&& holder) noexcept
+	: m_metaTable(std::move(holder.m_metaTable))
 	{}
 
-	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
+	BFResourcesHolderBase& BFResourcesHolderBase::operator=(BFResourcesHolderBase&& holder) noexcept
 	{
 		if(this != &holder)
 		{
-			m_vfs = std::exchange(holder.m_vfs, nullptr);
 			m_metaTable = std::move(holder.m_metaTable);
 		}
 
 		return *this;
 	}
 
-	ResourceGuid BFResourcesHolder::getGuidFromPath(const BFString& path)
+	ResourceGuid BFResourcesHolderBase::getGuidFromPath(const BFString& path)
 	{
 		return m_metaTable.getResourceMetaData(path).guid;
 	}
 
-	BFTextResource::Handle BFResourcesHolder::loadTextAsset(
+	BFTextResource::Handle BFResourcesHolderBase::loadTextAsset(
 			const Resources::ResourceType& type,
 			const BFString& path)
 	{
@@ -152,81 +103,118 @@ namespace BlackFox
 		return loadTextAsset(type, guid);
 	}
 
-	BFTextResource::Handle BFResourcesHolder::loadTextAsset(
+	BFTextResource::Handle BFResourcesHolderBase::loadTextAsset(
 			const Resources::ResourceType& type,
 			const ResourceGuid& guid)
 	{
-	    const entt::id_type id = m_metaTable.getUniqueId(guid);
+		const entt::id_type id = m_metaTable.getUniqueId(guid);
 		if (m_textAssetCache.contains(id))
 		{
 			return m_textAssetCache.handle(id);
 		}
 
 		BF_PRINT("Load text asset {}", m_metaTable.getResourceMetaData(guid).path);
-		return m_textAssetCache.load<BFTextResourceLoader>(id, type, m_metaTable.getResourceMetaData(guid), m_vfs);
+		return createTextAssetHandle(id, guid, type);
 	}
 
-	TextureHandle BFResourcesHolder::loadTexture(const BFString& path)
+	TextureHandle BFResourcesHolderBase::loadTexture(const BFString& path)
 	{
 		return loadTexture(path, sf::IntRect());
 	}
 
-	TextureHandle BFResourcesHolder::loadTexture(const BFString& path, const sf::IntRect& rect)
+	TextureHandle BFResourcesHolderBase::loadTexture(const BFString& path, const sf::IntRect& rect)
 	{
-	    std::string str(path);
 		return loadTexture(m_metaTable.getResourceMetaData(path).guid, rect);
 	}
 
-	TextureHandle BFResourcesHolder::loadTexture(const ResourceGuid& guid)
+	TextureHandle BFResourcesHolderBase::loadTexture(const ResourceGuid& guid)
 	{
 		return loadTexture(guid, sf::IntRect());
 	}
 
-	TextureHandle BFResourcesHolder::loadTexture(const ResourceGuid& guid, const sf::IntRect& rect)
+	TextureHandle BFResourcesHolderBase::loadTexture(const ResourceGuid& guid, const sf::IntRect& rect)
 	{
-        const entt::id_type id = m_metaTable.getUniqueId(guid);
+		const entt::id_type id = m_metaTable.getUniqueId(guid);
 		if (m_textureCache.contains(id))
 		{
 			return m_textureCache.handle(id);
 		}
 
 		BF_PRINT("Load texture {}", m_metaTable.getResourceMetaData(guid).path);
-		return m_textureCache.load<BFTextureResourceLoader>(id, m_metaTable.getResourceMetaData(guid), m_vfs, rect);
+		return createTextureHandle(id, guid, rect);
 	}
 
-	TextureHandle BFResourcesHolder::loadTextureOrThrow(const BFString& path)
+	TextureHandle BFResourcesHolderBase::loadTextureOrThrow(const BFString& path)
 	{
 		return loadTextureOrThrow(path, sf::IntRect());
 	}
 
-	TextureHandle BFResourcesHolder::loadTextureOrThrow(const BFString& path, const sf::IntRect& rect)
+	TextureHandle BFResourcesHolderBase::loadTextureOrThrow(const BFString& path, const sf::IntRect& rect)
 	{
 		const auto handle = loadTexture(path, rect);
-		if (!handle) BF_EXCEPTION("Failed to load texture {}", std::string(path));
+		if (!handle) BF_EXCEPTION("Failed to load texture {}", path);
 		return handle;
 	}
 
-	FontHandle BFResourcesHolder::loadFont(const BFString &path)
+	FontHandle BFResourcesHolderBase::loadFont(const BFString &path)
 	{
 		return loadFont(m_metaTable.getResourceMetaData(path).guid);
 	}
 
-	FontHandle BFResourcesHolder::loadFont(const ResourceGuid& guid)
+	FontHandle BFResourcesHolderBase::loadFont(const ResourceGuid& guid)
 	{
-        const entt::id_type id = m_metaTable.getUniqueId(guid);
+		const entt::id_type id = m_metaTable.getUniqueId(guid);
 		if(m_fontCache.contains(id))
 		{
 			return m_fontCache.handle(id);
 		}
 
-		BF_PRINT("Load font {}", std::string(m_metaTable.getResourceMetaData(guid).path));
-		return m_fontCache.load<BFFontResourceLoader>(id, m_metaTable.getResourceMetaData(guid), m_vfs);
+		BF_PRINT("Load font {}", m_metaTable.getResourceMetaData(guid).path);
+		return createFontHandle(id, guid);
 	}
 
-	FontHandle BFResourcesHolder::loadFontOrThrow(const BFString& path)
+	FontHandle BFResourcesHolderBase::loadFontOrThrow(const BFString& path)
 	{
 		const auto handle = loadFont(path);
-		if (!handle) BF_EXCEPTION("Failed to load font {}", std::string(path));
+		if (!handle) BF_EXCEPTION("Failed to load font {}", path);
 		return handle;
+	}
+	
+	//--------------------------------------------------------------------------------------
+	
+	BFResourcesHolder::BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs)
+	: BFResourcesHolderBase()
+	, m_vfs(std::move(vfs))
+    {
+	    m_metaTable.initFromFileSystem(m_vfs);
+    }
+
+	BFResourcesHolder::BFResourcesHolder(BFResourcesHolder&& holder) noexcept
+	: m_vfs(std::exchange(holder.m_vfs, nullptr))
+	{}
+
+	BFResourcesHolder& BFResourcesHolder::operator=(BFResourcesHolder&& holder) noexcept
+	{
+		if(this != &holder)
+		{
+			m_vfs = std::exchange(holder.m_vfs, nullptr);
+		}
+
+		return *this;
+	}
+
+	BFTextResource::Handle BFResourcesHolder::createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type)
+	{
+		return m_textAssetCache.load<BFTextResourceLoader>(id, type, m_metaTable.getResourceMetaData(guid), m_vfs);
+	}
+
+	TextureHandle BFResourcesHolder::createTextureHandle(entt::id_type id, const ResourceGuid& guid, const sf::IntRect& rect)
+	{
+		return m_textureCache.load<BFTextureResourceLoader>(id, m_metaTable.getResourceMetaData(guid), m_vfs, rect);
+	}
+
+	FontHandle BFResourcesHolder::createFontHandle(entt::id_type id, const ResourceGuid& guid)
+	{
+		return m_fontCache.load<BFFontResourceLoader>(id, m_metaTable.getResourceMetaData(guid), m_vfs);
 	}
 }

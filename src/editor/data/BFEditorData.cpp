@@ -49,7 +49,7 @@ namespace YAML
 
 namespace BlackFox::Editor
 {
-	BFEditorData::BFEditorData() : BFYamlData<BFEditorData>(BFYamlFile(Resources::EDITOR_DATA))
+	BFEditorData::BFEditorData() : BFYamlData<BFEditorData>()
 	{
 		config.resourcesPath = BLACKFOX_EDITOR_RESOURCES_PATH;
 		config.backgroundColor = ImVec4(sf::Color::Black);

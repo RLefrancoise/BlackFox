@@ -21,7 +21,7 @@ namespace YAML
 
 namespace BlackFox::Editor
 {
-	BFProjectData::BFProjectData() : BFYamlData<BFProjectData>(BFYamlFile(Resources::PROJECT_DATA))
+	BFProjectData::BFProjectData() : BFYamlData<BFProjectData>()
 	{
 	}
 
@@ -30,12 +30,12 @@ namespace BlackFox::Editor
 		return fmt::format(R""""(===Project Data===
 name: {}
 scenes: {}
-)"""", name, Utils::join<std::filesystem::path>(scenes, ",", Utils::stringifyPath));
+)"""", name, static_cast<std::string>(Utils::join<std::filesystem::path>(scenes, ",", Utils::stringifyPath)));
 	}
 
 	std::filesystem::path BFProjectData::rootPath() const
 	{
-		auto p = m_file.file();
+		auto p = m_file;
 		return p.remove_filename();
 	}
 }

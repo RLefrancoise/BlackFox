@@ -2,8 +2,7 @@
 
 namespace BlackFox::Editor
 {
-	BFResourceData::BFResourceData()
-	: BFYamlData<BFResourceData>(BFYamlFile(Resources::RESOURCE_DATA))
+	BFResourceData::BFResourceData() : BFYamlData<BFResourceData>()
 	{}
 
 	BFResourceData::operator std::string() const

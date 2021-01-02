@@ -24,6 +24,27 @@ namespace BlackFox::Resources
         return UNKNOWN_CATEGORY;
     }
 
+    Resources::ResourceType getTypeFromResource(const BFString& path)
+    {
+        const std::filesystem::path p(path);
+        const auto extension = p.extension().string();
+        if(extension == ".lua")
+        {
+            if(path.find("components") == 0) return Resources::LUA_COMPONENT_SCRIPT;
+            if(path.find("systems") == 0) return Resources::LUA_SYSTEM_SCRIPT;
+        }
+        else if(extension == ".png")
+        {
+            return Resources::TEXTURE_ASSET;
+        }
+        else if(extension == ".ttf")
+        {
+            return Resources::FONT_ASSET;
+        }
+
+        return Resources::UNKNOWN_TYPE;
+    }
+
     /*ResourceGuid pathToGuid(const std::string& path)
     {
         return ResourceGuid(path.c_str());

@@ -13,7 +13,7 @@ namespace BlackFox::Editor
 	{
 		BF_PRINT("Load project {}", projectData.name);
 
-		const auto data = std::make_shared <BFProjectData>(std::move(projectData));
+		const auto data = std::make_shared <BFProjectData>(projectData);
 		m_dataManager->setActiveProject(data);
 
 		//Add project to editor history

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BFApplication.h"
+#include "BFApplicationArgs.h"
 #include "BFMainContext.h"
 #include "BFDebug.h"
 
@@ -51,6 +52,10 @@ namespace BlackFox
             //Create DI Container
             m_container = std::make_shared<cinject::Container>();
             m_container->bind<cinject::Container>().toConstant(m_container);
+
+            //Args
+            const auto args = std::make_shared<BFApplicationArgs>(argc, argv);
+            m_container->bind<BFApplicationArgs>().toConstant(args);
 
             //Create main context
             m_context = makeContext<BFMainContext>(m_container, false);

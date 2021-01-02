@@ -30,15 +30,16 @@ namespace BlackFox
         std::unordered_map<ResourceGuid, BFResourcesMetaData> m_table;
     };
 
+
+    //-------------------------------------------------------------------------
+
+
 	class BLACKFOX_EXPORT IBFResourcesHolder
 	{
 	public:
 		typedef std::shared_ptr<IBFResourcesHolder> Ptr;
 
 		virtual ~IBFResourcesHolder() = default;
-
-		IBFResourcesHolder(IBFResourcesHolder&& holder) noexcept;
-		IBFResourcesHolder& operator=(IBFResourcesHolder&& holder) noexcept;
 
 		virtual ResourceGuid getGuidFromPath(const BFString& path) = 0;
 
@@ -59,24 +60,23 @@ namespace BlackFox
 		virtual FontHandle loadFontOrThrow(const BFString& path) = 0;
 
 	protected:
-		IBFResourcesHolder();
-
-		TextureCache m_textureCache {};
-		FontCache m_fontCache {};
-		entt::resource_cache<BFTextResource> m_textAssetCache {};
+		IBFResourcesHolder() = default;
 	};
 
-	class BLACKFOX_EXPORT BFResourcesHolder final : public IBFResourcesHolder
+
+	//-------------------------------------------------------------------------
+
+
+	class BLACKFOX_EXPORT BFResourcesHolderBase : public IBFResourcesHolder
 	{
 	public:
-		constexpr BFResourcesHolder(const BFResourcesHolder& app) = delete;
-		constexpr BFResourcesHolder& operator=(const BFResourcesHolder& app) = delete;
-		
-		CINJECT(BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs));
-		~BFResourcesHolder() override = default;
+		constexpr BFResourcesHolderBase(const BFResourcesHolderBase& app) = delete;
+		constexpr BFResourcesHolderBase& operator=(const BFResourcesHolderBase& app) = delete;
 
-		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
-		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
+		~BFResourcesHolderBase() override = default;
+
+		BFResourcesHolderBase(BFResourcesHolderBase&& holder) noexcept;
+		BFResourcesHolderBase& operator=(BFResourcesHolderBase&& holder) noexcept;
 
 		ResourceGuid getGuidFromPath(const BFString& path) override;
 
@@ -97,8 +97,39 @@ namespace BlackFox
 
 		FontHandle loadFontOrThrow(const BFString& path) override;
 
+	protected:
+		BFResourcesHolderBase() = default;
+
+		BFResourcesMetaTable m_metaTable;
+
+		TextureCache m_textureCache {};
+		FontCache m_fontCache {};
+		entt::resource_cache<BFTextResource> m_textAssetCache {};
+
+		virtual BFTextResource::Handle createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type) = 0;
+		virtual TextureHandle createTextureHandle(entt::id_type id, const ResourceGuid& guid, const sf::IntRect& rect) = 0;
+		virtual FontHandle createFontHandle(entt::id_type id, const ResourceGuid& guid) = 0;
+	};
+
+
+	class BLACKFOX_EXPORT BFResourcesHolder final : public BFResourcesHolderBase
+	{
+	public:
+		constexpr BFResourcesHolder(const BFResourcesHolder& app) = delete;
+		constexpr BFResourcesHolder& operator=(const BFResourcesHolder& app) = delete;
+
+		CINJECT(BFResourcesHolder(IBFVirtualFileSystem::Ptr vfs));
+		~BFResourcesHolder() override = default;
+
+		BFResourcesHolder(BFResourcesHolder&& holder) noexcept;
+		BFResourcesHolder& operator=(BFResourcesHolder&& holder) noexcept;
+
+	protected:
+		BFTextResource::Handle createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type) override;
+		TextureHandle createTextureHandle(entt::id_type id, const ResourceGuid& guid, const sf::IntRect& rect) override;
+		FontHandle createFontHandle(entt::id_type id, const ResourceGuid& guid) override;
+
 	private:
 		IBFVirtualFileSystem::Ptr m_vfs;
-		BFResourcesMetaTable m_metaTable;
 	};
 }

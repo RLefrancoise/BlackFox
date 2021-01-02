@@ -55,7 +55,7 @@ namespace BlackFox
 	 * Base class for BlackFox resource.
 	 */
 	template<class T>
-	class BLACKFOX_EXPORT BFResource : public IBFResource
+	class BFResource : public IBFResource
 	{
 	public:
 		typedef entt::resource_handle<T> Handle;

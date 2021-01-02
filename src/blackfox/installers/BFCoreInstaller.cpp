@@ -21,12 +21,7 @@ namespace BlackFox
 	{
 		try
 		{
-			//Config data
-			/*auto holder = m_container->get<IBFResourcesHolder>();
-			auto handle = holder->loadTextAsset("data/config.ini");
-			auto configFile = BFIniFile(handle);
-			configFile.loadOrThrow();*/
-
+			//Engine config
 			auto engineConfig = std::make_shared<BFEngineConfig>(BFIniFile("config/engine.ini"));
 			BF_PRINT(*engineConfig);
 			m_container->bind<BFEngineConfig>().toConstant(engineConfig);

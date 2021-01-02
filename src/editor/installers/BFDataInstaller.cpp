@@ -1,5 +1,6 @@
 #include "BFDataInstaller.h"
 #include "BFEditorResourcesHolder.h"
+#include "BFDataManager.h"
 
 namespace BlackFox::Editor
 {

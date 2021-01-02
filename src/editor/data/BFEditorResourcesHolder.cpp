@@ -2,16 +2,29 @@
 #include <entt/resource/loader.hpp>
 
 #include "BFDebug.h"
+#include "BFDataManager.h"
+#include "BFResourceTypes.h"
 
 namespace BlackFox::Editor
 {
+    struct TextAssetLoader : entt::resource_loader<TextAssetLoader, BFTextResource>
+    {
+        std::shared_ptr<BFTextResource> load(const BFString& path, const ResourceGuid& guid, const Resources::ResourceType& type) const
+        {
+            auto text = std::make_shared<BFTextResource>(type, guid);
+            //TODO: load text
+
+            return text;
+        }
+    };
+
     struct TextureLoader : entt::resource_loader<TextureLoader, sf::Texture>
     {
-        std::shared_ptr<sf::Texture> load(const std::filesystem::path& path, sf::IntRect rect) const
+        std::shared_ptr<sf::Texture> load(const BFString& path, sf::IntRect rect) const
         {
             auto tex = std::make_shared<sf::Texture>();
-            if(!tex->loadFromFile(path.string()))
-                BF_EXCEPTION("Failed to load texture {}", path.string());
+            if(!tex->loadFromFile(path))
+                BF_EXCEPTION("Failed to load texture {}", path);
 
             return tex;
         }
@@ -19,11 +32,11 @@ namespace BlackFox::Editor
 
     struct FontLoader : entt::resource_loader<FontLoader, sf::Font>
     {
-        std::shared_ptr<sf::Font> load(const std::filesystem::path& path) const
+        std::shared_ptr<sf::Font> load(const BFString& path) const
         {
             auto font = std::make_shared<sf::Font>();
-            if(!font->loadFromFile(path.string()))
-                BF_EXCEPTION("Failed to load font {}", path.string());
+            if(!font->loadFromFile(path))
+                BF_EXCEPTION("Failed to load font {}", path);
 
             return font;
         }
@@ -31,84 +44,29 @@ namespace BlackFox::Editor
 
     //------------------------------------------------------------------------------------------
 
-    BFEditorResourcesHolder::BFEditorResourcesHolder() = default;
-
-    TextureHandle BFEditorResourcesHolder::loadTexture(const std::string &path)
+    BFEditorResourcesHolder::BFEditorResourcesHolder(BFDataManager::Ptr dataManager) : BFResourcesHolderBase()
     {
-        const std::filesystem::path p(path);
-        return loadTexture(p);
+        BFEditorData::Ptr editorData = dataManager->getEditorData();
+        const auto& resourcesPath = editorData->config.resourcesPath;
+
+        BF_PRINT("Resources folder is {}", resourcesPath.string());
+
+        m_metaTable.addResource(Icons::FOLDER_ICON.data(), Resources::TEXTURE_ASSET);
+        m_metaTable.addResource(Icons::FILE_ICON.data(), Resources::TEXTURE_ASSET);
     }
 
-    TextureHandle BFEditorResourcesHolder::loadTexture(const std::string &path, const sf::IntRect &rect)
+    BFTextResource::Handle BFEditorResourcesHolder::createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type)
     {
-        const std::filesystem::path p(path);
-        return loadTexture(p, rect);
+        return m_textAssetCache.load<TextAssetLoader>(id, m_metaTable.getResourceMetaData(guid).path, guid, type);
     }
 
-    TextureHandle BFEditorResourcesHolder::loadTexture(const std::filesystem::path &path)
+    TextureHandle BFEditorResourcesHolder::createTextureHandle(entt::id_type id, const ResourceGuid& guid, const sf::IntRect& rect)
     {
-        return loadTexture(path, sf::IntRect());
+        return m_textureCache.load<TextureLoader>(id, m_metaTable.getResourceMetaData(guid).path, rect);
     }
 
-    TextureHandle BFEditorResourcesHolder::loadTexture(const std::filesystem::path &path, const sf::IntRect &rect)
+    FontHandle BFEditorResourcesHolder::createFontHandle(entt::id_type id, const ResourceGuid& guid)
     {
-        return loadTexture(ResourceGuid(path.string().c_str()), rect);
-    }
-
-    TextureHandle BFEditorResourcesHolder::loadTexture(const ResourceGuid& guid)
-    {
-        return loadTexture(guid, sf::IntRect());
-    }
-
-    TextureHandle BFEditorResourcesHolder::loadTexture(const ResourceGuid& guid, const sf::IntRect& rect)
-    {
-        if (m_textureCache.contains(guid))
-        {
-            return m_textureCache.handle(guid);
-        }
-
-        BF_PRINT("Load texture {}", guid.data());
-        return m_textureCache.load<TextureLoader>(guid, std::filesystem::path(guid.data()), rect);
-    }
-
-    TextureHandle BFEditorResourcesHolder::loadTextureOrThrow(const std::filesystem::path &path)
-    {
-        return loadTextureOrThrow(path, sf::IntRect());
-    }
-
-    TextureHandle BFEditorResourcesHolder::loadTextureOrThrow(const std::filesystem::path &path, const sf::IntRect &rect)
-    {
-        const auto handle = loadTexture(path, rect);
-        if (!handle) BF_EXCEPTION("Failed to load texture {}", path.string());
-        return handle;
-    }
-
-    FontHandle BFEditorResourcesHolder::loadFont(const std::string &path)
-    {
-        std::filesystem::path p(path);
-        return loadFont(p);
-    }
-
-    FontHandle BFEditorResourcesHolder::loadFont(const std::filesystem::path &path)
-    {
-        return loadFont(ResourceGuid(path.string().c_str()));
-    }
-
-    FontHandle BFEditorResourcesHolder::loadFont(const ResourceGuid& guid)
-    {
-        if(m_fontCache.contains(guid))
-        {
-            return m_fontCache.handle(guid);
-        }
-
-        BF_PRINT("Load font {}", guid.data());
-        return m_fontCache.load<FontLoader>(guid, std::filesystem::path(guid.data()));
-    }
-
-    FontHandle BFEditorResourcesHolder::loadFontOrThrow(const std::filesystem::path &path)
-    {
-        const auto handle = loadFont(path);
-        if (!handle) BF_EXCEPTION("Failed to load font {}", path.string());
-        return handle;
+        return m_fontCache.load<FontLoader>(id, m_metaTable.getResourceMetaData(guid).path);
     }
 }

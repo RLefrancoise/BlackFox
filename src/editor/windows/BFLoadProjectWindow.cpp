@@ -66,10 +66,11 @@ namespace BlackFox::Editor
 			BF_PRINT("Selected project {}", m_fileBrowser.selected_path);
 			BFProjectData data;
 
-			if (!data.load(m_fileBrowser.selected_path, nullptr))
+			std::string error;
+			if (!data.load(m_fileBrowser.selected_path, &error))
 			{
-				BF_ERROR("Failed to load project file at {}", m_fileBrowser.selected_path);
-				m_windowManager->createMessagePopup("Error", fmt::format("Failed to load project {}", m_fileBrowser.selected_path));
+				BF_ERROR("Failed to load project file at {} : {}", m_fileBrowser.selected_path, error);
+				m_windowManager->createMessagePopup("Error", fmt::format("Failed to load project {} : {}", m_fileBrowser.selected_path, error));
 			}
 			else
 			{

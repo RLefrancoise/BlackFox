@@ -2,6 +2,7 @@
 
 #include "BFYamlData.h"
 #include <yaml-convert.h>
+#include <blackfox/resources/BFResourceTypes.h>
 
 namespace BlackFox::Editor
 {

@@ -1,9 +1,11 @@
 #include "BFEditorApplication.h"
+#include "BFApplicationArgs.h"
 #include "BFTypeDefs.h"
 #include "BFDebug.h"
 #include "BFCommandManager.h"
 #include "BFWindowManager.h"
 #include "BFDataManager.h"
+#include "BFVirtualFileSystem.h"
 #include "imgui-SFML.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -32,8 +34,6 @@ namespace BlackFox::Editor
 
 		int execute()
 		{
-			if (!init()) return EXIT_FAILURE;
-
 			sf::Clock deltaClock;
 			while (m_window.isOpen())
 			{
@@ -71,8 +71,7 @@ namespace BlackFox::Editor
 			m_window.close();
 		}
 
-	private:
-		int init()
+		int init(int argc, char** argv)
 		{
 			try
 			{
@@ -98,21 +97,17 @@ namespace BlackFox::Editor
 
 				//Load or create editor data
 				const auto editorData = editorFolder / "data.yaml";
-				BFEditorData::Ptr dataPtr;
+				BFEditorData::Ptr dataPtr = std::make_shared<BFEditorData>();
 				if(!exists(editorData))
 				{
-					BFEditorData data;
-					data.file(editorData);
-					if (!data.save())
-						BF_EXCEPTION("Failed to create editor data");
-
-					dataPtr = std::make_shared<BFEditorData>(data);
+					BF_PRINT("No editor data, create file");
+					dataPtr->file(editorData);
+					dataPtr->saveOrThrow();
 				}
 				else
 				{
-					BFEditorData d;
-					d.loadOrThrow(editorData);
-					dataPtr = std::make_shared<BFEditorData>(d);
+					BF_PRINT("Found editor data, load file");
+					dataPtr->loadOrThrow(editorData);
 				}
 
 				m_dataManager->setEditorData(dataPtr);
@@ -140,6 +135,7 @@ namespace BlackFox::Editor
 			return true;
 		}
 
+	private:
 		void cleanup()
 		{
 			ImGui::SFML::Shutdown();
@@ -153,33 +149,42 @@ namespace BlackFox::Editor
 
 		sf::RenderWindow m_window;
 		DiContainer m_container;
+
 		BFCommandManager::Ptr m_commandManager;
 		BFWindowManager::Ptr m_windowManager;
 		BFDataManager::Ptr m_dataManager;
 		BFMenuBar::Ptr m_menuBar;
 	};
 
-	BFEditorApplication::BFEditorApplication(
-		DiContainer container, 
-		BFCommandManager::Ptr commandManager,
-		BFWindowManager::Ptr windowManager,
-		BFDataManager::Ptr dataManager)
+	BFEditorApplication::BFEditorApplication(DiContainer container)
 		: m_container{ std::move(container) }
-		, pImpl{ std::make_unique<impl>(m_container, std::move(commandManager), std::move(windowManager), std::move(dataManager)) }
 	{
 	}
 
 	BFEditorApplication::~BFEditorApplication() noexcept = default;
 
 	BFEditorApplication::BFEditorApplication(BFEditorApplication&& app) noexcept
-		: pImpl{ std::move(app.pImpl) }
+		: m_container{ std::exchange(app.m_container, nullptr) }
+		, pImpl{ std::exchange(app.pImpl, nullptr) }
 	{
 	}
 
 	BFEditorApplication& BFEditorApplication::operator=(BFEditorApplication&& app) noexcept
 	{
-		pImpl = std::move(app.pImpl);
+		if(this != &app)
+		{
+			m_container = std::exchange(app.m_container, nullptr);
+			pImpl = std::exchange(app.pImpl, nullptr);
+		}
+
 		return *this;
+	}
+
+	int BFEditorApplication::init(int argc, char **argv)
+	{
+		m_container->bind<BFEditorApplication::impl>().toSelf().inSingletonScope();
+		pImpl = m_container->get<BFEditorApplication::impl>();
+		return pImpl->init(argc, argv);
 	}
 
 	int BFEditorApplication::execute() const

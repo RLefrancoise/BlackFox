@@ -13,6 +13,6 @@ namespace BlackFox::Editor
 		constexpr BFEditorBootstrap(const BFEditorBootstrap& app) = delete;
 		constexpr BFEditorBootstrap& operator=(const BFEditorBootstrap& app) = delete;
 
-		[[nodiscard]] int run() const;
+		[[nodiscard]] int run(int argc, char** argv) const;
 	};
 }

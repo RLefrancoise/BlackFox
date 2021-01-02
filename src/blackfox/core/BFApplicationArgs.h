@@ -5,12 +5,14 @@
 #include <unordered_map>
 #include <variant>
 
+#include "BFExport.h"
+
 namespace BlackFox
 {
     /*!
      * Arguments sent to the application through command line
      */
-    class BFApplicationArgs
+    class BLACKFOX_EXPORT BFApplicationArgs
     {
     public:
         typedef std::shared_ptr<BFApplicationArgs> Ptr;

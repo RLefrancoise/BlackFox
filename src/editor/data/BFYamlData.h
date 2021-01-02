@@ -1,6 +1,9 @@
 #pragma once
 
-#include "BFYamlFile.h"
+#include <filesystem>
+#include <fstream>
+#include <yaml-cpp/yaml.h>
+#include "BFDebug.h"
 
 namespace BlackFox::Editor
 {
@@ -8,27 +11,55 @@ namespace BlackFox::Editor
     class BFYamlData
     {
     public:
-        explicit BFYamlData(const BFYamlFile& file) : m_file(file) {}
+        BFYamlData() = default;
 
-        [[nodiscard]] virtual bool save()
+        [[nodiscard]] virtual bool save(std::string* errorMessage) const
         {
+            std::ofstream ofs(m_file.string(), std::ofstream::out);
+            if(!ofs.good()) return false;
+
             const T& thisP = static_cast<const T&>(*this);
-            m_file.from<T>(thisP);
-            return m_file.save();
+            YAML::Emitter emitter;
+            emitter << thisP;
+
+            if(!emitter.good() && !emitter.GetLastError().empty())
+            {
+                *errorMessage = emitter.GetLastError();
+                return false;
+            }
+
+            ofs << emitter.c_str();
+            ofs.close();
+
+            return true;
         }
 
         virtual void saveOrThrow()
         {
-            m_file.saveOrThrow();
+            std::string err;
+            if (!save(&err))
+            {
+                BF_EXCEPTION("Failed to save YAML data {}: {}", m_file.string(), err);
+            }
         }
 
         [[nodiscard]] virtual bool load(const std::filesystem::path& file, std::string* errorMessage)
         {
-            if(!m_file.load(file, errorMessage))
-                return false;
+            try
+            {
+                const auto node = YAML::LoadFile(file.string());
+                T* thisP = static_cast<T*>(this);
+                *thisP = node.as<T>();
 
-            m_file.to<T>(static_cast<T*>(this));
-            return true;
+                m_file = file;
+
+                return true;
+            }
+            catch(const std::exception& e)
+            {
+                *errorMessage = e.what();
+                return false;
+            }
         }
 
         virtual void loadOrThrow(const std::filesystem::path& file)
@@ -42,15 +73,15 @@ namespace BlackFox::Editor
 
         virtual void file(const std::filesystem::path& file)
         {
-            m_file.file(file);
+            m_file = file;
         }
 
-        virtual std::filesystem::path file() const
+        virtual const std::filesystem::path& file() const
         {
-            return m_file.file();
+            return m_file;
         }
 
     protected:
-        BFYamlFile m_file;
+        std::filesystem::path m_file;
     };
 }

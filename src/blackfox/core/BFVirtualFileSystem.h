@@ -149,7 +149,8 @@ namespace BlackFox
     class BLACKFOX_EXPORT BFVirtualFileSystem final: public IBFVirtualFileSystem
     {
     public:
-        CINJECT(BFVirtualFileSystem());
+        BFVirtualFileSystem() = delete;
+        CINJECT(BFVirtualFileSystem(BFApplicationArgs::Ptr args));
         ~BFVirtualFileSystem() override;
 
         bool init(BFApplicationArgs::Ptr args) override;
@@ -172,5 +173,6 @@ namespace BlackFox
 
     private:
         BFString m_baseDir;
+        BFApplicationArgs::Ptr m_args;
     };
 }
