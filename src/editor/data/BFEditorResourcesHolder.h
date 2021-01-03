@@ -9,7 +9,7 @@ namespace BlackFox::Editor
     class BFEditorResourcesHolder final : public BFResourcesHolderBase
     {
     public:
-        CINJECT(BFEditorResourcesHolder(std::shared_ptr<BFDataManager> dataManager));
+        CINJECT(BFEditorResourcesHolder());
         ~BFEditorResourcesHolder() override = default;
 
         BFEditorResourcesHolder(BFEditorResourcesHolder&& holder) noexcept = default;

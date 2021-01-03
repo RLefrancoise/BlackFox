@@ -44,15 +44,8 @@ namespace BlackFox::Editor
 
     //------------------------------------------------------------------------------------------
 
-    BFEditorResourcesHolder::BFEditorResourcesHolder(BFDataManager::Ptr dataManager) : BFResourcesHolderBase()
+    BFEditorResourcesHolder::BFEditorResourcesHolder() : BFResourcesHolderBase()
     {
-        BFEditorData::Ptr editorData = dataManager->getEditorData();
-        const auto& resourcesPath = editorData->config.resourcesPath;
-
-        BF_PRINT("Resources folder is {}", resourcesPath.string());
-
-        m_metaTable.addResource(Icons::FOLDER_ICON.data(), Resources::TEXTURE_ASSET);
-        m_metaTable.addResource(Icons::FILE_ICON.data(), Resources::TEXTURE_ASSET);
     }
 
     BFTextResource::Handle BFEditorResourcesHolder::createTextAssetHandle(entt::id_type id, const ResourceGuid& guid, const Resources::ResourceType& type)

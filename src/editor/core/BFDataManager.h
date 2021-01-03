@@ -50,8 +50,12 @@ namespace BlackFox::Editor
 		[[nodiscard]] BFEditorData::Ptr getEditorData() const;
 		void setEditorData(BFEditorData::Ptr editorData);
 
+		TextureHandle getTextureResource(const entt::hashed_string &textureId, const sf::IntRect &rect = sf::IntRect());
+
 	private:
 		BFProjectData::Ptr m_projectData;
 		BFEditorData::Ptr m_editorData;
+
+		TextureCache m_textures;
 	};
 }

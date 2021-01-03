@@ -12,7 +12,7 @@ namespace BlackFox::Editor
 	class BFDataBrowserWindow final : public BFWindow<BFDataBrowserWindow>
 	{
 	public:
-		CINJECT(BFDataBrowserWindow(BFCommandManager::Ptr commandManager, BFDataManager::Ptr dataManager, IBFResourcesHolder::Ptr holder));
+		CINJECT(BFDataBrowserWindow(BFCommandManager::Ptr commandManager, BFDataManager::Ptr dataManager));
 		BFDataBrowserWindow* clone() const override;
 
 	protected:
@@ -33,7 +33,6 @@ namespace BlackFox::Editor
 		
 		BFCommandManager::Ptr m_commandManager;
 		BFDataManager::Ptr m_dataManager;
-		IBFResourcesHolder::Ptr m_holder;
 
 		std::filesystem::path m_rootFolder;
 		std::filesystem::path m_currentFolder;
